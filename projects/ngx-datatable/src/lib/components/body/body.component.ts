@@ -148,8 +148,14 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   @Input() summaryHeight: number;
 
   @Input() set pageSize(val: number) {
-    this._pageSize = val;
-    this.recalcLayout();
+    if (val !== this._pageSize) {
+      this._pageSize = val;
+      this.recalcLayout();
+
+      // Emits the page event if page size has been changed
+      this.updatePage('up');
+      this.updatePage('down');
+    }
   }
 
   get pageSize(): number {
@@ -157,8 +163,10 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   }
 
   @Input() set rows(val: any[]) {
-    this._rows = val;
-    this.recalcLayout();
+    if (val !== this._rows) {
+      this._rows = val;
+      this.recalcLayout();
+    }
   }
 
   get rows(): any[] {
@@ -166,9 +174,11 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   }
 
   @Input() set columns(val: any[]) {
-    this._columns = val;
-    const colsByPin = columnsByPin(val);
-    this.columnGroupWidths = columnGroupWidths(colsByPin, val);
+    if (val !== this._columns) {
+      this._columns = val;
+      const colsByPin = columnsByPin(val);
+      this.columnGroupWidths = columnGroupWidths(colsByPin, val);
+    }
   }
 
   get columns(): any[] {
@@ -176,8 +186,10 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   }
 
   @Input() set offset(val: number) {
-    this._offset = val;
-    if (!this.scrollbarV || (this.scrollbarV && !this.virtualization)) this.recalcLayout();
+    if (val !== this._offset) {
+      this._offset = val;
+      if (!this.scrollbarV || (this.scrollbarV && !this.virtualization)) this.recalcLayout();
+    }
   }
 
   get offset(): number {
@@ -185,8 +197,10 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   }
 
   @Input() set rowCount(val: number) {
-    this._rowCount = val;
-    this.recalcLayout();
+    if (val !== this._rowCount) {
+      this._rowCount = val;
+      this.recalcLayout();
+    }
   }
 
   get rowCount(): number {

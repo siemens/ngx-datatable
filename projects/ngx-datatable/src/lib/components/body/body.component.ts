@@ -153,6 +153,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
       this.recalcLayout();
 
       // Emits the page event if page size has been changed
+      this._offsetEvent = -1;
       this.updatePage('up');
       this.updatePage('down');
     }
@@ -279,6 +280,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   _rowCount: number;
   _offset: number;
   _pageSize: number;
+  _offsetEvent = -1;
 
   /**
    * Creates an instance of DataTableBodyComponent.
@@ -400,7 +402,8 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
       offset = Math.floor(offset);
     }
 
-    if (direction !== undefined && !isNaN(offset)) {
+    if (direction !== undefined && !isNaN(offset) && offset !== this._offsetEvent) {
+      this._offsetEvent = offset;
       this.page.emit({ offset });
     }
   }

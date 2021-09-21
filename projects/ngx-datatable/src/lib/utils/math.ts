@@ -145,6 +145,11 @@ export function forceFillColumnWidths(
     remainingWidth = expectedWidth - contentWidth;
     removeProcessedColumns(columnsToResize, columnsProcessed);
   } while (remainingWidth > remainingWidthLimit && columnsToResize.length !== 0);
+
+  // reset so we don't have stale values
+  for (const column of columnsToResize) {
+    column.$$oldWidth = 0;
+  }
 }
 
 /**

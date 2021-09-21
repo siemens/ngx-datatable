@@ -34,6 +34,10 @@ function scaleColumns(colsByGroup: any, maxWidth: any, totalFlexGrow: any) {
   // calculate total width and flexgrow points for coulumns that can be resized
   for (const attr in colsByGroup) {
     for (const column of colsByGroup[attr]) {
+      if (column.$$oldWidth) {
+        // when manually resized, switch off auto-resize
+        column.canAutoResize = false;
+      }
       if (!column.canAutoResize) {
         maxWidth -= column.width;
         totalFlexGrow -= column.flexGrow ? column.flexGrow : 0;

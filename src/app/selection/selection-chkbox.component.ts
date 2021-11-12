@@ -37,6 +37,7 @@ import { ColumnMode, SelectionType } from 'projects/ngx-datatable/src/public-api
           [displayCheck]="displayCheck"
           (activate)="onActivate($event)"
           (select)="onSelect($event)"
+          (deselect)="onDeselect($event)"
         >
           <ngx-datatable-column
             [width]="30"
@@ -97,6 +98,10 @@ export class CheckboxSelectionComponent {
 
     this.selected.splice(0, this.selected.length);
     this.selected.push(...selected);
+  }
+
+  onDeselect(deselected: any) {
+    console.log('Deselect Event', deselected);
   }
 
   onActivate(event) {

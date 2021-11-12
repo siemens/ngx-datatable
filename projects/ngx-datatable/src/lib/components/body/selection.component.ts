@@ -27,6 +27,7 @@ export class DataTableSelectionComponent {
 
   @Output() activate: EventEmitter<any> = new EventEmitter();
   @Output() select: EventEmitter<any> = new EventEmitter();
+  @Output() deselect: EventEmitter<any> = new EventEmitter();
 
   prevIndex: number;
 
@@ -43,6 +44,7 @@ export class DataTableSelectionComponent {
         selected = selectRowsBetween([], this.rows, index, this.prevIndex, this.getRowSelectedIdx.bind(this));
       } else if (event.ctrlKey || event.metaKey || multiClick || chkbox) {
         selected = selectRows([...this.selected], row, this.getRowSelectedIdx.bind(this));
+        this.deselectEvent(event, row);
       } else {
         selected = selectRows([], row, this.getRowSelectedIdx.bind(this));
       }
@@ -62,6 +64,18 @@ export class DataTableSelectionComponent {
     this.select.emit({
       selected
     });
+  }
+
+  deselectEvent(event: any, row: any) {
+    let unselected: any | undefined;
+    if (event && event.srcElement && !event.srcElement.checked) {
+      unselected = row;
+    }
+    if (unselected) {
+      this.deselect.emit({
+        unselected
+      });
+    }
   }
 
   onActivate(model: Model, index: number): void {

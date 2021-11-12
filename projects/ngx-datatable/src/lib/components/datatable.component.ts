@@ -427,6 +427,11 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
   @Output() select: EventEmitter<any> = new EventEmitter();
 
   /**
+   * A cell or row was selected.
+   */
+  @Output() deselect: EventEmitter<any> = new EventEmitter();
+
+  /**
    * Column sort was invoked.
    */
   @Output() sort: EventEmitter<any> = new EventEmitter();
@@ -1135,6 +1140,10 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
    */
   onBodySelect(event: any): void {
     this.select.emit(event);
+  }
+
+  onDeselect(event: any): void {
+    this.deselect.emit(event);
   }
 
   /**

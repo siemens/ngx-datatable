@@ -32,6 +32,7 @@ import { translateXY } from '../../utils/translate';
       [selectionType]="selectionType"
       [rowIdentity]="rowIdentity"
       (select)="select.emit($event)"
+      (deselect)="deselect.emit($event)"
       (activate)="activate.emit($event)"
     >
       <datatable-scroller
@@ -247,6 +248,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   @Output() page: EventEmitter<any> = new EventEmitter();
   @Output() activate: EventEmitter<any> = new EventEmitter();
   @Output() select: EventEmitter<any> = new EventEmitter();
+  @Output() deselect: EventEmitter<any> = new EventEmitter();
   @Output() detailToggle: EventEmitter<any> = new EventEmitter();
   @Output() rowContextmenu = new EventEmitter<{ event: MouseEvent; row: any }>(false);
   @Output() treeAction: EventEmitter<any> = new EventEmitter();

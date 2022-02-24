@@ -210,20 +210,6 @@
   }
 
   /**
-   * Custom Loader Styles
-   */
-  .custom-loading-indicator-wrapper {
-    position: sticky;
-    top: 0;
-    height: 0;
-    z-index: 999;
-      .custom-loading-content {
-        width: 100%;
-        background-color: white;
-      }
-  }
-
-  /**
    * Body Styles
    */
   .datatable-body {

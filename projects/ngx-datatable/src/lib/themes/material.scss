@@ -293,46 +293,49 @@ $datatable-summary-row-background-hover: #ddd !default;
         font-weight: 400;
       }
     }
+  }
 
-    .progress-linear {
+  /**
+	 * Progress Bar Styles
+	 */
+  .progress-linear {
+    display: block;
+    position: sticky;
+    width: 100%;
+    height: 5px;
+    padding: 0;
+    margin: 0;
+    top: 0;
+
+    .container {
       display: block;
-      position: sticky;
+      position: relative;
+      overflow: hidden;
       width: 100%;
       height: 5px;
-      padding: 0;
-      margin: 0;
-      top: 0;
+      -webkit-transform: translate(0, 0) scale(1, 1);
+      transform: translate(0, 0) scale(1, 1);
+      background-color: rgb(170, 209, 249);
 
-      .container {
-        display: block;
-        position: relative;
-        overflow: hidden;
+      .bar {
+        transition: all 0.2s linear;
+        -webkit-animation: query 0.8s infinite cubic-bezier(0.39, 0.575, 0.565, 1);
+        animation: query 0.8s infinite cubic-bezier(0.39, 0.575, 0.565, 1);
+
+        transition: -webkit-transform 0.2s linear;
+        transition: transform 0.2s linear;
+        background-color: rgb(16, 108, 200);
+
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
         width: 100%;
         height: 5px;
-        -webkit-transform: translate(0, 0) scale(1, 1);
-        transform: translate(0, 0) scale(1, 1);
-        background-color: rgb(170, 209, 249);
-
-        .bar {
-          transition: all 0.2s linear;
-          -webkit-animation: query 0.8s infinite cubic-bezier(0.39, 0.575, 0.565, 1);
-          animation: query 0.8s infinite cubic-bezier(0.39, 0.575, 0.565, 1);
-
-          transition: -webkit-transform 0.2s linear;
-          transition: transform 0.2s linear;
-          background-color: rgb(16, 108, 200);
-
-          position: absolute;
-          left: 0;
-          top: 0;
-          bottom: 0;
-          width: 100%;
-          height: 5px;
-        }
       }
     }
   }
-
+  
   /**
 	 * Footer Styles
 	 */

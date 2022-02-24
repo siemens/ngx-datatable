@@ -25,6 +25,10 @@
     (columnContextmenu)="onColumnContextmenu($event)"
   >
   </datatable-header>
+  <ng-container *ngIf="loadingIndicator">
+    <span class="custom-loading-indicator" #customIndicator><ng-content select="[loading-indicator]"></ng-content></span>
+    <datatable-progress *ngIf="!customIndicator?.hasChildNodes()"></datatable-progress>
+  </ng-container>
   <datatable-body
     tabindex="0"
     role="rowgroup"
@@ -65,7 +69,6 @@
     (scroll)="onBodyScroll($event)"
     (treeAction)="onTreeAction($event)"
   >
-    <ng-content select="[loading-indicator]" ngProjectAs="[loading-indicator]"></ng-content>
     <ng-content select="[empty-content]" ngProjectAs="[empty-content]"></ng-content>
   </datatable-body>
   <datatable-footer

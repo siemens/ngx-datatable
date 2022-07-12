@@ -5,7 +5,6 @@ import {
   EventEmitter,
   HostBinding,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
   Output,

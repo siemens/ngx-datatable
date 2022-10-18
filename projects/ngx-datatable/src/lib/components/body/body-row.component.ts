@@ -137,7 +137,7 @@ export class DataTableBodyRowComponent implements DoCheck {
   @Input()
     rowHeight: number;
 
-  @HostBinding('style.width.px')
+  @HostBinding('style.min-width.px')
   get columnsTotalWidths(): string {
     return this._columnGroupWidths.total;
   }
@@ -195,7 +195,7 @@ export class DataTableBodyRowComponent implements DoCheck {
     const offsetX = this.offsetX;
 
     const styles = {
-      width: `${widths[group]}px`
+      minWidth: `${widths[group]}px`
     };
 
     if (group === 'left') {

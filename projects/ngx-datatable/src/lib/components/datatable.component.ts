@@ -448,6 +448,11 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   @Input() disableRowCheck: (row: any) => boolean;
 
   /**
+   * A flag for enabling row dragging
+   */
+  @Input() rowDraggable = false;
+
+  /**
    * Body was scrolled typically in a `scrollbarV:true` scenario.
    */
   @Output() scroll: EventEmitter<any> = new EventEmitter();
@@ -493,6 +498,11 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    * A row was expanded ot collapsed for tree
    */
   @Output() treeAction: EventEmitter<any> = new EventEmitter();
+
+  /**
+   * Triggered when row is dragged and dropped on another row
+   */
+  @Output() rowDragEvent: EventEmitter<any> = new EventEmitter();
 
   /**
    * CSS class applied if the header height if fixed height.

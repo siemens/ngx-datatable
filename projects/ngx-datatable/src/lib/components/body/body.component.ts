@@ -98,8 +98,12 @@ import { translateXY } from '../../utils/translate';
             [displayCheck]="displayCheck"
             [treeStatus]="group && group.treeStatus"
             [ghostLoadingIndicator]="ghostLoadingIndicator"
+            [draggable]="rowDraggable"
             (treeAction)="onTreeAction(group)"
             (activate)="selector.onActivate($event, indexes.first + i)"
+            (drop)="drop($event, group)"
+            (dragover)="allowDrop($event)"
+            (dragstart)="drag(group)"
           >
           </datatable-body-row>
           <ng-template #groupedRowsTemplate>
@@ -119,7 +123,11 @@ import { translateXY } from '../../utils/translate';
               [expanded]="getRowExpanded(row)"
               [rowClass]="rowClass"
               [ghostLoadingIndicator]="ghostLoadingIndicator"
+              [draggable]="rowDraggable"
               (activate)="selector.onActivate($event, i)"
+              (drop)="drop($event, row)"
+              (dragover)="allowDrop($event)"
+              (dragstart)="drag(row)"
             >
             </datatable-body-row>
           </ng-template>
@@ -189,6 +197,8 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   @Input() summaryRow: boolean;
   @Input() summaryPosition: string;
   @Input() summaryHeight: number;
+  @Input() rowDraggable: boolean;
+  @Input() rowDragEvent: EventEmitter<any>;
   @Input() disableRowCheck: (row: any) => boolean;
 
   @Input() set pageSize(val: number) {
@@ -330,6 +340,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   _offset: number;
   _pageSize: number;
   _offsetEvent = -1;
+  _draggedRow: any;
 
   /**
    * Creates an instance of DataTableBodyComponent.
@@ -885,5 +896,21 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
 
   onTreeAction(row: any) {
     this.treeAction.emit({ row });
+  }
+
+  allowDrop(ev) {
+    ev.preventDefault();
+  }
+
+  drag(row) {
+    this._draggedRow = row;
+  }
+
+  drop(ev, target) {
+    ev.preventDefault();
+    this.rowDragEvent.emit({
+      source: this._draggedRow,
+      destination: target
+    });
   }
 }

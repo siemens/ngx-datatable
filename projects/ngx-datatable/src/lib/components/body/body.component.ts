@@ -15,6 +15,7 @@ import { SelectionType } from '../../types/selection.type';
 import { columnGroupWidths, columnsByPin } from '../../utils/column';
 import { RowHeightCache } from '../../utils/row-height-cache';
 import { translateXY } from '../../utils/translate';
+import { DragEventData } from '../../types/drag-events.type';
 
 @Component({
   selector: 'datatable-body',
@@ -85,6 +86,7 @@ import { translateXY } from '../../utils/translate';
             role="row"
             *ngIf="!groupedRows; else groupedRowsTemplate"
             tabindex="-1"
+            #rowElement
             [disable$]="rowWrapper.disable$"
             [isSelected]="selector.getRowSelected(group)"
             [innerWidth]="innerWidth"
@@ -101,9 +103,11 @@ import { translateXY } from '../../utils/translate';
             [draggable]="rowDraggable"
             (treeAction)="onTreeAction(group)"
             (activate)="selector.onActivate($event, indexes.first + i)"
-            (drop)="drop($event, group)"
-            (dragover)="allowDrop($event)"
-            (dragstart)="drag(group)"
+            (drop)="drop($event, group, rowElement)"
+            (dragover)="dragOver($event, group)"
+            (dragenter)="dragEnter($event, group, rowElement)"
+            (dragstart)="drag($event, group, rowElement)"
+            (dragend)="dragEnd($event, group)"
           >
           </datatable-body-row>
           <ng-template #groupedRowsTemplate>
@@ -112,6 +116,7 @@ import { translateXY } from '../../utils/translate';
               [disable$]="rowWrapper.disable$"
               *ngFor="let row of group.value; let i = index; trackBy: rowTrackingFn"
               tabindex="-1"
+              #rowElement
               [isSelected]="selector.getRowSelected(row)"
               [innerWidth]="innerWidth"
               [offsetX]="offsetX"
@@ -125,9 +130,11 @@ import { translateXY } from '../../utils/translate';
               [ghostLoadingIndicator]="ghostLoadingIndicator"
               [draggable]="rowDraggable"
               (activate)="selector.onActivate($event, i)"
-              (drop)="drop($event, row)"
-              (dragover)="allowDrop($event)"
-              (dragstart)="drag(row)"
+              (drop)="drop($event, row, rowElement)"
+              (dragover)="dragOver($event, row)"
+              (dragenter)="dragEnter($event, row, rowElement)"
+              (dragstart)="drag($event, row, rowElement)"
+              (dragend)="dragEnd($event, row)"
             >
             </datatable-body-row>
           </ng-template>
@@ -198,7 +205,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   @Input() summaryPosition: string;
   @Input() summaryHeight: number;
   @Input() rowDraggable: boolean;
-  @Input() rowDragEvent: EventEmitter<any>;
+  @Input() rowDragEvents: EventEmitter<DragEventData>;
   @Input() disableRowCheck: (row: any) => boolean;
 
   @Input() set pageSize(val: number) {
@@ -340,7 +347,9 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   _offset: number;
   _pageSize: number;
   _offsetEvent = -1;
-  _draggedRow: any;
+
+  private _draggedRow: any;
+  private _draggedRowElement: HTMLElement;
 
   /**
    * Creates an instance of DataTableBodyComponent.
@@ -898,19 +907,61 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
     this.treeAction.emit({ row });
   }
 
-  allowDrop(ev) {
-    ev.preventDefault();
-  }
-
-  drag(row) {
-    this._draggedRow = row;
-  }
-
-  drop(ev, target) {
-    ev.preventDefault();
-    this.rowDragEvent.emit({
-      source: this._draggedRow,
-      destination: target
+  dragOver(event: DragEvent, dropRow) {
+    event.preventDefault();
+    this.rowDragEvents.emit({
+      event,
+      srcElement: this._draggedRowElement,
+      eventType: 'dragover',
+      dragRow: this._draggedRow,
+      dropRow
     });
+  }
+
+  drag(event: DragEvent, dragRow, rowComponent) {
+    this._draggedRow = dragRow;
+    this._draggedRowElement = rowComponent._element;
+    this.rowDragEvents.emit({
+      event,
+      srcElement: this._draggedRowElement,
+      eventType: 'dragstart',
+      dragRow
+    });
+  }
+
+  drop(event: DragEvent, dropRow, rowComponent) {
+    event.preventDefault();
+    this.rowDragEvents.emit({
+      event,
+      srcElement: this._draggedRowElement,
+      targetElement: rowComponent._element,
+      eventType: 'drop',
+      dragRow: this._draggedRow,
+      dropRow
+    });
+  }
+
+  dragEnter(event: DragEvent, dropRow, rowComponent) {
+    event.preventDefault();
+    this.rowDragEvents.emit({
+      event,
+      srcElement: this._draggedRowElement,
+      targetElement: rowComponent._element,
+      eventType: 'dragenter',
+      dragRow: this._draggedRow,
+      dropRow
+    });
+  }
+
+  dragEnd(event: DragEvent, dragRow) {
+    event.preventDefault();
+    this.rowDragEvents.emit({
+      event,
+      srcElement: this._draggedRowElement,
+      eventType: 'dragend',
+      dragRow
+    });
+    this._draggedRow = undefined;
+    this._draggedRowElement = undefined;
   }
 }

@@ -23,8 +23,6 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
         [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="50"
-        [rowDraggable]="true"
-        (rowDragEvent)="rowDragged($event)"
         rowHeight="auto"
         [limit]="10"
       >
@@ -52,9 +50,5 @@ export class ClientPagingComponent {
     };
 
     req.send();
-  }
-
-  rowDragged(event) {
-    console.log(event);
   }
 }

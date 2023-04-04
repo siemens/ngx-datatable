@@ -33,6 +33,7 @@ import { groupRowsByParents, optionalGetterForProp } from '../utils/tree';
 import { TableColumn } from '../types/table-column.type';
 import { setColumnDefaults, translateTemplates } from '../utils/column-helper';
 import { ColumnMode } from '../types/column-mode.type';
+import { DragEventData } from '../types/drag-events.type';
 import { SelectionType } from '../types/selection.type';
 import { SortType } from '../types/sort.type';
 import { ContextmenuType } from '../types/contextmenu.type';
@@ -448,7 +449,8 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   @Input() disableRowCheck: (row: any) => boolean;
 
   /**
-   * A flag for enabling row dragging
+   * A flag to enable drag behavior of native HTML5 drag and drop API on rows.
+   * If set to true, {@link rowDragEvents} will emit dragstart and dragend events.
    */
   @Input() rowDraggable = false;
 
@@ -500,9 +502,11 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   @Output() treeAction: EventEmitter<any> = new EventEmitter();
 
   /**
-   * Triggered when row is dragged and dropped on another row
+   * Emits HTML5 native drag events.
+   * Only emits dragenter, dragover, drop events by default.
+   * Set {@link rowDraggble} to true for dragstart and dragend.
    */
-  @Output() rowDragEvent: EventEmitter<any> = new EventEmitter();
+  @Output() rowDragEvents: EventEmitter<DragEventData> = new EventEmitter();
 
   /**
    * CSS class applied if the header height if fixed height.

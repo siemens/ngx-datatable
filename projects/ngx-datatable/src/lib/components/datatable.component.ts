@@ -829,7 +829,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    * Lifecycle hook that is called when Angular dirty checks a directive.
    */
   ngDoCheck(): void {
-    if (this.rowDiffer.diff(this.rows)) {
+    if (this.rowDiffer.diff(this.rows) || this.disableRowCheck) {
       if (!this.externalSorting) {
         this.sortInternalRows();
       } else {

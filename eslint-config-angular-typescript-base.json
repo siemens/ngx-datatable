@@ -1,7 +1,8 @@
 {
   "extends": [
     "plugin:@angular-eslint/recommended",
-    "plugin:@angular-eslint/template/process-inline-templates"
+    "plugin:@angular-eslint/template/process-inline-templates",
+    "plugin:@typescript-eslint/recommended"
   ],
   "parserOptions": {
     "allowAutomaticSingleRunInference": true
@@ -23,7 +24,7 @@
     "indent": "off",
     "keyword-spacing": "off",
     "no-shadow": "off",
-    "no-duplicate-imports": "off",
+    "no-duplicate-imports": "error",
     "no-redeclare": "off",
     "no-underscore-dangle": "off",
     "@angular-eslint/no-input-rename": "off",
@@ -38,7 +39,6 @@
     "@typescript-eslint/keyword-spacing": "error",
     "@typescript-eslint/member-ordering": "off",
     "@typescript-eslint/naming-convention": "off",
-    "@typescript-eslint/no-duplicate-imports": "error",
     "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-redeclare": "error",
@@ -46,6 +46,10 @@
     "@typescript-eslint/no-shadow": ["error", { "ignoreTypeValueShadow": true }],
     "@typescript-eslint/no-var-requires": "error",
     "@typescript-eslint/type-annotation-spacing": "error",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/triple-slash-reference": "off",
+    "@typescript-eslint/no-this-alias": "off",
 
     "array-bracket-spacing": "error",
     "arrow-parens": [
@@ -69,6 +73,8 @@
     "semi-spacing": "error",
     "space-in-parens": "error",
     "space-infix-ops": "error",
-    "sort-imports": ["error", { "ignoreCase": true, "ignoreDeclarationSort": true }]
+    "sort-imports": ["error", { "ignoreCase": true, "ignoreDeclarationSort": true }],
+    "prefer-spread": "off",
+    "prefer-rest-params": "off"
   }
 }

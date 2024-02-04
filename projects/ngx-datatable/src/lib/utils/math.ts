@@ -31,9 +31,9 @@ export function adjustColumnWidths(allColumns: any, expectedWidth: any) {
  * Resizes columns based on the flexGrow property, while respecting manually set widths
  */
 function scaleColumns(colsByGroup: any, maxWidth: any, totalFlexGrow: any) {
-  // calculate total width and flexgrow points for coulumns that can be resized
+  // calculate total width and flexgrow points for columns that can be resized
   for (const attr in colsByGroup) {
-    if (colsByGroup.hasOwnProperty(attr)){
+    if (colsByGroup.hasOwnProperty(attr)) {
       for (const column of colsByGroup[attr]) {
         if (column.$$oldWidth) {
           // when manually resized, switch off auto-resize
@@ -58,9 +58,9 @@ function scaleColumns(colsByGroup: any, maxWidth: any, totalFlexGrow: any) {
     remainingWidth = 0;
 
     for (const attr in colsByGroup) {
-      if (colsByGroup.hasOwnProperty(attr)){
+      if (colsByGroup.hasOwnProperty(attr)) {
         for (const column of colsByGroup[attr]) {
-        // if the column can be resize and it hasn't reached its minimum width yet
+          // if the column can be resize and it hasn't reached its minimum width yet
           if (column.canAutoResize && !hasMinWidth[column.prop]) {
             const newWidth = column.width + column.flexGrow * widthPerFlexPoint;
             if (column.minWidth !== undefined && newWidth < column.minWidth) {
@@ -75,6 +75,27 @@ function scaleColumns(colsByGroup: any, maxWidth: any, totalFlexGrow: any) {
       }
     }
   } while (remainingWidth !== 0);
+
+  // Adjust for any remaining offset in computed widths vs maxWidth by tweaking the biggest column
+  let totalWidthAchieved = 0;
+  const biggestColumnRef = {
+    width: 0,
+    ref: null
+  };
+
+  for (const attr in colsByGroup) {
+    if (colsByGroup.hasOwnProperty(attr)) {
+      for (const column of colsByGroup[attr]) {
+        totalWidthAchieved += column.width;
+
+        if (column.width > biggestColumnRef.width) {
+          biggestColumnRef.ref = column
+        }
+      }
+    }
+  }
+  const remainingDelta = maxWidth - totalWidthAchieved;
+  biggestColumnRef.ref.width += remainingDelta;
 }
 
 /**

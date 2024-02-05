@@ -89,13 +89,15 @@ function scaleColumns(colsByGroup: any, maxWidth: any, totalFlexGrow: any) {
         totalWidthAchieved += column.width;
 
         if (column.width > biggestColumnRef.width) {
-          biggestColumnRef.ref = column
+          biggestColumnRef.ref = column;
         }
       }
     }
   }
-  const remainingDelta = maxWidth - totalWidthAchieved;
-  biggestColumnRef.ref.width += remainingDelta;
+
+  if (biggestColumnRef.ref) {
+    biggestColumnRef.ref.width += maxWidth - totalWidthAchieved;
+  }
 }
 
 /**

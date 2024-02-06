@@ -37,7 +37,7 @@ describe('Math function', () => {
 
   describe('adjustColumnWidths', () => {
     describe('flex mode', () => {
-      it('should not go overflow/underflow compared to given max width', () => {
+      it('should not go over/under compared to given max width', () => {
         const cols = [
           { prop: 'id1', width: 287, maxWidth: undefined, minWidth: 175, flexGrow: 2, canAutoResize: true },
           { prop: 'id2', width: 215, maxWidth: undefined, minWidth: 200, flexGrow: 1.5, canAutoResize: true },
@@ -52,6 +52,32 @@ describe('Math function', () => {
 
         const totalAdjustedColumnWidths = cols.map(c => c.width).reduce((p, c) => p + c, 0);
         expect(totalAdjustedColumnWidths).toBeCloseTo(givenTableWidth, 0.001);
+      });
+
+      it('should overflow if the total of given min widths is bigger than given max width', () => {
+        const cols = [
+          { prop: 'id1', width: 100, maxWidth: undefined, minWidth: 100, flexGrow: 1, canAutoResize: true },
+          { prop: 'id2', width: 100, maxWidth: undefined, minWidth: 100, flexGrow: 1, canAutoResize: true }
+        ];
+        const maxWidth = 199;
+
+        adjustColumnWidths(cols, maxWidth);
+
+        const totalAdjustedColumnWidths = cols.map(c => c.width).reduce((p, c) => p + c, 0);
+        expect(totalAdjustedColumnWidths).toBeGreaterThan(maxWidth);
+      });
+
+      it('should respect min widths', () => {
+        const cols = [
+          { prop: 'id1', width: 0, maxWidth: undefined, minWidth: 10, flexGrow: 3.0000000000000075, canAutoResize: true },
+          { prop: 'id2', width: 0, maxWidth: undefined, minWidth: 10, flexGrow: 1, canAutoResize: true }
+        ];
+
+        adjustColumnWidths(cols, 40);
+
+        for (const col of cols) {
+          expect(col.width - col.minWidth).toBeGreaterThanOrEqual(0);
+        }
       });
     });
   });

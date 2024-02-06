@@ -76,27 +76,30 @@ function scaleColumns(colsByGroup: any, maxWidth: any, totalFlexGrow: any) {
     }
   } while (remainingWidth !== 0);
 
-  // Adjust for any remaining offset in computed widths vs maxWidth by tweaking the biggest column
-  let totalWidthAchieved = 0;
-  const biggestColumnRef = {
-    width: 0,
-    ref: null
-  };
+  // Adjust for any remaining offset in computed widths vs maxWidth
+  const columns = Object.values<{
+    width: number,
+    canAutoResize: boolean,
+    minWidth: number,
+    maxWidth: number
+  }>(colsByGroup).reduce((acc, col) => acc.concat(col), []);
 
-  for (const attr in colsByGroup) {
-    if (colsByGroup.hasOwnProperty(attr)) {
-      for (const column of colsByGroup[attr]) {
-        totalWidthAchieved += column.width;
+  const totalWidthAchieved = columns.reduce((acc, col) => acc + col.width, 0);
+  const delta = maxWidth - totalWidthAchieved;
 
-        if (column.width > biggestColumnRef.width) {
-          biggestColumnRef.ref = column;
-        }
-      }
-    }
+  if (delta === 0) {
+    return
   }
 
-  if (biggestColumnRef.ref) {
-    biggestColumnRef.ref.width += maxWidth - totalWidthAchieved;
+  // adjust the first column that can be auto-resized respecting the min/max widths
+  for (const col of columns.filter(c => c.canAutoResize).sort((a, b) => a.width - b.width)) {
+    if (
+      (delta > 0 && (!col.maxWidth || col.width + delta <= col.maxWidth)) ||
+      (delta < 0 && (!col.minWidth || col.width + delta >= col.minWidth))
+    ) {
+      col.width += delta;
+      break;
+    }
   }
 }
 

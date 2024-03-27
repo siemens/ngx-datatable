@@ -21,6 +21,7 @@ import {
   Output,
   QueryList,
   SkipSelf,
+  TemplateRef,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
@@ -30,7 +31,7 @@ import { DatatableGroupHeaderDirective } from './body/body-group-header.directiv
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { INgxDatatableConfig } from '../ngx-datatable.module';
 import { groupRowsByParents, optionalGetterForProp } from '../utils/tree';
-import { TableColumn } from '../types/table-column.type';
+import { TableColumn, TableColumnProp } from '../types/table-column.type';
 import { setColumnDefaults, translateTemplates } from '../utils/column-helper';
 import { ColumnMode } from '../types/column-mode.type';
 import { DragEventData } from '../types/drag-events.type';
@@ -48,6 +49,8 @@ import { DimensionsHelper } from '../services/dimensions-helper.service';
 import { throttleable } from '../utils/throttle';
 import { adjustColumnWidths, forceFillColumnWidths } from '../utils/math';
 import { sortRows } from '../utils/sort';
+import { Group } from "../types/group.type";
+import { SortPropDir } from "../types/sort-prop-dir.type";
 
 @Component({
   selector: 'ngx-datatable',
@@ -60,16 +63,16 @@ import { sortRows } from '../utils/sort';
     class: 'ngx-datatable'
   }
 })
-export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, AfterContentInit, OnDestroy {
+export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterViewInit, AfterContentInit, OnDestroy {
   /**
    * Template for the target marker of drag target columns.
    */
-  @Input() targetMarkerTemplate: any;
+  @Input() targetMarkerTemplate: TemplateRef<unknown>;
 
   /**
    * Rows that are displayed in the table.
    */
-  @Input() set rows(val: any) {
+  @Input() set rows(val: TRow[]) {
     this._rows = val;
 
     if (val) {
@@ -102,18 +105,18 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   /**
    * Gets the rows.
    */
-  get rows(): any {
+  get rows(): TRow[] {
     return this._rows;
   }
 
   /**
    * This attribute allows the user to set the name of the column to group the data with
    */
-  @Input() set groupRowsBy(val: string) {
+  @Input() set groupRowsBy(val: keyof TRow) {
     if (val) {
       this._groupRowsBy = val;
       if (this._rows && this._groupRowsBy) {
-        // cretes a new array with the data grouped
+        // creates a new array with the data grouped
         this.groupedRows = this.groupArrayBy(this._rows, this._groupRowsBy);
       }
     }
@@ -138,7 +141,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    *    ]}
    *  ]
    */
-  @Input() groupedRows: any[];
+  @Input() groupedRows: Group<TRow>[];
 
   /**
    * Columns to be displayed.
@@ -165,7 +168,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    * represented as selected in the grid.
    * Default value: `[]`
    */
-  @Input() selected: any[] = [];
+  @Input() selected: TRow[] = [];
 
   /**
    * Enable vertical scrollbars
@@ -189,7 +192,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    * The row height; which is necessary
    * to calculate the height for the lazy rendering.
    */
-  @Input() rowHeight: number | 'auto' | ((row?: any) => number) = 30;
+  @Input() rowHeight: number | 'auto' | ((row?: TRow) => number) = 30;
 
   /**
    * Type of column width distribution formula.
@@ -324,12 +327,12 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    * Array of sorted columns by property and type.
    * Default value: `[]`
    */
-  @Input() sorts: any[] = [];
+  @Input() sorts: SortPropDir[] = [];
 
   /**
    * Css class overrides
    */
-  @Input() cssClasses: any = {
+  @Input() cssClasses: INgxDatatableConfig['cssClasses'] = {
     sortAscending: 'datatable-icon-up',
     sortDescending: 'datatable-icon-down',
     sortUnset: 'datatable-icon-sort-unset',
@@ -346,7 +349,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    * totalMessage     [default] = 'total'
    * selectedMessage  [default] = 'selected'
    */
-  @Input() messages: any = {
+  @Input() messages: INgxDatatableConfig['messages'] = {
     // Message to show when array is presented
     // but contains no values
     emptyMessage: 'No data to display',
@@ -375,7 +378,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    *      return selection !== 'Ethel Price';
    *    }
    */
-  @Input() selectCheck: any;
+  @Input() selectCheck: (value: TRow, index: number, array: TRow[]) => boolean;
 
   /**
    * A function you can use to check whether you want
@@ -385,7 +388,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    *      return row.name !== 'Ethel Price';
    *    }
    */
-  @Input() displayCheck: (row: any, column?: any, value?: any) => boolean;
+  @Input() displayCheck: (row: TRow, column?: any, value?: any) => boolean;
 
   /**
    * A boolean you can use to set the detault behaviour of rows and groups
@@ -446,7 +449,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    *      return row.name !== 'Ethel Price';
    *    }
    */
-  @Input() disableRowCheck: (row: any) => boolean;
+  @Input() disableRowCheck: (row: TRow) => boolean;
 
   /**
    * A flag to enable drag behavior of native HTML5 drag and drop API on rows.
@@ -678,9 +681,9 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   _limit: number | undefined;
   _count = 0;
   _offset = 0;
-  _rows: any[];
-  _groupRowsBy: string;
-  _internalRows: any[];
+  _rows: TRow[];
+  _groupRowsBy: keyof TRow;
+  _internalRows: TRow[];
   _internalColumns: TableColumn[];
   _columns: TableColumn[];
   _columnTemplates: QueryList<DataTableColumnDirective>;
@@ -802,14 +805,15 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    * Creates a map with the data grouped by the user choice of grouping index
    *
    * @param originalArray the original array passed via parameter
-   * @param groupByIndex  the index of the column to group the data by
+   * @param groupBy  the key of the column to group the data by
    */
-  groupArrayBy(originalArray: any, groupBy: any) {
+  groupArrayBy(originalArray: TRow[], groupBy: keyof TRow) {
     // create a map to hold groups with their corresponding results
-    const map = new Map();
+    const map = new Map<TRow[keyof TRow], TRow[]>();
     let i = 0;
 
-    originalArray.forEach((item: any) => {
+    originalArray.forEach(item => {
+      // We know, that groupKey will only return properties of type TableColumnProp. Typescript does not, unfortunately.
       const key = item[groupBy];
       if (!map.has(key)) {
         map.set(key, [item]);
@@ -819,7 +823,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
       i++;
     });
 
-    const addGroup = (key: any, value: any) => ({ key, value });
+    const addGroup = (key: TRow[keyof TRow], value: TRow[]) => ({ key, value });
 
     // convert map back to a simple array of objects
     return Array.from(map, x => addGroup(x[0], x[1]));

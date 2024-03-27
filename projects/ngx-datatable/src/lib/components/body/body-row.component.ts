@@ -21,6 +21,7 @@ import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 import { translateXY } from '../../utils/translate';
 import { BehaviorSubject } from 'rxjs';
 import { DataTableRowWrapperComponent } from './body-row-wrapper.component';
+import { RowOrGroup } from "../../types/group.type";
 
 @Component({
   selector: 'datatable-body-row',
@@ -54,7 +55,7 @@ import { DataTableRowWrapperComponent } from './body-row-wrapper.component';
     </div>
   `
 })
-export class DataTableBodyRowComponent implements DoCheck {
+export class DataTableBodyRowComponent<TRow = any> implements DoCheck {
   @Input() set columns(val: any[]) {
     this._columns = val;
     this.recalculateColumns(val);
@@ -82,12 +83,12 @@ export class DataTableBodyRowComponent implements DoCheck {
 
   @Input() expanded: boolean;
   @Input() rowClass: any;
-  @Input() row: any;
-  @Input() group: any;
+  @Input() row: RowOrGroup<TRow>;
+  @Input() group: TRow[];
   @Input() isSelected: boolean;
   @Input() rowIndex: number;
   @Input() displayCheck: any;
-  @Input() treeStatus: TreeStatus = 'collapsed';
+  @Input() treeStatus?: TreeStatus = 'collapsed';
   @Input() ghostLoadingIndicator = false;
 
   @Input() disable$: BehaviorSubject<boolean>;
@@ -145,7 +146,7 @@ export class DataTableBodyRowComponent implements DoCheck {
   @Output() activate: EventEmitter<any> = new EventEmitter();
   @Output() treeAction: EventEmitter<any> = new EventEmitter();
 
-  _element: any;
+  _element: HTMLElement;
   _columnGroupWidths: any;
   _columnsByPin: any;
   _offsetX: number;
@@ -157,13 +158,13 @@ export class DataTableBodyRowComponent implements DoCheck {
     right: {}
   };
 
-  private _rowDiffer: KeyValueDiffer<unknown, unknown>;
+  private _rowDiffer: KeyValueDiffer<keyof RowOrGroup<TRow>, any>;
 
   constructor(
-    private differs: KeyValueDiffers,
+    differs: KeyValueDiffers,
     @SkipSelf() private scrollbarHelper: ScrollbarHelper,
     private cd: ChangeDetectorRef,
-    element: ElementRef
+    element: ElementRef<HTMLElement>
   ) {
     this._element = element.nativeElement;
     this._rowDiffer = differs.find({}).create();

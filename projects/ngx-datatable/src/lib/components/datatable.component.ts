@@ -13,8 +13,8 @@ import {
   HostListener,
   Inject,
   Input,
-  KeyValueDiffer,
-  KeyValueDiffers,
+  IterableDiffer,
+  IterableDiffers,
   OnDestroy,
   OnInit,
   Optional,
@@ -675,7 +675,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   pageSize: number;
   bodyHeight: number;
   rowCount = 0;
-  rowDiffer: KeyValueDiffer<unknown, unknown>;
+  rowDiffer: IterableDiffer<TRow>;
 
   _offsetX = new BehaviorSubject(0);
   _limit: number | undefined;
@@ -695,13 +695,13 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
     @SkipSelf() private dimensionsHelper: DimensionsHelper,
     private cd: ChangeDetectorRef,
     element: ElementRef,
-    differs: KeyValueDiffers,
+    differs: IterableDiffers,
     private columnChangesService: ColumnChangesService,
     @Optional() @Inject('configuration') private configuration: INgxDatatableConfig
   ) {
     // get ref to elm for measuring
     this.element = element.nativeElement;
-    this.rowDiffer = differs.find({}).create();
+    this.rowDiffer = differs.find([]).create();
 
     // apply global settings from Module.forRoot
     if (this.configuration) {

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ColumnMode, SelectionType } from 'projects/ngx-datatable/src/public-api';
+import { Employee } from "../data.model";
 
 @Component({
   selector: 'chkbox-selection-template-demo',
@@ -81,8 +82,8 @@ import { ColumnMode, SelectionType } from 'projects/ngx-datatable/src/public-api
   `
 })
 export class CustomCheckboxSelectionComponent {
-  rows = [];
-  selected = [];
+  rows: Employee[] = [];
+  selected: Employee[] = [];
 
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;

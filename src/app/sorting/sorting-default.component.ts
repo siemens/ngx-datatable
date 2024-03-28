@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
+import { Employee } from "../data.model";
 
 @Component({
   selector: 'default-sorting-demo',
@@ -44,7 +45,7 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
   `
 })
 export class DefaultSortingComponent implements OnInit {
-  rows = [];
+  rows: Employee[] = [];
 
   ColumnMode = ColumnMode;
 

@@ -1,5 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
+import { ColumnMode, DatatableComponent } from 'projects/ngx-datatable/src/public-api';
+import { FullEmployee } from "../data.model";
 
 @Component({
   selector: 'row-details-demo',
@@ -89,9 +90,9 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
   encapsulation: ViewEncapsulation.None
 })
 export class RowDetailsComponent {
-  @ViewChild('myTable') table: any;
+  @ViewChild('myTable') table: DatatableComponent<FullEmployee>;
 
-  rows: any[] = [];
+  rows: FullEmployee[] = [];
   expanded: any = {};
   timeout: any;
 

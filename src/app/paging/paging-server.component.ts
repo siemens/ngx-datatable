@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MockServerResultsService } from './mock-server-results-service';
-import { CorporateEmployee } from './model/corporate-employee';
 import { Page } from './model/page';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
+import { Employee } from "../data.model";
 
 @Component({
   selector: 'server-paging-demo',
@@ -39,15 +39,17 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
   `
 })
 export class ServerPagingComponent implements OnInit{
-  page = new Page();
-  rows = new Array<CorporateEmployee>();
+  page: Page = {
+    pageNumber: 0,
+    size: 20,
+    totalElements: 0,
+    totalPages: 0
+  }
+  rows: Employee[] = []
 
   ColumnMode = ColumnMode;
 
-  constructor(private serverResultsService: MockServerResultsService) {
-    this.page.pageNumber = 0;
-    this.page.size = 20;
-  }
+  constructor(private serverResultsService: MockServerResultsService) {}
 
   ngOnInit() {
     this.setPage({ offset: 0 });

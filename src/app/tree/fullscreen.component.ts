@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
+import { ColumnMode, TreeStatus } from 'projects/ngx-datatable/src/public-api';
+import { Employee } from "../data.model";
 
 @Component({
   selector: 'full-screen-tree-demo',
@@ -59,7 +60,7 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
   styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
 })
 export class FullScreenTreeComponent {
-  rows = [];
+  rows: (Employee & {treeStatus: TreeStatus})[] = [];
   lastIndex = 15;
 
   ColumnMode = ColumnMode;

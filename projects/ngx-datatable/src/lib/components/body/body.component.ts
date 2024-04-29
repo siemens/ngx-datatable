@@ -8,7 +8,6 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  TrackByFunction,
   ViewChild
 } from '@angular/core';
 import { ScrollerComponent } from './scroller.component';
@@ -17,8 +16,6 @@ import { columnGroupWidths, columnsByPin } from '../../utils/column';
 import { RowHeightCache } from '../../utils/row-height-cache';
 import { translateXY } from '../../utils/translate';
 import { DragEventData } from '../../types/drag-events.type';
-import { TreeStatus } from "./body-cell.component";
-import { Group, RowOrGroup } from "../../types/group.type";
 
 @Component({
   selector: 'datatable-body',
@@ -87,7 +84,7 @@ import { Group, RowOrGroup } from "../../types/group.type";
         >
           <datatable-body-row
             role="row"
-            *ngIf="isRow(group)"
+            *ngIf="!groupedRows; else groupedRowsTemplate"
             tabindex="-1"
             #rowElement
             [disable$]="rowWrapper.disable$"
@@ -101,7 +98,7 @@ import { Group, RowOrGroup } from "../../types/group.type";
             [expanded]="getRowExpanded(group)"
             [rowClass]="rowClass"
             [displayCheck]="displayCheck"
-            [treeStatus]="group?.treeStatus"
+            [treeStatus]="group && group.treeStatus"
             [ghostLoadingIndicator]="ghostLoadingIndicator"
             [draggable]="rowDraggable"
             (treeAction)="onTreeAction(group)"
@@ -114,7 +111,7 @@ import { Group, RowOrGroup } from "../../types/group.type";
             (dragend)="dragEnd($event, group)"
           >
           </datatable-body-row>
-          <ng-container *ngIf="isGroup(group)">
+          <ng-template #groupedRowsTemplate>
             <datatable-body-row
               role="row"
               [disable$]="rowWrapper.disable$"
@@ -142,7 +139,7 @@ import { Group, RowOrGroup } from "../../types/group.type";
               (dragend)="dragEnd($event, row)"
             >
             </datatable-body-row>
-          </ng-container>
+          </ng-template>
         </datatable-row-wrapper>
         <datatable-summary-row
           role="row"
@@ -157,14 +154,14 @@ import { Group, RowOrGroup } from "../../types/group.type";
         </datatable-summary-row>
       </datatable-scroller>
       <ng-container *ngIf="!rows?.length && !loadingIndicator && !ghostLoadingIndicator">
-        <div
-          class="empty-row"
-          *ngIf="!customEmptyContent?.children.length"
-          [innerHTML]="emptyMessage"
-        ></div>
-        <div #customEmptyContent>
-          <ng-content select="[empty-content]"></ng-content>
-        </div>
+      <div
+        class="empty-row"
+        *ngIf="!customEmptyContent?.children.length"
+        [innerHTML]="emptyMessage"
+      ></div>
+      <div #customEmptyContent>
+        <ng-content select="[empty-content]"></ng-content>
+      </div>
       </ng-container>
     </datatable-selection>
   `,
@@ -173,7 +170,7 @@ import { Group, RowOrGroup } from "../../types/group.type";
     class: 'datatable-body'
   }
 })
-export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any> implements OnInit, OnDestroy {
+export class DataTableBodyComponent implements OnInit, OnDestroy {
   @Input() scrollbarV: boolean;
   @Input() scrollbarH: boolean;
   @Input() loadingIndicator: boolean;
@@ -182,8 +179,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
     this._ghostLoadingIndicator = val;
     if (!val) {
       // remove placeholder rows once ghostloading is set to false
-      // typescript is cannot detect the type --> casting
-      this.temp = this.temp.filter(item => !!item) as any;
+      this.temp = this.temp.filter(item => !!item);
     }
   };
   get ghostLoadingIndicator() {
@@ -205,7 +201,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
   @Input() groupedRows: any;
   @Input() groupExpansionDefault: boolean;
   @Input() innerWidth: number;
-  @Input() groupRowsBy: keyof TRow;
+  @Input() groupRowsBy: string;
   @Input() virtualization: boolean;
   @Input() summaryRow: boolean;
   @Input() summaryPosition: string;
@@ -230,14 +226,14 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
     return this._pageSize;
   }
 
-  @Input() set rows(val: TRow[]) {
+  @Input() set rows(val: any[]) {
     if (val !== this._rows) {
       this._rows = val;
       this.recalcLayout();
     }
   }
 
-  get rows(): TRow[] {
+  get rows(): any[] {
     return this._rows;
   }
 
@@ -310,7 +306,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
   @Output() activate: EventEmitter<any> = new EventEmitter();
   @Output() select: EventEmitter<any> = new EventEmitter();
   @Output() detailToggle: EventEmitter<any> = new EventEmitter();
-  @Output() rowContextmenu = new EventEmitter<{ event: MouseEvent; row: TRow }>(false);
+  @Output() rowContextmenu = new EventEmitter<{ event: MouseEvent; row: any }>(false);
   @Output() treeAction: EventEmitter<any> = new EventEmitter();
 
   @ViewChild(ScrollerComponent) scroller: ScrollerComponent;
@@ -336,17 +332,17 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
   }
 
   rowHeightsCache: RowHeightCache = new RowHeightCache();
-  temp: RowOrGroup<TRow>[] = [];
+  temp: any[] = [];
   offsetY = 0;
   indexes: any = {};
   columnGroupWidths: any;
   columnGroupWidthsWithoutGroup: any;
-  rowTrackingFn: TrackByFunction<RowOrGroup<TRow>>;
+  rowTrackingFn: any;
   listener: any;
   rowIndexes: any = new WeakMap<any, string>();
   rowExpansions: any[] = [];
 
-  _rows: TRow[];
+  _rows: any[];
   _bodyHeight: any;
   _columns: any[];
   _rowCount: number;
@@ -354,7 +350,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
   _pageSize: number;
   _offsetEvent = -1;
 
-  private _draggedRow: RowOrGroup<TRow>;
+  private _draggedRow: any;
   private _draggedRowElement: HTMLElement;
 
   /**
@@ -362,7 +358,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
    */
   constructor(public cd: ChangeDetectorRef) {
     // declare fn here so we can get access to the `this` property
-    this.rowTrackingFn = (index, row) => {
+    this.rowTrackingFn = (index: number, row: any): any => {
       const idx = this.getRowIndex(row);
       if (this.trackByProp) {
         return row[this.trackByProp];
@@ -557,7 +553,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
   /**
    * Get the row height
    */
-  getRowHeight(row: RowOrGroup<TRow>): number {
+  getRowHeight(row: any): number {
     // if its a function return it
     if (typeof this.rowHeight === 'function') {
       return this.rowHeight(row);
@@ -569,7 +565,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
   /**
    * @param group the group with all rows
    */
-  getGroupHeight(group: Group<TRow>): number {
+  getGroupHeight(group: any): number {
     let rowHeight = 0;
 
     if (group.value) {
@@ -585,7 +581,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
   /**
    * Calculate row height based on the expanded state of the row.
    */
-  getRowAndDetailHeight(row: TRow): number {
+  getRowAndDetailHeight(row: any): number {
     let rowHeight = this.getRowHeight(row);
     const expanded = this.getRowExpanded(row);
 
@@ -600,7 +596,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
   /**
    * Get the height of the detail row.
    */
-  getDetailRowHeight = (row?: TRow, index?: number): number => {
+  getDetailRowHeight = (row?: any, index?: any): number => {
     if (!this.rowDetail) {
       return 0;
     }
@@ -629,7 +625,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
    *
    * @memberOf DataTableBodyComponent
    */
-  getRowsStyles(rows: RowOrGroup<TRow> | TRow[], index = 0): any {
+  getRowsStyles(rows: any, index = 0): any {
     const styles: any = {};
 
     // only add styles for the group if there is a group
@@ -640,7 +636,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
     if (this.scrollbarV && this.virtualization) {
       let idx = 0;
 
-      if (rows instanceof Array) {
+      if (this.groupedRows) {
         // Get the latest row rowindex in a group
         const row = rows[rows.length - 1];
         idx = row ? this.getRowIndex(row) : 0;
@@ -742,7 +738,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
 
     // Initialize the tree only if there are rows inside the tree.
     if (this.rows && this.rows.length) {
-      const rowExpansions = new Set<TRow>();
+      const rowExpansions = new Set();
       for (const row of this.rows) {
         if (this.getRowExpanded(row)) {
           rowExpansions.add(row);
@@ -784,7 +780,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
    * a part of the row object itself as we have to preserve the expanded row
    * status in case of sorting and filtering of the row set.
    */
-  toggleRowExpansion(row: TRow): void {
+  toggleRowExpansion(row: any): void {
     // Capture the row index of the first row that is visible on the viewport.
     const viewPortFirstRowIndex = this.getAdjustedViewPortIndex();
     const rowExpandedIdx = this.getRowExpandedIdx(row, this.rowExpansions);
@@ -882,7 +878,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
   /**
    * Returns if the row was expanded and set default row expansion when row expansion is empty
    */
-  getRowExpanded(row: RowOrGroup<TRow>): boolean {
+  getRowExpanded(row: any): boolean {
     if (this.rowExpansions.length === 0 && this.groupExpansionDefault) {
       for (const group of this.groupedRows) {
         this.rowExpansions.push(group);
@@ -892,7 +888,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
     return this.getRowExpandedIdx(row, this.rowExpansions) > -1;
   }
 
-  getRowExpandedIdx(row: RowOrGroup<TRow>, expanded: RowOrGroup<TRow>[]): number {
+  getRowExpandedIdx(row: any, expanded: any[]): number {
     if (!expanded || !expanded.length) {return -1;}
 
     const rowId = this.rowIdentity(row);
@@ -905,15 +901,15 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
   /**
    * Gets the row index given a row
    */
-  getRowIndex(row: RowOrGroup<TRow>): number {
+  getRowIndex(row: any): number {
     return this.rowIndexes.get(row) || 0;
   }
 
-  onTreeAction(row: TRow) {
+  onTreeAction(row: any) {
     this.treeAction.emit({ row });
   }
 
-  dragOver(event: DragEvent, dropRow: RowOrGroup<TRow>) {
+  dragOver(event: DragEvent, dropRow) {
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
@@ -924,7 +920,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
     });
   }
 
-  drag(event: DragEvent, dragRow: RowOrGroup<TRow>, rowComponent) {
+  drag(event: DragEvent, dragRow, rowComponent) {
     this._draggedRow = dragRow;
     this._draggedRowElement = rowComponent._element;
     this.rowDragEvents.emit({
@@ -935,7 +931,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
     });
   }
 
-  drop(event: DragEvent, dropRow: RowOrGroup<TRow>, rowComponent) {
+  drop(event: DragEvent, dropRow, rowComponent) {
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
@@ -947,7 +943,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
     });
   }
 
-  dragEnter(event: DragEvent, dropRow: RowOrGroup<TRow>, rowComponent) {
+  dragEnter(event: DragEvent, dropRow, rowComponent) {
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
@@ -959,7 +955,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
     });
   }
 
-  dragLeave(event: DragEvent, dropRow: RowOrGroup<TRow>, rowComponent) {
+  dragLeave(event: DragEvent, dropRow, rowComponent) {
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
@@ -971,7 +967,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
     });
   }
 
-  dragEnd(event: DragEvent, dragRow: RowOrGroup<TRow>) {
+  dragEnd(event: DragEvent, dragRow) {
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
@@ -981,15 +977,5 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
     });
     this._draggedRow = undefined;
     this._draggedRowElement = undefined;
-  }
-
-  protected isGroup(row: RowOrGroup<TRow>[]): row is Group<TRow>[];
-  protected isGroup(row: RowOrGroup<TRow>): row is Group<TRow>;
-  protected isGroup(row: RowOrGroup<TRow> | RowOrGroup<TRow>[]): boolean {
-    return this.groupedRows;
-  }
-
-  protected isRow(row: RowOrGroup<TRow>): row is TRow {
-    return !this.groupedRows;
   }
 }

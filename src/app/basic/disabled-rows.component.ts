@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { ColumnMode, SelectionType } from 'projects/ngx-datatable/src/public-api';
-import { FullEmployee } from "../data.model";
-import { BehaviorSubject } from "rxjs";
 
 @Component({
   selector: 'disabled-rows-demo',
@@ -62,7 +60,7 @@ import { BehaviorSubject } from "rxjs";
   `
 })
 export class DisabledRowsComponent {
-  rows: (FullEmployee & {isDisabled?: boolean}) [] = [];
+  rows = [];
 
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
@@ -84,17 +82,21 @@ export class DisabledRowsComponent {
     req.send();
   }
 
-  isRowDisabled(row: FullEmployee & {isDisabled: boolean}) {
-    return !(!row.isDisabled && row.age < 40);
+  isRowDisabled(row: any) {
+    if (!row.isDisabled && row.age < 40) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
-  disableRow(rowIndex: number, disableRow$: BehaviorSubject<boolean>) {
+  disableRow(rowIndex, disableRow$) {
     this.rows[rowIndex].isDisabled = true;
     this.rows = [...this.rows];
     disableRow$.next(true);
   }
 
-  updateValue(event, cell, rowIndex: number, disableRow$: BehaviorSubject<boolean>) {
+  updateValue(event, cell, rowIndex, disableRow$) {
     this.rows[rowIndex][cell] = event.target.value;
     this.rows = [...this.rows];
     if (disableRow$ && cell === 'age' && this.rows[rowIndex][cell] > 40) {

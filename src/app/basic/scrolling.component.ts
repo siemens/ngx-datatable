@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { FullEmployee } from "../data.model";
 
 @Component({
   selector: 'horz-vert-scrolling-demo',
@@ -36,7 +35,7 @@ import { FullEmployee } from "../data.model";
   `
 })
 export class HorzVertScrollingComponent {
-  rows: FullEmployee[] = [];
+  rows = [];
 
   constructor() {
     this.fetch(data => {

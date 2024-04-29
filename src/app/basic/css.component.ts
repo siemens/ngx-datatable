@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
-import { FullEmployee } from "../data.model";
 
 @Component({
   selector: 'row-css-demo',
@@ -34,8 +33,9 @@ import { FullEmployee } from "../data.model";
   `
 })
 export class RowCssComponent {
-  rows: FullEmployee[] = [];
+  rows = [];
   expanded = {};
+  timeout: any;
 
   ColumnMode = ColumnMode;
 

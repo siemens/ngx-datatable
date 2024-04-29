@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'rx-demo',
@@ -29,9 +28,9 @@ import { Employee } from "../data.model";
   `
 })
 export class RxDemoComponent {
-  rows: Observable<Employee[]>;
+  rows: Observable<any[]>;
 
-  columns: TableColumn[] = [{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }];
+  columns = [{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }];
 
   ColumnMode = ColumnMode;
 

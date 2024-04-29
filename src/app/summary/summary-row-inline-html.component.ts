@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
 
 @Component({
   selector: 'summary-row-inline-html',
@@ -41,7 +40,7 @@ import { Employee } from "../data.model";
   `
 })
 export class SummaryRowInlineHtmlComponent {
-  rows: Employee[] = [];
+  rows = [];
 
   enableSummary = true;
   summaryPosition = 'top';

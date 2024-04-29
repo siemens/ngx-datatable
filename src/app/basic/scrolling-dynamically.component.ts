@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
 
 @Component({
   selector: 'scrolling-dynamically-demo',
@@ -78,8 +77,8 @@ import { Employee } from "../data.model";
   `
 })
 export class ScollingDynamicallyComponent {
-  editing: Record<string, boolean> = {};
-  rows: Employee[] = [];
+  editing = {};
+  rows = [];
 
   ColumnMode = ColumnMode;
 

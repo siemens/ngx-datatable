@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
-import { FullEmployee } from "../data.model";
 
 @Component({
   selector: 'dynamic-height-demo',
@@ -34,7 +33,7 @@ import { FullEmployee } from "../data.model";
   `
 })
 export class DynamicHeightComponent {
-  rows: FullEmployee[] = [];
+  rows = [];
   expanded = {};
   timeout: any;
 

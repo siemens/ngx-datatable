@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { ColumnMode, TreeStatus } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'client-side-tree-demo',
@@ -49,7 +48,7 @@ import { Employee } from "../data.model";
   styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
 })
 export class ClientTreeComponent {
-  rows: (Employee & {treeStatus: TreeStatus})[] = [];
+  rows = [];
 
   ColumnMode = ColumnMode;
 

@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatatableComponent } from '../../../projects/ngx-datatable/src/lib/components/datatable.component';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'filter-demo',
@@ -40,12 +39,12 @@ import { Employee } from "../data.model";
   `
 })
 export class FilterBarComponent {
-  rows: Employee[] = [];
+  rows = [];
 
-  temp: Employee[] = [];
+  temp = [];
 
-  columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
-  @ViewChild(DatatableComponent) table: DatatableComponent<Employee>;
+  columns = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
+  @ViewChild(DatatableComponent) table: DatatableComponent;
 
   ColumnMode = ColumnMode;
 
@@ -73,10 +72,13 @@ export class FilterBarComponent {
   updateFilter(event) {
     const val = event.target.value.toLowerCase();
 
-    // filter our data and update the rows
-    this.rows = this.temp.filter(function (d) {
+    // filter our data
+    const temp = this.temp.filter(function(d) {
       return d.name.toLowerCase().indexOf(val) !== -1 || !val;
     });
+
+    // update the rows
+    this.rows = temp;
     // Whenever the filter changes, always go back to the first page
     this.table.offset = 0;
   }

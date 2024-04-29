@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'summary-row-simple-demo',
@@ -51,9 +50,9 @@ import { Employee } from "../data.model";
   styleUrls: ['./summary-row-simple.component.scss']
 })
 export class SummaryRowSimpleComponent {
-  rows: Employee[] = [];
+  rows = [];
 
-  columns: TableColumn[] = [
+  columns = [
     { prop: 'name', summaryFunc: null },
     { name: 'Gender', summaryFunc: cells => this.summaryForGender(cells) },
     { prop: 'age', summaryFunc: cells => this.avgAge(cells) }
@@ -70,7 +69,7 @@ export class SummaryRowSimpleComponent {
     });
   }
 
-  fetch(cb: (data: [Employee]) => void) {
+  fetch(cb: (data: [unknown]) => void) {
     const req = new XMLHttpRequest();
     req.open('GET', `assets/data/company.json`);
 

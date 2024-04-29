@@ -1,6 +1,5 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ColumnMode, DatatableComponent } from 'projects/ngx-datatable/src/public-api';
-import { FullEmployee } from "../data.model";
+import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'responsive-demo',
@@ -116,9 +115,9 @@ import { FullEmployee } from "../data.model";
   encapsulation: ViewEncapsulation.None
 })
 export class ResponsiveComponent {
-  @ViewChild('myTable') table: DatatableComponent<FullEmployee>;
+  @ViewChild('myTable') table: any;
 
-  rows: FullEmployee[] = [];
+  rows: any[] = [];
   expanded: any = {};
   timeout: any;
 

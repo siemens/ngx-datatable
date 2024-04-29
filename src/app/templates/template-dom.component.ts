@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
 
 @Component({
   selector: 'inline-templates-demo',
@@ -52,7 +51,7 @@ import { Employee } from "../data.model";
   `
 })
 export class InlineTemplatesComponent {
-  rows: Employee[] = [];
+  rows = [];
   joke = 'knock knock';
 
   ColumnMode = ColumnMode;

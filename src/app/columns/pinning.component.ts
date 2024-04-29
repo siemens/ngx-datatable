@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
-import { FullEmployee } from "../data.model";
 
 @Component({
   selector: 'column-pinning-demo',
@@ -38,7 +37,7 @@ import { FullEmployee } from "../data.model";
   `
 })
 export class ColumnPinningComponent {
-  rows: FullEmployee[] = [];
+  rows = [];
 
   ColumnMode = ColumnMode;
 

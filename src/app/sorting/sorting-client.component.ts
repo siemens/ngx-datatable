@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { ColumnMode, SortType, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { ColumnMode, SortType } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'client-sorting-demo',
@@ -33,9 +32,9 @@ import { Employee } from "../data.model";
   `
 })
 export class ClientSortingComponent {
-  rows: Employee[] = [];
+  rows = [];
 
-  columns: TableColumn[] = [{ name: 'Company' }, { name: 'Name' }, { name: 'Gender' }];
+  columns = [{ name: 'Company' }, { name: 'Name' }, { name: 'Gender' }];
 
   ColumnMode = ColumnMode;
   SortType = SortType;

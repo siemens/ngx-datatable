@@ -1,6 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'template-ref-demo',
@@ -41,8 +40,8 @@ export class TemplateRefTemplatesComponent implements OnInit {
   @ViewChild('editTmpl', { static: true }) editTmpl: TemplateRef<any>;
   @ViewChild('hdrTpl', { static: true }) hdrTpl: TemplateRef<any>;
 
-  rows: Employee[] = [];
-  columns: TableColumn[] = [];
+  rows = [];
+  columns = [];
 
   ColumnMode = ColumnMode;
 

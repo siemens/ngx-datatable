@@ -1,13 +1,13 @@
 /**
  * An object used to get page information from the server
  */
-export interface Page {
+export class Page {
   // The number of elements in the page
-  size: number;
+  size = 0;
   // The total number of elements
-  totalElements: number;
+  totalElements = 0;
   // The total number of pages
-  totalPages: number;
+  totalPages = 0;
   // The current page number
-  pageNumber: number;
+  pageNumber = 0;
 }

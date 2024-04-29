@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'contextmenu-demo',
@@ -45,9 +44,9 @@ import { Employee } from "../data.model";
   `
 })
 export class ContextMenuDemoComponent {
-  rows: Employee[] = [];
+  rows = [];
 
-  columns: TableColumn[] = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company' }];
+  columns = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company' }];
 
   rawEvent: any;
   contextmenuRow: any;

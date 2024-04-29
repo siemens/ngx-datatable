@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MockServerResultsService } from './mock-server-results-service';
+import { CorporateEmployee } from './model/corporate-employee';
 import { Page } from './model/page';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
 
 @Component({
   selector: 'paging-scrolling-novirtualization-demo',
@@ -41,17 +41,15 @@ import { Employee } from "../data.model";
   `
 })
 export class PagingScrollingNoVirtualizationComponent implements OnInit{
-  page: Page = {
-    pageNumber: 0,
-    size: 20,
-    totalElements: 0,
-    totalPages: 0
-  }
-  rows: Employee[] = [];
+  page = new Page();
+  rows = new Array<CorporateEmployee>();
 
   ColumnMode = ColumnMode;
 
-  constructor(private serverResultsService: MockServerResultsService) {}
+  constructor(private serverResultsService: MockServerResultsService) {
+    this.page.pageNumber = 0;
+    this.page.size = 20;
+  }
 
   ngOnInit() {
     this.setPage({ offset: 0 });

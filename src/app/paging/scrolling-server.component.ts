@@ -1,11 +1,10 @@
 import { Component, ElementRef, Injectable, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
+import { CorporateEmployee } from './model/corporate-employee';
 
 import data from 'src/assets/data/company.json';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
-
 const companyData = data as any[];
 
 class PagedData<T> {
@@ -17,7 +16,7 @@ class PagedData<T> {
  */
 @Injectable()
 export class MockServerResultsService {
-  public getResults(offset: number, limit: number): Observable<PagedData<Employee>> {
+  public getResults(offset: number, limit: number): Observable<PagedData<CorporateEmployee>> {
     return of(companyData.slice(offset, offset + limit)).pipe(
       delay(new Date(Date.now() + 500)),
       map(d => ({ data: d }))
@@ -62,7 +61,7 @@ export class ServerScrollingComponent implements OnInit {
   readonly rowHeight = 50;
   readonly pageLimit = 10;
 
-  rows: Employee[] = [];
+  rows: CorporateEmployee[] = [];
   isLoading: boolean;
 
   ColumnMode = ColumnMode;

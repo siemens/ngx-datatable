@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'empty-demo',
@@ -30,6 +30,6 @@ import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
   `
 })
 export class BasicEmptyComponent {
-  columns: TableColumn[] = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company', sortable: false }];
+  columns = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company', sortable: false }];
   ColumnMode = ColumnMode;
 }

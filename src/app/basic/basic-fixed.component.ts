@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'basic-fixed-demo',
@@ -31,8 +30,8 @@ import { Employee } from "../data.model";
   `
 })
 export class BasicFixedComponent {
-  rows: Employee[] = [];
-  columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
+  rows = [];
+  columns = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
 
   ColumnMode = ColumnMode;
 

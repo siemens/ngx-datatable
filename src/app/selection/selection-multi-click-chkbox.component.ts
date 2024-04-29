@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ColumnMode, SelectionType } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
 
 @Component({
   selector: 'multi-click-chkbox-selection-demo',
@@ -71,8 +70,8 @@ import { Employee } from "../data.model";
   `
 })
 export class MultiClickCheckboxSelectionComponent {
-  rows: Employee[] = [];
-  selected: Employee[] = [];
+  rows = [];
+  selected = [];
 
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;

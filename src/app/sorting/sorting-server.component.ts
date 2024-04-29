@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'server-sorting-demo',
@@ -36,9 +35,9 @@ import { Employee } from "../data.model";
 export class ServerSortingComponent {
   loading = false;
 
-  rows: Employee[] = [];
+  rows = [];
 
-  columns: TableColumn[] = [
+  columns = [
     { name: 'Company', sortable: true },
     { name: 'Name', sortable: true },
     { name: 'Gender', sortable: true }

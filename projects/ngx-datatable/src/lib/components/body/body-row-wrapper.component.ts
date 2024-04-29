@@ -12,7 +12,6 @@ import {
   Output
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { RowOrGroup } from "../../types/group.type";
 
 @Component({
   selector: 'datatable-row-wrapper',
@@ -45,16 +44,16 @@ import { RowOrGroup } from "../../types/group.type";
     class: 'datatable-row-wrapper'
   }
 })
-export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit {
+export class DataTableRowWrapperComponent implements DoCheck, OnInit {
   @Input() innerWidth: number;
   @Input() rowDetail: any;
   @Input() groupHeader: any;
   @Input() offsetX: number;
   @Input() detailRowHeight: any;
-  @Input() row: RowOrGroup<TRow>;
+  @Input() row: any;
   @Input() groupedRows: any;
-  @Input() disableCheck: (row: RowOrGroup<TRow>) => boolean;
-  @Output() rowContextmenu = new EventEmitter<{ event: MouseEvent; row: RowOrGroup<TRow> }>(false);
+  @Input() disableCheck: (row: any) => boolean;
+  @Output() rowContextmenu = new EventEmitter<{ event: MouseEvent; row: any }>(false);
 
   @Input() set rowIndex(val: number) {
     this._rowIndex = val;
@@ -82,11 +81,11 @@ export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit
   rowContext: any;
   disable$: BehaviorSubject<boolean>;
 
-  private rowDiffer: KeyValueDiffer<keyof RowOrGroup<TRow>, any>;
+  private rowDiffer: KeyValueDiffer<unknown, unknown>;
   private _expanded = false;
   private _rowIndex: number;
 
-  constructor(private cd: ChangeDetectorRef, differs: KeyValueDiffers) {
+  constructor(private cd: ChangeDetectorRef, private differs: KeyValueDiffers) {
     this.groupContext = {
       group: this.row,
       expanded: this.expanded,
@@ -113,12 +112,9 @@ export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit
   ngDoCheck(): void {
     if (this.disableCheck) {
       const isRowDisabled = this.disableCheck(this.row);
-      if (isRowDisabled !== this.disable$.value) {
-        this.disable$.next(isRowDisabled);
-        this.cd.markForCheck();
-      }
+      this.disable$.next(isRowDisabled);
+      this.cd.markForCheck();
     }
-
     if (this.rowDiffer.diff(this.row)) {
       this.rowContext.row = this.row;
       this.groupContext.group = this.row;

@@ -1,6 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'summary-row-custom-template-demo',
@@ -39,11 +38,12 @@ import { Employee } from "../data.model";
   styleUrls: ['./summary-row-custom-template.component.scss']
 })
 export class SummaryRowCustomTemplateComponent implements OnInit {
-  rows: Employee[] = [];
+  rows = [];
 
-  @ViewChild('nameSummaryCell') nameSummaryCell: TemplateRef<any>;
+  @ViewChild('nameSummaryCell')
+    nameSummaryCell: TemplateRef<any>;
 
-  columns: TableColumn[] = [];
+  columns = [];
 
   ColumnMode = ColumnMode;
 

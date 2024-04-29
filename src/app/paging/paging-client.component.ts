@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
 
 @Component({
   selector: 'client-paging-demo',
@@ -32,7 +31,7 @@ import { Employee } from "../data.model";
   `
 })
 export class ClientPagingComponent {
-  rows: Employee[] = [];
+  rows = [];
 
   ColumnMode = ColumnMode;
 

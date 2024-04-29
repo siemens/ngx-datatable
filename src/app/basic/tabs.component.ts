@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
-import { FullEmployee } from "../data.model";
 
 @Component({
   selector: 'tabs-demo',
@@ -67,7 +66,7 @@ import { FullEmployee } from "../data.model";
   `
 })
 export class TabsDemoComponent {
-  rows: FullEmployee[] = [];
+  rows = [];
 
   tab1 = true;
   tab2 = false;

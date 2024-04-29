@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'comparator-sorting-demo',
@@ -31,9 +30,9 @@ import { Employee } from "../data.model";
   `
 })
 export class SortingComparatorComponent {
-  rows: Employee[] = [];
+  rows = [];
 
-  columns: TableColumn[] = [
+  columns = [
     { name: 'Company', comparator: this.companyComparator.bind(this) },
     { name: 'Name', sortable: false },
     { name: 'Gender', sortable: false }

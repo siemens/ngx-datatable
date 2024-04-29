@@ -21,7 +21,6 @@ import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 import { translateXY } from '../../utils/translate';
 import { BehaviorSubject } from 'rxjs';
 import { DataTableRowWrapperComponent } from './body-row-wrapper.component';
-import { RowOrGroup } from "../../types/group.type";
 
 @Component({
   selector: 'datatable-body-row',
@@ -55,7 +54,7 @@ import { RowOrGroup } from "../../types/group.type";
     </div>
   `
 })
-export class DataTableBodyRowComponent<TRow = any> implements DoCheck {
+export class DataTableBodyRowComponent implements DoCheck {
   @Input() set columns(val: any[]) {
     this._columns = val;
     this.recalculateColumns(val);
@@ -83,12 +82,12 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck {
 
   @Input() expanded: boolean;
   @Input() rowClass: any;
-  @Input() row: RowOrGroup<TRow>;
-  @Input() group: TRow[];
+  @Input() row: any;
+  @Input() group: any;
   @Input() isSelected: boolean;
   @Input() rowIndex: number;
   @Input() displayCheck: any;
-  @Input() treeStatus?: TreeStatus = 'collapsed';
+  @Input() treeStatus: TreeStatus = 'collapsed';
   @Input() ghostLoadingIndicator = false;
 
   @Input() disable$: BehaviorSubject<boolean>;
@@ -146,7 +145,7 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck {
   @Output() activate: EventEmitter<any> = new EventEmitter();
   @Output() treeAction: EventEmitter<any> = new EventEmitter();
 
-  _element: HTMLElement;
+  _element: any;
   _columnGroupWidths: any;
   _columnsByPin: any;
   _offsetX: number;
@@ -158,13 +157,13 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck {
     right: {}
   };
 
-  private _rowDiffer: KeyValueDiffer<keyof RowOrGroup<TRow>, any>;
+  private _rowDiffer: KeyValueDiffer<unknown, unknown>;
 
   constructor(
-    differs: KeyValueDiffers,
+    private differs: KeyValueDiffers,
     @SkipSelf() private scrollbarHelper: ScrollbarHelper,
     private cd: ChangeDetectorRef,
-    element: ElementRef<HTMLElement>
+    element: ElementRef
   ) {
     this._element = element.nativeElement;
     this._rowDiffer = differs.find({}).create();

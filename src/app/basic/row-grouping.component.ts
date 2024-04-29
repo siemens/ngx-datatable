@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
-import { ColumnMode, DatatableComponent } from 'projects/ngx-datatable/src/public-api';
-import { GroupedEmployee } from "../data.model";
+import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { NgStyle } from '@angular/common';
+import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'row-grouping-demo',
@@ -119,10 +119,15 @@ import { GroupedEmployee } from "../data.model";
   `
 })
 export class RowGroupingComponent {
-  @ViewChild('myTable') table: DatatableComponent<GroupedEmployee>;
+  @ViewChild('myTable') table: any;
 
-  editing: Record<string, boolean> = {};
-  rows: GroupedEmployee[] = [];
+  funder = [];
+  calculated = [];
+  pending = [];
+  groups = [];
+
+  editing = {};
+  rows = [];
 
   ColumnMode = ColumnMode;
 
@@ -141,6 +146,17 @@ export class RowGroupingComponent {
     };
 
     req.send();
+  }
+
+  getGroupRowHeight(group, rowHeight) {
+    let style = {};
+
+    style = {
+      height: group.length * 40 + 'px',
+      width: '100%'
+    };
+
+    return style;
   }
 
   checkGroup(event, row, rowIndex, group) {

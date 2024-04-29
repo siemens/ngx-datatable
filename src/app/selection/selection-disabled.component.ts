@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { ColumnMode, SelectionType, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { ColumnMode, SelectionType } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'multidisable-selection-demo',
@@ -49,11 +48,11 @@ import { Employee } from "../data.model";
   `
 })
 export class MultiDisableSelectionComponent {
-  rows: Employee[] = [];
+  rows = [];
 
-  selected: Employee[] = [];
+  selected = [];
 
-  columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
+  columns: any[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
 
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;

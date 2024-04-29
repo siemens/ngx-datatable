@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'column-toggle-demo',
@@ -42,7 +41,7 @@ import { Employee } from "../data.model";
   `
 })
 export class ColumnToggleComponent {
-  rows: Employee[] = [
+  rows = [
     {
       name: 'Claudine Neal',
       gender: 'female',
@@ -55,13 +54,13 @@ export class ColumnToggleComponent {
     }
   ];
 
-  columns: TableColumn[] = [{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }];
+  columns = [{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }];
 
-  allColumns: TableColumn[] = [{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }];
+  allColumns = [{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }];
 
   ColumnMode = ColumnMode;
 
-  toggle(col: TableColumn) {
+  toggle(col) {
     const isChecked = this.isChecked(col);
 
     if (isChecked) {
@@ -71,7 +70,7 @@ export class ColumnToggleComponent {
     }
   }
 
-  isChecked(col: TableColumn) {
+  isChecked(col) {
     return (
       this.columns.find(c => c.name === col.name) !== undefined
     );

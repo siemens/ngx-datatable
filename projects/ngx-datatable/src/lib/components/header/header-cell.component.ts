@@ -13,7 +13,7 @@ import { SortType } from '../../types/sort.type';
 import { SelectionType } from '../../types/selection.type';
 import { TableColumn } from '../../types/table-column.type';
 import { nextSortDir } from '../../utils/sort';
-import { SortDirection } from '../../types/sort-direction.type';
+import { InnerSortEvent, SortDirection } from '../../types/sort-direction.type';
 
 @Component({
   selector: 'datatable-header-cell',
@@ -93,9 +93,9 @@ export class DataTableHeaderCellComponent implements OnInit {
     return this._sorts;
   }
 
-  @Output() sort: EventEmitter<any> = new EventEmitter();
+  @Output() sort: EventEmitter<InnerSortEvent> = new EventEmitter();
   @Output() select: EventEmitter<any> = new EventEmitter();
-  @Output() columnContextmenu = new EventEmitter<{ event: MouseEvent; column: any }>(false);
+  @Output() columnContextmenu = new EventEmitter<{ event: MouseEvent; column: TableColumn }>(false);
 
   @HostBinding('class')
   get columnCssClasses(): any {

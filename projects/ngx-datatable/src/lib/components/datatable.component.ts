@@ -52,6 +52,11 @@ import { sortRows } from '../utils/sort';
 import { Group } from "../types/group.type";
 import { SortPropDir } from "../types/sort-prop-dir.type";
 import { NgClass } from '@angular/common';
+import { Model } from './body/selection.component';
+import { InnerSortEvent, SortEvent } from '../types/sort-direction.type';
+import { BodyPageEvent, PageEvent, PagerPageEvent } from '../types/page-event.type';
+import { ReorderEvent } from '../types/orderable.types';
+import { ColumnResizeEvent } from '../types/resize.type';
 
 @Component({
   selector: 'ngx-datatable',
@@ -461,49 +466,49 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   /**
    * Body was scrolled typically in a `scrollbarV:true` scenario.
    */
-  @Output() scroll: EventEmitter<any> = new EventEmitter();
+  @Output() scroll: EventEmitter<MouseEvent> = new EventEmitter();
 
   /**
    * A cell or row was focused via keyboard or mouse click.
    */
-  @Output() activate: EventEmitter<any> = new EventEmitter();
+  @Output() activate: EventEmitter<Model<TRow>> = new EventEmitter();
 
   /**
    * A cell or row was selected.
    */
-  @Output() select: EventEmitter<any> = new EventEmitter();
+  @Output() select: EventEmitter<{selected: TRow[]}> = new EventEmitter();
 
   /**
    * Column sort was invoked.
    */
-  @Output() sort: EventEmitter<any> = new EventEmitter();
+  @Output() sort: EventEmitter<SortEvent> = new EventEmitter();
 
   /**
    * The table was paged either triggered by the pager or the body scroll.
    */
-  @Output() page: EventEmitter<any> = new EventEmitter();
+  @Output() page: EventEmitter<PageEvent> = new EventEmitter();
 
   /**
    * Columns were re-ordered.
    */
-  @Output() reorder: EventEmitter<any> = new EventEmitter();
+  @Output() reorder: EventEmitter<ReorderEvent> = new EventEmitter();
 
   /**
    * Column was resized.
    */
-  @Output() resize: EventEmitter<any> = new EventEmitter();
+  @Output() resize: EventEmitter<ColumnResizeEvent> = new EventEmitter();
 
   /**
    * The context menu was invoked on the table.
    * type indicates whether the header or the body was clicked.
    * content contains either the column or the row that was clicked.
    */
-  @Output() tableContextmenu = new EventEmitter<{ event: MouseEvent; type: ContextmenuType; content: any }>(false);
+  @Output() tableContextmenu = new EventEmitter<{ event: MouseEvent; type: ContextmenuType; content: TableColumn | TRow }>(false);
 
   /**
    * A row was expanded ot collapsed for tree
    */
-  @Output() treeAction: EventEmitter<any> = new EventEmitter();
+  @Output() treeAction: EventEmitter<{row: TRow; rowIndex: number}> = new EventEmitter();
 
   /**
    * Emits HTML5 native drag events.
@@ -948,7 +953,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   /**
    * Body triggered a page event.
    */
-  onBodyPage({ offset }: any): void {
+  onBodyPage({ offset }: BodyPageEvent): void {
     // Avoid pagination caming from body events like scroll when the table
     // has no virtualization and the external paging is enable.
     // This means, let's the developer handle pagination by my him(her) self
@@ -980,7 +985,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   /**
    * The footer triggered a page event.
    */
-  onFooterPage(event: any) {
+  onFooterPage(event: PagerPageEvent) {
     this.offset = event.page - 1;
     this.bodyComponent.updateOffsetY(this.offset);
 
@@ -1047,21 +1052,21 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   /**
    * The header triggered a contextmenu event.
    */
-  onColumnContextmenu({ event, column }: any): void {
+  onColumnContextmenu({ event, column }: {event: MouseEvent; column: TableColumn}): void {
     this.tableContextmenu.emit({ event, type: ContextmenuType.header, content: column });
   }
 
   /**
    * The body triggered a contextmenu event.
    */
-  onRowContextmenu({ event, row }: any): void {
+  onRowContextmenu({ event, row }: {event: MouseEvent; row: TRow}): void {
     this.tableContextmenu.emit({ event, type: ContextmenuType.body, content: row });
   }
 
   /**
    * The header triggered a column resize event.
    */
-  onColumnResize({ column, newValue }: any): void {
+  onColumnResize({ column, newValue, prevValue }: ColumnResizeEvent): void {
     /* Safari/iOS 10.2 workaround */
     if (column === undefined) {
       return;
@@ -1088,7 +1093,8 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
 
     this.resize.emit({
       column,
-      newValue
+      newValue,
+      prevValue
     });
   }
 
@@ -1105,7 +1111,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   /**
    * The header triggered a column re-order event.
    */
-  onColumnReorder({ column, newValue, prevValue }: any): void {
+  onColumnReorder({ column, newValue, prevValue }: ReorderEvent): void {
     const cols = this._internalColumns.map(c => ({ ...c }));
 
     if (this.swapColumns) {
@@ -1140,7 +1146,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   /**
    * The header triggered a column sort event.
    */
-  onColumnSort(event: any): void {
+  onColumnSort(event: SortEvent): void {
     // clean selected rows
     if (this.selectAllRowsOnPage) {
       this.selected = [];
@@ -1220,14 +1226,14 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   /**
    * A row was selected from body
    */
-  onBodySelect(event: any): void {
+  onBodySelect(event: {selected: TRow[]}): void {
     this.select.emit(event);
   }
 
   /**
    * A row was expanded or collapsed for tree
    */
-  onTreeAction(event: any) {
+  onTreeAction(event: {row: TRow}) {
     const row = event.row;
     // TODO: For duplicated items this will not work
     const rowIndex = this._rows.findIndex(r => r[this.treeToRelation] === event.row[this.treeToRelation]);

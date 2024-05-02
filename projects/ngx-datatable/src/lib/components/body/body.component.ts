@@ -21,6 +21,8 @@ import { TreeStatus } from "./body-cell.component";
 import { Group, RowOrGroup } from "../../types/group.type";
 import { NgStyle } from '@angular/common';
 import { TableColumn } from '../../types/table-column.type';
+import { Model } from './selection.component';
+import { BodyPageEvent } from '../../types/page-event.type';
 
 @Component({
   selector: 'datatable-body',
@@ -308,12 +310,12 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
   }
 
   @Output() scroll: EventEmitter<any> = new EventEmitter();
-  @Output() page: EventEmitter<any> = new EventEmitter();
-  @Output() activate: EventEmitter<any> = new EventEmitter();
-  @Output() select: EventEmitter<any> = new EventEmitter();
+  @Output() page: EventEmitter<BodyPageEvent> = new EventEmitter();
+  @Output() activate: EventEmitter<Model<TRow>> = new EventEmitter();
+  @Output() select: EventEmitter<{selected: TRow[]}> = new EventEmitter();
   @Output() detailToggle: EventEmitter<any> = new EventEmitter();
   @Output() rowContextmenu = new EventEmitter<{ event: MouseEvent; row: TRow }>(false);
-  @Output() treeAction: EventEmitter<any> = new EventEmitter();
+  @Output() treeAction: EventEmitter<{row: TRow}> = new EventEmitter();
 
   @ViewChild(ScrollerComponent) scroller: ScrollerComponent;
 

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { PagerPageEvent } from '../../types/page-event.type';
 
 @Component({
   selector: 'datatable-pager',
@@ -83,7 +84,7 @@ export class DataTablePagerComponent {
     return Math.max(count || 0, 1);
   }
 
-  @Output() change: EventEmitter<any> = new EventEmitter();
+  @Output() change: EventEmitter<PagerPageEvent> = new EventEmitter();
 
   _count = 0;
   _page = 1;

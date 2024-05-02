@@ -51,6 +51,7 @@ export * from './lib/types/click.type';
 export * from './lib/types/table-column.type';
 export * from './lib/types/sort-prop-dir.type';
 export * from './lib/types/contextmenu.type';
+export * from './lib/types/orderable.types';
 
 // utils
 export * from './lib/utils/id';

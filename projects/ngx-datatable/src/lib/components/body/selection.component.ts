@@ -26,8 +26,8 @@ export class DataTableSelectionComponent<TRow = any> {
   @Input() selectCheck: any;
   @Input() disableCheck: any;
 
-  @Output() activate: EventEmitter<any> = new EventEmitter();
-  @Output() select: EventEmitter<any> = new EventEmitter();
+  @Output() activate: EventEmitter<Model<TRow>> = new EventEmitter();
+  @Output() select: EventEmitter<{selected: TRow[]}> = new EventEmitter();
 
   prevIndex: number;
 
@@ -37,11 +37,11 @@ export class DataTableSelectionComponent<TRow = any> {
     const chkbox = this.selectionType === SelectionType.checkbox;
     const multi = this.selectionType === SelectionType.multi;
     const multiClick = this.selectionType === SelectionType.multiClick;
-    let selected: any[] = [];
+    let selected: TRow[] = [];
 
     if (multi || chkbox || multiClick) {
       if (event.shiftKey) {
-        selected = selectRowsBetween([], this.rows, index, this.prevIndex, this.getRowSelectedIdx.bind(this));
+        selected = selectRowsBetween([], this.rows, index, this.prevIndex);
       } else if ((event as KeyboardEvent).key === 'a' && (event.ctrlKey || event.metaKey)) {
         // select all rows except dummy rows which are added for ghostloader in case of virtual scroll
         selected = this.rows.filter(rowItem => !!rowItem);

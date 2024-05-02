@@ -6,7 +6,7 @@ import {
   HostBinding,
   Input,
   OnDestroy,
-  Output
+  Output, TemplateRef
 } from '@angular/core';
 import { columnGroupWidths, columnsByPin, columnsByPinArr } from '../../utils/column';
 import { SortType } from '../../types/sort.type';
@@ -17,7 +17,7 @@ import { TableColumn } from '../../types/table-column.type';
 import { PinnedColumns } from '../../types/column-pin.type';
 import { InnerSortEvent, SortDirection, SortEvent } from '../../types/sort-direction.type';
 import { SortPropDir } from '../../types/sort-prop-dir.type';
-import { OrderableReorderEvent, ReorderEvent } from '../../types/orderable.types';
+import { OrderableReorderEvent, ReorderEvent, TargetChangedEvent } from '../../types/orderable.types';
 import { ColumnResizeEvent } from '../../types/resize.type';
 
 @Component({
@@ -79,14 +79,12 @@ import { ColumnResizeEvent } from '../../types/resize.type';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DataTableHeaderComponent implements OnDestroy {
-  @Input() sortAscendingIcon: any;
-  @Input() sortDescendingIcon: any;
-  @Input() sortUnsetIcon: any;
+  @Input() sortAscendingIcon: string;
+  @Input() sortDescendingIcon: string;
+  @Input() sortUnsetIcon: string;
   @Input() scrollbarH: boolean;
   @Input() dealsWithGroup: boolean;
-  @Input() targetMarkerTemplate: any;
-
-  targetMarkerContext: any;
+  @Input() targetMarkerTemplate: TemplateRef<unknown>;
 
   @Input() set innerWidth(val: number) {
     this._innerWidth = val;
@@ -103,13 +101,13 @@ export class DataTableHeaderComponent implements OnDestroy {
     return this._innerWidth;
   }
 
-  @Input() sorts: any[];
+  @Input() sorts: SortPropDir[];
   @Input() sortType: SortType;
   @Input() allRowsSelected: boolean;
   @Input() selectionType: SelectionType;
   @Input() reorderable: boolean;
 
-  dragEventTarget: any;
+  dragEventTarget?: MouseEvent;
 
   @HostBinding('style.height')
   @Input()
@@ -153,7 +151,7 @@ export class DataTableHeaderComponent implements OnDestroy {
   @Output() reorder: EventEmitter<ReorderEvent> = new EventEmitter();
   @Output() resize: EventEmitter<ColumnResizeEvent> = new EventEmitter();
   @Output() resizing: EventEmitter<ColumnResizeEvent> = new EventEmitter();
-  @Output() select: EventEmitter<any> = new EventEmitter();
+  @Output() select: EventEmitter<void> = new EventEmitter();
   @Output() columnContextmenu = new EventEmitter<{ event: MouseEvent; column: TableColumn }>(false);
 
   _columnsByPin: PinnedColumns[];
@@ -178,7 +176,7 @@ export class DataTableHeaderComponent implements OnDestroy {
     this.destroyed = true;
   }
 
-  onLongPressStart({ event, model }: { event: any; model: TableColumn }) {
+  onLongPressStart({ event, model }: { event: MouseEvent; model: TableColumn }) {
     model.dragging = true;
     this.dragEventTarget = event;
   }
@@ -207,7 +205,7 @@ export class DataTableHeaderComponent implements OnDestroy {
     return '100%';
   }
 
-  trackByGroups(index: number, colGroup: {type: 'left' | 'center' | 'right', columns: TableColumn[]}): string {
+  trackByGroups(index: number, colGroup: PinnedColumns): string {
     return colGroup.type;
   }
 
@@ -247,7 +245,7 @@ export class DataTableHeaderComponent implements OnDestroy {
     });
   }
 
-  onTargetChanged({ prevIndex, newIndex, initialIndex }: any): void {
+  onTargetChanged({ prevIndex, newIndex, initialIndex }: TargetChangedEvent): void {
     if (prevIndex || prevIndex === 0) {
       const oldColumn = this.getColumn(prevIndex);
       oldColumn.isTarget = false;
@@ -333,7 +331,7 @@ export class DataTableHeaderComponent implements OnDestroy {
     }
   }
 
-  calcStylesByGroup(group: 'center' | 'right' | 'left'): any {
+  calcStylesByGroup(group: 'center' | 'right' | 'left'): NgStyle['ngStyle'] {
     const widths = this._columnGroupWidths;
     const offsetX = this.offsetX;
 

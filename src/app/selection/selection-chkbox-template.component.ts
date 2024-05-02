@@ -46,11 +46,10 @@ import { Employee } from "../data.model";
           >
             <ng-template
               ngx-datatable-header-template
-              let-value="value"
               let-allRowsSelected="allRowsSelected"
               let-selectFn="selectFn"
             >
-              <input type="checkbox" [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)" />
+              <input type="checkbox" [checked]="allRowsSelected" (change)="selectFn()" />
             </ng-template>
             <ng-template
               ngx-datatable-cell-template

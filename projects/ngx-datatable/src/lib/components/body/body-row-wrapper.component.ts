@@ -14,6 +14,9 @@ import {
 import { BehaviorSubject } from 'rxjs';
 import { RowOrGroup } from "../../types/group.type";
 import { NgStyle } from '@angular/common';
+import { RowDetailContext } from '../../types/detail-context.type';
+import { GroupContext } from '../../types/cell-context.type';
+import { DatatableGroupHeaderDirective } from './body-group-header.directive';
 
 @Component({
   selector: 'datatable-row-wrapper',
@@ -49,7 +52,7 @@ import { NgStyle } from '@angular/common';
 export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit {
   @Input() innerWidth: number;
   @Input() rowDetail: any;
-  @Input() groupHeader: any;
+  @Input() groupHeader: DatatableGroupHeaderDirective;
   @Input() offsetX: number;
   @Input() detailRowHeight: any;
   @Input() row: RowOrGroup<TRow>;
@@ -79,8 +82,8 @@ export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit
     return this._expanded;
   }
 
-  groupContext: any;
-  rowContext: any;
+  groupContext: GroupContext<TRow>;
+  rowContext: RowDetailContext<TRow>;
   disable$: BehaviorSubject<boolean>;
 
   private rowDiffer: KeyValueDiffer<keyof RowOrGroup<TRow>, any>;
@@ -94,12 +97,6 @@ export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit
       rowIndex: this.rowIndex
     };
 
-    this.rowContext = {
-      row: this.row,
-      expanded: this.expanded,
-      rowIndex: this.rowIndex
-    };
-
     this.rowDiffer = differs.find({}).create();
   }
 
@@ -108,7 +105,12 @@ export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit
       const isRowDisabled = this.disableCheck(this.row);
       this.disable$ = new BehaviorSubject(isRowDisabled);
     }
-    this.rowContext.disableRow$ = this.disable$;
+    this.rowContext = {
+      row: this.row,
+      expanded: this.expanded,
+      rowIndex: this.rowIndex,
+      disableRow$: this.disable$.asObservable()
+    };
   }
 
   ngDoCheck(): void {

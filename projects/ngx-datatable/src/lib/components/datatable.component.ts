@@ -49,7 +49,7 @@ import { DimensionsHelper } from '../services/dimensions-helper.service';
 import { throttleable } from '../utils/throttle';
 import { adjustColumnWidths, forceFillColumnWidths } from '../utils/math';
 import { sortRows } from '../utils/sort';
-import { Group } from '../types/group.type';
+import { Group, RowOrGroup } from '../types/group.type';
 import { SortPropDir } from '../types/sort-prop-dir.type';
 import { NgClass } from '@angular/common';
 import { Model } from './body/selection.component';
@@ -503,7 +503,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
    * type indicates whether the header or the body was clicked.
    * content contains either the column or the row that was clicked.
    */
-  @Output() tableContextmenu = new EventEmitter<{ event: MouseEvent; type: ContextmenuType; content: TableColumn | TRow }>(false);
+  @Output() tableContextmenu = new EventEmitter<{ event: MouseEvent; type: ContextmenuType; content: TableColumn | RowOrGroup<TRow> }>(false);
 
   /**
    * A row was expanded ot collapsed for tree
@@ -1059,7 +1059,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   /**
    * The body triggered a contextmenu event.
    */
-  onRowContextmenu({ event, row }: {event: MouseEvent; row: TRow}): void {
+  onRowContextmenu({ event, row }: {event: MouseEvent; row: RowOrGroup<TRow>}): void {
     this.tableContextmenu.emit({ event, type: ContextmenuType.body, content: row });
   }
 

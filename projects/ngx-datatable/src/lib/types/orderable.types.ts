@@ -18,3 +18,9 @@ export interface ReorderEvent {
   prevValue: number;
   newValue: number;
 }
+
+export interface TargetChangedEvent {
+  newIndex?: number;
+  prevIndex: number;
+  initialIndex: number;
+}

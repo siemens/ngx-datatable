@@ -19,10 +19,12 @@ import { translateXY } from '../../utils/translate';
 import { DragEventData } from '../../types/drag-events.type';
 import { TreeStatus } from "./body-cell.component";
 import { Group, RowOrGroup } from "../../types/group.type";
-import { NgStyle } from '@angular/common';
+import { NgClass, NgStyle } from '@angular/common';
 import { TableColumn } from '../../types/table-column.type';
 import { Model } from './selection.component';
 import { BodyPageEvent } from '../../types/page-event.type';
+import { DatatableGroupHeaderDirective } from './body-group-header.directive';
+import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive';
 
 @Component({
   selector: 'datatable-body',
@@ -200,12 +202,12 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
   @Input() selectionType: SelectionType;
   @Input() selected: any[] = [];
   @Input() rowIdentity: any;
-  @Input() rowDetail: any;
-  @Input() groupHeader: any;
-  @Input() selectCheck: any;
+  @Input() rowDetail: DatatableRowDetailDirective;
+  @Input() groupHeader: DatatableGroupHeaderDirective;
+  @Input() selectCheck: (value: TRow, index: number, array: TRow[]) => boolean;
   @Input() displayCheck: any;
   @Input() trackByProp: string;
-  @Input() rowClass: any;
+  @Input() rowClass: NgClass['ngClass'];
   @Input() groupedRows: any;
   @Input() groupExpansionDefault: boolean;
   @Input() innerWidth: number;
@@ -216,7 +218,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
   @Input() summaryHeight: number;
   @Input() rowDraggable: boolean;
   @Input() rowDragEvents: EventEmitter<DragEventData>;
-  @Input() disableRowCheck: (row: any) => boolean;
+  @Input() disableRowCheck: (row: TRow) => boolean;
 
   @Input() set pageSize(val: number) {
     if (val !== this._pageSize) {
@@ -314,7 +316,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
   @Output() activate: EventEmitter<Model<TRow>> = new EventEmitter();
   @Output() select: EventEmitter<{selected: TRow[]}> = new EventEmitter();
   @Output() detailToggle: EventEmitter<any> = new EventEmitter();
-  @Output() rowContextmenu = new EventEmitter<{ event: MouseEvent; row: TRow }>(false);
+  @Output() rowContextmenu = new EventEmitter<{ event: MouseEvent; row: RowOrGroup<TRow> }>(false);
   @Output() treeAction: EventEmitter<{row: TRow}> = new EventEmitter();
 
   @ViewChild(ScrollerComponent) scroller: ScrollerComponent;

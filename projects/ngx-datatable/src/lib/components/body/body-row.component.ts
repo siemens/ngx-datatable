@@ -20,9 +20,8 @@ import { Keys } from '../../utils/keys';
 import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 import { translateXY } from '../../utils/translate';
 import { BehaviorSubject } from 'rxjs';
-import { DataTableRowWrapperComponent } from './body-row-wrapper.component';
 import { RowOrGroup } from "../../types/group.type";
-import { NgStyle } from '@angular/common';
+import { NgClass, NgStyle } from '@angular/common';
 import { TableColumn } from '../../types/table-column.type';
 import { PinnedColumns } from '../../types/column-pin.type';
 
@@ -85,7 +84,7 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck {
   }
 
   @Input() expanded: boolean;
-  @Input() rowClass: any;
+  @Input() rowClass: NgClass['ngClass'];
   @Input() row: RowOrGroup<TRow>;
   @Input() group: TRow[];
   @Input() isSelected: boolean;
@@ -121,7 +120,7 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck {
     }
 
     if (this.rowClass) {
-      const res = this.rowClass(this.row);
+      const res = this.rowClass;
       if (typeof res === 'string') {
         cls += ` ${res}`;
       } else if (typeof res === 'object') {

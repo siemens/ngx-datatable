@@ -13,12 +13,12 @@ import { DraggableDirective } from './draggable.directive';
 import { DOCUMENT } from '@angular/common';
 import { TableColumn } from '../types/table-column.type';
 import { DraggableDragEvent } from '../types/drag-events.type';
-import { OrderableReorderEvent, OrderPosition } from '../types/orderable.types';
+import { OrderableReorderEvent, OrderPosition, TargetChangedEvent } from '../types/orderable.types';
 
 @Directive({ selector: '[orderable]' })
 export class OrderableDirective implements AfterContentInit, OnDestroy {
   @Output() reorder: EventEmitter<OrderableReorderEvent> = new EventEmitter();
-  @Output() targetChanged: EventEmitter<any> = new EventEmitter();
+  @Output() targetChanged: EventEmitter<TargetChangedEvent> = new EventEmitter();
 
   @ContentChildren(DraggableDirective, { descendants: true })
     draggables: QueryList<DraggableDirective>;
@@ -90,7 +90,7 @@ export class OrderableDirective implements AfterContentInit, OnDestroy {
     }
   }
 
-  onDragging({ element, model, event }: any): void {
+  onDragging({ element, model, event }: DraggableDragEvent): void {
     const prevPos = this.positions[model.$$id];
     const target = this.isTarget(model, event);
 

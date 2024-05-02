@@ -1,5 +1,6 @@
-import { PipeTransform } from '@angular/core';
+import { PipeTransform, TemplateRef } from '@angular/core';
 import { ValueGetter } from '../utils/column-prop-getters';
+import { HeaderCellContext } from './cell-context.type';
 
 /**
  * Column property that indicates how to retrieve this column's
@@ -173,7 +174,7 @@ export interface TableColumn {
    *
    * @memberOf TableColumn
    */
-  headerTemplate?: any;
+  headerTemplate?: TemplateRef<HeaderCellContext>;
 
   /**
    * Tree toggle template ref

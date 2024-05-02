@@ -20,6 +20,9 @@ import { SortDirection } from '../../types/sort-direction.type';
 import { Keys } from '../../utils/keys';
 import { RowOrGroup } from "../../types/group.type";
 import { BehaviorSubject } from "rxjs";
+import { ActivateEvent } from '../../types/activate-event.type';
+import { CellContext } from '../../types/cell-context.type';
+import { SortPropDir } from '../../types/sort-prop-dir.type';
 
 export type TreeStatus = 'collapsed' | 'expanded' | 'loading' | 'disabled';
 
@@ -159,9 +162,9 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
     return this._row;
   }
 
-  @Input() set sorts(val: any[]) {
+  @Input() set sorts(val: SortPropDir[]) {
     this._sorts = val;
-    this.calcSortDir = this.calcSortDir(val);
+    this.sortDir = this.calcSortDir(val);
   }
 
   get sorts(): any[] {
@@ -185,7 +188,7 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
 
   @Input() ghostLoadingIndicator = false;
 
-  @Output() activate: EventEmitter<any> = new EventEmitter();
+  @Output() activate: EventEmitter<ActivateEvent<TRow>> = new EventEmitter();
 
   @Output() treeAction: EventEmitter<any> = new EventEmitter();
 
@@ -269,10 +272,8 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
   value: any;
   sortDir: SortDirection;
   isFocused = false;
-  onCheckboxChangeFn = this.onCheckboxChange.bind(this);
-  activateFn = this.activate.emit.bind(this.activate);
 
-  cellContext: any;
+  cellContext: CellContext<TRow>;
 
   private _isSelected: boolean;
   private _sorts: any[];
@@ -287,8 +288,8 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
 
   constructor(element: ElementRef<HTMLElement>, private cd: ChangeDetectorRef) {
     this.cellContext = {
-      onCheckboxChangeFn: this.onCheckboxChangeFn,
-      activateFn: this.activateFn,
+      onCheckboxChangeFn: (event: MouseEvent) => this.onCheckboxChange(event),
+      activateFn: (event: ActivateEvent<TRow>) => this.activate.emit(event),
       row: this.row,
       group: this.group,
       value: this.value,
@@ -297,8 +298,8 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
       isSelected: this.isSelected,
       rowIndex: this.rowIndex,
       treeStatus: this.treeStatus,
-      disable$: this.disable$,
-      onTreeAction: this.onTreeAction.bind(this)
+      disable$: this.disable$.asObservable(),
+      onTreeAction: () => this.onTreeAction()
     };
 
     this._element = element.nativeElement;
@@ -409,7 +410,7 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
     }
   }
 
-  onCheckboxChange(event: any): void {
+  onCheckboxChange(event: MouseEvent): void {
     this.activate.emit({
       type: 'checkbox',
       event,
@@ -423,7 +424,7 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
     });
   }
 
-  calcSortDir(sorts: any[]): any {
+  calcSortDir(sorts: SortPropDir[]): SortDirection {
     if (!sorts) {
       return;
     }
@@ -431,7 +432,7 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
     const sort = sorts.find((s: any) => s.prop === this.column.prop);
 
     if (sort) {
-      return sort.dir;
+      return sort.dir as SortDirection;
     }
   }
 

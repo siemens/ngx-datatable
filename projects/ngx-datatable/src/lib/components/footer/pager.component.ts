@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { PagerPageEvent } from '../../types/page-event.type';
+import { Page } from '../../types/pages.type';
 
 @Component({
   selector: 'datatable-pager',
@@ -89,7 +90,7 @@ export class DataTablePagerComponent {
   _count = 0;
   _page = 1;
   _size = 0;
-  pages: any;
+  pages: Page[];
 
   canPrevious(): boolean {
     return this.page > 1;
@@ -117,8 +118,8 @@ export class DataTablePagerComponent {
     }
   }
 
-  calcPages(page?: number): any[] {
-    const pages = [];
+  calcPages(page?: number): Page[] {
+    const pages: Page[] = [];
     let startPage = 1;
     let endPage = this.totalPages;
     const maxSize = 5;

@@ -13,6 +13,7 @@ import { SortType } from '../../types/sort.type';
 import { SelectionType } from '../../types/selection.type';
 import { DataTableColumnDirective } from '../columns/column.directive';
 import { translateXY } from '../../utils/translate';
+import { NgStyle } from '@angular/common';
 
 @Component({
   selector: 'datatable-header',
@@ -158,10 +159,10 @@ export class DataTableHeaderComponent implements OnDestroy {
   _offsetX: number;
   _columns: any[];
   _headerHeight: string;
-  _styleByGroup: { [prop: string]: unknown } = {
-    left: {},
-    center: {},
-    right: {}
+  _styleByGroup = {
+    left: NgStyle['ngStyle'],
+    center: NgStyle['ngStyle'],
+    right: NgStyle['ngStyle']
   };
 
   private destroyed = false;
@@ -327,22 +328,27 @@ export class DataTableHeaderComponent implements OnDestroy {
     }
   }
 
-  calcStylesByGroup(group: string): any {
+  calcStylesByGroup(group: 'center' | 'right' | 'left'): any {
     const widths = this._columnGroupWidths;
     const offsetX = this.offsetX;
 
-    const styles = {
-      width: `${widths[group]}px`
-    };
-
     if (group === 'center') {
-      translateXY(styles, offsetX * -1, 0);
+      return {
+        ...translateXY(offsetX * -1, 0),
+        width: `${widths[group]}px`
+      }
     } else if (group === 'right') {
       const totalDiff = widths.total - this.innerWidth;
       const offset = totalDiff * -1;
-      translateXY(styles, offset, 0);
+      return {
+        ...translateXY(offset, 0),
+        width: `${widths[group]}px`
+
+      }
     }
 
-    return styles;
+    return {
+      width: `${widths[group]}px`
+    };
   }
 }

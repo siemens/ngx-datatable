@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { RowOrGroup } from "../../types/group.type";
+import { NgStyle } from '@angular/common';
 
 @Component({
   selector: 'datatable-row-wrapper',
@@ -131,13 +132,11 @@ export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit
     this.rowContextmenu.emit({ event: $event, row: this.row });
   }
 
-  getGroupHeaderStyle(): any {
-    const styles = {} as any;
-
-    styles.transform = 'translate3d(' + this.offsetX + 'px, 0px, 0px)';
-    styles['backface-visibility'] = 'hidden';
-    styles.width = this.innerWidth;
-
-    return styles;
+  getGroupHeaderStyle(): NgStyle['ngStyle'] {
+    return {
+      "transform": 'translate3d(' + this.offsetX + 'px, 0px, 0px)',
+      'backface-visibility': 'hidden',
+      "width": this.innerWidth
+    };
   }
 }

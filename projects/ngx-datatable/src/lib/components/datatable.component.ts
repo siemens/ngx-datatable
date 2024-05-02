@@ -51,6 +51,7 @@ import { adjustColumnWidths, forceFillColumnWidths } from '../utils/math';
 import { sortRows } from '../utils/sort';
 import { Group } from "../types/group.type";
 import { SortPropDir } from "../types/sort-prop-dir.type";
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'ngx-datatable',
@@ -368,7 +369,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
    *  [rowClass]="'first second'"
    *  [rowClass]="{ 'first': true, 'second': true, 'third': false }"
    */
-  @Input() rowClass: any;
+  @Input() rowClass: NgClass['ngClass'];
 
   /**
    * A boolean/function you can use to check whether you want

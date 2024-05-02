@@ -19,6 +19,7 @@ import { translateXY } from '../../utils/translate';
 import { DragEventData } from '../../types/drag-events.type';
 import { TreeStatus } from "./body-cell.component";
 import { Group, RowOrGroup } from "../../types/group.type";
+import { NgStyle } from '@angular/common';
 
 @Component({
   selector: 'datatable-body',
@@ -629,8 +630,8 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
    *
    * @memberOf DataTableBodyComponent
    */
-  getRowsStyles(rows: RowOrGroup<TRow> | TRow[], index = 0): any {
-    const styles: any = {};
+  getRowsStyles(rows: RowOrGroup<TRow> | TRow[], index = 0): NgStyle['ngStyle'] {
+    const styles: NgStyle['ngStyle'] = {};
 
     // only add styles for the group if there is a group
     if (this.groupedRows) {
@@ -658,7 +659,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
       // until the previous row position.
       const pos = this.rowHeightsCache.query(idx - 1);
 
-      translateXY(styles, 0, pos);
+      Object.assign(styles, translateXY(0, pos))
     }
 
     return styles;
@@ -673,17 +674,16 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
    *
    * @memberOf DataTableBodyComponent
    */
-  getBottomSummaryRowStyles(): any {
+  getBottomSummaryRowStyles(): NgStyle['ngStyle'] {
     if (!this.scrollbarV || !this.rows || !this.rows.length) {
       return null;
     }
 
-    const styles = { position: 'absolute' };
     const pos = this.rowHeightsCache.query(this.rows.length - 1);
-
-    translateXY(styles, 0, pos);
-
-    return styles;
+    return {
+      ...translateXY(0, pos),
+      position: 'absolute'
+    };
   }
 
   /**
@@ -853,30 +853,6 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
    */
   columnTrackingFn(index: number, column: any): any {
     return column.$$id;
-  }
-
-  /**
-   * Gets the row pinning group styles
-   */
-  stylesByGroup(group: string) {
-    const widths = this.columnGroupWidths;
-    const offsetX = this.offsetX;
-
-    const styles = {
-      width: `${widths[group]}px`
-    };
-
-    if (group === 'left') {
-      translateXY(styles, offsetX, 0);
-    } else if (group === 'right') {
-      const bodyWidth = this.innerWidth;
-      const totalDiff = widths.total - bodyWidth;
-      const offsetDiff = totalDiff - offsetX;
-      const offset = offsetDiff * -1;
-      translateXY(styles, offset, 0);
-    }
-
-    return styles;
   }
 
   /**

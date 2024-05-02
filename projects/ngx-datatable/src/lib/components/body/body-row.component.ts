@@ -22,6 +22,7 @@ import { translateXY } from '../../utils/translate';
 import { BehaviorSubject } from 'rxjs';
 import { DataTableRowWrapperComponent } from './body-row-wrapper.component';
 import { RowOrGroup } from "../../types/group.type";
+import { NgStyle } from '@angular/common';
 
 @Component({
   selector: 'datatable-body-row',
@@ -152,10 +153,10 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck {
   _offsetX: number;
   _columns: any[];
   _innerWidth: number;
-  _groupStyles: { [prop: string]: unknown } = {
-    left: {},
-    center: {},
-    right: {}
+  _groupStyles = {
+    left: NgStyle['ngStyle'],
+    center: NgStyle['ngStyle'],
+    right: NgStyle['ngStyle']
   };
 
   private _rowDiffer: KeyValueDiffer<keyof RowOrGroup<TRow>, any>;
@@ -191,25 +192,31 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck {
     this.cd.markForCheck();
   }
 
-  calcStylesByGroup(group: string) {
+  calcStylesByGroup(group: 'left' | 'right' | 'center') {
     const widths = this._columnGroupWidths;
     const offsetX = this.offsetX;
 
-    const styles = {
-      width: `${widths[group]}px`
-    };
-
     if (group === 'left') {
-      translateXY(styles, offsetX, 0);
+      return {
+        width: `${widths[group]}px`,
+        ...translateXY(offsetX, 0)
+
+      }
     } else if (group === 'right') {
       const bodyWidth = this.innerWidth;
       const totalDiff = widths.total - bodyWidth;
       const offsetDiff = totalDiff - offsetX;
       const offset = (offsetDiff + this.scrollbarHelper.width) * -1;
-      translateXY(styles, offset, 0);
+      return {
+        width: `${widths[group]}px`,
+        ...translateXY(offset, 0)
+
+      }
     }
 
-    return styles;
+    return {
+      width: `${widths[group]}px`
+    };
   }
 
   onActivate(event: any, index: number): void {

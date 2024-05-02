@@ -98,6 +98,13 @@ export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit
       rowIndex: this.rowIndex
     };
 
+    this.rowContext = {
+      row: this.row,
+      expanded: this.expanded,
+      rowIndex: this.rowIndex,
+      disableRow$: this.disable$
+    };
+
     this.rowDiffer = differs.find({}).create();
   }
 
@@ -105,13 +112,8 @@ export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit
     if (this.disableCheck) {
       const isRowDisabled = this.disableCheck(this.row);
       this.disable$ = new BehaviorSubject(isRowDisabled);
+      this.rowContext.disableRow$ = this.disable$;
     }
-    this.rowContext = {
-      row: this.row,
-      expanded: this.expanded,
-      rowIndex: this.rowIndex,
-      disableRow$: this.disable$.asObservable()
-    };
   }
 
   ngDoCheck(): void {

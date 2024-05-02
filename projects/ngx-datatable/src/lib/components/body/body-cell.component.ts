@@ -298,7 +298,7 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
       isSelected: this.isSelected,
       rowIndex: this.rowIndex,
       treeStatus: this.treeStatus,
-      disable$: this.disable$.asObservable(),
+      disable$: this.disable$,
       onTreeAction: () => this.onTreeAction()
     };
 

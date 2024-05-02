@@ -31,7 +31,7 @@ import { DatatableGroupHeaderDirective } from './body/body-group-header.directiv
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { INgxDatatableConfig } from '../ngx-datatable.module';
 import { groupRowsByParents, optionalGetterForProp } from '../utils/tree';
-import { TableColumn, TableColumnProp } from '../types/table-column.type';
+import { TableColumn } from '../types/table-column.type';
 import { setColumnDefaults, translateTemplates } from '../utils/column-helper';
 import { ColumnMode } from '../types/column-mode.type';
 import { DragEventData } from '../types/drag-events.type';
@@ -49,11 +49,11 @@ import { DimensionsHelper } from '../services/dimensions-helper.service';
 import { throttleable } from '../utils/throttle';
 import { adjustColumnWidths, forceFillColumnWidths } from '../utils/math';
 import { sortRows } from '../utils/sort';
-import { Group } from "../types/group.type";
-import { SortPropDir } from "../types/sort-prop-dir.type";
+import { Group } from '../types/group.type';
+import { SortPropDir } from '../types/sort-prop-dir.type';
 import { NgClass } from '@angular/common';
 import { Model } from './body/selection.component';
-import { InnerSortEvent, SortEvent } from '../types/sort-direction.type';
+import { SortEvent } from '../types/sort-direction.type';
 import { BodyPageEvent, PageEvent, PagerPageEvent } from '../types/page-event.type';
 import { ReorderEvent } from '../types/orderable.types';
 import { ColumnResizeEvent } from '../types/resize.type';
@@ -650,7 +650,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
    * invoking functions on the body.
    */
   @ViewChild(DataTableBodyComponent)
-    bodyComponent: DataTableBodyComponent;
+    bodyComponent: DataTableBodyComponent<TRow>;
 
   /**
    * Reference to the header component for manually
@@ -700,7 +700,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
     @SkipSelf() private scrollbarHelper: ScrollbarHelper,
     @SkipSelf() private dimensionsHelper: DimensionsHelper,
     private cd: ChangeDetectorRef,
-    element: ElementRef,
+    element: ElementRef<HTMLElement>,
     differs: IterableDiffers,
     private columnChangesService: ColumnChangesService,
     @Optional() @Inject('configuration') private configuration: INgxDatatableConfig
@@ -779,11 +779,11 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
    *
    * (`fn(x) === fn(y)` instead of `x === y`)
    */
-  @Input() rowIdentity: (x: any) => any = (x: any) => {
+  @Input() rowIdentity: (x: TRow | Group<TRow>) => unknown = x => {
     if (this._groupRowsBy) {
       // each group in groupedRows are stored as {key, value: [rows]},
       // where key is the groupRowsBy index
-      return x.key;
+      return (x as Group<TRow>).key;
     } else {
       return x;
     }
@@ -792,7 +792,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   /**
    * Translates the templates to the column objects
    */
-  translateColumns(val: any) {
+  translateColumns(val: QueryList<DataTableColumnDirective>) {
     if (val) {
       const arr = val.toArray();
       if (arr.length) {
@@ -889,10 +889,10 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
    * distribution mode and scrollbar offsets.
    */
   recalculateColumns(
-    columns: any[] = this._internalColumns,
+    columns: TableColumn[] = this._internalColumns,
     forceIdx: number = -1,
     allowBleed: boolean = this.scrollbarH
-  ): any[] | undefined {
+  ): TableColumn[] | undefined {
     if (!columns) {return undefined;}
 
     let width = this._innerWidth;
@@ -1007,7 +1007,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   /**
    * Recalculates the sizes of the page
    */
-  calcPageSize(val: any[] = this.rows): number {
+  calcPageSize(): number {
     // Keep the page size constant even if the row has been expanded.
     // This is because an expanded row is still considered to be a child of
     // the original row.  Hence calculation would use rowHeight only.
@@ -1022,8 +1022,8 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
     }
 
     // otherwise use row length
-    if (val) {
-      return val.length;
+    if (this.rows) {
+      return this.rows.length;
     }
 
     // other empty :(
@@ -1033,16 +1033,16 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   /**
    * Calculates the row count.
    */
-  calcRowCount(val: any[] = this.rows): number {
+  calcRowCount(): number {
     if (!this.externalPaging) {
-      if (!val) {return 0;}
+      if (!this.rows) {return 0;}
 
       if (this.groupedRows) {
         return this.groupedRows.length;
       } else if (this.treeFromRelation != null && this.treeToRelation != null) {
         return this._internalRows.length;
       } else {
-        return val.length;
+        return this.rows.length;
       }
     }
 
@@ -1098,7 +1098,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
     });
   }
 
-  onColumnResizing({ column, newValue }: any): void {
+  onColumnResizing({ column, newValue }: ColumnResizeEvent): void {
     if (column === undefined) {
       return;
     }
@@ -1187,7 +1187,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   /**
    * Toggle all row selection
    */
-  onHeaderSelect(event: any): void {
+  onHeaderSelect(): void {
     if (this.bodyComponent && this.selectAllRowsOnPage) {
       // before we splice, chk if we currently have all selected
       const first = this.bodyComponent.indexes.first;

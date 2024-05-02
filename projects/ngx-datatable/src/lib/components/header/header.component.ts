@@ -152,7 +152,7 @@ export class DataTableHeaderComponent implements OnDestroy {
   @Output() sort: EventEmitter<SortEvent> = new EventEmitter();
   @Output() reorder: EventEmitter<ReorderEvent> = new EventEmitter();
   @Output() resize: EventEmitter<ColumnResizeEvent> = new EventEmitter();
-  @Output() resizing: EventEmitter<any> = new EventEmitter();
+  @Output() resizing: EventEmitter<ColumnResizeEvent> = new EventEmitter();
   @Output() select: EventEmitter<any> = new EventEmitter();
   @Output() columnContextmenu = new EventEmitter<{ event: MouseEvent; column: TableColumn }>(false);
 

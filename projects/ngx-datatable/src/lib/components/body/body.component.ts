@@ -205,10 +205,10 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
   @Input() rowDetail: DatatableRowDetailDirective;
   @Input() groupHeader: DatatableGroupHeaderDirective;
   @Input() selectCheck: (value: TRow, index: number, array: TRow[]) => boolean;
-  @Input() displayCheck: any;
+  @Input() displayCheck: (row: TRow, column?: TableColumn, value?: any) => boolean;
   @Input() trackByProp: string;
   @Input() rowClass: NgClass['ngClass'];
-  @Input() groupedRows: any;
+  @Input() groupedRows: Group<TRow>[];
   @Input() groupExpansionDefault: boolean;
   @Input() innerWidth: number;
   @Input() groupRowsBy: keyof TRow;
@@ -967,7 +967,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
   protected isGroup(row: RowOrGroup<TRow>[]): row is Group<TRow>[];
   protected isGroup(row: RowOrGroup<TRow>): row is Group<TRow>;
   protected isGroup(row: RowOrGroup<TRow> | RowOrGroup<TRow>[]): boolean {
-    return this.groupedRows;
+    return !!this.groupedRows;
   }
 
   protected isRow(row: RowOrGroup<TRow>): row is TRow {

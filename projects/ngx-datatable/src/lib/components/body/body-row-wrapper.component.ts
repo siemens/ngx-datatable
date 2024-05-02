@@ -12,11 +12,12 @@ import {
   Output
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { RowOrGroup } from "../../types/group.type";
+import { Group, RowOrGroup } from '../../types/group.type';
 import { NgStyle } from '@angular/common';
 import { RowDetailContext } from '../../types/detail-context.type';
 import { GroupContext } from '../../types/cell-context.type';
 import { DatatableGroupHeaderDirective } from './body-group-header.directive';
+import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive';
 
 @Component({
   selector: 'datatable-row-wrapper',
@@ -51,12 +52,12 @@ import { DatatableGroupHeaderDirective } from './body-group-header.directive';
 })
 export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit {
   @Input() innerWidth: number;
-  @Input() rowDetail: any;
+  @Input() rowDetail: DatatableRowDetailDirective;
   @Input() groupHeader: DatatableGroupHeaderDirective;
   @Input() offsetX: number;
-  @Input() detailRowHeight: any;
+  @Input() detailRowHeight: number;
   @Input() row: RowOrGroup<TRow>;
-  @Input() groupedRows: any;
+  @Input() groupedRows: Group<TRow>[];
   @Input() disableCheck: (row: RowOrGroup<TRow>) => boolean;
   @Output() rowContextmenu = new EventEmitter<{ event: MouseEvent; row: RowOrGroup<TRow> }>(false);
 

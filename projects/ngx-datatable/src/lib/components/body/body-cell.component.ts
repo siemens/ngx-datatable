@@ -167,7 +167,7 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
     this.sortDir = this.calcSortDir(val);
   }
 
-  get sorts(): any[] {
+  get sorts(): SortPropDir[] {
     return this._sorts;
   }
 
@@ -199,7 +199,7 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
     ghostLoaderTemplate: ViewContainerRef;
 
   @HostBinding('class')
-  get columnCssClasses(): any {
+  get columnCssClasses(): string {
     let cls = 'datatable-body-cell';
     if (this.column.cellClass) {
       if (typeof this.column.cellClass === 'string') {
@@ -268,7 +268,7 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
     return height + 'px';
   }
 
-  sanitizedValue: any;
+  sanitizedValue: string;
   value: any;
   sortDir: SortDirection;
   isFocused = false;
@@ -276,7 +276,7 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
   cellContext: CellContext<TRow>;
 
   private _isSelected: boolean;
-  private _sorts: any[];
+  private _sorts: SortPropDir[];
   private _column: TableColumn;
   private _row: RowOrGroup<TRow>;
   private _group: TRow[];
@@ -429,7 +429,7 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
       return;
     }
 
-    const sort = sorts.find((s: any) => s.prop === this.column.prop);
+    const sort = sorts.find(s => s.prop === this.column.prop);
 
     if (sort) {
       return sort.dir as SortDirection;
@@ -447,7 +447,7 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
     this.treeAction.emit(this.row);
   }
 
-  calcLeftMargin(column: any, row: RowOrGroup<TRow>) {
+  calcLeftMargin(column: TableColumn, row: RowOrGroup<TRow>) {
     const levelIndent = column.treeLevelIndent != null ? column.treeLevelIndent : 50;
     return column.isTreeColumn ? (row as TRow).level * levelIndent : 0;
   }

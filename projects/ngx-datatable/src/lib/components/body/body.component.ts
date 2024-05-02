@@ -20,6 +20,7 @@ import { DragEventData } from '../../types/drag-events.type';
 import { TreeStatus } from "./body-cell.component";
 import { Group, RowOrGroup } from "../../types/group.type";
 import { NgStyle } from '@angular/common';
+import { TableColumn } from '../../types/table-column.type';
 
 @Component({
   selector: 'datatable-body',
@@ -242,7 +243,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
     return this._rows;
   }
 
-  @Input() set columns(val: any[]) {
+  @Input() set columns(val: TableColumn[]) {
     if (val !== this._columns) {
       this._columns = val;
       const colsByPin = columnsByPin(val);
@@ -349,7 +350,7 @@ export class DataTableBodyComponent<TRow extends {treeStatus?: TreeStatus} = any
 
   _rows: TRow[];
   _bodyHeight: any;
-  _columns: any[];
+  _columns: TableColumn[];
   _rowCount: number;
   _offset: number;
   _pageSize: number;

@@ -23,6 +23,8 @@ import { BehaviorSubject } from 'rxjs';
 import { DataTableRowWrapperComponent } from './body-row-wrapper.component';
 import { RowOrGroup } from "../../types/group.type";
 import { NgStyle } from '@angular/common';
+import { TableColumn } from '../../types/table-column.type';
+import { PinnedColumns } from '../../types/column-pin.type';
 
 @Component({
   selector: 'datatable-body-row',
@@ -57,7 +59,7 @@ import { NgStyle } from '@angular/common';
   `
 })
 export class DataTableBodyRowComponent<TRow = any> implements DoCheck {
-  @Input() set columns(val: any[]) {
+  @Input() set columns(val: TableColumn[]) {
     this._columns = val;
     this.recalculateColumns(val);
     this.buildStylesByGroup();
@@ -149,9 +151,9 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck {
 
   _element: HTMLElement;
   _columnGroupWidths: any;
-  _columnsByPin: any;
+  _columnsByPin: PinnedColumns[];
   _offsetX: number;
-  _columns: any[];
+  _columns: TableColumn[];
   _innerWidth: number;
   _groupStyles = {
     left: NgStyle['ngStyle'],
@@ -177,11 +179,11 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck {
     }
   }
 
-  trackByGroups(index: number, colGroup: any): any {
+  trackByGroups(index: number, colGroup: PinnedColumns): string {
     return colGroup.type;
   }
 
-  columnTrackingFn(index: number, column: any): any {
+  columnTrackingFn(index: number, column: TableColumn): string {
     return column.$$id;
   }
 
@@ -262,7 +264,7 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck {
     });
   }
 
-  recalculateColumns(val: any[] = this.columns): void {
+  recalculateColumns(val: TableColumn[] = this.columns): void {
     this._columns = val;
     const colsByPin = columnsByPin(this._columns);
     this._columnsByPin = columnsByPinArr(this._columns);

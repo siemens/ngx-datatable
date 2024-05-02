@@ -120,6 +120,15 @@ export interface TableColumn {
    */
   draggable?: boolean;
 
+  /** @internal */
+  dragging?: boolean;
+
+  /** @internal */
+  isTarget?: boolean;
+
+  /** @internal */
+  targetMarkerContext?: any;
+
   /**
    * Whether the column can automatically resize to fill space in the table.
    *

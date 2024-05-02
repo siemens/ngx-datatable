@@ -11,9 +11,10 @@ import {
 import { columnGroupWidths, columnsByPin, columnsByPinArr } from '../../utils/column';
 import { SortType } from '../../types/sort.type';
 import { SelectionType } from '../../types/selection.type';
-import { DataTableColumnDirective } from '../columns/column.directive';
 import { translateXY } from '../../utils/translate';
 import { NgStyle } from '@angular/common';
+import { TableColumn } from '../../types/table-column.type';
+import { PinnedColumns } from '../../types/column-pin.type';
 
 @Component({
   selector: 'datatable-header',
@@ -120,7 +121,7 @@ export class DataTableHeaderComponent implements OnDestroy {
     return this._headerHeight;
   }
 
-  @Input() set columns(val: any[]) {
+  @Input() set columns(val: TableColumn[]) {
     this._columns = val;
 
     const colsByPin = columnsByPin(val);
@@ -151,13 +152,13 @@ export class DataTableHeaderComponent implements OnDestroy {
   @Output() select: EventEmitter<any> = new EventEmitter();
   @Output() columnContextmenu = new EventEmitter<{ event: MouseEvent; column: any }>(false);
 
-  _columnsByPin: any;
+  _columnsByPin: PinnedColumns[];
   _columnGroupWidths: any = {
     total: 100
   };
   _innerWidth: number;
   _offsetX: number;
-  _columns: any[];
+  _columns: TableColumn[];
   _headerHeight: string;
   _styleByGroup = {
     left: NgStyle['ngStyle'],
@@ -173,13 +174,13 @@ export class DataTableHeaderComponent implements OnDestroy {
     this.destroyed = true;
   }
 
-  onLongPressStart({ event, model }: { event: any; model: any }) {
+  onLongPressStart({ event, model }: { event: any; model: TableColumn }) {
     model.dragging = true;
     this.dragEventTarget = event;
   }
 
-  onLongPressEnd({ event, model }: { event: any; model: any }) {
-    this.dragEventTarget = event;
+  onLongPressEnd({ model }: { model: TableColumn }) {
+    this.dragEventTarget = undefined;
 
     // delay resetting so sort can be
     // prevented if we were dragging
@@ -187,7 +188,7 @@ export class DataTableHeaderComponent implements OnDestroy {
       // datatable component creates copies from columns on reorder
       // set dragging to false on new objects
       const column = this._columns.find(c => c.$$id === model.$$id);
-      if (column) {
+      if (column && 'dragging' in column) {
         column.dragging = false;
       }
     }, 5);
@@ -202,23 +203,23 @@ export class DataTableHeaderComponent implements OnDestroy {
     return '100%';
   }
 
-  trackByGroups(index: number, colGroup: any): any {
+  trackByGroups(index: number, colGroup: {type: 'left' | 'center' | 'right', columns: TableColumn[]}): string {
     return colGroup.type;
   }
 
-  columnTrackingFn(index: number, column: any): any {
+  columnTrackingFn(index: number, column: TableColumn): string {
     return column.$$id;
   }
 
-  onColumnResized(width: number, column: DataTableColumnDirective): void {
+  onColumnResized(width: number, column: TableColumn): void {
     this.resize.emit(this.makeResizeEvent(width, column));
   }
 
-  onColumnResizing(width: number, column: DataTableColumnDirective): void {
+  onColumnResizing(width: number, column: TableColumn): void {
     this.resizing.emit(this.makeResizeEvent(width, column));
   }
 
-  private makeResizeEvent(width: number, column: DataTableColumnDirective) {
+  private makeResizeEvent(width: number, column: TableColumn) {
     if (width <= column.minWidth) {
       width = column.minWidth;
     } else if (width >= column.maxWidth) {

@@ -141,19 +141,19 @@
 
 ## 16.1.0
 
-- Fix: [selectAllRowsOnPage] is broken. (#1809)
-- Fix: Bug when using cellClass as string. (#1817)
-- Fix: Docs. (#1812, #1837, #1845, #1854)
-- Fix: redraw after recalculate (#1816)
-- Fix: undefined row index for rows in groups (#1857)
-- Chore: Add pretty-quick as a precommit hook using husky (#1841)
-- Chore: Bump dependecies (#1858, #1862, #1859)
+- Fix: [selectAllRowsOnPage] is broken. (swimlane/ngx-datatable#1809)
+- Fix: Bug when using cellClass as string. (swimlane/ngx-datatable#1817)
+- Fix: Docs. (swimlane/ngx-datatable#1812, swimlane/ngx-datatable#1837, swimlane/ngx-datatable#1845, swimlane/ngx-datatable#1854)
+- Fix: redraw after recalculate (swimlane/ngx-datatable#1816)
+- Fix: undefined row index for rows in groups (swimlane/ngx-datatable#1857)
+- Chore: Add pretty-quick as a precommit hook using husky (swimlane/ngx-datatable#1841)
+- Chore: Bump dependecies (swimlane/ngx-datatable#1858, swimlane/ngx-datatable#1862, swimlane/ngx-datatable#1859)
 
 ## 16.0.3
 
-- Bug: Fix disappearing rows with vertical scrollbar, virtual scrolling & rowdetail auto height (#1799)
-- Bug: Fix memory leak due to created element not cleaned up (#1792)
-- Bug: do not collapse row details when row updated (#1778)
+- Bug: Fix disappearing rows with vertical scrollbar, virtual scrolling & rowdetail auto height (swimlane/ngx-datatable#1799)
+- Bug: Fix memory leak due to created element not cleaned up (swimlane/ngx-datatable#1792)
+- Bug: do not collapse row details when row updated (swimlane/ngx-datatable#1778)
 
 ## 16.0.2
 
@@ -166,42 +166,42 @@
 ## 16.0.0
 
 - Breaking: the release files are not under the `/release` folder any more. Also, paths to `themes` and `assets` have changed. If you are importing any assets or styles from the release folder, you would need to update the paths.
-- Chore: Migrates the project to angular-cli, making it compatible with Ivy (#1738)
-- Feature: Implements global module config via forRoot (#1688)
-- Feature: Colors of material style can be modified by target application (#1651)
-- Bug: Fixes Exception in scoller component destroy (#1685)
-- Bug: Fixes issue 1686: column resizing issue in force columns mode (no horizontal scroll) when container get smaller (#1687)
-- Docs: Updates demo pages (#1738)
+- Chore: Migrates the project to angular-cli, making it compatible with Ivy (swimlane/ngx-datatable#1738)
+- Feature: Implements global module config via forRoot (swimlane/ngx-datatable#1688)
+- Feature: Colors of material style can be modified by target application (swimlane/ngx-datatable#1651)
+- Bug: Fixes Exception in scoller component destroy (swimlane/ngx-datatable#1685)
+- Bug: Fixes issue 1686: column resizing issue in force columns mode (no horizontal scroll) when container get smaller (swimlane/ngx-datatable#1687)
+- Docs: Updates demo pages (swimlane/ngx-datatable#1738)
 
 ## 15.0.2
 
-- Fix: Fixes issue where footer pagination does not work when virtual scrolling is enabled (#1704)
+- Fix: Fixes issue where footer pagination does not work when virtual scrolling is enabled (swimlane/ngx-datatable#1704)
 
 ## 15.0.1
 
-- Fix: Fixes issue where using conditional templates would not render them (#1701)
+- Fix: Fixes issue where using conditional templates would not render them (swimlane/ngx-datatable#1701)
 
 ## 15.0.0
 
-- Breaking: Upgrade to angular 8 (#1697)
-- Fix: Module not found: Error: Can't resolve '.' (#1646)
-- Fix: trackByProp can't work. (#1622)
+- Breaking: Upgrade to angular 8 (swimlane/ngx-datatable#1697)
+- Fix: Module not found: Error: Can't resolve '.' (swimlane/ngx-datatable#1646)
+- Fix: trackByProp can't work. (swimlane/ngx-datatable#1622)
 
 ## 14.0.0
 
 - Breaking: Upgrade to angular 7
-- Fix: Fix compile error when using TemplateTypeCheck set to true (#1520)
+- Fix: Fix compile error when using TemplateTypeCheck set to true (swimlane/ngx-datatable#1520)
 
 ## 13.1.0
 
-- Feature: Added support for tree grid (#1273)
-- Fix: Improve virtualization as a flag (#1297)
-- Fix: Fix issue when count is undefined #838 (#1499)
-- Fix: Fix usage withing prerendered SPA (#1438)
+- Feature: Added support for tree grid (swimlane/ngx-datatable#1273)
+- Fix: Improve virtualization as a flag (swimlane/ngx-datatable#1297)
+- Fix: Fix issue when count is undefined #838 (swimlane/ngx-datatable#1499)
+- Fix: Fix usage withing prerendered SPA (swimlane/ngx-datatable#1438)
 
 ## 13.0.1
 
-- Fix: Run scroll event listeners inside angular zone (#1375)
+- Fix: Run scroll event listeners inside angular zone (swimlane/ngx-datatable#1375)
 
 ## 13.0.0
 
@@ -260,11 +260,11 @@
 
 ## 11.1.3
 
-- Bug: Angular SSR Event Undefined (#1144)
+- Bug: Angular SSR Event Undefined (swimlane/ngx-datatable#1144)
 
 ## 11.1.2
 
-- Bug: Fix total undefined (#1140)
+- Bug: Fix total undefined (swimlane/ngx-datatable#1140)
 
 ## 11.1.1
 
@@ -273,8 +273,8 @@
 ## 11.1.0
 
 - Perf: Better performance on scrolling y and x
-- Feature: Select All on Current Page (#1132)
-- Bug: Don't show empty on loading (#1139)
+- Feature: Select All on Current Page (swimlane/ngx-datatable#1132)
+- Bug: Don't show empty on loading (swimlane/ngx-datatable#1139)
 
 ## 11.0.4
 
@@ -291,22 +291,22 @@
 
 ## 10.4.0
 
-- Feature: Ability to filter checkable rows (#1056)
-- Feature: Allow sorting based on whole row (#1074)
-- Bug: Fix protractor events (#1081)
-- Bug: Fix misalignment on smaller screens (#1081)
+- Feature: Ability to filter checkable rows (swimlane/ngx-datatable#1056)
+- Feature: Allow sorting based on whole row (swimlane/ngx-datatable#1074)
+- Bug: Fix protractor events (swimlane/ngx-datatable#1081)
+- Bug: Fix misalignment on smaller screens (swimlane/ngx-datatable#1081)
 
 ## 10.3.0
 
 - Feature: Bootstrap theme
-- Bug: Fix CSS for row grouping (#1053)
-- Bug: Fix group row values (#1034)
-- Bug: Fix cell overflow w/ fluid height (#1030)
-- Bug: Fix for column sort (#1018)
-- Bug: Strip HTML for null values (#966)
-- Bug: Update context in cell header (#935)
-- Bug: Add bounds to offset (#978)
-- Bug: Make selection apply to all rows (#974)
+- Bug: Fix CSS for row grouping (swimlane/ngx-datatable#1053)
+- Bug: Fix group row values (swimlane/ngx-datatable#1034)
+- Bug: Fix cell overflow w/ fluid height (swimlane/ngx-datatable#1030)
+- Bug: Fix for column sort (swimlane/ngx-datatable#1018)
+- Bug: Strip HTML for null values (swimlane/ngx-datatable#966)
+- Bug: Update context in cell header (swimlane/ngx-datatable#935)
+- Bug: Add bounds to offset (swimlane/ngx-datatable#978)
+- Bug: Make selection apply to all rows (swimlane/ngx-datatable#974)
 
 ## 10.2.3
 
@@ -358,7 +358,7 @@
 
 - Bug: Fix old references to `$$index` and `$$expanded`
 - Bug: Add `$$index` in cell templates as `rowIndex`
-- Bug: Fix MouseEvent undefined in JIT (#893)
+- Bug: Fix MouseEvent undefined in JIT (swimlane/ngx-datatable#893)
 
 ## 10.0.0
 
@@ -366,16 +366,16 @@
 - Feature: Always center activated page on pager
 - Bug: Remove row mutations of `$$index` and `$$expanded`
 - Bug: Pagination broken on large number of rows
-- Bug: Strip HTML from title tags (#892)
+- Bug: Strip HTML from title tags (swimlane/ngx-datatable#892)
 
 ## 9.3.1
 
-- Bug: More Universal Rendering Fixes (#795)
+- Bug: More Universal Rendering Fixes (swimlane/ngx-datatable#795)
 - Chore: Build optimizations from new webpack version
 
 ## 9.3.0
 
-- Feature: Unviseral Rendering (#764)
+- Feature: Unviseral Rendering (swimlane/ngx-datatable#764)
 
 ## 9.2.0
 
@@ -393,7 +393,7 @@
 
 ## 9.0.0
 
-- BREAKING: Fixes for external pagination fixes. Index calculation change being last page = `0 + pageSize` (#714, #138, #391)
+- BREAKING: Fixes for external pagination fixes. Index calculation change being last page = `0 + pageSize` (swimlane/ngx-datatable#714, swimlane/ngx-datatable#138, swimlane/ngx-datatable#391)
 - Feature: Server-side virtual scrolling pagination
 - Demos: Deep linking of demo pages
 
@@ -411,13 +411,13 @@
 
 ## 8.0.1
 
-- Bug: Fix memory leak (#702)
-- Bug: Don't add column header title attribute when custom template provided (#643)
-- Bug: Only apply pointer to header text (#682)
-- Bug: Fix prop field name with dots (#596)
-- Bug: Virtual scroll + dynamic height in cell detail not working right (#703)
+- Bug: Fix memory leak (swimlane/ngx-datatable#702)
+- Bug: Don't add column header title attribute when custom template provided (swimlane/ngx-datatable#643)
+- Bug: Only apply pointer to header text (swimlane/ngx-datatable#682)
+- Bug: Fix prop field name with dots (swimlane/ngx-datatable#596)
+- Bug: Virtual scroll + dynamic height in cell detail not working right (swimlane/ngx-datatable#703)
 - Bug: Fix dynamic row height not working right if using server-side pagination
-- Chore: Implement `noImplicitAny` (#671)
+- Chore: Implement `noImplicitAny` (swimlane/ngx-datatable#671)
 
 ## 8.0.0
 
@@ -435,7 +435,7 @@
 ## 7.3.0
 
 - Feature: Dynamic row heights for virtual scrolling
-- Bug: Do not use `document` for universal support (#668)
+- Bug: Do not use `document` for universal support (swimlane/ngx-datatable#668)
 
 ## 7.2.1
 
@@ -443,77 +443,77 @@
 
 ## 7.2.0
 
-- Feature: Allow for dynamic Detail Row heights (#653)
-- Feature: Numeric prop support via support array rows (#494)
+- Feature: Allow for dynamic Detail Row heights (swimlane/ngx-datatable#653)
+- Feature: Numeric prop support via support array rows (swimlane/ngx-datatable#494)
 - Perf: Optimize sort code by caching valueGetter and compareFn outside loop.
 - Perf: Set ValueGetter on `TableColumn.$$valueGetter`
 - Bug: Alter setColumnDefaults to work with numeric prop values.
 
 ## 7.1.1
 
-- Perf: Fix memory leaks with templates (#464)
+- Perf: Fix memory leaks with templates (swimlane/ngx-datatable#464)
 - Bug: Fix row detail expanded and then collapsed not showing anything until scroll
 
 ## 7.1.0
 
-- Bug: Fix title not set on cell template (#629)
+- Bug: Fix title not set on cell template (swimlane/ngx-datatable#629)
 - Chore: Update to official Angular4
 - Chore: Misc build dep updates
 
 ## 7.0.0
 
 - BREAKING: Update to Angular4!
-- Feature: Row classes (#571), (#348)
-- Bug: Show first page after sorting (#553)
-- Bug: When reordering and skipping a column, the column gets duplicated (#497), (#562), (#563)
+- Feature: Row classes (swimlane/ngx-datatable#571), (swimlane/ngx-datatable#348)
+- Bug: Show first page after sorting (swimlane/ngx-datatable#553)
+- Bug: When reordering and skipping a column, the column gets duplicated (swimlane/ngx-datatable#497), (swimlane/ngx-datatable#562), (swimlane/ngx-datatable#563)
 - Chore: Upgrade misc deps and lint fixes
 
 _NOTE: If you need support for ~Angular2, use version 6.x._
 
 ## 6.3.0
 
-- Bug: Perform sort when sort icon is clicked (#536)
-- Bug: Fix resize handle overlaped by label (#521)
-- Chore: Fix relative imports for rollup (#542)
+- Bug: Perform sort when sort icon is clicked (swimlane/ngx-datatable#536)
+- Bug: Fix resize handle overlaped by label (swimlane/ngx-datatable#521)
+- Chore: Fix relative imports for rollup (swimlane/ngx-datatable#542)
 - Chore: Linting
 
 ## 6.2.1
 
-- Bug: Revert #516 causing server-side paging issue (#543)
+- Bug: Revert #516 causing server-side paging issue (swimlane/ngx-datatable#543)
 
 ## 6.2.0
 
-- Bug: Fix AoT builds with SCSS (#534)
-- Bug: Fix offset incorrect when filtering (#516)
-- Bug: Fix mouse press subscription cleanups (#522)
-- Bug: Fix header cell wrapper empty span (#504)
-- Bug: Fix selected count undefined in footer template (#537)
-- Bug: Fix orderable unsubscribe listeners (#538)
+- Bug: Fix AoT builds with SCSS (swimlane/ngx-datatable#534)
+- Bug: Fix offset incorrect when filtering (swimlane/ngx-datatable#516)
+- Bug: Fix mouse press subscription cleanups (swimlane/ngx-datatable#522)
+- Bug: Fix header cell wrapper empty span (swimlane/ngx-datatable#504)
+- Bug: Fix selected count undefined in footer template (swimlane/ngx-datatable#537)
+- Bug: Fix orderable unsubscribe listeners (swimlane/ngx-datatable#538)
 - Chore: Update Angular and ZoneJS
 
 ## 6.1.2
 
-- Bug: Fix default sort (#475)
+- Bug: Fix default sort (swimlane/ngx-datatable#475)
 
 ## 6.1.1
 
-- Bug: Fix tree-shaking issue (#511)
+- Bug: Fix tree-shaking issue (swimlane/ngx-datatable#511)
 
 ## 6.1.0
 
-- Feature: Add selected count in footer (#508)
-- Bug: Fix drag/drop/long-press (#506)
-- Bug: Fix row widths not set correctly (#510)
-- Perf: Better mouseup handling (#507)
+- Feature: Add selected count in footer (swimlane/ngx-datatable#508)
+- Bug: Fix drag/drop/long-press (swimlane/ngx-datatable#506)
+- Bug: Fix row widths not set correctly (swimlane/ngx-datatable#510)
+- Perf: Better mouseup handling (swimlane/ngx-datatable#507)
 - Chore: Bump Depedencies
 
 ## 6.0.2
 
-- Bug: Move scss to release dir (#459)
+- Bug: Move scss to release dir (swimlane/ngx-datatable#459)
 
 ## 6.0.1
 
-- Bug: Fix CSS not working with AoT (#459)
+- Bug: Fix CSS not working with AoT (swimlane/ngx-datatable#459)
 - Chore: Fix ExtractText plugin causing build issue
 - Chore: Upgrade Angular 2.4.5
 
@@ -521,8 +521,8 @@ _NOTE: If you need support for ~Angular2, use version 6.x._
 
 - BREAKING: Renamed `datatable` css class to `ngx-datatable`
 - BREAKING: Embedded core css file with Angular `styleUrls`
-- Enhancement: Allow sorting from inline templates (#431)
-- Enhancement: Fix re-ordering columns throwing errors (#438)
+- Enhancement: Allow sorting from inline templates (swimlane/ngx-datatable#431)
+- Enhancement: Fix re-ordering columns throwing errors (swimlane/ngx-datatable#438)
 - Enhancement: Add nice drag indicator to material theme
 - Chore: Update Depedencies
 
@@ -536,17 +536,17 @@ _NOTE: If you need support for ~Angular2, use version 6.x._
 ## 4.2.0
 
 - Enhancement: Ability to add CSS Classes on Header/Column
-- Bug: Fix CPU Perf on Resort (#409)
+- Bug: Fix CPU Perf on Resort (swimlane/ngx-datatable#409)
 - Chore: Upgrade to Angular ^2.4.3
 - Chore: Correct RxJS Imports
 
 ## 4.1.0
 
 - Feature: Adding multi-click selection
-- Bug: Use tracking fn vs inline (#388)
-- Bug: Fix AoT header issue (#389)
-- Bug: Fix `reorderable` not being honored (#387)
-- Bug: Fix multi-select CTRL not working (#381)
+- Bug: Use tracking fn vs inline (swimlane/ngx-datatable#388)
+- Bug: Fix AoT header issue (swimlane/ngx-datatable#389)
+- Bug: Fix `reorderable` not being honored (swimlane/ngx-datatable#387)
+- Bug: Fix multi-select CTRL not working (swimlane/ngx-datatable#381)
 - Chore: Upgrade Angular to ^2.4.1
 - Docs: Multi-select
 
@@ -558,9 +558,9 @@ _NOTE: If you need support for ~Angular2, use version 6.x._
 ## 3.0.0
 
 - BREAKING: Removed `shiftMulti` option, its not useful and creates odd scenarios
-- Bug: Permanently high CPU utilization after sorting (#359)
+- Bug: Permanently high CPU utilization after sorting (swimlane/ngx-datatable#359)
 - Bug: Fix checkbox showing in header if defined but not using checkbox select
-- Bug: Fix AoT errors (#370)
+- Bug: Fix AoT errors (swimlane/ngx-datatable#370)
 - Bug: Fix build not outputing AoT files in correct directory
 - Bug: Fix checkbox selection not working w/ shift key
 - Chore: Upgrade Angular/Webpack
@@ -579,9 +579,9 @@ _NOTE: If you need support for ~Angular2, use version 6.x._
 
 ## 2.2.0
 
-- Bug: Fix AoT private props (#352)
-- Bug: Added null chk to selection getter (#340)
-- Bug: multiShift not working after first page (#294)
+- Bug: Fix AoT private props (swimlane/ngx-datatable#352)
+- Bug: Added null chk to selection getter (swimlane/ngx-datatable#340)
+- Bug: multiShift not working after first page (swimlane/ngx-datatable#294)
 - Chore: Update Angular to 2.3.0
 - Chore: Update TypeScript to 2.1.x
 - Chore: Update RxJS to 5.0.0-rc.4
@@ -591,7 +591,7 @@ _NOTE: If you need support for ~Angular2, use version 6.x._
 ## 2.1.3
 
 - Bug: Fix footer not updating when all removes removed
-- Bug: Fix Add/Remove items in array not updating (#255)
+- Bug: Fix Add/Remove items in array not updating (swimlane/ngx-datatable#255)
 
 ## 2.1.2
 
@@ -612,19 +612,19 @@ _NOTE: If you need support for ~Angular2, use version 6.x._
 
 ## 2.0.0
 
-- BREAKING: Rename from `datatable` to `swui-datatable` (#320)
-- BREAKING: Redo how row-detail/cell/header templates are described in markup (#304)
+- BREAKING: Rename from `datatable` to `swui-datatable` (swimlane/ngx-datatable#320)
+- BREAKING: Redo how row-detail/cell/header templates are described in markup (swimlane/ngx-datatable#304)
 - BREAKING: Change Detection switched back to normal
-- Enhancement: Row Context Menu Event `rowContextmenu` (#331)
-- Bug: Set default value for selected (#314)
-- Bug: Fix widths being int vs float (#309)
-- Bug: Fix column resize not setting widths to the right (#308)
-- Bug: Fix row object mutations (#255)
-- Bug: Async Problem when using @Input (#253)
-- Bug: Sort doesn't work on the first click (#254)
-- Bug: Pagination "skip to last page" is not selected after click (#324)
-- Bug: ngFor Not working in the datatable-row-detail-template (#274)
-- Chore: Resolve all implicit `any`s (#330)
+- Enhancement: Row Context Menu Event `rowContextmenu` (swimlane/ngx-datatable#331)
+- Bug: Set default value for selected (swimlane/ngx-datatable#314)
+- Bug: Fix widths being int vs float (swimlane/ngx-datatable#309)
+- Bug: Fix column resize not setting widths to the right (swimlane/ngx-datatable#308)
+- Bug: Fix row object mutations (swimlane/ngx-datatable#255)
+- Bug: Async Problem when using @Input (swimlane/ngx-datatable#253)
+- Bug: Sort doesn't work on the first click (swimlane/ngx-datatable#254)
+- Bug: Pagination "skip to last page" is not selected after click (swimlane/ngx-datatable#324)
+- Bug: ngFor Not working in the datatable-row-detail-template (swimlane/ngx-datatable#274)
+- Chore: Resolve all implicit `any`s (swimlane/ngx-datatable#330)
 - Chore: Bump Angular to latest `2.2.4`
 
 ## 1.7.0
@@ -634,20 +634,20 @@ _NOTE: If you need support for ~Angular2, use version 6.x._
 
 ## 1.6.0
 
-- Bug: Column headers not re-ordering (#238)
-- Bug: Datatable doesn't sort data correctly when data changed (#284)
+- Bug: Column headers not re-ordering (swimlane/ngx-datatable#238)
+- Bug: Datatable doesn't sort data correctly when data changed (swimlane/ngx-datatable#284)
 - BREAKING: `comparator` now is a normal sort function arguments of `propA, propB`.
 
 ## 1.5.1
 
-- Bug: Custom comparator should return new array (#286)
-- Bug: Init selection to empty array (#285)
+- Bug: Custom comparator should return new array (swimlane/ngx-datatable#286)
+- Bug: Init selection to empty array (swimlane/ngx-datatable#285)
 
 ## 1.5.0
 
-- Enhancement: `externalSorting` input for simpler server-sorting usage (#281)
+- Enhancement: `externalSorting` input for simpler server-sorting usage (swimlane/ngx-datatable#281)
 - Enhancement: Add `trackByProp` for change detection with mutation of row data
-- Bug: Row height variable access protection (#280)
+- Bug: Row height variable access protection (swimlane/ngx-datatable#280)
 - Chore: Upgrade to Angular 2.2.0
 - Demo: Inline editing updates
 - Demo: Live data refresh demo
@@ -655,39 +655,39 @@ _NOTE: If you need support for ~Angular2, use version 6.x._
 
 ## 1.4.1
 
-- Bug: Ignore next page when already at last (#223)
+- Bug: Ignore next page when already at last (swimlane/ngx-datatable#223)
 - Chore: Redid Webpack Config to be clean
 - Chore: TESTS! TRAVIS BUILDS! COVERAGE REPORTING!
 
 ## 1.4.0
 
-- Enhancement: Added `refresh` API for updating table (#255)
-- Bug: Fix intersection observer type errors (#268)
+- Enhancement: Added `refresh` API for updating table (swimlane/ngx-datatable#255)
+- Bug: Fix intersection observer type errors (swimlane/ngx-datatable#268)
 
 ## 1.3.1
 
-- Bug: Fix force column width distribution overriding new resize (#245)
+- Bug: Fix force column width distribution overriding new resize (swimlane/ngx-datatable#245)
 
 ## 1.3.0
 
 - Enhancement: `selectCheck` fn to prevent selection
 - Bug: Fix columns leaking event handlers
-- Bug: Fix column toggling errors (#245)
+- Bug: Fix column toggling errors (swimlane/ngx-datatable#245)
 - Bug: Fix AoT Metadata not creating
 
 ## 1.2.0
 
-- Bug: Fix columns loosing templates on resize (#252)
+- Bug: Fix columns loosing templates on resize (swimlane/ngx-datatable#252)
 - Bug: Fix pager not having right pages when hidden by default
 - Bug: Fix expressive column width as attribute with standard column distribution
-- Bug: Fix body columns not readjusting after window resize (#251)
+- Bug: Fix body columns not readjusting after window resize (swimlane/ngx-datatable#251)
 - Enhancement: Refactor `emptyMessage` and `totalMessage` to `messages` object
 - Enhancement: Huge perf improvement for tables hidden by default
 
 ## 1.1.0
 
 - Feature: NGC Complation
-- Bug: Null value in deepValueGetter (#243)
+- Bug: Null value in deepValueGetter (swimlane/ngx-datatable#243)
 - Chore: Update Depedencies
 
 ## 1.0.0
@@ -710,10 +710,10 @@ _NOTE: If you need support for ~Angular2, use version 6.x._
 
 ## 0.12.0
 
-- Bug: Return empty string on undefined deep values (#232)
-- Bug: Fix force fill alog (#218)
-- Enhancement: Support for other icon types (#235)
-- Enhancement: Add ability to identify rows for proper selection (#154)
+- Bug: Return empty string on undefined deep values (swimlane/ngx-datatable#232)
+- Bug: Fix force fill alog (swimlane/ngx-datatable#218)
+- Enhancement: Support for other icon types (swimlane/ngx-datatable#235)
+- Enhancement: Add ability to identify rows for proper selection (swimlane/ngx-datatable#154)
 
 ## 0.11.2
 
@@ -727,32 +727,32 @@ _NOTE: If you need support for ~Angular2, use version 6.x._
 ## 0.11.0
 
 - Chore: New build process
-- Bug: Fix detail row bug (#212)
+- Bug: Fix detail row bug (swimlane/ngx-datatable#212)
 
 ## 0.10.1
 
-- Bug: Fix `$$expanded` undefined with server paging (#210)
+- Bug: Fix `$$expanded` undefined with server paging (swimlane/ngx-datatable#210)
 
 ## 0.10.0
 
-- Chore: Upgrade to Angular 2.1.0 (#202)
-- Chore: Removed engine restrictions (#195)
-- Bug: windows builds with node-sass (#207)
-- Bug: resizing not closing correctly (#196)
-- Bug: Fix height paging (#208)
-- Enhancement: Improve Active CSS (#204)
-- Enhancement: Add Empty Message (#194)
-- Enhancement: Add deep value getter to sortRows function (#181)
-- Enhancement: Sort Classes are applied to body cells (#166)
-- Enhancement: AoT Compatibility (#199)
-- Feature: Row Detail (#201)
+- Chore: Upgrade to Angular 2.1.0 (swimlane/ngx-datatable#202)
+- Chore: Removed engine restrictions (swimlane/ngx-datatable#195)
+- Bug: windows builds with node-sass (swimlane/ngx-datatable#207)
+- Bug: resizing not closing correctly (swimlane/ngx-datatable#196)
+- Bug: Fix height paging (swimlane/ngx-datatable#208)
+- Enhancement: Improve Active CSS (swimlane/ngx-datatable#204)
+- Enhancement: Add Empty Message (swimlane/ngx-datatable#194)
+- Enhancement: Add deep value getter to sortRows function (swimlane/ngx-datatable#181)
+- Enhancement: Sort Classes are applied to body cells (swimlane/ngx-datatable#166)
+- Enhancement: AoT Compatibility (swimlane/ngx-datatable#199)
+- Feature: Row Detail (swimlane/ngx-datatable#201)
 
 ## 0.9.3
 
-- Column resize sometimes gives weird behaviour on mouse resize/click (#155)
-- Fix order of setters in DataTable ngOnChanges (#179)
+- Column resize sometimes gives weird behaviour on mouse resize/click (swimlane/ngx-datatable#155)
+- Fix order of setters in DataTable ngOnChanges (swimlane/ngx-datatable#179)
 - Remove document event listener subscription leak in draggable & resizeable
-- Fix `setScrollTop` undefined error (#182)
+- Fix `setScrollTop` undefined error (swimlane/ngx-datatable#182)
 
 ## 0.9.2
 
@@ -760,13 +760,13 @@ _NOTE: If you need support for ~Angular2, use version 6.x._
 
 ## 0.9.1
 
-- Export component references for external consumption (#176)
+- Export component references for external consumption (swimlane/ngx-datatable#176)
 
 ## 0.9.0
 
 - Fix accidental breaking change of renaming `HeaderCell` column property to `model`. See [commit](https://github.com/swimlane/angular2-data-table/commit/6c56b51ab918e380edb0d511730b28e66cb80afe#diff-aee46548d5e0b9f72917dd179250d4fe).
-- Ensure minWidth and maxWidth values are specified saved as numbers (#167)
-- Add row double click option (#168)
+- Ensure minWidth and maxWidth values are specified saved as numbers (swimlane/ngx-datatable#167)
+- Add row double click option (swimlane/ngx-datatable#168)
 
 ## 0.8.0
 
@@ -777,13 +777,13 @@ _NOTE: If you need support for ~Angular2, use version 6.x._
 
 - Removed #142 in favor of style height
 - Fixed issue with height + scrollbarV not sizing right
-- Fix limit not applied (#133)
-- Fix sort not resetting to top of page (#136)
+- Fix limit not applied (swimlane/ngx-datatable#133)
+- Fix sort not resetting to top of page (swimlane/ngx-datatable#136)
 - Added option validation
 
 ## 0.7.3
 
-- Huge perf bumps (#149)
+- Huge perf bumps (swimlane/ngx-datatable#149)
 
 ## 0.7.2
 
@@ -796,25 +796,25 @@ _NOTE: If you need support for ~Angular2, use version 6.x._
 ## 0.7.0
 
 - Upgrade Angular 2.0.1 & ZoneJS
-- Angular Code Style Compliance (#147)
-- Fix initial load of rows jumbled (#156)
-- Update row/options setting to ngOnChanges (#151)
-- Fix column height not set correctly (#144)
+- Angular Code Style Compliance (swimlane/ngx-datatable#147)
+- Fix initial load of rows jumbled (swimlane/ngx-datatable#156)
+- Update row/options setting to ngOnChanges (swimlane/ngx-datatable#151)
+- Fix column height not set correctly (swimlane/ngx-datatable#144)
 
 ## 0.6.1
 
-- Virtual Scrolling Emits Paging (#130)
+- Virtual Scrolling Emits Paging (swimlane/ngx-datatable#130)
 
 ## 0.6.0
 
 - Update to Angular 2.0.0!
-- Fix horizontal header issue (#129)
+- Fix horizontal header issue (swimlane/ngx-datatable#129)
 
 ## 0.5.1
 
-- Fixed Multiple Tables on Same Page (#103)
-- Fix TS Helpers not being included in release (#107)
-- Update `onPage` API to reflect docs (#116)
+- Fixed Multiple Tables on Same Page (swimlane/ngx-datatable#103)
+- Fix TS Helpers not being included in release (swimlane/ngx-datatable#107)
+- Update `onPage` API to reflect docs (swimlane/ngx-datatable#116)
 
 ## 0.5.0
 

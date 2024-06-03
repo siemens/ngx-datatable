@@ -196,7 +196,7 @@
 
 - Feature: Added support for tree grid (swimlane/ngx-datatable#1273)
 - Fix: Improve virtualization as a flag (swimlane/ngx-datatable#1297)
-- Fix: Fix issue when count is undefined #838 (swimlane/ngx-datatable#1499)
+- Fix: Fix issue when count is undefined swimlane/ngx-datatable#838 (swimlane/ngx-datatable#1499)
 - Fix: Fix usage withing prerendered SPA (swimlane/ngx-datatable#1438)
 
 ## 13.0.1

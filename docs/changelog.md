@@ -205,38 +205,38 @@
 
 ## 13.0.0
 
-- Breaking: Fixes several issues related to the summary row feature #1418
-- Fix: DataTableColumnDirective Input Binding Changes #1384
-- Fix: angular version #1420
-- Fix: issues when running npm run build --prod #1410
+- Breaking: Fixes several issues related to the summary row feature (swimlane/ngx-datatable#1418)
+- Fix: DataTableColumnDirective Input Binding Changes (swimlane/ngx-datatable#1384)
+- Fix: angular version (swimlane/ngx-datatable#1420)
+- Fix: issues when running npm run build --prod (swimlane/ngx-datatable#1410)
 
 ## 12.0.0
 
-- Breaking: Upgraded to Angular 6 #1400
-- Feat: Added reorderable input #1261
-- Fix: Fixed rowHeight type in body component #1295
-- Fix: Fixed row selection for bootstrap theme #1357
-- Fix: Reflect minWidh & maxWidth props to body cell #1361
+- Breaking: Upgraded to Angular 6 (swimlane/ngx-datatable#1400)
+- Feat: Added reorderable input (swimlane/ngx-datatable#1261)
+- Fix: Fixed rowHeight type in body component (swimlane/ngx-datatable#1295)
+- Fix: Fixed row selection for bootstrap theme (swimlane/ngx-datatable#1357)
+- Fix: Reflect minWidh & maxWidth props to body cell (swimlane/ngx-datatable#1361)
 
 ## 11.3.0
 
-- Feat: Added summary row #1233
+- Feat: Added summary row (swimlane/ngx-datatable#1233)
 - Fix: Fixed issue wi
-  th misaligned body content #1326
-- Fix: Fixed Default Sort Behavior Of Table With Custom Templates #1308
-- Chore: Fixed link in column api docs #1343
-- Chore: Fixed typo in docs #1342
+  th misaligned body content (swimlane/ngx-datatable#1326)
+- Fix: Fixed Default Sort Behavior Of Table With Custom Templates (swimlane/ngx-datatable#1308)
+- Chore: Fixed link in column api docs (swimlane/ngx-datatable#1343)
+- Chore: Fixed typo in docs (swimlane/ngx-datatable#1342)
 
 ## 11.2.0
 
-- Feat: Add resize handler for non-resizable columns #1225
-- Fix: Pager Component Accessibility #1259
-- Fix: Fix missing row with virtualization and scrollbarV #1235
-- Fix: Fall back to view mode when select field value doesn't change #1241
-- Fix: Fix virtual-paging #1229
-- Fix: Fix column scaling on resize #1236
-- Fix: Propagate sortDir changes to template #1243
-- Fix: Add setStylesByGroup() in set column prop #1244
+- Feat: Add resize handler for non-resizable columns (swimlane/ngx-datatable#1225)
+- Fix: Pager Component Accessibility (swimlane/ngx-datatable#1259)
+- Fix: Fix missing row with virtualization and scrollbarV (swimlane/ngx-datatable#1235)
+- Fix: Fall back to view mode when select field value doesn't change (swimlane/ngx-datatable#1241)
+- Fix: Fix virtual-paging (swimlane/ngx-datatable#1229)
+- Fix: Fix column scaling on resize (swimlane/ngx-datatable#1236)
+- Fix: Propagate sortDir changes to template (swimlane/ngx-datatable#1243)
+- Fix: Add setStylesByGroup() in set column prop (swimlane/ngx-datatable#1244)
 
 ## 11.1.7
 
@@ -245,8 +245,8 @@
 ## 11.1.6
 
 - Bug: Ignore rxjs/operators
-- Feat: Ability to disable virtualization #1191
-- Feat: Universal Support #1178
+- Feat: Ability to disable virtualization (swimlane/ngx-datatable#1191)
+- Feat: Universal Support (swimlane/ngx-datatable#1178)
 
 ## 11.1.5
 
@@ -310,13 +310,13 @@
 
 ## 10.2.3
 
-- Bug: Fix checkbox not being shown #956
-- Bug: Fix IE displaying null #967
-- Bug: Fix emptry string is row is null #951
+- Bug: Fix checkbox not being shown (swimlane/ngx-datatable#956)
+- Bug: Fix IE displaying null (swimlane/ngx-datatable#967)
+- Bug: Fix emptry string is row is null (swimlane/ngx-datatable#951)
 
 ## 10.2.2
 
-- Bug: Recalculate limit properly #963
+- Bug: Recalculate limit properly (swimlane/ngx-datatable#963)
 
 ## 10.2.1
 
@@ -331,7 +331,7 @@
 - Feature: Row Hover Event
 - Bug: Columns are no longer mutated!
 - Bug: Fixes for Angular v5!
-- Bug: Fix expand all row detail not working #917
+- Bug: Fix expand all row detail not working (swimlane/ngx-datatable#917)
 - Chore: Remove useless jsdoc comments
 
 ## 10.0.5
@@ -385,11 +385,11 @@
 
 ## 9.1.0
 
-- Enhancement: Add more context to cells #720
-- Enhancement: Export Pager component #735
-- Bug: Header checkbox when row selection is changed #659
-- Bug: When rowClass() returns a string, the class is not properly added #710
-- Bug: Rename icons so don't conflict with other libs #729
+- Enhancement: Add more context to cells (swimlane/ngx-datatable#720)
+- Enhancement: Export Pager component (swimlane/ngx-datatable#735)
+- Bug: Header checkbox when row selection is changed (swimlane/ngx-datatable#659)
+- Bug: When rowClass() returns a string, the class is not properly added (swimlane/ngx-datatable#710)
+- Bug: Rename icons so don't conflict with other libs (swimlane/ngx-datatable#729)
 
 ## 9.0.0
 
@@ -479,7 +479,7 @@ _NOTE: If you need support for ~Angular2, use version 6.x._
 
 ## 6.2.1
 
-- Bug: Revert #516 causing server-side paging issue (swimlane/ngx-datatable#543)
+- Bug: Revert swimlane/ngx-datatable#516 causing server-side paging issue (swimlane/ngx-datatable#543)
 
 ## 6.2.0
 
@@ -775,7 +775,7 @@ _NOTE: If you need support for ~Angular2, use version 6.x._
 
 ## 0.7.4
 
-- Removed #142 in favor of style height
+- Removed swimlane/ngx-datatable#142 in favor of style height
 - Fixed issue with height + scrollbarV not sizing right
 - Fix limit not applied (swimlane/ngx-datatable#133)
 - Fix sort not resetting to top of page (swimlane/ngx-datatable#136)

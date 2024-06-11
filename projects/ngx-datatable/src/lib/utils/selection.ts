@@ -10,13 +10,12 @@ export function selectRows(selected: any[], row: any, comparefn: any) {
   return selected;
 }
 
-export function selectRowsBetween(
-  selected: any[],
-  rows: any[],
+export function selectRowsBetween<TRow>(
+  selected: TRow[],
+  rows: TRow[],
   index: number,
-  prevIndex: number,
-  comparefn: any
-): any[] {
+  prevIndex: number
+): TRow[] {
   const reverse = index < prevIndex;
 
   for (let i = 0; i < rows.length; i++) {

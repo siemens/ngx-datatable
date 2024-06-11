@@ -19,7 +19,6 @@ class TestFixtureComponent {}
 describe('DatatableGroupHeaderDirective', () => {
   let fixture: ComponentFixture<TestFixtureComponent>;
   let component: TestFixtureComponent;
-  let element: any;
 
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
@@ -33,7 +32,6 @@ describe('DatatableGroupHeaderDirective', () => {
       TestBed.compileComponents().then(() => {
         fixture = TestBed.createComponent(TestFixtureComponent);
         component = fixture.componentInstance;
-        element = fixture.nativeElement;
       });
     })
   );

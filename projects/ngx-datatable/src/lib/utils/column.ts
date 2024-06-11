@@ -1,8 +1,11 @@
+import { TableColumn } from '../types/table-column.type';
+import { PinnedColumns } from '../types/column-pin.type';
+
 /**
  * Returns the columns by pin.
  */
-export function columnsByPin(cols: any[]) {
-  const ret: { left: any; center: any; right: any } = {
+export function columnsByPin(cols: TableColumn[]) {
+  const ret: { left: TableColumn[]; center: TableColumn[]; right: TableColumn[] } = {
     left: [],
     center: [],
     right: []
@@ -66,13 +69,11 @@ export function columnsTotalWidth(columns: any, prop?: any) {
   return totalWidth;
 }
 
-export function columnsByPinArr(val: any) {
-  const colsByPinArr = [];
+export function columnsByPinArr(val: TableColumn[]): PinnedColumns[] {
   const colsByPin = columnsByPin(val);
-
-  colsByPinArr.push({ type: 'left', columns: colsByPin.left });
-  colsByPinArr.push({ type: 'center', columns: colsByPin.center });
-  colsByPinArr.push({ type: 'right', columns: colsByPin.right });
-
-  return colsByPinArr;
+  return [
+    { type: 'left' as const, columns: colsByPin.left },
+    { type: 'center' as const, columns: colsByPin.center },
+    { type: 'right' as const, columns: colsByPin.right }
+  ];
 }

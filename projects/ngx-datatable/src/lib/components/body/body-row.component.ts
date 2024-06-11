@@ -20,7 +20,10 @@ import { Keys } from '../../utils/keys';
 import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 import { translateXY } from '../../utils/translate';
 import { BehaviorSubject } from 'rxjs';
-import { DataTableRowWrapperComponent } from './body-row-wrapper.component';
+import { RowOrGroup } from "../../types/group.type";
+import { NgClass, NgStyle } from '@angular/common';
+import { TableColumn } from '../../types/table-column.type';
+import { PinnedColumns } from '../../types/column-pin.type';
 
 @Component({
   selector: 'datatable-body-row',
@@ -54,8 +57,8 @@ import { DataTableRowWrapperComponent } from './body-row-wrapper.component';
     </div>
   `
 })
-export class DataTableBodyRowComponent implements DoCheck {
-  @Input() set columns(val: any[]) {
+export class DataTableBodyRowComponent<TRow = any> implements DoCheck {
+  @Input() set columns(val: TableColumn[]) {
     this._columns = val;
     this.recalculateColumns(val);
     this.buildStylesByGroup();
@@ -81,13 +84,13 @@ export class DataTableBodyRowComponent implements DoCheck {
   }
 
   @Input() expanded: boolean;
-  @Input() rowClass: any;
-  @Input() row: any;
-  @Input() group: any;
+  @Input() rowClass: NgClass['ngClass'];
+  @Input() row: RowOrGroup<TRow>;
+  @Input() group: TRow[];
   @Input() isSelected: boolean;
   @Input() rowIndex: number;
   @Input() displayCheck: any;
-  @Input() treeStatus: TreeStatus = 'collapsed';
+  @Input() treeStatus?: TreeStatus = 'collapsed';
   @Input() ghostLoadingIndicator = false;
 
   @Input() disable$: BehaviorSubject<boolean>;
@@ -117,7 +120,7 @@ export class DataTableBodyRowComponent implements DoCheck {
     }
 
     if (this.rowClass) {
-      const res = this.rowClass(this.row);
+      const res = this.rowClass;
       if (typeof res === 'string') {
         cls += ` ${res}`;
       } else if (typeof res === 'object') {
@@ -145,25 +148,25 @@ export class DataTableBodyRowComponent implements DoCheck {
   @Output() activate: EventEmitter<any> = new EventEmitter();
   @Output() treeAction: EventEmitter<any> = new EventEmitter();
 
-  _element: any;
+  _element: HTMLElement;
   _columnGroupWidths: any;
-  _columnsByPin: any;
+  _columnsByPin: PinnedColumns[];
   _offsetX: number;
-  _columns: any[];
+  _columns: TableColumn[];
   _innerWidth: number;
-  _groupStyles: { [prop: string]: unknown } = {
-    left: {},
-    center: {},
-    right: {}
+  _groupStyles = {
+    left: NgStyle['ngStyle'],
+    center: NgStyle['ngStyle'],
+    right: NgStyle['ngStyle']
   };
 
-  private _rowDiffer: KeyValueDiffer<unknown, unknown>;
+  private _rowDiffer: KeyValueDiffer<keyof RowOrGroup<TRow>, any>;
 
   constructor(
-    private differs: KeyValueDiffers,
+    differs: KeyValueDiffers,
     @SkipSelf() private scrollbarHelper: ScrollbarHelper,
     private cd: ChangeDetectorRef,
-    element: ElementRef
+    element: ElementRef<HTMLElement>
   ) {
     this._element = element.nativeElement;
     this._rowDiffer = differs.find({}).create();
@@ -175,11 +178,11 @@ export class DataTableBodyRowComponent implements DoCheck {
     }
   }
 
-  trackByGroups(index: number, colGroup: any): any {
+  trackByGroups(index: number, colGroup: PinnedColumns): string {
     return colGroup.type;
   }
 
-  columnTrackingFn(index: number, column: any): any {
+  columnTrackingFn(index: number, column: TableColumn): string {
     return column.$$id;
   }
 
@@ -190,25 +193,31 @@ export class DataTableBodyRowComponent implements DoCheck {
     this.cd.markForCheck();
   }
 
-  calcStylesByGroup(group: string) {
+  calcStylesByGroup(group: 'left' | 'right' | 'center') {
     const widths = this._columnGroupWidths;
     const offsetX = this.offsetX;
 
-    const styles = {
-      width: `${widths[group]}px`
-    };
-
     if (group === 'left') {
-      translateXY(styles, offsetX, 0);
+      return {
+        width: `${widths[group]}px`,
+        ...translateXY(offsetX, 0)
+
+      }
     } else if (group === 'right') {
       const bodyWidth = this.innerWidth;
       const totalDiff = widths.total - bodyWidth;
       const offsetDiff = totalDiff - offsetX;
       const offset = (offsetDiff + this.scrollbarHelper.width) * -1;
-      translateXY(styles, offset, 0);
+      return {
+        width: `${widths[group]}px`,
+        ...translateXY(offset, 0)
+
+      }
     }
 
-    return styles;
+    return {
+      width: `${widths[group]}px`
+    };
   }
 
   onActivate(event: any, index: number): void {
@@ -254,7 +263,7 @@ export class DataTableBodyRowComponent implements DoCheck {
     });
   }
 
-  recalculateColumns(val: any[] = this.columns): void {
+  recalculateColumns(val: TableColumn[] = this.columns): void {
     this._columns = val;
     const colsByPin = columnsByPin(this._columns);
     this._columnsByPin = columnsByPinArr(this._columns);

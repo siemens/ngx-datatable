@@ -12,6 +12,12 @@ import {
   Output
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Group, RowOrGroup } from '../../types/group.type';
+import { NgStyle } from '@angular/common';
+import { RowDetailContext } from '../../types/detail-context.type';
+import { GroupContext } from '../../types/cell-context.type';
+import { DatatableGroupHeaderDirective } from './body-group-header.directive';
+import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive';
 
 @Component({
   selector: 'datatable-row-wrapper',
@@ -44,16 +50,16 @@ import { BehaviorSubject } from 'rxjs';
     class: 'datatable-row-wrapper'
   }
 })
-export class DataTableRowWrapperComponent implements DoCheck, OnInit {
+export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit {
   @Input() innerWidth: number;
-  @Input() rowDetail: any;
-  @Input() groupHeader: any;
+  @Input() rowDetail: DatatableRowDetailDirective;
+  @Input() groupHeader: DatatableGroupHeaderDirective;
   @Input() offsetX: number;
-  @Input() detailRowHeight: any;
-  @Input() row: any;
-  @Input() groupedRows: any;
-  @Input() disableCheck: (row: any) => boolean;
-  @Output() rowContextmenu = new EventEmitter<{ event: MouseEvent; row: any }>(false);
+  @Input() detailRowHeight: number;
+  @Input() row: RowOrGroup<TRow>;
+  @Input() groupedRows: Group<TRow>[];
+  @Input() disableCheck: (row: RowOrGroup<TRow>) => boolean;
+  @Output() rowContextmenu = new EventEmitter<{ event: MouseEvent; row: RowOrGroup<TRow> }>(false);
 
   @Input() set rowIndex(val: number) {
     this._rowIndex = val;
@@ -77,15 +83,15 @@ export class DataTableRowWrapperComponent implements DoCheck, OnInit {
     return this._expanded;
   }
 
-  groupContext: any;
-  rowContext: any;
+  groupContext: GroupContext<TRow>;
+  rowContext: RowDetailContext<TRow>;
   disable$: BehaviorSubject<boolean>;
 
-  private rowDiffer: KeyValueDiffer<unknown, unknown>;
+  private rowDiffer: KeyValueDiffer<keyof RowOrGroup<TRow>, any>;
   private _expanded = false;
   private _rowIndex: number;
 
-  constructor(private cd: ChangeDetectorRef, private differs: KeyValueDiffers) {
+  constructor(private cd: ChangeDetectorRef, differs: KeyValueDiffers) {
     this.groupContext = {
       group: this.row,
       expanded: this.expanded,
@@ -95,7 +101,8 @@ export class DataTableRowWrapperComponent implements DoCheck, OnInit {
     this.rowContext = {
       row: this.row,
       expanded: this.expanded,
-      rowIndex: this.rowIndex
+      rowIndex: this.rowIndex,
+      disableRow$: this.disable$
     };
 
     this.rowDiffer = differs.find({}).create();
@@ -105,16 +112,19 @@ export class DataTableRowWrapperComponent implements DoCheck, OnInit {
     if (this.disableCheck) {
       const isRowDisabled = this.disableCheck(this.row);
       this.disable$ = new BehaviorSubject(isRowDisabled);
+      this.rowContext.disableRow$ = this.disable$;
     }
-    this.rowContext.disableRow$ = this.disable$;
   }
 
   ngDoCheck(): void {
     if (this.disableCheck) {
       const isRowDisabled = this.disableCheck(this.row);
-      this.disable$.next(isRowDisabled);
-      this.cd.markForCheck();
+      if (isRowDisabled !== this.disable$.value) {
+        this.disable$.next(isRowDisabled);
+        this.cd.markForCheck();
+      }
     }
+
     if (this.rowDiffer.diff(this.row)) {
       this.rowContext.row = this.row;
       this.groupContext.group = this.row;
@@ -127,13 +137,11 @@ export class DataTableRowWrapperComponent implements DoCheck, OnInit {
     this.rowContextmenu.emit({ event: $event, row: this.row });
   }
 
-  getGroupHeaderStyle(): any {
-    const styles = {} as any;
-
-    styles.transform = 'translate3d(' + this.offsetX + 'px, 0px, 0px)';
-    styles['backface-visibility'] = 'hidden';
-    styles.width = this.innerWidth;
-
-    return styles;
+  getGroupHeaderStyle(): NgStyle['ngStyle'] {
+    return {
+      "transform": 'translate3d(' + this.offsetX + 'px, 0px, 0px)',
+      'backface-visibility': 'hidden',
+      "width": this.innerWidth
+    };
   }
 }

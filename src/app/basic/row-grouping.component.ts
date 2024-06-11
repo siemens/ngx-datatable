@@ -1,5 +1,4 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { NgStyle } from '@angular/common';
+import { Component, ViewChild } from '@angular/core';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
@@ -48,7 +47,7 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
         </ngx-datatable-group-header>
 
         <!-- Row Column Template -->
-        <ngx-datatable-column name="Exp. Pay." prop="" editable="true" frozenLeft="True">
+        <ngx-datatable-column name="Exp. Pay." prop="" editable="true" frozenLeft="True" [sortable]="false">
           <ng-template
             ngx-datatable-cell-template
             let-rowIndex="rowIndex"
@@ -259,8 +258,9 @@ export class RowGroupingComponent {
   }
 
   updateValue(event, cell, rowIndex) {
+    const index = rowIndex.split('-')[1];
     this.editing[rowIndex + '-' + cell] = false;
-    this.rows[rowIndex][cell] = event.target.value;
+    this.rows[index][cell] = event.target.value;
     this.rows = [...this.rows];
   }
 

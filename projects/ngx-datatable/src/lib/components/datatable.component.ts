@@ -21,6 +21,7 @@ import {
   Output,
   QueryList,
   SkipSelf,
+  TemplateRef,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
@@ -48,6 +49,7 @@ import { DimensionsHelper } from '../services/dimensions-helper.service';
 import { throttleable } from '../utils/throttle';
 import { adjustColumnWidths, forceFillColumnWidths } from '../utils/math';
 import { sortGroupedRows, sortRows } from '../utils/sort';
+import { DatatableRowDefDirective } from './body/body-row-def.component';
 
 @Component({
   selector: 'ngx-datatable',
@@ -654,6 +656,9 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
 
   @ViewChild(DataTableBodyComponent, { read: ElementRef })
   private bodyElement: ElementRef<HTMLElement>;
+  @ContentChild(DatatableRowDefDirective, {
+    read: TemplateRef
+  }) rowDefTemplate!: TemplateRef<any>;
 
   /**
    * Returns if all rows are selected.

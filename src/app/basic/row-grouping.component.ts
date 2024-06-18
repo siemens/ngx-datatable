@@ -1,3 +1,4 @@
+import { SelectionType } from './../../../projects/ngx-datatable/src/lib/types/selection.type';
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
@@ -29,6 +30,7 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
         [rowHeight]="40"
         [limit]="4"
         [groupExpansionDefault]="true"
+        [selectionType]="SelectionType.multiClick"
       >
         <!-- Group Header Template -->
         <ngx-datatable-group-header [rowHeight]="50" #myGroupHeader (toggle)="onDetailToggle($event)">
@@ -130,6 +132,7 @@ export class RowGroupingComponent {
   rows = [];
 
   ColumnMode = ColumnMode;
+  SelectionType = SelectionType;
 
   constructor() {
     this.fetch(data => {

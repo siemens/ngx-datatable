@@ -652,6 +652,9 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   @ViewChild(DataTableHeaderComponent)
     headerComponent: DataTableHeaderComponent;
 
+  @ViewChild(DataTableBodyComponent, { read: ElementRef })
+  private bodyElement: ElementRef<HTMLElement>;
+
   /**
    * Returns if all rows are selected.
    */
@@ -686,6 +689,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   _columnTemplates: QueryList<DataTableColumnDirective>;
   _subscriptions: Subscription[] = [];
   _ghostLoadingIndicator = false;
+  protected verticalScrollVisible = false;
 
   constructor(
     @SkipSelf() private scrollbarHelper: ScrollbarHelper,
@@ -843,6 +847,10 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
         optionalGetterForProp(this.treeToRelation)
       );
 
+      queueMicrotask(() => {
+        this.recalculate();
+        this.cd.markForCheck();
+      });
       this.recalculatePages();
       this.cd.markForCheck();
     }
@@ -886,14 +894,15 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
     if (!columns) {return undefined;}
 
     let width = this._innerWidth;
+    const bodyElement = this.bodyElement?.nativeElement;
+    this.verticalScrollVisible = bodyElement?.scrollHeight > bodyElement?.clientHeight;
     if (this.scrollbarV && !this.scrollbarVDynamic) {
-      width = width - this.scrollbarHelper.width;
-
+      width = width - (this.verticalScrollVisible ? this.scrollbarHelper.width : 0);
     } else if (this.scrollbarVDynamic){
       const scrollerHeight = this.bodyComponent?.scroller?.element.offsetHeight;
       if (scrollerHeight && this.bodyHeight < scrollerHeight) {
-        width = width - this.scrollbarHelper.width;
-      }
+        width = width - (this.verticalScrollVisible ? this.scrollbarHelper.width : 0);
+      } 
 
       if (this.headerComponent && this.headerComponent.innerWidth !== width){
         this.headerComponent.innerWidth = width;

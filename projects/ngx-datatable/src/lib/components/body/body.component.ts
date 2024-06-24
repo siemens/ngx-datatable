@@ -101,6 +101,7 @@ import { DragEventData } from '../../types/drag-events.type';
             [treeStatus]="group && group.treeStatus"
             [ghostLoadingIndicator]="ghostLoadingIndicator"
             [draggable]="rowDraggable"
+            [verticalScrollVisible]="verticalScrollVisible"
             (treeAction)="onTreeAction(group)"
             (activate)="selector.onActivate($event, indexes.first + i)"
             (drop)="drop($event, group, rowElement)"
@@ -130,6 +131,7 @@ import { DragEventData } from '../../types/drag-events.type';
               [rowClass]="rowClass"
               [ghostLoadingIndicator]="ghostLoadingIndicator"
               [draggable]="rowDraggable"
+              [verticalScrollVisible]="verticalScrollVisible"
               (activate)="selector.onActivate($event, i)"
               (drop)="drop($event, row, rowElement)"
               (dragover)="dragOver($event, row)"
@@ -154,14 +156,23 @@ import { DragEventData } from '../../types/drag-events.type';
         </datatable-summary-row>
       </datatable-scroller>
       <ng-container *ngIf="!rows?.length && !loadingIndicator && !ghostLoadingIndicator">
-      <div
-        class="empty-row"
-        *ngIf="!customEmptyContent?.children.length"
-        [innerHTML]="emptyMessage"
-      ></div>
-      <div #customEmptyContent>
-        <ng-content select="[empty-content]"></ng-content>
-      </div>
+        <datatable-scroller
+          [scrollbarV]="scrollbarV"
+          [scrollbarH]="scrollbarH"
+          [scrollHeight]="scrollHeight"
+          [scrollWidth]="columnGroupWidths?.total"
+          (scroll)="onBodyScroll($event)"
+        >
+          <div
+            class="empty-row"
+            *ngIf="!customEmptyContent?.children.length"
+            [innerHTML]="emptyMessage"
+          ></div>
+          <div #customEmptyContent>
+            {{columnGroupWidths?.total}}
+            <ng-content select="[empty-content]"></ng-content>
+          </div>
+        </datatable-scroller>
       </ng-container>
     </datatable-selection>
   `,
@@ -300,6 +311,8 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   get bodyHeight() {
     return this._bodyHeight;
   }
+
+  @Input() verticalScrollVisible = false;
 
   @Output() scroll: EventEmitter<any> = new EventEmitter();
   @Output() page: EventEmitter<any> = new EventEmitter();

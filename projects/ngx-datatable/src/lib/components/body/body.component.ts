@@ -198,7 +198,7 @@ import { DragEventData } from '../../types/drag-events.type';
   }
 })
 export class DataTableBodyComponent implements OnInit, OnDestroy {
-  @Input() rowDefTemplate!: TemplateRef<any>;
+  @Input() rowDefTemplate?: TemplateRef<any>;
   @Input() scrollbarV: boolean;
   @Input() scrollbarH: boolean;
   @Input() loadingIndicator: boolean;

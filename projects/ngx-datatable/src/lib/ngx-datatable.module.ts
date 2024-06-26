@@ -91,8 +91,7 @@ import { DatatableRowDefComponent, DatatableRowDefDirective, DatatableRowDefInte
     DatatableGroupHeaderTemplateDirective,
     DisableRowDirective,
     DatatableRowDefComponent,
-    DatatableRowDefDirective,
-    DatatableRowDefInternalDirective
+    DatatableRowDefDirective
   ]
 })
 export class NgxDatatableModule {

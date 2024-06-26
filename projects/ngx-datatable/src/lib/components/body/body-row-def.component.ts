@@ -10,6 +10,11 @@ import {
   ViewContainerRef
 } from '@angular/core';
 
+/**
+ * This component is passed as ng-template and rendered by BodyComponent.
+ * BodyComponent uses rowDefInternal to first inject actual row template.
+ * This component will render that actual row template.
+ */
 @Component({
   selector: 'datatable-row-def',
   template: `<ng-container
@@ -43,7 +48,7 @@ export class DatatableRowDefDirective {
 export class DatatableRowDefInternalDirective implements OnInit {
   vc = inject(ViewContainerRef);
 
-  @Input() rowDefInternal!: RowDefContext;
+  @Input() rowDefInternal?: RowDefContext;
 
   ngOnInit(): void {
     this.vc.createEmbeddedView(

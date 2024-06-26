@@ -20,6 +20,8 @@
   - Row Detail
     - [Inputs](api/detail/inputs.md)
     - [Outputs](api/detail/outputs.md)
+  - Row
+    - [Custom row wrapper](api/row/row-def.md)
 - Demos
   - [Online](http://siemens.github.io/ngx-datatable/)
   - [Source Code](https://github.com/siemens/ngx-datatable/tree/master/src/app)

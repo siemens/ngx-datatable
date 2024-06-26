@@ -658,7 +658,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   private bodyElement: ElementRef<HTMLElement>;
   @ContentChild(DatatableRowDefDirective, {
     read: TemplateRef
-  }) rowDefTemplate!: TemplateRef<any>;
+  }) rowDefTemplate?: TemplateRef<any>;
 
   /**
    * Returns if all rows are selected.

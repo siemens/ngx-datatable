@@ -34,9 +34,9 @@ import { SelectionType } from './../../../projects/ngx-datatable/src/lib/types/s
         [selectionType]="SelectionType.multiClick"
       >
         <!-- Group Header Template -->
-        <ngx-datatable-group-header [rowHeight]="50" #myGroupHeader (toggle)="onDetailToggle($event)">
+        <ngx-datatable-group-header [rowHeight]="34" #myGroupHeader (toggle)="onDetailToggle($event)">
           <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
-            <div style="padding-left:5px;">
+            <div style="padding-left:5px;height: 100%; display:flex;align-items: center;">
               <a
                 href="#"
                 [class.datatable-icon-right]="!expanded"

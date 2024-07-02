@@ -176,7 +176,7 @@ import { DragEventData } from '../../types/drag-events.type';
           [scrollbarV]="scrollbarV"
           [scrollbarH]="scrollbarH"
           [scrollHeight]="scrollHeight"
-          [scrollWidth]="columnGroupWidths?.total"
+          [style.width]="scrollbarH ? columnGroupWidths?.total + 'px' : '100%'"
           (scroll)="onBodyScroll($event)"
         >
           <div
@@ -185,7 +185,6 @@ import { DragEventData } from '../../types/drag-events.type';
             [innerHTML]="emptyMessage"
           ></div>
           <div #customEmptyContent>
-            {{columnGroupWidths?.total}}
             <ng-content select="[empty-content]"></ng-content>
           </div>
         </datatable-scroller>

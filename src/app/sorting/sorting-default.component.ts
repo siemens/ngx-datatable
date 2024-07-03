@@ -24,6 +24,7 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
         [footerHeight]="50"
         [rowHeight]="50"
         [scrollbarV]="true"
+        [enableClearingSortState]="true"
         [sorts]="[{ prop: 'name', dir: 'desc' }]"
       >
         <ngx-datatable-column name="Company">

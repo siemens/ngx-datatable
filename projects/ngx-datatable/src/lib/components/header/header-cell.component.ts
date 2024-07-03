@@ -54,6 +54,7 @@ export class DataTableHeaderCellComponent implements OnInit {
   @Input() isTarget: boolean;
   @Input() targetMarkerTemplate: any;
   @Input() targetMarkerContext: any;
+  @Input() enableClearingSortState = false;
 
   _allRowsSelected: boolean;
 
@@ -191,6 +192,10 @@ export class DataTableHeaderCellComponent implements OnInit {
 
   ngOnInit() {
     this.sortClass = this.calcSortClass(this.sortDir);
+    // If there is already a default sort then start the counter with 1.
+    if (this.sortDir) {
+      this.totalSortStatesApplied = 1;
+    }
   }
 
   calcSortDir(sorts: any[]): any {
@@ -200,11 +205,18 @@ export class DataTableHeaderCellComponent implements OnInit {
       if (sort) {return sort.dir;}
     }
   }
-
+  // Counter to reset sort once user sort asc and desc.
+  private totalSortStatesApplied = 0;
   onSort(): void {
     if (!this.column.sortable) {return;}
 
-    const newValue = nextSortDir(this.sortType, this.sortDir);
+    this.totalSortStatesApplied++;
+    let newValue = nextSortDir(this.sortType, this.sortDir);
+    // User has done both direction sort so we reset the next sort.
+    if (this.enableClearingSortState && this.totalSortStatesApplied === 3) {
+      newValue = undefined;
+      this.totalSortStatesApplied = 0;
+    }
     this.sort.emit({
       column: this.column,
       prevValue: this.sortDir,

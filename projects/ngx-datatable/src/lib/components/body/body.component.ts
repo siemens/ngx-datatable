@@ -403,38 +403,33 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     if (this.rowDetail) {
-      this.listener = this.rowDetail.toggle.subscribe(({ type, value }: { type: string; value: any }) => {
-        if (type === 'row') {
-          this.toggleRowExpansion(value);
-        }
-        if (type === 'all') {
-          this.toggleAllRows(value);
-        }
-
-        // Refresh rows after toggle
-        // Fixes #883
-        this.updateIndexes();
-        this.updateRows();
-        this.cd.markForCheck();
-      });
+      this.listener = this.rowDetail.toggle.subscribe(({ type, value }: { type: string; value: any }) =>
+        this.toggleStateChange(type, value)
+      );
     }
 
     if (this.groupHeader) {
       this.listener = this.groupHeader.toggle.subscribe(({ type, value }: { type: string; value: any }) => {
-        if (type === 'group') {
-          this.toggleRowExpansion(value);
-        }
-        if (type === 'all') {
-          this.toggleAllRows(value);
-        }
-
-        // Refresh rows after toggle
-        // Fixes #883
-        this.updateIndexes();
-        this.updateRows();
-        this.cd.markForCheck();
+        // Remove default expansion state once user starts manual toggle.
+        this.groupExpansionDefault = false;
+        this.toggleStateChange(type, value);
       });
     }
+  }
+
+  private toggleStateChange(type: string, value: any) {
+    if (type === 'group' || type === 'row') {
+      this.toggleRowExpansion(value);
+    }
+    if (type === 'all') {
+      this.toggleAllRows(value);
+    }
+
+    // Refresh rows after toggle
+    // Fixes #883
+    this.updateIndexes();
+    this.updateRows();
+    this.cd.markForCheck();
   }
 
   /**
@@ -854,9 +849,9 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
 
     // Capture the row index of the first row that is visible on the viewport.
     const viewPortFirstRowIndex = this.getAdjustedViewPortIndex();
-
+    const rows = this.groupedRows ?? this.rows;
     if (expanded) {
-      for (const row of this.rows) {
+      for (const row of rows) {
         this.rowExpansions.push(row);
       }
     }
@@ -868,7 +863,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
 
     // Emit all rows that have been expanded.
     this.detailToggle.emit({
-      rows: this.rows,
+      rows: rows,
       currentIndex: viewPortFirstRowIndex
     });
   }

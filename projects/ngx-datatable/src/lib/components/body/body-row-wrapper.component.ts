@@ -17,7 +17,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { DatatableComponent } from '../datatable.component';
+import { DatatableComponentToken } from '../../utils/table-token';
 
 @Component({
   selector: 'datatable-row-wrapper',
@@ -111,7 +111,7 @@ export class DataTableRowWrapperComponent implements DoCheck, OnInit {
   private selectedRowsDiffer: IterableDiffer<unknown[]>;
   private _expanded = false;
   private _rowIndex: number;
-  private tableComponent = inject(DatatableComponent);
+  private tableComponent = inject(DatatableComponentToken);
 
   constructor(private cd: ChangeDetectorRef, private differs: KeyValueDiffers, private iterableDiffers: IterableDiffers) {
     this.groupContext = {

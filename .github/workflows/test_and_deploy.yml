@@ -17,6 +17,12 @@ jobs:
     - name: Install
       uses: bahmutov/npm-install@v1
 
+    - name: Build and package library
+      run: |
+        npm run package --if-present
+      env:
+        CI: true
+
     - name: Build
       run: |
         npm run build --if-present

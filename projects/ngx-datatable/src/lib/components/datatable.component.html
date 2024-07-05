@@ -1,4 +1,4 @@
-<div visibilityObserver (visible)="recalculate()">
+<div visibilityObserver [resizeThrottle]="resizeThrottle" [emitInitial]="emitInitial" (visible)="recalculate()">
   <div role="table">
     <datatable-header
       role="rowgroup"

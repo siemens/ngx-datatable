@@ -7,6 +7,7 @@ import { DatatableComponent } from '@siemens/ngx-datatable';
 })
 export class StickyHeaderDirective implements OnInit {
   private _isFixed = false;
+  private _shouldBeFixed = false;
 
   constructor(@Host() @Optional() private ngxDatatable: DatatableComponent) {}
 
@@ -23,12 +24,19 @@ export class StickyHeaderDirective implements OnInit {
     const tableRect = this.ngxDatatable?.element?.getBoundingClientRect();
 
     const shouldFixHeader = tableRect.top <= 0 && tableRect.bottom - headerRect.height > 0;
-    if (shouldFixHeader && !this.isFixed) {
+    if (shouldFixHeader && !this._isFixed) {
       this.applyFixedStyles(header);
-      this.isFixed = true;
-    } else if (!shouldFixHeader && this.isFixed) {
-      this.resetStyles(header);
-      this.isFixed = false;
+      if (this._shouldBeFixed) {
+        this.ngxDatatable.element.style.paddingTop = `${headerRect.height}px`;
+        this._isFixed = true;
+      }
+      this._shouldBeFixed = true;
+    } else if (!shouldFixHeader && this._isFixed) {
+      if (!this._shouldBeFixed) {
+        this.resetStyles(header);
+        this._isFixed = false;
+      }
+      this._shouldBeFixed = false;
     }
   }
 
@@ -37,14 +45,13 @@ export class StickyHeaderDirective implements OnInit {
     header.style.top = '0';
     header.style.zIndex = '1000';
     header.style.backgroundColor = 'white';
-    this.ngxDatatable.element.style.marginTop = `${header.getBoundingClientRect().height}px`;
   }
 
   private resetStyles(header: HTMLElement) {
-    header.style.position = null;
-    header.style.top = null;
-    header.style.zIndex = null;
-    header.style.backgroundColor = null;
-    this.ngxDatatable.element.style.marginTop = null;
+    header.style.position = '';
+    header.style.top = '';
+    header.style.zIndex = '';
+    header.style.backgroundColor = '';
+    this.ngxDatatable.element.style.paddingTop = '';
   }
 }

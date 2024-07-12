@@ -21,8 +21,6 @@ export class StickyHeaderDirective implements OnInit {
     const datatableHeader = this.ngxDatatable?.element?.querySelector('.datatable-header') as HTMLElement;
     const datatableHeaderBoundingClientRect = datatableHeader.getBoundingClientRect();
     const datatableBoundingClientRect = this.ngxDatatable?.element?.getBoundingClientRect();
-    console.log('datatableHeader bounding client rect', datatableHeaderBoundingClientRect);
-    console.log('datatable bounding client rect', this.ngxDatatable.element.getBoundingClientRect());
     const datatableYTopInViewport = this._isFixed
       ? datatableBoundingClientRect.top - datatableHeaderBoundingClientRect.height
       : datatableHeaderBoundingClientRect.top;

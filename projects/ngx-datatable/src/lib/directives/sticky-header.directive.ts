@@ -25,8 +25,8 @@ export class StickyHeaderDirective implements OnInit {
 
     const shouldFixHeader = tableRect.top <= 0 && tableRect.bottom - headerRect.height > 0;
     if (shouldFixHeader && !this._isFixed) {
-      this.applyFixedStyles(header);
       if (this._shouldBeFixed) {
+        this.applyFixedStyles(header);
         this.ngxDatatable.element.style.paddingTop = `${headerRect.height}px`;
         this._isFixed = true;
       }

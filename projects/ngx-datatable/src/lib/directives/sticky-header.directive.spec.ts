@@ -5,7 +5,7 @@ import { StickyHeaderDirective } from './sticky-header.directive';
 
 @Component({
   selector: 'test-fixture-component',
-  template: ` <div sticky-header></div> `
+  template: ` <div stickyHeader></div> `
 })
 class TestFixtureComponent {}
 

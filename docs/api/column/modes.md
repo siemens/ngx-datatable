@@ -10,7 +10,7 @@ Columns are distributed given the width's defined in the column options.
 ## Flex
 
 Flex mode distributes the width's grow factor relative to other columns.
-It works the same as the [flex-grow API](http =//www.w3.org/TR/css3-flexbox/) in CSS.
+It works the same as the [flex-grow API](https://www.w3.org/TR/css3-flexbox-1/) in CSS.
 Basically it takes any available extra width and distribute it proportionally
 according to each column's `flexGrow` value.
 

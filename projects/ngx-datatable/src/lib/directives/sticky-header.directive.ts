@@ -18,7 +18,7 @@ export class StickyHeaderDirective implements OnInit {
 
     @HostListener('window:scroll', ['$event'])
   onWindowScroll() {
-    const header = this.ngxDatatable?.element?.querySelector('.datatable-header') as HTMLElement;
+    const header: HTMLElement = this.ngxDatatable?.element?.querySelector('.datatable-header');
     const headerRect = header.getBoundingClientRect();
     const tableRect = this.ngxDatatable?.element?.getBoundingClientRect();
 

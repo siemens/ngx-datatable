@@ -9,6 +9,7 @@ import { DraggableDirective } from './directives/draggable.directive';
 import { ResizeableDirective } from './directives/resizeable.directive';
 import { OrderableDirective } from './directives/orderable.directive';
 import { LongPressDirective } from './directives/long-press.directive';
+import { LongPressDirective } from './directives/sticky-header.directive';
 import { ScrollerComponent } from './components/body/scroller.component';
 import { DatatableComponent } from './components/datatable.component';
 import { DataTableColumnDirective } from './components/columns/column.directive';
@@ -46,6 +47,7 @@ import { DatatableRowDefComponent, DatatableRowDefDirective, DatatableRowDefInte
     ResizeableDirective,
     OrderableDirective,
     LongPressDirective,
+    StickyHeaderDirective,
     ScrollerComponent,
     DatatableComponent,
     DataTableColumnDirective,
@@ -87,6 +89,7 @@ import { DatatableRowDefComponent, DatatableRowDefDirective, DatatableRowDefInte
     DataTableColumnCellTreeToggle,
     DataTableFooterTemplateDirective,
     DatatableFooterDirective,
+    StickyHeaderDirective,
     DataTablePagerComponent,
     DatatableGroupHeaderTemplateDirective,
     DisableRowDirective,

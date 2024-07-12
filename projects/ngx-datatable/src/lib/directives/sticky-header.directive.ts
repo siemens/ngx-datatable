@@ -2,7 +2,7 @@ import { Directive, Host, HostListener, OnInit, Optional } from '@angular/core';
 import { DatatableComponent } from '@siemens/ngx-datatable';
 
 @Directive({
-  selector: '[sticky-header]',
+  selector: '[stickyHeader]',
   standalone: true,
 })
 export class StickyHeaderDirective implements OnInit {

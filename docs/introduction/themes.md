@@ -20,7 +20,7 @@ You can just add above to your `scss` file and then specify the class of your ng
 - `ngx-datatable`: Master Table class
 
   - `fixed-header`: The header is fixed on the table
-  - `sticky-header`: The header is sticky during the scroll along the table.
+  - `sticky-header`: The header is sticky during the scroll along the table. ⚠️ Do not apply `overflow: hidden;` or `overflow-{x,y}: hidden;` properties to parent elements.
 
 - `datatable-header`: Header row class
 

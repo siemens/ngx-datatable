@@ -20,14 +20,3 @@ $disable-row-text-color: #83888E !default;
     }
   }
 }
-
-.ngx-datatable-sticky {
-  overflow: unset !important;
-
-  .datatable-header {
-    position: sticky;
-    top: 0;
-    z-index: 999;
-    background-color: white;
-  }
-}

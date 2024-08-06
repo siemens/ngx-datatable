@@ -1,4 +1,5 @@
-import { Directive, ElementRef, EventEmitter, HostBinding, NgZone, OnDestroy, OnInit, Output } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, HostBinding, Input, NgZone, OnDestroy, OnInit, Output } from '@angular/core';
+import { debounceTime, Observable, Subscriber } from 'rxjs';
 
 /**
  * Visibility Observer Directive
@@ -18,7 +19,20 @@ export class VisibilityDirective implements OnInit, OnDestroy {
 
   @Output() visible: EventEmitter<any> = new EventEmitter();
 
-  timeout: any;
+  observer!: ResizeObserver;
+
+  /**
+   * Throttle time in ms. Will emit this time after the resize.
+   */
+  @Input() resizeThrottle = 100;
+  /**
+   * Emit the initial visibility without waiting throttle time.
+   */
+  @Input() emitInitial = true;
+
+  private previousOffsetHeight = 0;
+  private previousOffsetWidth = 0;
+
 
   constructor(private element: ElementRef, private zone: NgZone) {}
 
@@ -27,7 +41,7 @@ export class VisibilityDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    clearTimeout(this.timeout);
+    this.observer.disconnect();
   }
 
   onVisibilityChange(): void {
@@ -39,21 +53,28 @@ export class VisibilityDirective implements OnInit, OnDestroy {
   }
 
   runCheck(): void {
-    const check = () => {
-      // https://davidwalsh.name/offsetheight-visibility
-      const { offsetHeight, offsetWidth } = this.element.nativeElement;
+    const resizeEvent = new Observable((subscriber: Subscriber<ResizeObserverEntry[]>) => {
+      this.observer = new ResizeObserver(_entries => {
+        const { offsetHeight, offsetWidth } = this.element.nativeElement;
+        if ((offsetWidth && offsetHeight) && ((offsetHeight !== this.previousOffsetHeight) || (offsetWidth !== this.previousOffsetWidth))) {
+          // First time emit immediately once table is visible
+          if (!this.isVisible && this.emitInitial) {
+            this.onVisibilityChange();
+          } else {
+            subscriber.next();
+          }
+        }
+        this.previousOffsetHeight = offsetHeight;
+        this.previousOffsetWidth = offsetWidth;
+      });
+      
+      this.observer.observe(this.element.nativeElement);
+    });
 
-      if (offsetHeight && offsetWidth) {
-        clearTimeout(this.timeout);
-        this.onVisibilityChange();
-      } else {
-        clearTimeout(this.timeout);
-        this.zone.runOutsideAngular(() => {
-          this.timeout = setTimeout(() => check(), 50);
-        });
-      }
-    };
-
-    this.timeout = setTimeout(() => check());
+    resizeEvent.pipe(
+      debounceTime(this.resizeThrottle)
+    ).subscribe(() => {
+      this.onVisibilityChange();
+    });
   }
 }

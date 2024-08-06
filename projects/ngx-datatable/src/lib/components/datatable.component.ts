@@ -469,6 +469,16 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   @Input() enableClearingSortState = false;
 
   /**
+   * Throttle time in ms. Will recalculate table this time after the resize.
+   */
+  @Input() resizeThrottle = 100;
+
+  /**
+   * Emits first visibility change immediately without waiting for resizeThrottle.
+   */
+  @Input() emitInitial = true;
+
+  /**
    * Body was scrolled typically in a `scrollbarV:true` scenario.
    */
   @Output() scroll: EventEmitter<any> = new EventEmitter();

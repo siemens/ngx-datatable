@@ -628,17 +628,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
    * if described in your markup.
    */
   @ContentChildren(DataTableColumnDirective)
-  set columnTemplates(val: QueryList<DataTableColumnDirective>) {
-    this._columnTemplates = val;
-    this.translateColumns(val);
-  }
-
-  /**
-   * Returns the column templates.
-   */
-  get columnTemplates(): QueryList<DataTableColumnDirective> {
-    return this._columnTemplates;
-  }
+    columnTemplates!: QueryList<DataTableColumnDirective>;
 
   /**
    * Row Detail templates gathered from the ContentChild
@@ -711,7 +701,6 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   _internalRows: TRow[];
   _internalColumns: TableColumn[];
   _columns: TableColumn[];
-  _columnTemplates: QueryList<DataTableColumnDirective>;
   _subscriptions: Subscription[] = [];
   _ghostLoadingIndicator = false;
   protected verticalScrollVisible = false;
@@ -789,7 +778,10 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
    * content has been fully initialized.
    */
   ngAfterContentInit() {
-    this.columnTemplates.changes.subscribe(v => this.translateColumns(v));
+    if (this.columnTemplates.length) {
+      this.translateColumns(this.columnTemplates);
+    }
+    this._subscriptions.push(this.columnTemplates.changes.subscribe(v => this.translateColumns(v)));
     this.listenForColumnInputChanges();
   }
 

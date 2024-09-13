@@ -13,8 +13,8 @@ import {
   HostListener,
   Inject,
   Input,
-  KeyValueDiffer,
-  KeyValueDiffers,
+  IterableDiffer,
+  IterableDiffers,
   OnDestroy,
   OnInit,
   Optional,
@@ -48,9 +48,19 @@ import { ColumnChangesService } from '../services/column-changes.service';
 import { DimensionsHelper } from '../services/dimensions-helper.service';
 import { throttleable } from '../utils/throttle';
 import { adjustColumnWidths, forceFillColumnWidths } from '../utils/math';
+import { Group, RowOrGroup } from '../types/group.type';
+import { SortPropDir } from '../types/sort-prop-dir.type';
+import { NgClass } from '@angular/common';
+import { Model } from './body/selection.component';
+import { SortEvent } from '../types/sort-direction.type';
+import { BodyPageEvent, PageEvent, PagerPageEvent } from '../types/page-event.type';
+import { ReorderEvent } from '../types/orderable.types';
+import { ColumnResizeEvent } from '../types/resize.type';
 import { sortGroupedRows, sortRows } from '../utils/sort';
 import { DatatableRowDefDirective } from './body/body-row-def.component';
 import { DatatableComponentToken } from '../utils/table-token';
+import { ScrollEvent } from '../types/scroll.type';
+import { TreeStatus } from './body/body-cell.component';
 
 @Component({
   selector: 'ngx-datatable',
@@ -67,16 +77,16 @@ import { DatatableComponentToken } from '../utils/table-token';
     useExisting: DatatableComponent
   }]
 })
-export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, AfterContentInit, OnDestroy {
+export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterViewInit, AfterContentInit, OnDestroy {
   /**
    * Template for the target marker of drag target columns.
    */
-  @Input() targetMarkerTemplate: any;
+  @Input() targetMarkerTemplate: TemplateRef<unknown>;
 
   /**
    * Rows that are displayed in the table.
    */
-  @Input() set rows(val: any) {
+  @Input() set rows(val: TRow[] | null | undefined) {
     this._rows = val;
 
     if (val) {
@@ -109,18 +119,18 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   /**
    * Gets the rows.
    */
-  get rows(): any {
+  get rows(): TRow[] {
     return this._rows;
   }
 
   /**
    * This attribute allows the user to set the name of the column to group the data with
    */
-  @Input() set groupRowsBy(val: string) {
+  @Input() set groupRowsBy(val: keyof TRow) {
     if (val) {
       this._groupRowsBy = val;
       if (this._rows && this._groupRowsBy) {
-        // cretes a new array with the data grouped
+        // creates a new array with the data grouped
         this.groupedRows = this.groupArrayBy(this._rows, this._groupRowsBy);
       }
     }
@@ -145,7 +155,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    *    ]}
    *  ]
    */
-  @Input() groupedRows: any[];
+  @Input() groupedRows: Group<TRow>[];
 
   /**
    * Columns to be displayed.
@@ -172,7 +182,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    * represented as selected in the grid.
    * Default value: `[]`
    */
-  @Input() selected: any[] = [];
+  @Input() selected: TRow[] = [];
 
   /**
    * Enable vertical scrollbars
@@ -196,7 +206,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    * The row height; which is necessary
    * to calculate the height for the lazy rendering.
    */
-  @Input() rowHeight: number | 'auto' | ((row?: any) => number) = 30;
+  @Input() rowHeight: number | 'auto' | ((row?: TRow) => number) = 30;
 
   /**
    * Type of column width distribution formula.
@@ -331,12 +341,12 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    * Array of sorted columns by property and type.
    * Default value: `[]`
    */
-  @Input() sorts: any[] = [];
+  @Input() sorts: SortPropDir[] = [];
 
   /**
    * Css class overrides
    */
-  @Input() cssClasses: any = {
+  @Input() cssClasses: INgxDatatableConfig['cssClasses'] = {
     sortAscending: 'datatable-icon-up',
     sortDescending: 'datatable-icon-down',
     sortUnset: 'datatable-icon-sort-unset',
@@ -353,7 +363,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    * totalMessage     [default] = 'total'
    * selectedMessage  [default] = 'selected'
    */
-  @Input() messages: any = {
+  @Input() messages: INgxDatatableConfig['messages'] = {
     // Message to show when array is presented
     // but contains no values
     emptyMessage: 'No data to display',
@@ -366,13 +376,11 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   };
 
   /**
-   * Row specific classes.
-   * Similar implementation to ngClass.
-   *
-   *  [rowClass]="'first second'"
-   *  [rowClass]="{ 'first': true, 'second': true, 'third': false }"
+   * A function which is called with the row and should return either:
+   * - a string: `"class-1 class-2`
+   * - a Record<string, boolean>: `{ 'class-1': true, 'class-2': false }`
    */
-  @Input() rowClass: any;
+  @Input() rowClass: (row: Group<TRow> | TRow) => string | Record<string, boolean>;
 
   /**
    * A boolean/function you can use to check whether you want
@@ -382,7 +390,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    *      return selection !== 'Ethel Price';
    *    }
    */
-  @Input() selectCheck: any;
+  @Input() selectCheck: (value: TRow, index: number, array: TRow[]) => boolean;
 
   /**
    * A function you can use to check whether you want
@@ -392,7 +400,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    *      return row.name !== 'Ethel Price';
    *    }
    */
-  @Input() displayCheck: (row: any, column?: any, value?: any) => boolean;
+  @Input() displayCheck: (row: TRow, column: TableColumn, value?: any) => boolean;
 
   /**
    * A boolean you can use to set the detault behaviour of rows and groups
@@ -453,7 +461,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    *      return row.name !== 'Ethel Price';
    *    }
    */
-  @Input() disableRowCheck: (row: any) => boolean;
+  @Input() disableRowCheck: (row: TRow) => boolean;
 
   /**
    * A flag to enable drag behavior of native HTML5 drag and drop API on rows.
@@ -471,49 +479,49 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   /**
    * Body was scrolled typically in a `scrollbarV:true` scenario.
    */
-  @Output() scroll: EventEmitter<any> = new EventEmitter();
+  @Output() scroll: EventEmitter<ScrollEvent> = new EventEmitter();
 
   /**
    * A cell or row was focused via keyboard or mouse click.
    */
-  @Output() activate: EventEmitter<any> = new EventEmitter();
+  @Output() activate: EventEmitter<Model<TRow>> = new EventEmitter();
 
   /**
    * A cell or row was selected.
    */
-  @Output() select: EventEmitter<any> = new EventEmitter();
+  @Output() select: EventEmitter<{selected: TRow[]}> = new EventEmitter();
 
   /**
    * Column sort was invoked.
    */
-  @Output() sort: EventEmitter<any> = new EventEmitter();
+  @Output() sort: EventEmitter<SortEvent> = new EventEmitter();
 
   /**
    * The table was paged either triggered by the pager or the body scroll.
    */
-  @Output() page: EventEmitter<any> = new EventEmitter();
+  @Output() page: EventEmitter<PageEvent> = new EventEmitter();
 
   /**
    * Columns were re-ordered.
    */
-  @Output() reorder: EventEmitter<any> = new EventEmitter();
+  @Output() reorder: EventEmitter<ReorderEvent> = new EventEmitter();
 
   /**
    * Column was resized.
    */
-  @Output() resize: EventEmitter<any> = new EventEmitter();
+  @Output() resize: EventEmitter<ColumnResizeEvent> = new EventEmitter();
 
   /**
    * The context menu was invoked on the table.
    * type indicates whether the header or the body was clicked.
    * content contains either the column or the row that was clicked.
    */
-  @Output() tableContextmenu = new EventEmitter<{ event: MouseEvent; type: ContextmenuType; content: any }>(false);
+  @Output() tableContextmenu = new EventEmitter<{ event: MouseEvent; type: ContextmenuType; content: TableColumn | RowOrGroup<TRow> }>(false);
 
   /**
    * A row was expanded ot collapsed for tree
    */
-  @Output() treeAction: EventEmitter<any> = new EventEmitter();
+  @Output() treeAction: EventEmitter<{row: TRow; rowIndex: number}> = new EventEmitter();
 
   /**
    * Emits HTML5 native drag events.
@@ -655,7 +663,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    * invoking functions on the body.
    */
   @ViewChild(DataTableBodyComponent)
-    bodyComponent: DataTableBodyComponent;
+    bodyComponent: DataTableBodyComponent<TRow & {treeStatus?: TreeStatus}>;
 
   /**
    * Reference to the header component for manually
@@ -692,15 +700,15 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   pageSize: number;
   bodyHeight: number;
   rowCount = 0;
-  rowDiffer: KeyValueDiffer<unknown, unknown>;
+  rowDiffer: IterableDiffer<TRow>;
 
   _offsetX = new BehaviorSubject(0);
   _limit: number | undefined;
   _count = 0;
   _offset = 0;
-  _rows: any[];
-  _groupRowsBy: string;
-  _internalRows: any[];
+  _rows: TRow[] | null | undefined;
+  _groupRowsBy: keyof TRow;
+  _internalRows: TRow[];
   _internalColumns: TableColumn[];
   _columns: TableColumn[];
   _columnTemplates: QueryList<DataTableColumnDirective>;
@@ -712,14 +720,14 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
     @SkipSelf() private scrollbarHelper: ScrollbarHelper,
     @SkipSelf() private dimensionsHelper: DimensionsHelper,
     private cd: ChangeDetectorRef,
-    element: ElementRef,
-    differs: KeyValueDiffers,
+    element: ElementRef<HTMLElement>,
+    differs: IterableDiffers,
     private columnChangesService: ColumnChangesService,
     @Optional() @Inject('configuration') private configuration: INgxDatatableConfig
   ) {
     // get ref to elm for measuring
     this.element = element.nativeElement;
-    this.rowDiffer = differs.find({}).create();
+    this.rowDiffer = differs.find([]).create();
 
     // apply global settings from Module.forRoot
     if (this.configuration) {
@@ -791,11 +799,11 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    *
    * (`fn(x) === fn(y)` instead of `x === y`)
    */
-  @Input() rowIdentity: (x: any) => any = (x: any) => {
+  @Input() rowIdentity: (x: TRow | Group<TRow>) => unknown = x => {
     if (this._groupRowsBy) {
       // each group in groupedRows are stored as {key, value: [rows]},
       // where key is the groupRowsBy index
-      return x.key ?? x;
+      return (x as Group<TRow>).key ?? x;
     } else {
       return x;
     }
@@ -804,7 +812,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   /**
    * Translates the templates to the column objects
    */
-  translateColumns(val: any) {
+  translateColumns(val: QueryList<DataTableColumnDirective>) {
     if (val) {
       const arr = val.toArray();
       if (arr.length) {
@@ -823,14 +831,14 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    * Creates a map with the data grouped by the user choice of grouping index
    *
    * @param originalArray the original array passed via parameter
-   * @param groupBy  the index of the column to group the data by
+   * @param groupBy the key of the column to group the data by
    */
-  groupArrayBy(originalArray: any, groupBy: any) {
+  groupArrayBy(originalArray: TRow[], groupBy: keyof TRow) {
     // create a map to hold groups with their corresponding results
-    const map = new Map();
+    const map = new Map<TRow[keyof TRow], TRow[]>();
     let i = 0;
 
-    originalArray.forEach((item: any) => {
+    originalArray.forEach(item => {
       const key = item[groupBy];
       if (!map.has(key)) {
         map.set(key, [item]);
@@ -840,7 +848,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
       i++;
     });
 
-    const addGroup = (key: any, value: any) => ({ key, value });
+    const addGroup = (key: TRow[keyof TRow], value: TRow[]) => ({ key, value });
 
     // convert map back to a simple array of objects
     return Array.from(map, x => addGroup(x[0], x[1]));
@@ -908,10 +916,10 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
    * distribution mode and scrollbar offsets.
    */
   recalculateColumns(
-    columns: any[] = this._internalColumns,
+    columns: TableColumn[] = this._internalColumns,
     forceIdx: number = -1,
     allowBleed: boolean = this.scrollbarH
-  ): any[] | undefined {
+  ): TableColumn[] | undefined {
     if (!columns) {return undefined;}
 
     let width = this._innerWidth;
@@ -923,7 +931,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
       const scrollerHeight = this.bodyComponent?.scroller?.element.offsetHeight;
       if (scrollerHeight && this.bodyHeight < scrollerHeight) {
         width = width - (this.verticalScrollVisible ? this.scrollbarHelper.width : 0);
-      } 
+      }
 
       if (this.headerComponent && this.headerComponent.innerWidth !== width){
         this.headerComponent.innerWidth = width;
@@ -978,7 +986,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   /**
    * Body triggered a page event.
    */
-  onBodyPage({ offset }: any): void {
+  onBodyPage({ offset }: BodyPageEvent): void {
     // Avoid pagination caming from body events like scroll when the table
     // has no virtualization and the external paging is enable.
     // This means, let's the developer handle pagination by my him(her) self
@@ -1001,7 +1009,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   /**
    * The body triggered a scroll event.
    */
-  onBodyScroll(event: MouseEvent): void {
+  onBodyScroll(event: ScrollEvent): void {
     this._offsetX.next(event.offsetX);
     this.scroll.emit(event);
     this.cd.detectChanges();
@@ -1010,7 +1018,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   /**
    * The footer triggered a page event.
    */
-  onFooterPage(event: any) {
+  onFooterPage(event: PagerPageEvent) {
     this.offset = event.page - 1;
     this.bodyComponent.updateOffsetY(this.offset);
 
@@ -1032,7 +1040,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   /**
    * Recalculates the sizes of the page
    */
-  calcPageSize(val: any[] = this.rows): number {
+  calcPageSize(): number {
     // Keep the page size constant even if the row has been expanded.
     // This is because an expanded row is still considered to be a child of
     // the original row.  Hence calculation would use rowHeight only.
@@ -1047,8 +1055,8 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
     }
 
     // otherwise use row length
-    if (val) {
-      return val.length;
+    if (this.rows) {
+      return this.rows.length;
     }
 
     // other empty :(
@@ -1058,16 +1066,16 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   /**
    * Calculates the row count.
    */
-  calcRowCount(val: any[] = this.rows): number {
+  calcRowCount(): number {
     if (!this.externalPaging) {
-      if (!val) {return 0;}
+      if (!this.rows) {return 0;}
 
       if (this.groupedRows) {
         return this.groupedRows.length;
       } else if (this.treeFromRelation != null && this.treeToRelation != null) {
         return this._internalRows.length;
       } else {
-        return val.length;
+        return this.rows.length;
       }
     }
 
@@ -1077,21 +1085,21 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   /**
    * The header triggered a contextmenu event.
    */
-  onColumnContextmenu({ event, column }: any): void {
+  onColumnContextmenu({ event, column }: {event: MouseEvent; column: TableColumn}): void {
     this.tableContextmenu.emit({ event, type: ContextmenuType.header, content: column });
   }
 
   /**
    * The body triggered a contextmenu event.
    */
-  onRowContextmenu({ event, row }: any): void {
+  onRowContextmenu({ event, row }: {event: MouseEvent; row: RowOrGroup<TRow>}): void {
     this.tableContextmenu.emit({ event, type: ContextmenuType.body, content: row });
   }
 
   /**
    * The header triggered a column resize event.
    */
-  onColumnResize({ column, newValue }: any): void {
+  onColumnResize({ column, newValue, prevValue }: ColumnResizeEvent): void {
     /* Safari/iOS 10.2 workaround */
     if (column === undefined) {
       return;
@@ -1118,11 +1126,12 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
 
     this.resize.emit({
       column,
-      newValue
+      newValue,
+      prevValue
     });
   }
 
-  onColumnResizing({ column, newValue }: any): void {
+  onColumnResizing({ column, newValue }: ColumnResizeEvent): void {
     if (column === undefined) {
       return;
     }
@@ -1135,7 +1144,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   /**
    * The header triggered a column re-order event.
    */
-  onColumnReorder({ column, newValue, prevValue }: any): void {
+  onColumnReorder({ column, newValue, prevValue }: ReorderEvent): void {
     const cols = this._internalColumns.map(c => ({ ...c }));
 
     if (this.swapColumns) {
@@ -1170,7 +1179,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   /**
    * The header triggered a column sort event.
    */
-  onColumnSort(event: any): void {
+  onColumnSort(event: SortEvent): void {
     // clean selected rows
     if (this.selectAllRowsOnPage) {
       this.selected = [];
@@ -1211,7 +1220,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   /**
    * Toggle all row selection
    */
-  onHeaderSelect(event: any): void {
+  onHeaderSelect(): void {
     if (this.bodyComponent && this.selectAllRowsOnPage) {
       // before we splice, chk if we currently have all selected
       const first = this.bodyComponent.indexes.first;
@@ -1250,14 +1259,14 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   /**
    * A row was selected from body
    */
-  onBodySelect(event: any): void {
+  onBodySelect(event: {selected: TRow[]}): void {
     this.select.emit(event);
   }
 
   /**
    * A row was expanded or collapsed for tree
    */
-  onTreeAction(event: any) {
+  onTreeAction(event: {row: TRow}) {
     const row = event.row;
     // TODO: For duplicated items this will not work
     const rowIndex = this._rows.findIndex(r => r[this.treeToRelation] === event.row[this.treeToRelation]);

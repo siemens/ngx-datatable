@@ -7,13 +7,15 @@ import {
   HostListener,
   Input,
   OnInit,
-  Output
+  Output, TemplateRef
 } from '@angular/core';
 import { SortType } from '../../types/sort.type';
 import { SelectionType } from '../../types/selection.type';
 import { TableColumn } from '../../types/table-column.type';
 import { nextSortDir } from '../../utils/sort';
-import { SortDirection } from '../../types/sort-direction.type';
+import { InnerSortEvent, SortDirection } from '../../types/sort-direction.type';
+import { SortPropDir } from '../../types/sort-prop-dir.type';
+import { HeaderCellContext } from '../../types/cell-context.type';
 
 @Component({
   selector: 'datatable-header-cell',
@@ -26,7 +28,7 @@ import { SortDirection } from '../../types/sort-direction.type';
       >
       </ng-template>
       <label *ngIf="isCheckboxable" class="datatable-checkbox">
-        <input type="checkbox" [checked]="allRowsSelected" (change)="select.emit(!allRowsSelected)" />
+        <input type="checkbox" [checked]="allRowsSelected" (change)="select.emit()" />
       </label>
       <span *ngIf="!column.headerTemplate" class="datatable-header-cell-wrapper">
         <span class="datatable-header-cell-label draggable" (click)="onSort()" [innerHTML]="name"> </span>
@@ -52,7 +54,7 @@ export class DataTableHeaderCellComponent implements OnInit {
   @Input() sortUnsetIcon: string;
 
   @Input() isTarget: boolean;
-  @Input() targetMarkerTemplate: any;
+  @Input() targetMarkerTemplate: TemplateRef<any>;
   @Input() targetMarkerContext: any;
   @Input() enableClearingSortState = false;
 
@@ -82,7 +84,7 @@ export class DataTableHeaderCellComponent implements OnInit {
   @Input()
     headerHeight: number;
 
-  @Input() set sorts(val: any[]) {
+  @Input() set sorts(val: SortPropDir[]) {
     this._sorts = val;
     this.sortDir = this.calcSortDir(val);
     this.cellContext.sortDir = this.sortDir;
@@ -90,16 +92,16 @@ export class DataTableHeaderCellComponent implements OnInit {
     this.cd.markForCheck();
   }
 
-  get sorts(): any[] {
+  get sorts(): SortPropDir[] {
     return this._sorts;
   }
 
-  @Output() sort: EventEmitter<any> = new EventEmitter();
-  @Output() select: EventEmitter<any> = new EventEmitter();
-  @Output() columnContextmenu = new EventEmitter<{ event: MouseEvent; column: any }>(false);
+  @Output() sort: EventEmitter<InnerSortEvent> = new EventEmitter();
+  @Output() select: EventEmitter<void> = new EventEmitter();
+  @Output() columnContextmenu = new EventEmitter<{ event: MouseEvent; column: TableColumn }>(false);
 
   @HostBinding('class')
-  get columnCssClasses(): any {
+  get columnCssClasses(): string {
     let cls = 'datatable-header-cell';
 
     if (this.column.sortable) {cls += ' sortable';}
@@ -160,23 +162,21 @@ export class DataTableHeaderCellComponent implements OnInit {
     return this.column.headerCheckboxable;
   }
 
-  sortFn = this.onSort.bind(this);
   sortClass: string;
   sortDir: SortDirection;
-  selectFn = this.select.emit.bind(this.select);
 
-  cellContext: any;
+  cellContext: HeaderCellContext;
 
   private _column: TableColumn;
-  private _sorts: any[];
+  private _sorts: SortPropDir[];
 
   constructor(private cd: ChangeDetectorRef) {
     this.cellContext = {
       column: this.column,
       sortDir: this.sortDir,
-      sortFn: this.sortFn,
+      sortFn: () => this.onSort(),
       allRowsSelected: this.allRowsSelected,
-      selectFn: this.selectFn
+      selectFn: () => this.select.emit()
     };
   }
 
@@ -198,7 +198,7 @@ export class DataTableHeaderCellComponent implements OnInit {
     }
   }
 
-  calcSortDir(sorts: any[]): any {
+  calcSortDir(sorts: SortPropDir[]): any {
     if (sorts && this.column) {
       const sort = sorts.find((s: any) => s.prop === this.column.prop);
 

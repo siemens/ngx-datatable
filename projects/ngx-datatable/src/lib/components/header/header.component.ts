@@ -13,21 +13,25 @@ import {
   TemplateRef
 } from '@angular/core';
 import { columnGroupWidths, columnsByPin, columnsByPinArr } from '../../utils/column';
-import { SortType } from '../../types/sort.type';
-import { SelectionType } from '../../types/selection.type';
+import {
+  ColumnResizeEvent,
+  InnerSortEvent,
+  ReorderEvent,
+  SelectionType,
+  SortDirection,
+  SortEvent,
+  SortPropDir,
+  SortType
+} from '../../types/public.types';
 import { translateXY } from '../../utils/translate';
 import { NgStyle } from '@angular/common';
 import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 import { TableColumn } from '../../types/table-column.type';
-import { PinnedColumns } from '../../types/column-pin.type';
-import { InnerSortEvent, SortDirection, SortEvent } from '../../types/sort-direction.type';
-import { SortPropDir } from '../../types/sort-prop-dir.type';
 import {
   OrderableReorderEvent,
-  ReorderEvent,
+  PinnedColumns,
   TargetChangedEvent
-} from '../../types/orderable.types';
-import { ColumnResizeEvent } from '../../types/resize.type';
+} from '../../types/internal.types';
 
 @Component({
   selector: 'datatable-header',

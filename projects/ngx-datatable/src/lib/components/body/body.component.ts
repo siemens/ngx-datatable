@@ -26,7 +26,11 @@ import { ColumnGroupWidth } from '../../types/internal.types';
 import {
   DragEventData,
   Group,
+  GroupToggleEvent,
+  GroupToggleEvents,
   RowOrGroup,
+  RowToggleEvent,
+  RowToggleEvents,
   ScrollEvent,
   SelectionType,
   TreeStatus
@@ -144,6 +148,7 @@ import {
           </ng-template>
 
           <ng-container *ngIf="isGroup(group)">
+            <!-- The row typecast is due to angular compiler acting weird. It is obvious that it is of type TRow, but the compiler does not understand. -->
             <datatable-body-row
               role="row"
               [disable$]="rowWrapper.disable$"
@@ -155,7 +160,7 @@ import {
               [offsetX]="offsetX"
               [columns]="columns"
               [rowHeight]="getRowHeight(row)"
-              [row]="row"
+              [row]="$any(row)"
               [group]="group.value"
               [rowIndex]="getRowIndex(row)"
               [expanded]="getRowExpanded(row)"
@@ -415,28 +420,24 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
    */
   ngOnInit(): void {
     if (this.rowDetail) {
-      this.listener = this.rowDetail.toggle.subscribe(
-        ({ type, value }: { type: string; value: any }) => this.toggleStateChange(type, value)
-      );
+      this.listener = this.rowDetail.toggle.subscribe(event => this.toggleStateChange(event));
     }
 
     if (this.groupHeader) {
-      this.listener = this.groupHeader.toggle.subscribe(
-        ({ type, value }: { type: string; value: any }) => {
-          // Remove default expansion state once user starts manual toggle.
-          this.groupExpansionDefault = false;
-          this.toggleStateChange(type, value);
-        }
-      );
+      this.listener = this.groupHeader.toggle.subscribe(event => {
+        // Remove default expansion state once user starts manual toggle.
+        this.groupExpansionDefault = false;
+        this.toggleStateChange(event);
+      });
     }
   }
 
-  private toggleStateChange(type: string, value: any) {
-    if (type === 'group' || type === 'row') {
-      this.toggleRowExpansion(value);
+  private toggleStateChange(event: RowToggleEvents<TRow> | GroupToggleEvents<TRow>) {
+    if (event.type === 'group' || event.type === 'row') {
+      this.toggleRowExpansion(event.value);
     }
-    if (type === 'all') {
-      this.toggleAllRows(value);
+    if (event.type === 'all') {
+      this.toggleAllRows(event.value);
     }
 
     // Refresh rows after toggle
@@ -635,7 +636,7 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   /**
    * Get the height of the detail row.
    */
-  getDetailRowHeight = (row?: TRow, index?: number): number => {
+  getDetailRowHeight = (row?: RowOrGroup<TRow>, index?: number): number => {
     if (!this.rowDetail) {
       return 0;
     }
@@ -827,7 +828,7 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
    * a part of the row object itself as we have to preserve the expanded row
    * status in case of sorting and filtering of the row set.
    */
-  toggleRowExpansion(row: TRow): void {
+  toggleRowExpansion(row: RowOrGroup<TRow>): void {
     // Capture the row index of the first row that is visible on the viewport.
     const viewPortFirstRowIndex = this.getAdjustedViewPortIndex();
     const rowExpandedIdx = this.getRowExpandedIdx(row, this.rowExpansions);

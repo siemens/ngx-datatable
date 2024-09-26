@@ -4,7 +4,7 @@ import { delay, map } from 'rxjs/operators';
 
 import data from 'src/assets/data/company.json';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { Employee } from '../data.model';
 
 const companyData = data as any[];
 
@@ -67,7 +67,10 @@ export class ServerScrollingComponent implements OnInit {
 
   ColumnMode = ColumnMode;
 
-  constructor(private serverResultsService: MockServerResultsService, private el: ElementRef) {}
+  constructor(
+    private serverResultsService: MockServerResultsService,
+    private el: ElementRef
+  ) {}
 
   ngOnInit() {
     this.onScroll(0);

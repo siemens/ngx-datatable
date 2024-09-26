@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { Employee } from '../data.model';
 
 @Component({
   selector: 'column-reorder-demo',
@@ -62,7 +62,11 @@ export class ColumnReorderComponent {
   reorderable = true;
   swapColumns = false;
 
-  columns: TableColumn[] = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company', sortable: false }];
+  columns: TableColumn[] = [
+    { prop: 'name' },
+    { name: 'Gender' },
+    { name: 'Company', sortable: false }
+  ];
 
   ColumnMode = ColumnMode;
 

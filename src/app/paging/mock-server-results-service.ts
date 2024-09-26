@@ -5,7 +5,7 @@ import { PagedData } from './model/paged-data';
 import { Page } from './model/page';
 
 import companyData from 'src/assets/data/company.json';
-import { Employee } from "../data.model";
+import { Employee } from '../data.model';
 
 /**
  * A server used to mock a paged data result from a server
@@ -29,7 +29,7 @@ export class MockServerResultsService {
    * @returns An array of the selected data and page
    */
   private getPagedData(page: Page): PagedData<Employee> {
-    const data: Employee[] = []
+    const data: Employee[] = [];
     page.totalElements = companyData.length;
     page.totalPages = page.totalElements / page.size;
     const start = page.pageNumber * page.size;

@@ -26,11 +26,11 @@ export class ScrollerComponent implements OnInit, OnDestroy {
 
   @HostBinding('style.height.px')
   @Input()
-    scrollHeight: number;
+  scrollHeight: number;
 
   @HostBinding('style.width.px')
   @Input()
-    scrollWidth: number;
+  scrollWidth: number;
 
   @Output() scroll: EventEmitter<any> = new EventEmitter();
 
@@ -43,7 +43,10 @@ export class ScrollerComponent implements OnInit, OnDestroy {
 
   private _scrollEventListener: any = null;
 
-  constructor(element: ElementRef<HTMLElement>, private renderer: Renderer2) {
+  constructor(
+    element: ElementRef<HTMLElement>,
+    private renderer: Renderer2
+  ) {
     this.element = element.nativeElement;
   }
 

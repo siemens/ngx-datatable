@@ -1,4 +1,4 @@
-$disable-row-text-color: #83888E !default;
+$disable-row-text-color: #83888e !default;
 
 .ngx-datatable {
   .row-disabled {
@@ -10,11 +10,11 @@ $disable-row-text-color: #83888E !default;
   .datatable-row-wrapper {
     .datatable-body-row {
       &.row-disabled:hover {
-      background-color: inherit;
-      transition: none;
+        background-color: inherit;
+        transition: none;
         .datatable-row-group {
-            background-color: inherit;
-            transition: none;
+          background-color: inherit;
+          transition: none;
         }
       }
     }

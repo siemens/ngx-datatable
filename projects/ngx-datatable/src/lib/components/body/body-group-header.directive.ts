@@ -15,10 +15,10 @@ export class DatatableGroupHeaderDirective<TRow = any> {
   @Input() checkboxable = false;
 
   @Input('template')
-    _templateInput: TemplateRef<GroupContext<TRow>>;
+  _templateInput: TemplateRef<GroupContext<TRow>>;
 
   @ContentChild(DatatableGroupHeaderTemplateDirective, { read: TemplateRef, static: true })
-    _templateQuery: TemplateRef<GroupContext<TRow>>;
+  _templateQuery: TemplateRef<GroupContext<TRow>>;
 
   get template(): TemplateRef<GroupContext<TRow>> {
     return this._templateInput || this._templateQuery;

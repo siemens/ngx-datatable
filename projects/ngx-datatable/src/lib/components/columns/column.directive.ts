@@ -1,4 +1,11 @@
-import { ContentChild, Directive, Input, OnChanges, SimpleChanges, TemplateRef } from '@angular/core';
+import {
+  ContentChild,
+  Directive,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  TemplateRef
+} from '@angular/core';
 import { DataTableColumnHeaderDirective } from './column-header.directive';
 import { DataTableColumnCellDirective } from './column-cell.directive';
 import { DataTableColumnCellTreeToggle } from './tree.directive';
@@ -33,40 +40,40 @@ export class DataTableColumnDirective implements OnChanges {
   @Input() summaryTemplate: TemplateRef<any>;
 
   @Input('cellTemplate')
-    _cellTemplateInput: TemplateRef<any>;
+  _cellTemplateInput: TemplateRef<any>;
 
   @ContentChild(DataTableColumnCellDirective, { read: TemplateRef, static: true })
-    _cellTemplateQuery: TemplateRef<any>;
+  _cellTemplateQuery: TemplateRef<any>;
 
   get cellTemplate(): TemplateRef<any> {
     return this._cellTemplateInput || this._cellTemplateQuery;
   }
 
   @Input('headerTemplate')
-    _headerTemplateInput: TemplateRef<HeaderCellContext>;
+  _headerTemplateInput: TemplateRef<HeaderCellContext>;
 
   @ContentChild(DataTableColumnHeaderDirective, { read: TemplateRef, static: true })
-    _headerTemplateQuery: TemplateRef<HeaderCellContext>;
+  _headerTemplateQuery: TemplateRef<HeaderCellContext>;
 
   get headerTemplate(): TemplateRef<HeaderCellContext> {
     return this._headerTemplateInput || this._headerTemplateQuery;
   }
 
   @Input('treeToggleTemplate')
-    _treeToggleTemplateInput: TemplateRef<any>;
+  _treeToggleTemplateInput: TemplateRef<any>;
 
   @ContentChild(DataTableColumnCellTreeToggle, { read: TemplateRef, static: true })
-    _treeToggleTemplateQuery: TemplateRef<any>;
+  _treeToggleTemplateQuery: TemplateRef<any>;
 
   get treeToggleTemplate(): TemplateRef<any> {
     return this._treeToggleTemplateInput || this._treeToggleTemplateQuery;
   }
 
   @Input('ghostCellTemplate')
-    _ghostCellTemplateInput: TemplateRef<void>;
+  _ghostCellTemplateInput: TemplateRef<void>;
 
   @ContentChild(DataTableColumnGhostCellDirective, { read: TemplateRef, static: true })
-    _ghostCellTemplateQuery: TemplateRef<void>;
+  _ghostCellTemplateQuery: TemplateRef<void>;
 
   get ghostCellTemplate(): TemplateRef<void> {
     return this._ghostCellTemplateInput || this._ghostCellTemplateQuery;

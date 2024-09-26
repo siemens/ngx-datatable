@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ColumnMode, SortType, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { Employee } from '../data.model';
 
 @Component({
   selector: 'client-sorting-demo',

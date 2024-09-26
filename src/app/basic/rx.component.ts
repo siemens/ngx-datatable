@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { Employee } from '../data.model';
 
 @Component({
   selector: 'rx-demo',
@@ -10,7 +10,10 @@ import { Employee } from "../data.model";
       <h3>
         RXjs Data
         <small>
-          <a href="https://github.com/siemens/ngx-datatable/blob/master/src/app/basic/rx.component.ts" target="_blank">
+          <a
+            href="https://github.com/siemens/ngx-datatable/blob/master/src/app/basic/rx.component.ts"
+            target="_blank"
+          >
             Source
           </a>
         </small>

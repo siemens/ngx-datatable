@@ -11,23 +11,14 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2022",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2022",
-      "dom"
-    ],
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2022", "dom"],
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@siemens/ngx-datatable": [
-        "dist/ngx-datatable"
-      ],
-      "@siemens/ngx-datatable/*": [
-        "dist/ngx-datatable/*"
-      ]
+      "@siemens/ngx-datatable": ["dist/ngx-datatable"],
+      "@siemens/ngx-datatable/*": ["dist/ngx-datatable/*"]
     },
     "useDefineForClassFields": false
   },

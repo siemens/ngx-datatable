@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MockServerResultsService } from './mock-server-results-service';
 import { Page } from './model/page';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { Employee } from '../data.model';
 
 @Component({
   selector: 'server-paging-demo',
@@ -38,14 +38,14 @@ import { Employee } from "../data.model";
     </div>
   `
 })
-export class ServerPagingComponent implements OnInit{
+export class ServerPagingComponent implements OnInit {
   page: Page = {
     pageNumber: 0,
     size: 20,
     totalElements: 0,
     totalPages: 0
-  }
-  rows: Employee[] = []
+  };
+  rows: Employee[] = [];
 
   ColumnMode = ColumnMode;
 

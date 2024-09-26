@@ -24,12 +24,18 @@ import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
         [headerHeight]="50"
         [footerHeight]="50"
       >
-        <div empty-content style="text-align: center;">My custom empty component<br />uses two lines.</div>
+        <div empty-content style="text-align: center;"
+          >My custom empty component<br />uses two lines.</div
+        >
       </ngx-datatable>
     </div>
   `
 })
 export class BasicEmptyComponent {
-  columns: TableColumn[] = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company', sortable: false }];
+  columns: TableColumn[] = [
+    { prop: 'name' },
+    { name: 'Gender' },
+    { name: 'Company', sortable: false }
+  ];
   ColumnMode = ColumnMode;
 }

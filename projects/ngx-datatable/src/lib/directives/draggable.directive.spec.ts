@@ -22,21 +22,21 @@ describe('DraggableDirective', () => {
     });
   });
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.compileComponents().then(() => {
-        fixture = TestBed.createComponent(TestFixtureComponent);
-        component = fixture.componentInstance;
-        element = fixture.nativeElement;
-      });
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.compileComponents().then(() => {
+      fixture = TestBed.createComponent(TestFixtureComponent);
+      component = fixture.componentInstance;
+      element = fixture.nativeElement;
+    });
+  }));
 
   describe('fixture', () => {
     let directive: DraggableDirective;
 
     beforeEach(() => {
-      directive = fixture.debugElement.query(By.directive(DraggableDirective)).injector.get(DraggableDirective);
+      directive = fixture.debugElement
+        .query(By.directive(DraggableDirective))
+        .injector.get(DraggableDirective);
     });
 
     it('should have a component instance', () => {

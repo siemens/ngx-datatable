@@ -29,7 +29,7 @@ export interface CellContext<TRow> {
   rowHeight: number;
   isSelected: boolean;
   rowIndex: number;
-  treeStatus: TreeStatus,
+  treeStatus: TreeStatus;
   disable$: Observable<boolean>;
   onTreeAction: () => void;
   expanded?: boolean;

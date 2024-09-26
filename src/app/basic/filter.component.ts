@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatatableComponent } from '../../../projects/ngx-datatable/src/lib/components/datatable.component';
 import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { Employee } from '../data.model';
 
 @Component({
   selector: 'filter-demo',

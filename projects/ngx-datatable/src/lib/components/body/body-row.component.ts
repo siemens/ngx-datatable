@@ -22,7 +22,7 @@ import { Keys } from '../../utils/keys';
 import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 import { translateXY } from '../../utils/translate';
 import { BehaviorSubject } from 'rxjs';
-import { RowOrGroup } from "../../types/group.type";
+import { RowOrGroup } from '../../types/group.type';
 import { NgStyle } from '@angular/common';
 import { TableColumn } from '../../types/table-column.type';
 import { PinnedColumns } from '../../types/column-pin.type';
@@ -142,7 +142,7 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
 
   @HostBinding('style.height.px')
   @Input()
-    rowHeight: number;
+  rowHeight: number;
 
   @HostBinding('style.width.px')
   get columnsTotalWidths(): number {
@@ -159,9 +159,9 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
   _columns: TableColumn[];
   _innerWidth: number;
   _groupStyles: {
-    left: NgStyle['ngStyle'],
-    center: NgStyle['ngStyle'],
-    right: NgStyle['ngStyle']
+    left: NgStyle['ngStyle'];
+    center: NgStyle['ngStyle'];
+    right: NgStyle['ngStyle'];
   } = { left: {}, center: {}, right: {} };
 
   private _rowDiffer: KeyValueDiffer<keyof RowOrGroup<TRow>, any>;
@@ -211,16 +211,17 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
       return {
         width: `${widths[group]}px`,
         ...translateXY(offsetX, 0)
-      }
+      };
     } else if (group === 'right') {
       const bodyWidth = this.innerWidth;
       const totalDiff = widths.total - bodyWidth;
       const offsetDiff = totalDiff - offsetX;
-      const offset = (offsetDiff + (this.verticalScrollVisible ? this.scrollbarHelper.width : 0)) * -1;
+      const offset =
+        (offsetDiff + (this.verticalScrollVisible ? this.scrollbarHelper.width : 0)) * -1;
       return {
         width: `${widths[group]}px`,
         ...translateXY(offset, 0)
-      }
+      };
     }
 
     return {

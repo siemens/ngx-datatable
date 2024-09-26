@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
-import { FullEmployee } from "../data.model";
+import { FullEmployee } from '../data.model';
 
 @Component({
   selector: 'row-css-demo',
@@ -27,7 +27,11 @@ import { FullEmployee } from "../data.model";
         [scrollbarV]="true"
       >
         <ngx-datatable-column name="Name"></ngx-datatable-column>
-        <ngx-datatable-column name="Gender" headerClass="is-gender" [cellClass]="getCellClass"></ngx-datatable-column>
+        <ngx-datatable-column
+          name="Gender"
+          headerClass="is-gender"
+          [cellClass]="getCellClass"
+        ></ngx-datatable-column>
         <ngx-datatable-column name="Age"></ngx-datatable-column>
       </ngx-datatable>
     </div>

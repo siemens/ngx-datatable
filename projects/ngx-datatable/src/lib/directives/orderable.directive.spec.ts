@@ -24,28 +24,28 @@ describe('OrderableDirective', () => {
     });
   });
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.compileComponents().then(() => {
-        fixture = TestBed.createComponent(TestFixtureComponent);
-        component = fixture.componentInstance;
-        element = fixture.nativeElement;
+  beforeEach(waitForAsync(() => {
+    TestBed.compileComponents().then(() => {
+      fixture = TestBed.createComponent(TestFixtureComponent);
+      component = fixture.componentInstance;
+      element = fixture.nativeElement;
 
-        /* This is required in order to resolve the `ContentChildren`.
-         *  If we don't go through at least on change detection cycle
-         *  the `draggables` will be `undefined` and `ngOnDestroy` will
-         *  fail.
-         */
-        fixture.detectChanges();
-      });
-    })
-  );
+      /* This is required in order to resolve the `ContentChildren`.
+       *  If we don't go through at least on change detection cycle
+       *  the `draggables` will be `undefined` and `ngOnDestroy` will
+       *  fail.
+       */
+      fixture.detectChanges();
+    });
+  }));
 
   describe('fixture', () => {
     let directive: OrderableDirective;
 
     beforeEach(() => {
-      directive = fixture.debugElement.query(By.directive(OrderableDirective)).injector.get(OrderableDirective);
+      directive = fixture.debugElement
+        .query(By.directive(OrderableDirective))
+        .injector.get(OrderableDirective);
     });
 
     it('should have a component instance', () => {

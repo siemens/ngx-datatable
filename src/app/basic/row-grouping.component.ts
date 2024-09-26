@@ -33,8 +33,17 @@ import { SelectionType } from './../../../projects/ngx-datatable/src/lib/types/s
         [selectionType]="SelectionType.checkbox"
       >
         <!-- Group Header Template -->
-        <ngx-datatable-group-header [rowHeight]="34" [checkboxable]="true" #myGroupHeader (toggle)="onDetailToggle($event)">
-          <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
+        <ngx-datatable-group-header
+          [rowHeight]="34"
+          [checkboxable]="true"
+          #myGroupHeader
+          (toggle)="onDetailToggle($event)"
+        >
+          <ng-template
+            let-group="group"
+            let-expanded="expanded"
+            ngx-datatable-group-header-template
+          >
             <div style="padding-left:5px;height: 100%; display:flex;align-items: center;">
               <a
                 href="#"
@@ -50,7 +59,15 @@ import { SelectionType } from './../../../projects/ngx-datatable/src/lib/types/s
         </ngx-datatable-group-header>
 
         <!-- Row Column Template -->
-        <ngx-datatable-column name="Exp. Pay." prop="" [headerCheckboxable]="true" [checkboxable]="true" editable="true" frozenLeft="True" [sortable]="false">
+        <ngx-datatable-column
+          name="Exp. Pay."
+          prop=""
+          [headerCheckboxable]="true"
+          [checkboxable]="true"
+          editable="true"
+          frozenLeft="True"
+          [sortable]="false"
+        >
           <ng-template
             ngx-datatable-cell-template
             let-rowIndex="rowIndex"
@@ -94,7 +111,12 @@ import { SelectionType } from './../../../projects/ngx-datatable/src/lib/types/s
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column name="Source" prop="source" editable="false" frozenLeft="True"></ngx-datatable-column>
+        <ngx-datatable-column
+          name="Source"
+          prop="source"
+          editable="false"
+          frozenLeft="True"
+        ></ngx-datatable-column>
         <ngx-datatable-column name="Name" prop="name" editable="true"></ngx-datatable-column>
         <ngx-datatable-column name="Gender" prop="gender"></ngx-datatable-column>
         <ngx-datatable-column name="Age" prop="age"></ngx-datatable-column>
@@ -187,7 +209,11 @@ export class RowGroupingComponent {
               }
             }
 
-            if (group[index].exppayyes === 0 && group[index].exppayno === 0 && group[index].exppaypending === 0) {
+            if (
+              group[index].exppayyes === 0 &&
+              group[index].exppayno === 0 &&
+              group[index].exppaypending === 0
+            ) {
               expectedPaymentDealtWith = false;
             }
             console.log('expectedPaymentDealtWith', expectedPaymentDealtWith);
@@ -197,7 +223,11 @@ export class RowGroupingComponent {
     } else {
       // eslint-disable-next-line @typescript-eslint/prefer-for-of
       for (let index = 0; index < group.length; index++) {
-        if (group[index].exppayyes === 0 && group[index].exppayno === 0 && group[index].exppaypending === 0) {
+        if (
+          group[index].exppayyes === 0 &&
+          group[index].exppayno === 0 &&
+          group[index].exppaypending === 0
+        ) {
           expectedPaymentDealtWith = false;
         }
         console.log('expectedPaymentDealtWith', expectedPaymentDealtWith);
@@ -207,8 +237,10 @@ export class RowGroupingComponent {
     // check if there is a pending selected payment or a row that does not have any expected payment selected
     if (
       group.filter(rowFilter => rowFilter.exppaypending === 1).length === 0 &&
-      group.filter(rowFilter => rowFilter.exppaypending === 0 && rowFilter.exppayyes === 0 && rowFilter.exppayno === 0)
-        .length === 0
+      group.filter(
+        rowFilter =>
+          rowFilter.exppaypending === 0 && rowFilter.exppayyes === 0 && rowFilter.exppayno === 0
+      ).length === 0
     ) {
       console.log('expected payment dealt with');
 

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ColumnMode, DatatableComponent } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { Employee } from '../data.model';
 
 @Component({
   selector: 'live-data-demo',
@@ -42,12 +42,12 @@ import { Employee } from "../data.model";
   `
 })
 export class LiveDataComponent {
-  @ViewChild('mydatatable') mydatatable: DatatableComponent<Employee & {updated: string}>;
+  @ViewChild('mydatatable') mydatatable: DatatableComponent<Employee & { updated: string }>;
 
   count = 50;
-  rows: (Employee & {updated: string})[] = [];
+  rows: (Employee & { updated: string })[] = [];
   active = true;
-  temp: (Employee & {updated: string})[] = [];
+  temp: (Employee & { updated: string })[] = [];
   cols = ['name', 'gender', 'company'];
 
   ColumnMode = ColumnMode;

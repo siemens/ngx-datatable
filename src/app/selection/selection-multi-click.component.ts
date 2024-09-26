@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ColumnMode, SelectionType, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { Employee } from '../data.model';
 
 @Component({
   selector: 'multi-click-selection-demo',

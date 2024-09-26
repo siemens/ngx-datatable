@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MockServerResultsService } from '../paging/mock-server-results-service';
 import { Page } from '../paging/model/page';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { Employee } from '../data.model';
 
 @Component({
   selector: 'summary-row-server-paging-demo',
@@ -45,7 +45,7 @@ export class SummaryRowServerPagingComponent implements OnInit {
     size: 20,
     totalPages: 0,
     totalElements: 0
-  }
+  };
   rows: Employee[] = [];
 
   columns = [

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MockServerResultsService } from './mock-server-results-service';
 import { Page } from './model/page';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { Employee } from '../data.model';
 
 interface PageInfo {
   offset: number;
@@ -85,7 +85,7 @@ export class VirtualPagingComponent {
       size: pageInfo.pageSize,
       totalElements: 0,
       totalPages: 0
-    }
+    };
 
     // We keep a index of server loaded pages so we don't load same data twice
     // This is based on the server page not the UI
@@ -93,7 +93,9 @@ export class VirtualPagingComponent {
       this.cachePageSize = page.size;
       this.cache = {};
     }
-    if (this.cache[page.pageNumber]) {return;}
+    if (this.cache[page.pageNumber]) {
+      return;
+    }
     this.cache[page.pageNumber] = true;
 
     // Counter of pending API calls

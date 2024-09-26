@@ -46,12 +46,12 @@ export * from './lib/services/column-changes.service';
 // types
 export * from './lib/types/activate-event.type';
 export * from './lib/types/cell-context.type';
-export * from './lib/types/click.type'
+export * from './lib/types/click.type';
 export * from './lib/types/column-group-width.type';
 export * from './lib/types/column-mode.type';
 export * from './lib/types/column-pin.type';
 export * from './lib/types/contextmenu.type';
-export * from './lib/types/detail-context.type'
+export * from './lib/types/detail-context.type';
 export * from './lib/types/drag-events.type';
 export * from './lib/types/footer-context';
 export * from './lib/types/group.type';

@@ -18,8 +18,8 @@ import {
 import { TableColumn } from '../../types/table-column.type';
 import { SortDirection } from '../../types/sort-direction.type';
 import { Keys } from '../../utils/keys';
-import { RowOrGroup } from "../../types/group.type";
-import { BehaviorSubject } from "rxjs";
+import { RowOrGroup } from '../../types/group.type';
+import { BehaviorSubject } from 'rxjs';
 import { ActivateEvent } from '../../types/activate-event.type';
 import { CellContext } from '../../types/cell-context.type';
 import { SortPropDir } from '../../types/sort-prop-dir.type';
@@ -30,59 +30,73 @@ export type TreeStatus = 'collapsed' | 'expanded' | 'loading' | 'disabled';
   selector: 'datatable-body-cell',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-  <ng-container *ngIf="row else ghostLoaderTemplate;">
-    <div class="datatable-body-cell-label" [style.margin-left.px]="calcLeftMargin(column, row)">
-      <label
-        *ngIf="column.checkboxable && (!displayCheck || displayCheck(row, column, value))"
-        class="datatable-checkbox"
-      >
-        <input type="checkbox" [disabled]="disable$ | async" [checked]="isSelected" (click)="onCheckboxChange($event)" />
-      </label>
-      <ng-container *ngIf="column.isTreeColumn">
-        <button
-          *ngIf="!column.treeToggleTemplate"
-          class="datatable-tree-button"
-          [disabled]="treeStatus === 'disabled'"
-          (click)="onTreeAction()"
-          [attr.aria-label]="treeStatus"
+    <ng-container *ngIf="row; else ghostLoaderTemplate">
+      <div class="datatable-body-cell-label" [style.margin-left.px]="calcLeftMargin(column, row)">
+        <label
+          *ngIf="column.checkboxable && (!displayCheck || displayCheck(row, column, value))"
+          class="datatable-checkbox"
         >
-          <span>
-            <i *ngIf="treeStatus === 'loading'" class="icon datatable-icon-collapse"></i>
-            <i *ngIf="treeStatus === 'collapsed'" class="icon datatable-icon-up"></i>
-            <i *ngIf="treeStatus === 'expanded' || treeStatus === 'disabled'" class="icon datatable-icon-down"></i>
-          </span>
-        </button>
+          <input
+            type="checkbox"
+            [disabled]="disable$ | async"
+            [checked]="isSelected"
+            (click)="onCheckboxChange($event)"
+          />
+        </label>
+        <ng-container *ngIf="column.isTreeColumn">
+          <button
+            *ngIf="!column.treeToggleTemplate"
+            class="datatable-tree-button"
+            [disabled]="treeStatus === 'disabled'"
+            (click)="onTreeAction()"
+            [attr.aria-label]="treeStatus"
+          >
+            <span>
+              <i *ngIf="treeStatus === 'loading'" class="icon datatable-icon-collapse"></i>
+              <i *ngIf="treeStatus === 'collapsed'" class="icon datatable-icon-up"></i>
+              <i
+                *ngIf="treeStatus === 'expanded' || treeStatus === 'disabled'"
+                class="icon datatable-icon-down"
+              ></i>
+            </span>
+          </button>
+          <ng-template
+            *ngIf="column.treeToggleTemplate"
+            [ngTemplateOutlet]="column.treeToggleTemplate"
+            [ngTemplateOutletContext]="{ cellContext: cellContext }"
+          >
+          </ng-template>
+        </ng-container>
+
+        <span *ngIf="!column.cellTemplate" [title]="sanitizedValue" [innerHTML]="value"> </span>
         <ng-template
-          *ngIf="column.treeToggleTemplate"
-          [ngTemplateOutlet]="column.treeToggleTemplate"
-          [ngTemplateOutletContext]="{ cellContext: cellContext }"
+          #cellTemplate
+          *ngIf="column.cellTemplate"
+          [ngTemplateOutlet]="column.cellTemplate"
+          [ngTemplateOutletContext]="cellContext"
         >
         </ng-template>
-      </ng-container>
-
-      <span *ngIf="!column.cellTemplate" [title]="sanitizedValue" [innerHTML]="value"> </span>
-      <ng-template
-        #cellTemplate
-        *ngIf="column.cellTemplate"
-        [ngTemplateOutlet]="column.cellTemplate"
-        [ngTemplateOutletContext]="cellContext"
-      >
-      </ng-template>
-    </div>
-  </ng-container>
-  <ng-template #ghostLoaderTemplate>
-    <ghost-loader *ngIf="ghostLoadingIndicator" [columns]="[column]" [pageSize]="1"></ghost-loader>
-  </ng-template>
+      </div>
+    </ng-container>
+    <ng-template #ghostLoaderTemplate>
+      <ghost-loader
+        *ngIf="ghostLoadingIndicator"
+        [columns]="[column]"
+        [pageSize]="1"
+      ></ghost-loader>
+    </ng-template>
   `
 })
-export class DataTableBodyCellComponent<TRow extends {level?: number} = any> implements DoCheck, OnDestroy {
+export class DataTableBodyCellComponent<TRow extends { level?: number } = any>
+  implements DoCheck, OnDestroy
+{
   @Input() displayCheck: (row: RowOrGroup<TRow>, column: TableColumn, value: any) => boolean;
 
   _disable$: BehaviorSubject<boolean>;
   @Input() set disable$(val: BehaviorSubject<boolean>) {
     this._disable$ = val;
     this.cellContext.disable$ = val;
-  };
+  }
   get disable$() {
     return this._disable$;
   }
@@ -172,7 +186,12 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
   }
 
   @Input() set treeStatus(status: TreeStatus) {
-    if (status !== 'collapsed' && status !== 'expanded' && status !== 'loading' && status !== 'disabled') {
+    if (
+      status !== 'collapsed' &&
+      status !== 'expanded' &&
+      status !== 'loading' &&
+      status !== 'disabled'
+    ) {
       this._treeStatus = 'collapsed';
     } else {
       this._treeStatus = status;
@@ -193,10 +212,10 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
   @Output() treeAction: EventEmitter<any> = new EventEmitter();
 
   @ViewChild('cellTemplate', { read: ViewContainerRef, static: true })
-    cellTemplate: ViewContainerRef;
+  cellTemplate: ViewContainerRef;
 
   @ViewChild('ghostLoaderTemplate', { read: ViewContainerRef, static: true })
-    ghostLoaderTemplate: ViewContainerRef;
+  ghostLoaderTemplate: ViewContainerRef;
 
   @HostBinding('class')
   get columnCssClasses(): string {
@@ -286,7 +305,10 @@ export class DataTableBodyCellComponent<TRow extends {level?: number} = any> imp
   private _element: HTMLElement;
   private _treeStatus: TreeStatus;
 
-  constructor(element: ElementRef<HTMLElement>, private cd: ChangeDetectorRef) {
+  constructor(
+    element: ElementRef<HTMLElement>,
+    private cd: ChangeDetectorRef
+  ) {
     this.cellContext = {
       onCheckboxChangeFn: (event: Event) => this.onCheckboxChange(event),
       activateFn: (event: ActivateEvent<TRow>) => this.activate.emit(event),

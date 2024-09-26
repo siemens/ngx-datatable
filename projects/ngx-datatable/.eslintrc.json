@@ -3,9 +3,7 @@
   "ignorePatterns": [],
   "overrides": [
     {
-      "files": [
-        "*.ts"
-      ],
+      "files": ["*.ts"],
       "parserOptions": {
         "project": [
           "projects/ngx-datatable/tsconfig.lib.json",

@@ -28,7 +28,10 @@ export class ResizeableDirective implements OnDestroy, AfterViewInit {
   subscription: Subscription;
   private resizeHandle: HTMLElement;
 
-  constructor(element: ElementRef, private renderer: Renderer2) {
+  constructor(
+    element: ElementRef,
+    private renderer: Renderer2
+  ) {
     this.element = element.nativeElement;
   }
 

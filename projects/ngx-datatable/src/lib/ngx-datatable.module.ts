@@ -34,7 +34,11 @@ import { DatatableGroupHeaderTemplateDirective } from './components/body/body-gr
 import { DataTableSummaryRowComponent } from './components/body/summary/summary-row.component';
 import { DataTableGhostLoaderComponent } from './components/body/ghost-loader/ghost-loader.component';
 import { DisableRowDirective } from './directives/disable-row.directive';
-import { DatatableRowDefComponent, DatatableRowDefDirective, DatatableRowDefInternalDirective } from './components/body/body-row-def.component';
+import {
+  DatatableRowDefComponent,
+  DatatableRowDefDirective,
+  DatatableRowDefInternalDirective
+} from './components/body/body-row-def.component';
 
 @NgModule({
   imports: [CommonModule],

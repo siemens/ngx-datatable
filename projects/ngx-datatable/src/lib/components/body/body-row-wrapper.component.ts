@@ -37,10 +37,13 @@ import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive'
     >
       <div class="datatable-group-cell">
         <div *ngIf="groupHeader.checkboxable">
-          <label
-            class="datatable-checkbox"
-          >
-            <input #select type="checkbox" [checked]="selectedGroupRows.length === group.value.length" (change)="onCheckboxChange(select.checked)" />
+          <label class="datatable-checkbox">
+            <input
+              #select
+              type="checkbox"
+              [checked]="selectedGroupRows.length === group.value.length"
+              (change)="onCheckboxChange(select.checked)"
+            />
           </label>
         </div>
         <ng-template
@@ -51,7 +54,11 @@ import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive'
         </ng-template>
       </div>
     </div>
-    <ng-content *ngIf="(groupHeader && groupHeader.template && expanded) || !groupHeader || !groupHeader.template">
+    <ng-content
+      *ngIf="
+        (groupHeader && groupHeader.template && expanded) || !groupHeader || !groupHeader.template
+      "
+    >
     </ng-content>
     <div
       *ngIf="rowDetail && rowDetail.template && expanded"
@@ -112,14 +119,17 @@ export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit
   rowContext: RowDetailContext<TRow>;
   disable$: BehaviorSubject<boolean>;
 
-
   private rowDiffer: KeyValueDiffer<keyof RowOrGroup<TRow>, any>;
   private selectedRowsDiffer: IterableDiffer<TRow>;
   private _expanded = false;
   private _rowIndex: number;
   private tableComponent = inject(DatatableComponentToken);
 
-  constructor(private cd: ChangeDetectorRef, differs: KeyValueDiffers, private iterableDiffers: IterableDiffers) {
+  constructor(
+    private cd: ChangeDetectorRef,
+    differs: KeyValueDiffers,
+    private iterableDiffers: IterableDiffers
+  ) {
     this.groupContext = {
       group: this.row,
       expanded: this.expanded,
@@ -191,9 +201,9 @@ export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit
 
   getGroupHeaderStyle(): NgStyle['ngStyle'] {
     return {
-      "transform": 'translate3d(' + this.offsetX + 'px, 0px, 0px)',
+      'transform': 'translate3d(' + this.offsetX + 'px, 0px, 0px)',
       'backface-visibility': 'hidden',
-      "width": this.innerWidth + 'px'
+      'width': this.innerWidth + 'px'
     };
   }
 

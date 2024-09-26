@@ -18,7 +18,9 @@ That's all.
 
 // common datatable colors
 $ngx-datatable-background: #fff !default;
-$ngx-datatable-box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+$ngx-datatable-box-shadow:
+  0 5px 5px -3px rgba(0, 0, 0, 0.2),
+  0 8px 10px 1px rgba(0, 0, 0, 0.14),
   0 3px 14px 2px rgba(0, 0, 0, 0.12) !default;
 $ngx-datatable-row-odd-background: #eee !default;
 
@@ -69,13 +71,18 @@ $datatable-summary-row-background-hover: #ddd !default;
 
 $datatable-ghost-cell-container-background: $ngx-datatable-background !default;
 $datatable-ghost-cell-strip-background: #d9d8d9 !default;
-$datatable-ghost-cell-strip-background-image: linear-gradient(to right, $datatable-ghost-cell-strip-background 0%, $datatable-ghost-cell-strip-background 10%, $ngx-datatable-background, transparent) !default;
+$datatable-ghost-cell-strip-background-image: linear-gradient(
+  to right,
+  $datatable-ghost-cell-strip-background 0%,
+  $datatable-ghost-cell-strip-background 10%,
+  $ngx-datatable-background,
+  transparent
+) !default;
 $datatable-ghost-cell-strip-radius: 0 !default;
 $datatble-ghost-cell-animation-duration: 10s;
 
 @import './ghost';
 @import './rows';
-
 
 .ngx-datatable.material {
   background: $ngx-datatable-background;
@@ -224,7 +231,9 @@ $datatble-ghost-cell-animation-duration: 10s;
 
       &.longpress {
         .draggable::after {
-          transition: transform 400ms ease, opacity 400ms ease;
+          transition:
+            transform 400ms ease,
+            opacity 400ms ease;
           opacity: 0.5;
           transform: scale(1);
         }
@@ -360,10 +369,10 @@ $datatble-ghost-cell-animation-duration: 10s;
       top: 0;
       height: 0;
       z-index: 999;
-        .custom-loading-content {
-          width: 100%;
-          background-color: $ngx-datatable-default-background;
-        }
+      .custom-loading-content {
+        width: 100%;
+        background-color: $ngx-datatable-default-background;
+      }
     }
   }
 

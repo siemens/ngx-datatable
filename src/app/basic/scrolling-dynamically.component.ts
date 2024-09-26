@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { Employee } from '../data.model';
 
 @Component({
   selector: 'scrolling-dynamically-demo',
@@ -31,7 +31,12 @@ import { Employee } from "../data.model";
         [rows]="rows"
       >
         <ngx-datatable-column name="Name">
-          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+          <ng-template
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+            let-value="value"
+            let-row="row"
+          >
             <span
               title="Double click to edit"
               (dblclick)="editing[rowIndex + '-name'] = true"
@@ -49,7 +54,12 @@ import { Employee } from "../data.model";
           </ng-template>
         </ngx-datatable-column>
         <ngx-datatable-column name="Gender">
-          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
+          <ng-template
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+            let-row="row"
+            let-value="value"
+          >
             <span
               title="Double click to edit"
               (dblclick)="editing[rowIndex + '-gender'] = true"

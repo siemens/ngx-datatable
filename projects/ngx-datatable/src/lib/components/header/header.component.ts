@@ -22,7 +22,11 @@ import { TableColumn } from '../../types/table-column.type';
 import { PinnedColumns } from '../../types/column-pin.type';
 import { InnerSortEvent, SortDirection, SortEvent } from '../../types/sort-direction.type';
 import { SortPropDir } from '../../types/sort-prop-dir.type';
-import { OrderableReorderEvent, ReorderEvent, TargetChangedEvent } from '../../types/orderable.types';
+import {
+  OrderableReorderEvent,
+  ReorderEvent,
+  TargetChangedEvent
+} from '../../types/orderable.types';
 import { ColumnResizeEvent } from '../../types/resize.type';
 
 @Component({
@@ -171,14 +175,17 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
   _columns: TableColumn[];
   _headerHeight: string;
   _styleByGroup: {
-    left: NgStyle['ngStyle'],
-    center: NgStyle['ngStyle'],
-    right: NgStyle['ngStyle']
+    left: NgStyle['ngStyle'];
+    center: NgStyle['ngStyle'];
+    right: NgStyle['ngStyle'];
   } = { left: {}, center: {}, right: {} };
 
   private destroyed = false;
 
-  constructor(private cd: ChangeDetectorRef, @SkipSelf() private scrollbarHelper: ScrollbarHelper) {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    @SkipSelf() private scrollbarHelper: ScrollbarHelper
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.verticalScrollVisible) {
@@ -216,7 +223,9 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
   @HostBinding('style.width')
   get headerWidth(): string {
     if (this.scrollbarH) {
-      const width = this.verticalScrollVisible ? (this.innerWidth - this.scrollbarHelper.width) : this.innerWidth;
+      const width = this.verticalScrollVisible
+        ? this.innerWidth - this.scrollbarHelper.width
+        : this.innerWidth;
       return width + 'px';
     }
 
@@ -310,7 +319,11 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
     });
   }
 
-  calcNewSorts(column: TableColumn, prevValue: SortDirection, newValue: SortDirection): SortPropDir[] {
+  calcNewSorts(
+    column: TableColumn,
+    prevValue: SortDirection,
+    newValue: SortDirection
+  ): SortPropDir[] {
     let idx = 0;
 
     if (!this.sorts) {
@@ -357,15 +370,15 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
       return {
         ...translateXY(offsetX * -1, 0),
         width: `${widths[group]}px`
-      }
+      };
     } else if (group === 'right') {
       const totalDiff = widths.total - this.innerWidth;
-      const offset = (totalDiff + (this.verticalScrollVisible ? this.scrollbarHelper.width : 0)) * -1;
+      const offset =
+        (totalDiff + (this.verticalScrollVisible ? this.scrollbarHelper.width : 0)) * -1;
       return {
         ...translateXY(offset, 0),
         width: `${widths[group]}px`
-
-      }
+      };
     }
 
     return {

@@ -9,7 +9,7 @@
 /**
  * JS version of browser APIs. This library can only run in the browser.
  */
-const win = (typeof window !== 'undefined' && window) || {} as any;
+const win = (typeof window !== 'undefined' && window) || ({} as any);
 
 export { win as window };
 export const document = win.document;

@@ -31,7 +31,7 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
         cdkDropList
       >
         <ng-template rowDef>
-          <datatable-row-def cdkDrag [cdkDragPreviewContainer]="'parent'"/>
+          <datatable-row-def cdkDrag [cdkDragPreviewContainer]="'parent'" />
         </ng-template>
       </ngx-datatable>
     </div>
@@ -42,7 +42,11 @@ export class DragDropComponent {
   loadingIndicator = true;
   reorderable = true;
 
-  columns = [{ prop: 'name', sortable: false }, { name: 'Gender', sortable: false }, { name: 'Company', sortable: false }];
+  columns = [
+    { prop: 'name', sortable: false },
+    { name: 'Gender', sortable: false },
+    { name: 'Company', sortable: false }
+  ];
 
   ColumnMode = ColumnMode;
 

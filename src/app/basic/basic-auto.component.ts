@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { Employee } from '../data.model';
 
 @Component({
   selector: 'basic-auto-demo',
@@ -37,7 +37,11 @@ export class BasicAutoComponent {
   loadingIndicator = true;
   reorderable = true;
 
-  columns: TableColumn[] = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company', sortable: false }];
+  columns: TableColumn[] = [
+    { prop: 'name' },
+    { name: 'Gender' },
+    { name: 'Company', sortable: false }
+  ];
 
   ColumnMode = ColumnMode;
 

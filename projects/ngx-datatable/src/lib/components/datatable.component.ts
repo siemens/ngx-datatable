@@ -72,12 +72,16 @@ import { TreeStatus } from './body/body-cell.component';
   host: {
     class: 'ngx-datatable'
   },
-  providers: [{
-    provide: DatatableComponentToken,
-    useExisting: DatatableComponent
-  }]
+  providers: [
+    {
+      provide: DatatableComponentToken,
+      useExisting: DatatableComponent
+    }
+  ]
 })
-export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterViewInit, AfterContentInit, OnDestroy {
+export class DatatableComponent<TRow = any>
+  implements OnInit, DoCheck, AfterViewInit, AfterContentInit, OnDestroy
+{
   /**
    * Template for the target marker of drag target columns.
    */
@@ -301,7 +305,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
       // in case where we don't have predefined total page length
       this.rows = [...(this.rows ?? []), undefined]; // undefined row will render ghost cell row at the end of the page
     }
-  };
+  }
   get ghostLoadingIndicator(): boolean {
     return this._ghostLoadingIndicator;
   }
@@ -489,7 +493,7 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   /**
    * A cell or row was selected.
    */
-  @Output() select: EventEmitter<{selected: TRow[]}> = new EventEmitter();
+  @Output() select: EventEmitter<{ selected: TRow[] }> = new EventEmitter();
 
   /**
    * Column sort was invoked.
@@ -516,12 +520,16 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
    * type indicates whether the header or the body was clicked.
    * content contains either the column or the row that was clicked.
    */
-  @Output() tableContextmenu = new EventEmitter<{ event: MouseEvent; type: ContextmenuType; content: TableColumn | RowOrGroup<TRow> }>(false);
+  @Output() tableContextmenu = new EventEmitter<{
+    event: MouseEvent;
+    type: ContextmenuType;
+    content: TableColumn | RowOrGroup<TRow>;
+  }>(false);
 
   /**
    * A row was expanded ot collapsed for tree
    */
-  @Output() treeAction: EventEmitter<{row: TRow; rowIndex: number}> = new EventEmitter();
+  @Output() treeAction: EventEmitter<{ row: TRow; rowIndex: number }> = new EventEmitter();
 
   /**
    * Emits HTML5 native drag events.
@@ -644,26 +652,26 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
    * Row Detail templates gathered from the ContentChild
    */
   @ContentChild(DatatableRowDetailDirective)
-    rowDetail: DatatableRowDetailDirective;
+  rowDetail: DatatableRowDetailDirective;
 
   /**
    * Group Header templates gathered from the ContentChild
    */
   @ContentChild(DatatableGroupHeaderDirective)
-    groupHeader: DatatableGroupHeaderDirective;
+  groupHeader: DatatableGroupHeaderDirective;
 
   /**
    * Footer template gathered from the ContentChild
    */
   @ContentChild(DatatableFooterDirective)
-    footer: DatatableFooterDirective;
+  footer: DatatableFooterDirective;
 
   /**
    * Reference to the body component for manually
    * invoking functions on the body.
    */
   @ViewChild(DataTableBodyComponent)
-    bodyComponent: DataTableBodyComponent<TRow & {treeStatus?: TreeStatus}>;
+  bodyComponent: DataTableBodyComponent<TRow & { treeStatus?: TreeStatus }>;
 
   /**
    * Reference to the header component for manually
@@ -672,13 +680,14 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
    * @memberOf DatatableComponent
    */
   @ViewChild(DataTableHeaderComponent)
-    headerComponent: DataTableHeaderComponent;
+  headerComponent: DataTableHeaderComponent;
 
   @ViewChild(DataTableBodyComponent, { read: ElementRef })
   private bodyElement: ElementRef<HTMLElement>;
   @ContentChild(DatatableRowDefDirective, {
     read: TemplateRef
-  }) rowDefTemplate?: TemplateRef<any>;
+  })
+  rowDefTemplate?: TemplateRef<any>;
 
   /**
    * Returns if all rows are selected.
@@ -920,23 +929,25 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
     forceIdx: number = -1,
     allowBleed: boolean = this.scrollbarH
   ): TableColumn[] | undefined {
-    if (!columns) {return undefined;}
+    if (!columns) {
+      return undefined;
+    }
 
     let width = this._innerWidth;
     const bodyElement = this.bodyElement?.nativeElement;
     this.verticalScrollVisible = bodyElement?.scrollHeight > bodyElement?.clientHeight;
     if (this.scrollbarV && !this.scrollbarVDynamic) {
       width = width - (this.verticalScrollVisible ? this.scrollbarHelper.width : 0);
-    } else if (this.scrollbarVDynamic){
+    } else if (this.scrollbarVDynamic) {
       const scrollerHeight = this.bodyComponent?.scroller?.element.offsetHeight;
       if (scrollerHeight && this.bodyHeight < scrollerHeight) {
         width = width - (this.verticalScrollVisible ? this.scrollbarHelper.width : 0);
       }
 
-      if (this.headerComponent && this.headerComponent.innerWidth !== width){
+      if (this.headerComponent && this.headerComponent.innerWidth !== width) {
         this.headerComponent.innerWidth = width;
       }
-      if (this.bodyComponent && this.bodyComponent.innerWidth !== width){
+      if (this.bodyComponent && this.bodyComponent.innerWidth !== width) {
         this.bodyComponent.innerWidth = width;
         this.bodyComponent.cd.markForCheck();
       }
@@ -967,8 +978,12 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
 
     if (this.scrollbarV) {
       let height = dims.height;
-      if (this.headerHeight) {height = height - this.headerHeight;}
-      if (this.footerHeight) {height = height - this.footerHeight;}
+      if (this.headerHeight) {
+        height = height - this.headerHeight;
+      }
+      if (this.footerHeight) {
+        height = height - this.footerHeight;
+      }
       this.bodyHeight = height;
     }
 
@@ -1068,7 +1083,9 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
    */
   calcRowCount(): number {
     if (!this.externalPaging) {
-      if (!this.rows) {return 0;}
+      if (!this.rows) {
+        return 0;
+      }
 
       if (this.groupedRows) {
         return this.groupedRows.length;
@@ -1085,14 +1102,14 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   /**
    * The header triggered a contextmenu event.
    */
-  onColumnContextmenu({ event, column }: {event: MouseEvent; column: TableColumn}): void {
+  onColumnContextmenu({ event, column }: { event: MouseEvent; column: TableColumn }): void {
     this.tableContextmenu.emit({ event, type: ContextmenuType.header, content: column });
   }
 
   /**
    * The body triggered a contextmenu event.
    */
-  onRowContextmenu({ event, row }: {event: MouseEvent; row: RowOrGroup<TRow>}): void {
+  onRowContextmenu({ event, row }: { event: MouseEvent; row: RowOrGroup<TRow> }): void {
     this.tableContextmenu.emit({ event, type: ContextmenuType.body, content: row });
   }
 
@@ -1259,17 +1276,19 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
   /**
    * A row was selected from body
    */
-  onBodySelect(event: {selected: TRow[]}): void {
+  onBodySelect(event: { selected: TRow[] }): void {
     this.select.emit(event);
   }
 
   /**
    * A row was expanded or collapsed for tree
    */
-  onTreeAction(event: {row: TRow}) {
+  onTreeAction(event: { row: TRow }) {
     const row = event.row;
     // TODO: For duplicated items this will not work
-    const rowIndex = this._rows.findIndex(r => r[this.treeToRelation] === event.row[this.treeToRelation]);
+    const rowIndex = this._rows.findIndex(
+      r => r[this.treeToRelation] === event.row[this.treeToRelation]
+    );
     this.treeAction.emit({ row, rowIndex });
   }
 
@@ -1305,9 +1324,16 @@ export class DatatableComponent<TRow = any> implements OnInit, DoCheck, AfterVie
       }
     }
     if (this.groupedRows && this.groupedRows.length) {
-      const sortOnGroupHeader = this.sorts?.find(sortColumns => sortColumns.prop === this._groupRowsBy);
+      const sortOnGroupHeader = this.sorts?.find(
+        sortColumns => sortColumns.prop === this._groupRowsBy
+      );
       this.groupedRows = this.groupArrayBy(this._rows, this._groupRowsBy);
-      this.groupedRows = sortGroupedRows(this.groupedRows, this._internalColumns, this.sorts, sortOnGroupHeader);
+      this.groupedRows = sortGroupedRows(
+        this.groupedRows,
+        this._internalColumns,
+        this.sorts,
+        sortOnGroupHeader
+      );
       this._internalRows = [...this._internalRows];
     } else {
       this._internalRows = sortRows(this._internalRows, this._internalColumns, this.sorts);

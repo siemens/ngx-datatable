@@ -7,7 +7,8 @@ import {
   HostListener,
   Input,
   OnInit,
-  Output, TemplateRef
+  Output,
+  TemplateRef
 } from '@angular/core';
 import { SortType } from '../../types/sort.type';
 import { SelectionType } from '../../types/selection.type';
@@ -31,7 +32,8 @@ import { HeaderCellContext } from '../../types/cell-context.type';
         <input type="checkbox" [checked]="allRowsSelected" (change)="select.emit()" />
       </label>
       <span *ngIf="!column.headerTemplate" class="datatable-header-cell-wrapper">
-        <span class="datatable-header-cell-label draggable" (click)="onSort()" [innerHTML]="name"> </span>
+        <span class="datatable-header-cell-label draggable" (click)="onSort()" [innerHTML]="name">
+        </span>
       </span>
       <ng-template
         *ngIf="column.headerTemplate"
@@ -82,7 +84,7 @@ export class DataTableHeaderCellComponent implements OnInit {
 
   @HostBinding('style.height.px')
   @Input()
-    headerHeight: number;
+  headerHeight: number;
 
   @Input() set sorts(val: SortPropDir[]) {
     this._sorts = val;
@@ -104,8 +106,12 @@ export class DataTableHeaderCellComponent implements OnInit {
   get columnCssClasses(): string {
     let cls = 'datatable-header-cell';
 
-    if (this.column.sortable) {cls += ' sortable';}
-    if (this.column.resizeable) {cls += ' resizeable';}
+    if (this.column.sortable) {
+      cls += ' sortable';
+    }
+    if (this.column.resizeable) {
+      cls += ' resizeable';
+    }
     if (this.column.headerClass) {
       if (typeof this.column.headerClass === 'string') {
         cls += ' ' + this.column.headerClass;
@@ -119,7 +125,9 @@ export class DataTableHeaderCellComponent implements OnInit {
         } else if (typeof res === 'object') {
           const keys = Object.keys(res);
           for (const k of keys) {
-            if (res[k] === true) {cls += ` ${k}`;}
+            if (res[k] === true) {
+              cls += ` ${k}`;
+            }
           }
         }
       }
@@ -156,7 +164,7 @@ export class DataTableHeaderCellComponent implements OnInit {
 
   @HostBinding('tabindex') get tabindex(): number {
     return this.column.sortable ? 0 : -1;
-  } 
+  }
 
   get isCheckboxable(): boolean {
     return this.column.headerCheckboxable;
@@ -202,13 +210,17 @@ export class DataTableHeaderCellComponent implements OnInit {
     if (sorts && this.column) {
       const sort = sorts.find((s: any) => s.prop === this.column.prop);
 
-      if (sort) {return sort.dir;}
+      if (sort) {
+        return sort.dir;
+      }
     }
   }
   // Counter to reset sort once user sort asc and desc.
   private totalSortStatesApplied = 0;
   onSort(): void {
-    if (!this.column.sortable) {return;}
+    if (!this.column.sortable) {
+      return;
+    }
 
     this.totalSortStatesApplied++;
     let newValue = nextSortDir(this.sortType, this.sortDir);
@@ -225,7 +237,9 @@ export class DataTableHeaderCellComponent implements OnInit {
   }
 
   calcSortClass(sortDir: SortDirection): string {
-    if (!this.cellContext.column.sortable) {return;}
+    if (!this.cellContext.column.sortable) {
+      return;
+    }
     if (sortDir === SortDirection.asc) {
       return `sort-btn sort-asc ${this.sortAscendingIcon}`;
     } else if (sortDir === SortDirection.desc) {

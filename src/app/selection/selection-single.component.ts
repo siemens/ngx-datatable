@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ColumnMode, SelectionType, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { Employee } from '../data.model';
 
 @Component({
   selector: 'single-selection-demo',
@@ -19,7 +19,10 @@ import { Employee } from "../data.model";
       </h3>
       <div style="float:left;width:75%">
         <div class="info">
-          <p>This demonstrates a simple single selection table with the 3rd row selected by default.</p>
+          <p
+            >This demonstrates a simple single selection table with the 3rd row selected by
+            default.</p
+          >
         </div>
 
         <ngx-datatable

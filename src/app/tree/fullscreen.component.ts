@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { ColumnMode, TreeStatus } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { Employee } from '../data.model';
 
 @Component({
   selector: 'full-screen-tree-demo',
@@ -32,35 +32,36 @@ import { Employee } from "../data.model";
         (treeAction)="onTreeAction($event)"
       >
         <ngx-datatable-column name="Id" [width]="80"></ngx-datatable-column>
-        <ngx-datatable-column name="Name" [isTreeColumn]="true" [width]="300" [treeLevelIndent]="20">
+        <ngx-datatable-column
+          name="Name"
+          [isTreeColumn]="true"
+          [width]="300"
+          [treeLevelIndent]="20"
+        >
           <ng-template ngx-datatable-tree-toggle let-tree="cellContext">
             <button [disabled]="tree.treeStatus === 'disabled'" (click)="tree.onTreeAction()">
-              <span *ngIf="tree.treeStatus === 'loading'">
-                ...
-              </span>
-              <span *ngIf="tree.treeStatus === 'collapsed'">
-                ↑
-              </span>
-              <span *ngIf="tree.treeStatus === 'expanded'">
-                ↓
-              </span>
-              <span *ngIf="tree.treeStatus === 'disabled'">
-                ⃠
-              </span>
+              <span *ngIf="tree.treeStatus === 'loading'"> ... </span>
+              <span *ngIf="tree.treeStatus === 'collapsed'"> ↑ </span>
+              <span *ngIf="tree.treeStatus === 'expanded'"> ↓ </span>
+              <span *ngIf="tree.treeStatus === 'disabled'"> ⃠ </span>
             </button>
           </ng-template>
         </ngx-datatable-column>
         <ngx-datatable-column name="Gender"></ngx-datatable-column>
         <ngx-datatable-column name="Age"></ngx-datatable-column>
         <ngx-datatable-column name="City" [width]="300" prop="address.city"></ngx-datatable-column>
-        <ngx-datatable-column name="State" [width]="300" prop="address.state"></ngx-datatable-column>
+        <ngx-datatable-column
+          name="State"
+          [width]="300"
+          prop="address.state"
+        ></ngx-datatable-column>
       </ngx-datatable>
     </div>
   `,
   styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
 })
 export class FullScreenTreeComponent {
-  rows: (Employee & {treeStatus: TreeStatus})[] = [];
+  rows: (Employee & { treeStatus: TreeStatus })[] = [];
   lastIndex = 15;
 
   ColumnMode = ColumnMode;

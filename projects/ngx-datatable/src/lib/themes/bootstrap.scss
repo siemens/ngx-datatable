@@ -1,7 +1,13 @@
 $datatable-ghost-cell-container-background: #fff !default;
 
 $datatable-ghost-cell-strip-background: #dee2e5 !default;
-$datatable-ghost-cell-strip-background-image: linear-gradient(to right, $datatable-ghost-cell-strip-background 0%, $datatable-ghost-cell-strip-background 10%, #fff, transparent) !default;
+$datatable-ghost-cell-strip-background-image: linear-gradient(
+  to right,
+  $datatable-ghost-cell-strip-background 0%,
+  $datatable-ghost-cell-strip-background 10%,
+  #fff,
+  transparent
+) !default;
 $datatable-ghost-cell-strip-radius: 0 !default;
 $datatble-ghost-cell-animation-duration: 10s;
 
@@ -53,10 +59,10 @@ $datatble-ghost-cell-animation-duration: 10s;
       top: 0;
       height: 0;
       z-index: 999;
-        .custom-loading-content {
-          width: 100%;
-          background-color: #fff;
-        }
+      .custom-loading-content {
+        width: 100%;
+        background-color: #fff;
+      }
     }
   }
   .datatable-footer {

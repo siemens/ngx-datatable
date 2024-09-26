@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from "../data.model";
+import { Employee } from '../data.model';
 
 @Component({
   selector: 'footer-demo',
@@ -38,7 +38,10 @@ import { Employee } from "../data.model";
             <div style="padding: 5px 10px">
               <div><strong>Summary</strong>: Gender: Female</div>
               <hr style="width:100%" />
-              <div>Rows: {{ rowCount }} | Size: {{ pageSize }} | Current: {{ curPage }} | Offset: {{ offset }}</div>
+              <div
+                >Rows: {{ rowCount }} | Size: {{ pageSize }} | Current: {{ curPage }} | Offset:
+                {{ offset }}</div
+              >
             </div>
           </ng-template>
         </ngx-datatable-footer>

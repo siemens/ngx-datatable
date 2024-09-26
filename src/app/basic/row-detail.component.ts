@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ColumnMode, DatatableComponent } from 'projects/ngx-datatable/src/public-api';
-import { FullEmployee } from "../data.model";
+import { FullEmployee } from '../data.model';
 
 @Component({
   selector: 'row-details-demo',

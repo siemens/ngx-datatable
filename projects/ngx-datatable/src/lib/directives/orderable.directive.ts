@@ -3,7 +3,9 @@ import {
   ContentChildren,
   Directive,
   EventEmitter,
-  Inject, KeyValueChangeRecord, KeyValueDiffer,
+  Inject,
+  KeyValueChangeRecord,
+  KeyValueDiffer,
   KeyValueDiffers,
   OnDestroy,
   Output,
@@ -21,13 +23,16 @@ export class OrderableDirective implements AfterContentInit, OnDestroy {
   @Output() targetChanged: EventEmitter<TargetChangedEvent> = new EventEmitter();
 
   @ContentChildren(DraggableDirective, { descendants: true })
-    draggables: QueryList<DraggableDirective>;
+  draggables: QueryList<DraggableDirective>;
 
   positions: Record<string, OrderPosition>;
   differ: KeyValueDiffer<string, DraggableDirective>;
   lastDraggingIndex: number;
 
-  constructor(differs: KeyValueDiffers, @Inject(DOCUMENT) private document: any) {
+  constructor(
+    differs: KeyValueDiffers,
+    @Inject(DOCUMENT) private document: any
+  ) {
     this.differ = differs.find({}).create();
   }
 

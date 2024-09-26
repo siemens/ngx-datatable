@@ -1,4 +1,13 @@
-import { Directive, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TableColumn } from '../types/table-column.type';
@@ -32,7 +41,11 @@ export class DraggableDirective implements OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.dragEventTarget && changes.dragEventTarget.currentValue && this.dragModel.dragging) {
+    if (
+      changes.dragEventTarget &&
+      changes.dragEventTarget.currentValue &&
+      this.dragModel.dragging
+    ) {
       this.onMousedown(changes.dragEventTarget.currentValue);
     }
   }
@@ -42,7 +55,9 @@ export class DraggableDirective implements OnDestroy, OnChanges {
   }
 
   onMouseup(event: MouseEvent): void {
-    if (!this.isDragging) {return;}
+    if (!this.isDragging) {
+      return;
+    }
 
     this.isDragging = false;
     this.element.classList.remove('dragging');
@@ -85,13 +100,19 @@ export class DraggableDirective implements OnDestroy, OnChanges {
   }
 
   move(event: MouseEvent, mouseDownPos: { x: number; y: number }): void {
-    if (!this.isDragging) {return;}
+    if (!this.isDragging) {
+      return;
+    }
 
     const x = event.clientX - mouseDownPos.x;
     const y = event.clientY - mouseDownPos.y;
 
-    if (this.dragX) {this.element.style.left = `${x}px`;}
-    if (this.dragY) {this.element.style.top = `${y}px`;}
+    if (this.dragX) {
+      this.element.style.left = `${x}px`;
+    }
+    if (this.dragY) {
+      this.element.style.top = `${y}px`;
+    }
 
     this.element.classList.add('dragging');
 

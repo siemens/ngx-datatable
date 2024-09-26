@@ -78,17 +78,17 @@ function scaleColumns(colsByGroup: any, maxWidth: any, totalFlexGrow: any) {
 
   // Adjust for any remaining offset in computed widths vs maxWidth
   const columns = Object.values<{
-    width: number,
-    canAutoResize: boolean,
-    minWidth: number,
-    maxWidth: number
+    width: number;
+    canAutoResize: boolean;
+    minWidth: number;
+    maxWidth: number;
   }>(colsByGroup).reduce((acc, col) => acc.concat(col), []);
 
   const totalWidthAchieved = columns.reduce((acc, col) => acc + col.width, 0);
   const delta = maxWidth - totalWidthAchieved;
 
   if (delta === 0) {
-    return
+    return;
   }
 
   // adjust the first column that can be auto-resized respecting the min/max widths
@@ -129,7 +129,9 @@ export function forceFillColumnWidths(
   allowBleed: boolean,
   defaultColWidth: number = 300
 ) {
-  const columnsToResize = allColumns.slice(startIdx + 1, allColumns.length).filter(c => c.canAutoResize !== false);
+  const columnsToResize = allColumns
+    .slice(startIdx + 1, allColumns.length)
+    .filter(c => c.canAutoResize !== false);
 
   for (const column of columnsToResize) {
     if (!column.$$oldWidth) {

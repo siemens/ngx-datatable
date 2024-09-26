@@ -13,7 +13,7 @@ export interface FullEmployee {
   address: {
     state: string;
     city: string;
-  }
+  };
 }
 
 export interface GroupedEmployee {

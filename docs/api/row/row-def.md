@@ -14,7 +14,7 @@ Apply your custom row level directive/class on this component. Example:
 **Template**
 
 ```html
-  <ng-template rowDef>
-    <datatable-row-def applyYourCustomDirectiveHereForRow />
-  </ng-template>
+<ng-template rowDef>
+  <datatable-row-def applyYourCustomDirectiveHereForRow />
+</ng-template>
 ```

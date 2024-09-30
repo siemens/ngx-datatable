@@ -45,7 +45,6 @@
     "@typescript-eslint/no-require-imports": "error",
     "@typescript-eslint/no-shadow": ["error", { "ignoreTypeValueShadow": true }],
     "@typescript-eslint/no-var-requires": "error",
-    "@typescript-eslint/type-annotation-spacing": "error",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/triple-slash-reference": "off",

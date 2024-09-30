@@ -311,7 +311,7 @@ export class DataTableBodyCellComponent<TRow extends { level?: number } = any>
     private cd: ChangeDetectorRef
   ) {
     this.cellContext = {
-      onCheckboxChangeFn: (event: Event) => this.onCheckboxChange(event),
+      onCheckboxChangeFn: (event: MouseEvent | KeyboardEvent) => this.onCheckboxChange(event),
       activateFn: (event: ActivateEvent<TRow>) => this.activate.emit(event),
       row: this.row,
       group: this.group,
@@ -433,7 +433,7 @@ export class DataTableBodyCellComponent<TRow extends { level?: number } = any>
     }
   }
 
-  onCheckboxChange(event: Event): void {
+  onCheckboxChange(event: MouseEvent | KeyboardEvent): void {
     this.activate.emit({
       type: 'checkbox',
       event,

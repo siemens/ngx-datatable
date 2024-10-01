@@ -99,32 +99,11 @@ export class DatatableComponent<TRow = any>
    */
   @Input() set rows(val: TRow[] | null | undefined) {
     this._rows = val;
-
+    // This will ensure that datatable detects changes on doing like this rows = [...rows];
+    this.rowDiffer.diff([]);
     if (val) {
       this._internalRows = [...val];
     }
-
-    // auto sort on new updates
-    if (!this.externalSorting) {
-      this.sortInternalRows();
-    }
-
-    // auto group by parent on new update
-    this._internalRows = groupRowsByParents(
-      this._internalRows,
-      optionalGetterForProp(this.treeFromRelation),
-      optionalGetterForProp(this.treeToRelation)
-    );
-
-    // recalculate sizes/etc
-    this.recalculate();
-
-    if (this._rows && this._groupRowsBy) {
-      // If a column has been specified in _groupRowsBy created a new array with the data grouped by that row
-      this.groupedRows = this.groupArrayBy(this._rows, this._groupRowsBy);
-    }
-
-    this.cd.markForCheck();
   }
 
   /**
@@ -752,10 +731,6 @@ export class DatatableComponent<TRow = any>
    * view has been fully initialized.
    */
   ngAfterViewInit(): void {
-    if (!this.externalSorting) {
-      this.sortInternalRows();
-    }
-
     // this has to be done to prevent the change detection
     // tree from freaking out because we are readjusting
     if (typeof requestAnimationFrame === 'undefined') {
@@ -815,7 +790,7 @@ export class DatatableComponent<TRow = any>
         this._internalColumns = translateTemplates(arr);
         setColumnDefaults(this._internalColumns);
         this.recalculateColumns();
-        if (!this.externalSorting) {
+        if (!this.externalSorting && this.rows?.length) {
           this.sortInternalRows();
         }
         this.cd.markForCheck();
@@ -856,7 +831,8 @@ export class DatatableComponent<TRow = any>
   ngDoCheck(): void {
     const rowDiffers = this.rowDiffer.diff(this.rows);
     if (rowDiffers || this.disableRowCheck) {
-      if (!this.externalSorting) {
+      // we don't sort again when ghost loader adds a dummy row
+      if (!this.ghostLoadingIndicator && !this.externalSorting && this._internalColumns) {
         this.sortInternalRows();
       } else {
         this._internalRows = [...this.rows];
@@ -869,6 +845,10 @@ export class DatatableComponent<TRow = any>
         optionalGetterForProp(this.treeToRelation)
       );
 
+      if (this._rows && this._groupRowsBy) {
+        // If a column has been specified in _groupRowsBy create a new array with the data grouped by that row
+        this.groupedRows = this.groupArrayBy(this._rows, this._groupRowsBy);
+      }
       if (rowDiffers) {
         queueMicrotask(() => {
           this.recalculate();

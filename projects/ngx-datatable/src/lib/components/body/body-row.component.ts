@@ -7,13 +7,13 @@ import {
   EventEmitter,
   HostBinding,
   HostListener,
+  inject,
   Input,
   KeyValueDiffer,
   KeyValueDiffers,
   OnChanges,
   Output,
-  SimpleChanges,
-  SkipSelf
+  SimpleChanges
 } from '@angular/core';
 
 import { columnGroupWidths, columnsByPin, columnsByPinArr } from '../../utils/column';
@@ -61,6 +61,9 @@ import { ColumnGroupWidth, PinnedColumns } from '../../types/internal.types';
   `
 })
 export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges {
+  private scrollbarHelper = inject(ScrollbarHelper);
+  private cd = inject(ChangeDetectorRef);
+
   @Input() set columns(val: TableColumn[]) {
     this._columns = val;
     this.recalculateColumns(val);
@@ -152,7 +155,7 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
   @Output() activate: EventEmitter<ActivateEvent<TRow>> = new EventEmitter();
   @Output() treeAction: EventEmitter<any> = new EventEmitter();
 
-  _element: HTMLElement;
+  _element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   _columnGroupWidths: ColumnGroupWidth;
   _columnsByPin: PinnedColumns[];
   _offsetX: number;
@@ -164,17 +167,9 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
     right: NgStyle['ngStyle'];
   } = { left: {}, center: {}, right: {} };
 
-  private _rowDiffer: KeyValueDiffer<keyof RowOrGroup<TRow>, any>;
-
-  constructor(
-    differs: KeyValueDiffers,
-    @SkipSelf() private scrollbarHelper: ScrollbarHelper,
-    private cd: ChangeDetectorRef,
-    element: ElementRef<HTMLElement>
-  ) {
-    this._element = element.nativeElement;
-    this._rowDiffer = differs.find({}).create();
-  }
+  private _rowDiffer: KeyValueDiffer<keyof RowOrGroup<TRow>, any> = inject(KeyValueDiffers)
+    .find({})
+    .create();
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.verticalScrollVisible) {

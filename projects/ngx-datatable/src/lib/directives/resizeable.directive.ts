@@ -5,6 +5,7 @@ import {
   EventEmitter,
   HostBinding,
   HostListener,
+  inject,
   Input,
   OnDestroy,
   Output,
@@ -17,6 +18,8 @@ import { takeUntil } from 'rxjs/operators';
   selector: '[resizeable]'
 })
 export class ResizeableDirective implements OnDestroy, AfterViewInit {
+  private renderer = inject(Renderer2);
+
   @HostBinding('class.resizeable') @Input() resizeEnabled = true;
   @Input() minWidth: number;
   @Input() maxWidth: number;
@@ -24,16 +27,9 @@ export class ResizeableDirective implements OnDestroy, AfterViewInit {
   @Output() resize: EventEmitter<any> = new EventEmitter();
   @Output() resizing: EventEmitter<any> = new EventEmitter();
 
-  element: HTMLElement;
+  element = inject(ElementRef).nativeElement;
   subscription: Subscription;
   private resizeHandle: HTMLElement;
-
-  constructor(
-    element: ElementRef,
-    private renderer: Renderer2
-  ) {
-    this.element = element.nativeElement;
-  }
 
   ngAfterViewInit(): void {
     const renderer2 = this.renderer;

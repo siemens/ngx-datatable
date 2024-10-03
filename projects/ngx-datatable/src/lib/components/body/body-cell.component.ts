@@ -7,6 +7,7 @@ import {
   EventEmitter,
   HostBinding,
   HostListener,
+  inject,
   Input,
   OnDestroy,
   Output,
@@ -93,6 +94,8 @@ import {
 export class DataTableBodyCellComponent<TRow extends { level?: number } = any>
   implements DoCheck, OnDestroy
 {
+  private cd = inject(ChangeDetectorRef);
+
   @Input() displayCheck: (row: RowOrGroup<TRow>, column: TableColumn, value: any) => boolean;
 
   _disable$: BehaviorSubject<boolean>;
@@ -305,13 +308,10 @@ export class DataTableBodyCellComponent<TRow extends { level?: number } = any>
   private _rowHeight: number;
   private _rowIndex: number;
   private _expanded: boolean;
-  private _element: HTMLElement;
+  private _element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private _treeStatus: TreeStatus;
 
-  constructor(
-    element: ElementRef<HTMLElement>,
-    private cd: ChangeDetectorRef
-  ) {
+  constructor() {
     this.cellContext = {
       onCheckboxChangeFn: (event: MouseEvent | KeyboardEvent) => this.onCheckboxChange(event),
       activateFn: (event: ActivateEvent<TRow>) => this.activate.emit(event),
@@ -326,8 +326,6 @@ export class DataTableBodyCellComponent<TRow extends { level?: number } = any>
       disable$: this.disable$,
       onTreeAction: () => this.onTreeAction()
     };
-
-    this._element = element.nativeElement;
   }
 
   ngDoCheck(): void {

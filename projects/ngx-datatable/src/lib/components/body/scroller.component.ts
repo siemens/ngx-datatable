@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   HostBinding,
+  inject,
   Input,
   NgZone,
   OnDestroy,
@@ -21,6 +22,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScrollerComponent implements OnInit, OnDestroy {
+  private renderer = inject(Renderer2);
+
   @Input() scrollbarV = false;
   @Input() scrollbarH = false;
 
@@ -38,17 +41,10 @@ export class ScrollerComponent implements OnInit, OnDestroy {
   scrollXPos = 0;
   prevScrollYPos = 0;
   prevScrollXPos = 0;
-  element: HTMLElement;
+  element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   parentElement: HTMLElement;
 
   private _scrollEventListener: any = null;
-
-  constructor(
-    element: ElementRef<HTMLElement>,
-    private renderer: Renderer2
-  ) {
-    this.element = element.nativeElement;
-  }
 
   ngOnInit(): void {
     // manual bind so we don't always listen

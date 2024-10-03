@@ -4,12 +4,12 @@ import {
   Component,
   EventEmitter,
   HostBinding,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
   Output,
   SimpleChanges,
-  SkipSelf,
   TemplateRef
 } from '@angular/core';
 import { columnGroupWidths, columnsByPin, columnsByPinArr } from '../../utils/column';
@@ -92,6 +92,9 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DataTableHeaderComponent implements OnDestroy, OnChanges {
+  private cd = inject(ChangeDetectorRef);
+  private scrollbarHelper = inject(ScrollbarHelper);
+
   @Input() sortAscendingIcon: string;
   @Input() sortDescendingIcon: string;
   @Input() sortUnsetIcon: string;
@@ -184,11 +187,6 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
   } = { left: {}, center: {}, right: {} };
 
   private destroyed = false;
-
-  constructor(
-    private cd: ChangeDetectorRef,
-    @SkipSelf() private scrollbarHelper: ScrollbarHelper
-  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.verticalScrollVisible) {

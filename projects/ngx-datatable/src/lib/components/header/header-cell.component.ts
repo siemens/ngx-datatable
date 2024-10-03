@@ -5,6 +5,7 @@ import {
   EventEmitter,
   HostBinding,
   HostListener,
+  inject,
   Input,
   OnInit,
   Output,
@@ -58,6 +59,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DataTableHeaderCellComponent implements OnInit {
+  private cd = inject(ChangeDetectorRef);
+
   @Input() sortType: SortType;
   @Input() sortAscendingIcon: string;
   @Input() sortDescendingIcon: string;
@@ -186,7 +189,7 @@ export class DataTableHeaderCellComponent implements OnInit {
   private _column: TableColumn;
   private _sorts: SortPropDir[];
 
-  constructor(private cd: ChangeDetectorRef) {
+  constructor() {
     this.cellContext = {
       column: this.column,
       sortDir: this.sortDir,

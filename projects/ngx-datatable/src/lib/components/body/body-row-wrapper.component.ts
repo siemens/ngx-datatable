@@ -98,17 +98,13 @@ export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit
   rowContext?: RowDetailContext<TRow>;
   disable$: BehaviorSubject<boolean>;
 
-  private rowDiffer: KeyValueDiffer<keyof RowOrGroup<TRow>, any>;
+  private rowDiffer: KeyValueDiffer<keyof RowOrGroup<TRow>, any> = inject(KeyValueDiffers)
+    .find({})
+    .create();
+  private iterableDiffers = inject(IterableDiffers);
   private selectedRowsDiffer: IterableDiffer<TRow>;
   private tableComponent = inject(DatatableComponentToken);
-
-  constructor(
-    private cd: ChangeDetectorRef,
-    differs: KeyValueDiffers,
-    private iterableDiffers: IterableDiffers
-  ) {
-    this.rowDiffer = differs.find({}).create();
-  }
+  private cd = inject(ChangeDetectorRef);
 
   get group(): Group<TRow> {
     if (typeof this.row === 'object' && 'value' in this.row) {

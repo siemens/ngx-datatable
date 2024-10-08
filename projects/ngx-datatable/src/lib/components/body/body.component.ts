@@ -441,10 +441,13 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   constructor(public cd: ChangeDetectorRef) {
     // declare fn here so we can get access to the `this` property
     this.rowTrackingFn = (index, row) => {
-      const idx = this.getRowIndex(row);
+      if (this.ghostLoadingIndicator) {
+        return index;
+      }
       if (this.trackByProp) {
         return row[this.trackByProp];
       } else {
+        const idx = this.getRowIndex(row);
         return idx;
       }
     };

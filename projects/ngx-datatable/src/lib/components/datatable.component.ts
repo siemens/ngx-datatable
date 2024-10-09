@@ -99,9 +99,11 @@ export class DatatableComponent<TRow = any>
    */
   @Input() set rows(val: TRow[] | null | undefined) {
     this._rows = val;
-    // This will ensure that datatable detects changes on doing like this rows = [...rows];
-    this.rowDiffer.diff([]);
     if (val) {
+      // This will ensure that datatable detects changes on doing like this rows = [...rows];
+      if (val.length) {
+        this.rowDiffer.diff([]);
+      }
       this._internalRows = [...val];
     }
   }

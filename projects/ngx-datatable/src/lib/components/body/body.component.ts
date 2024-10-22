@@ -360,6 +360,7 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   }
 
   rowHeightsCache: RowHeightCache = new RowHeightCache();
+  private cacheInit = signal(false);
   rowsToRender = computed(() => {
     return this.updateRows();
   });
@@ -424,11 +425,6 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
 
     if (changes.pageSize) {
       shouldRecalcLayout = true;
-
-      // Emits the page event if page size has been changed
-      this._offsetEvent = -1;
-      this.updatePage('up');
-      this.updatePage('down');
     }
 
     if (changes.rows) {
@@ -459,6 +455,14 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
 
     if (shouldRecalcLayout) {
       this.recalcLayout();
+    }
+
+    // Do this after recalcLayout.
+    if (changes.pageSize) {
+      // Emits the page event if page size has been changed
+      this._offsetEvent = -1;
+      this.updatePage('up');
+      this.updatePage('down');
     }
   }
 
@@ -800,6 +804,10 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
    * @memberOf DataTableBodyComponent
    */
   rowsStyles = computed(() => {
+    if (!this.cacheInit()) {
+      return [];
+    }
+
     const rowsStyles: NgStyle['ngStyle'][] = [];
     this.rowsToRender().forEach((rows, index) => {
       const styles: NgStyle['ngStyle'] = {};
@@ -847,7 +855,13 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
    * @memberOf DataTableBodyComponent
    */
   bottomSummaryRowsStyles = computed(() => {
-    if (!this.scrollbarV || !this.rows || !this.rows.length || !this.rowsToRender()) {
+    if (
+      !this.scrollbarV ||
+      !this.rows ||
+      !this.rows.length ||
+      !this.rowsToRender() ||
+      !this.cacheInit()
+    ) {
       return null;
     }
 
@@ -932,6 +946,8 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
         rowIndexes: this.rowIndexes,
         rowExpansions
       });
+
+      this.cacheInit.set(true);
     }
   }
 

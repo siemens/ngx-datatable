@@ -124,6 +124,7 @@ export class DatatableComponent<TRow = any>
       if (this._rows && this._groupRowsBy) {
         // creates a new array with the data grouped
         this.groupedRows = this.groupArrayBy(this._rows, this._groupRowsBy);
+        this.bodyComponent.cd.markForCheck();
       }
     }
   }

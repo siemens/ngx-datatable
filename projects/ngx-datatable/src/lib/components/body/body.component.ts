@@ -7,16 +7,18 @@ import {
   HostBinding,
   inject,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
   signal,
+  SimpleChanges,
   TemplateRef,
   TrackByFunction,
   ViewChild
 } from '@angular/core';
 import { ScrollerComponent } from './scroller.component';
-import { columnGroupWidths, columnsByPin } from '../../utils/column';
+import { columnGroupWidths, columnsByPin, columnsByPinArr } from '../../utils/column';
 import { RowHeightCache } from '../../utils/row-height-cache';
 import { translateXY } from '../../utils/translate';
 import { NgStyle } from '@angular/common';
@@ -24,7 +26,7 @@ import { TableColumn } from '../../types/table-column.type';
 import { DatatableGroupHeaderDirective } from './body-group-header.directive';
 import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive';
 import { DataTableBodyRowComponent } from './body-row.component';
-import { ColumnGroupWidth } from '../../types/internal.types';
+import { ColumnGroupWidth, PinnedColumns } from '../../types/internal.types';
 import {
   ActivateEvent,
   DragEventData,
@@ -34,6 +36,7 @@ import {
   SelectionType,
   TreeStatus
 } from '../../types/public.types';
+import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 
 @Component({
   selector: 'datatable-body',
@@ -81,10 +84,13 @@ import {
           @if (summaryRow && summaryPosition === 'top') {
             <datatable-summary-row
               [rowHeight]="summaryHeight"
-              [offsetX]="offsetX"
-              [innerWidth]="innerWidth"
               [rows]="rows"
               [columns]="columns"
+              [columnsByPin]="_columnsByPin"
+              [columnsTotalWidth]="_columnsTotalWidth"
+              [groupStyles]="_groupStyles"
+              [cssClass]="calculateSummaryCssClass()"
+              [verticalScrollVisible]="verticalScrollVisible"
             >
             </datatable-summary-row>
           }
@@ -126,19 +132,21 @@ import {
                     #rowElement
                     [disable$]="rowWrapper.disable$"
                     [isSelected]="selector.getRowSelected(group)"
-                    [innerWidth]="innerWidth"
-                    [offsetX]="offsetX"
                     [columns]="columns"
+                    [columnsByPin]="_columnsByPin"
+                    [columnsTotalWidth]="_columnsTotalWidth"
+                    [groupStyles]="_groupStyles"
+                    [cssClass]="
+                      calculateCssClass(group, getRowIndex(group), selector.getRowSelected(group))
+                    "
                     [rowHeight]="getRowHeight(group)"
                     [row]="group"
                     [rowIndex]="getRowIndex(group)"
                     [expanded]="getRowExpanded(group)"
-                    [rowClass]="rowClass"
                     [displayCheck]="displayCheck"
                     [treeStatus]="group?.treeStatus"
                     [ghostLoadingIndicator]="ghostLoadingIndicator"
                     [draggable]="rowDraggable"
-                    [verticalScrollVisible]="verticalScrollVisible"
                     (treeAction)="onTreeAction(group)"
                     (activate)="selector.onActivate($event, indexes().first + i)"
                     (drop)="drop($event, group, rowElement)"
@@ -160,19 +168,21 @@ import {
                     #rowElement
                     [disable$]="rowWrapper.disable$"
                     [isSelected]="selector.getRowSelected(group)"
-                    [innerWidth]="innerWidth"
-                    [offsetX]="offsetX"
                     [columns]="columns"
+                    [columnsByPin]="_columnsByPin"
+                    [columnsTotalWidth]="_columnsTotalWidth"
+                    [groupStyles]="_groupStyles"
+                    [cssClass]="
+                      calculateCssClass(group, getRowIndex(group), selector.getRowSelected(group))
+                    "
                     [rowHeight]="getRowHeight(group)"
                     [row]="group"
                     [rowIndex]="getRowIndex(group)"
                     [expanded]="getRowExpanded(group)"
-                    [rowClass]="rowClass"
                     [displayCheck]="displayCheck"
                     [treeStatus]="group?.treeStatus"
                     [ghostLoadingIndicator]="ghostLoadingIndicator"
                     [draggable]="rowDraggable"
-                    [verticalScrollVisible]="verticalScrollVisible"
                     (treeAction)="onTreeAction(group)"
                     (activate)="selector.onActivate($event, indexes().first + i)"
                     (drop)="drop($event, group, rowElement)"
@@ -191,22 +201,24 @@ import {
                 @for (row of group.value; track rowTrackingFn(i, row); let i = $index) {
                   <datatable-body-row
                     role="row"
-                    [disable$]="rowWrapper.disable$"
                     tabindex="-1"
                     #rowElement
+                    [disable$]="rowWrapper.disable$"
                     [isSelected]="selector.getRowSelected(row)"
-                    [innerWidth]="innerWidth"
-                    [offsetX]="offsetX"
                     [columns]="columns"
+                    [columnsByPin]="_columnsByPin"
+                    [columnsTotalWidth]="_columnsTotalWidth"
+                    [groupStyles]="_groupStyles"
+                    [cssClass]="
+                      calculateCssClass(row, getRowIndex(row), selector.getRowSelected(group))
+                    "
                     [rowHeight]="getRowHeight(row)"
                     [row]="row"
                     [group]="group.value"
                     [rowIndex]="getRowIndex(row)"
                     [expanded]="getRowExpanded(row)"
-                    [rowClass]="rowClass"
                     [ghostLoadingIndicator]="ghostLoadingIndicator"
                     [draggable]="rowDraggable"
-                    [verticalScrollVisible]="verticalScrollVisible"
                     (activate)="selector.onActivate($event, i)"
                     (drop)="drop($event, row, rowElement)"
                     (dragover)="dragOver($event, row)"
@@ -225,10 +237,13 @@ import {
               role="row"
               [ngStyle]="bottomSummaryRowsStyles()"
               [rowHeight]="summaryHeight"
-              [offsetX]="offsetX"
-              [innerWidth]="innerWidth"
               [rows]="rows"
               [columns]="columns"
+              [columnsByPin]="_columnsByPin"
+              [columnsTotalWidth]="_columnsTotalWidth"
+              [groupStyles]="_groupStyles"
+              [cssClass]="calculateSummaryCssClass()"
+              [verticalScrollVisible]="verticalScrollVisible"
             >
             </datatable-summary-row>
           }
@@ -256,9 +271,10 @@ import {
   }
 })
 export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = any>
-  implements OnInit, OnDestroy
+  implements OnInit, OnDestroy, OnChanges
 {
   cd = inject(ChangeDetectorRef);
+  private scrollbarHelper = inject(ScrollbarHelper);
 
   @Input() rowDefTemplate?: TemplateRef<any>;
   @Input() scrollbarV: boolean;
@@ -267,7 +283,6 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   @Input() ghostLoadingIndicator: boolean;
   @Input() externalPaging: boolean;
   @Input() rowHeight: number | 'auto' | ((row?: any) => number);
-  @Input() offsetX: number;
   @Input() emptyMessage: string;
   @Input() selectionType: SelectionType;
   @Input() selected: any[] = [];
@@ -280,8 +295,6 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   @Input() rowClass: (row: RowOrGroup<TRow>) => string | Record<string, boolean>;
   @Input() groupedRows: Group<TRow>[];
   @Input() groupExpansionDefault: boolean;
-  @Input() innerWidth: number;
-  @Input() groupRowsBy: keyof TRow;
   @Input() virtualization: boolean;
   @Input() summaryRow: boolean;
   @Input() summaryPosition: string;
@@ -290,70 +303,20 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   @Input() rowDragEvents: EventEmitter<DragEventData>;
   @Input() disableRowCheck: (row: TRow) => boolean;
 
-  @Input() set pageSize(val: number) {
-    if (val !== this._pageSize) {
-      this._pageSize = val;
-      this.recalcLayout();
+  @Input() offsetX: number;
 
-      // Emits the page event if page size has been changed
-      this._offsetEvent = -1;
-      this.updatePage('up');
-      this.updatePage('down');
-    }
-  }
+  @Input() innerWidth: number;
+  @Input() verticalScrollVisible: boolean;
 
-  get pageSize(): number {
-    return this._pageSize;
-  }
+  @Input() pageSize: number;
 
-  @Input() set rows(val: TRow[]) {
-    if (val !== this._rows) {
-      this._rows = val;
-      this.recalcLayout();
-    }
-  }
+  @Input() rows: TRow[];
 
-  get rows(): TRow[] {
-    return this._rows;
-  }
+  @Input() columns: TableColumn[];
 
-  @Input() set columns(val: TableColumn[]) {
-    if (val !== this._columns) {
-      this._columns = val;
-      this.updateColumnGroupWidths();
-    }
-  }
+  @Input() offset: number;
 
-  get columns(): any[] {
-    return this._columns;
-  }
-
-  @Input() set offset(val: number) {
-    if (val !== this._offset) {
-      this._offset = val;
-      if (!this.scrollbarV || (this.scrollbarV && !this.virtualization)) {
-        if (!isNaN(this._offset) && this.ghostLoadingIndicator) {
-          this.rows = [];
-        }
-        this.recalcLayout();
-      }
-    }
-  }
-
-  get offset(): number {
-    return this._offset;
-  }
-
-  @Input() set rowCount(val: number) {
-    if (val !== this._rowCount) {
-      this._rowCount = val;
-      this.recalcLayout();
-    }
-  }
-
-  get rowCount(): number {
-    return this._rowCount;
-  }
+  @Input() rowCount: number;
 
   @HostBinding('style.width')
   get bodyWidth(): string {
@@ -364,23 +327,10 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
     }
   }
 
-  @Input()
+  @Input() bodyHeight: number | string;
+
   @HostBinding('style.height')
-  set bodyHeight(val: number | string) {
-    if (this.scrollbarV) {
-      this._bodyHeight = val + 'px';
-    } else {
-      this._bodyHeight = 'auto';
-    }
-
-    this.recalcLayout();
-  }
-
-  get bodyHeight() {
-    return this._bodyHeight;
-  }
-
-  @Input() verticalScrollVisible = false;
+  private _bodyHeightStyle?: string;
 
   @Output() scroll: EventEmitter<ScrollEvent> = new EventEmitter();
   @Output() page: EventEmitter<number> = new EventEmitter();
@@ -413,6 +363,7 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   }
 
   rowHeightsCache: RowHeightCache = new RowHeightCache();
+  private cacheInit = signal(false);
   rowsToRender = computed(() => {
     return this.updateRows();
   });
@@ -424,13 +375,14 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   rowIndexes = new WeakMap<any, any>();
   rowExpansions: any[] = [];
 
-  _rows: TRow[];
-  _bodyHeight: string;
-  _columns: TableColumn[];
-  _rowCount: number;
-  _offset: number;
-  _pageSize: number;
   _offsetEvent = -1;
+  _columnsByPin: PinnedColumns[];
+  _columnsTotalWidth: number;
+  _groupStyles: {
+    left: NgStyle['ngStyle'];
+    center: NgStyle['ngStyle'];
+    right: NgStyle['ngStyle'];
+  } = { left: {}, center: {}, right: {} };
 
   private _draggedRow: RowOrGroup<TRow>;
   private _draggedRowElement: HTMLElement;
@@ -453,6 +405,70 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
     };
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    let shouldUpdateColumns = false;
+    let shouldUpdateGroupStyles = false;
+    let shouldRecalcLayout = false;
+
+    if (changes.columns) {
+      shouldUpdateColumns = true;
+      shouldUpdateGroupStyles = true;
+    }
+    if (changes.offsetX || changes.innerWidth || changes.verticalScrollVisible) {
+      shouldUpdateGroupStyles = true;
+    }
+    if (shouldUpdateColumns) {
+      this.updateColumnsByPin();
+      this.updateColumnGroupWidths();
+      shouldUpdateGroupStyles = true;
+    }
+    if (shouldUpdateGroupStyles) {
+      this.updateGroupStyles();
+    }
+
+    if (changes.pageSize) {
+      shouldRecalcLayout = true;
+    }
+
+    if (changes.rows) {
+      shouldRecalcLayout = true;
+    }
+
+    if (changes.offset) {
+      if (!this.scrollbarV || (this.scrollbarV && !this.virtualization)) {
+        if (!isNaN(this.offset) && this.ghostLoadingIndicator) {
+          this.rows = [];
+        }
+        shouldRecalcLayout = true;
+      }
+    }
+
+    if (changes.rowCount) {
+      shouldRecalcLayout = true;
+    }
+
+    if (changes.bodyHeight) {
+      if (this.scrollbarV) {
+        this._bodyHeightStyle = this.bodyHeight + 'px';
+      } else {
+        this._bodyHeightStyle = 'auto';
+      }
+      shouldRecalcLayout = true;
+    }
+
+    if (shouldRecalcLayout) {
+      this.recalcLayout();
+    }
+
+    // Do this after recalcLayout.
+    if (changes.pageSize) {
+      // Emits the page event if page size has been changed
+      this._offsetEvent = -1;
+      this.updatePage('up');
+      this.updatePage('down');
+    }
+  }
+
   /**
    * Called after the constructor, initializing input properties
    */
@@ -472,6 +488,85 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
         }
       );
     }
+  }
+
+  private updateColumnsByPin() {
+    this._columnsByPin = columnsByPinArr(this.columns);
+  }
+
+  private updateGroupStyles() {
+    this._groupStyles.left = this.calcStylesByGroup('left');
+    this._groupStyles.center = this.calcStylesByGroup('center');
+    this._groupStyles.right = this.calcStylesByGroup('right');
+    this.cd.markForCheck();
+  }
+
+  private calcStylesByGroup(group: 'left' | 'right' | 'center') {
+    const widths = this.columnGroupWidths;
+    const offsetX = this.offsetX;
+
+    if (group === 'left') {
+      return {
+        width: `${widths[group]}px`,
+        ...translateXY(offsetX, 0)
+      };
+    } else if (group === 'right') {
+      const bodyWidth = this.innerWidth;
+      const totalDiff = widths.total - bodyWidth;
+      const offsetDiff = totalDiff - offsetX;
+      const offset =
+        (offsetDiff + (this.verticalScrollVisible ? this.scrollbarHelper.getWidth() : 0)) * -1;
+      return {
+        width: `${widths[group]}px`,
+        ...translateXY(offset, 0)
+      };
+    }
+
+    return {
+      width: `${widths[group]}px`
+    };
+  }
+
+  protected calculateCssClass(row: TRow, rowIndex: number, isSelected: boolean): string {
+    let cls = 'datatable-body-row';
+    if (isSelected) {
+      cls += ' active';
+    }
+    if (rowIndex % 2 !== 0) {
+      cls += ' datatable-row-odd';
+    } else {
+      cls += ' datatable-row-even';
+    }
+    if (this.disableRowCheck && this.disableRowCheck(row)) {
+      cls += ' row-disabled';
+    }
+
+    if (this.rowClass) {
+      const res = this.rowClass(row);
+      if (typeof res === 'string') {
+        cls += ` ${res}`;
+      } else if (typeof res === 'object') {
+        const keys = Object.keys(res);
+        for (const k of keys) {
+          if (res[k] === true) {
+            cls += ` ${k}`;
+          }
+        }
+      }
+    }
+
+    return cls;
+  }
+
+  protected calculateSummaryCssClass(): string {
+    let cls = 'datatable-body-row datatable-summary-row';
+    if (-1 % 2 !== 0) {
+      cls += ' datatable-row-odd';
+    } else {
+      cls += ' datatable-row-even';
+    }
+    // Add any additional classes if needed
+    return cls;
   }
 
   private toggleStateChange(type: string, value: any) {
@@ -712,6 +807,10 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
    * @memberOf DataTableBodyComponent
    */
   rowsStyles = computed(() => {
+    if (!this.cacheInit()) {
+      return [];
+    }
+
     const rowsStyles: NgStyle['ngStyle'][] = [];
     this.rowsToRender().forEach((rows, index) => {
       const styles: NgStyle['ngStyle'] = {};
@@ -759,7 +858,13 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
    * @memberOf DataTableBodyComponent
    */
   bottomSummaryRowsStyles = computed(() => {
-    if (!this.scrollbarV || !this.rows || !this.rows.length || !this.rowsToRender()) {
+    if (
+      !this.scrollbarV ||
+      !this.rows ||
+      !this.rows.length ||
+      !this.rowsToRender() ||
+      !this.cacheInit()
+    ) {
       return null;
     }
 
@@ -789,7 +894,7 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
         // Calculation of the first and last indexes will be based on where the
         // scrollY position would be at.  The last index would be the one
         // that shows up inside the view port the last.
-        const height = parseInt(this._bodyHeight, 10);
+        const height = parseInt(this._bodyHeightStyle, 10);
         first = this.rowHeightsCache.getRowIndex(this.offsetY);
         last = this.rowHeightsCache.getRowIndex(height + this.offsetY) + 1;
       } else {
@@ -844,6 +949,8 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
         rowIndexes: this.rowIndexes,
         rowExpansions
       });
+
+      this.cacheInit.set(true);
     }
   }
 
@@ -931,6 +1038,7 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   recalcLayout(): void {
     this.refreshRowHeightCache();
     this.updateIndexes();
+    this.cd.markForCheck();
   }
 
   /**
@@ -1055,8 +1163,9 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   }
 
   updateColumnGroupWidths() {
-    const colsByPin = columnsByPin(this._columns);
-    this.columnGroupWidths = columnGroupWidths(colsByPin, this._columns);
+    const colsByPin = columnsByPin(this.columns);
+    this.columnGroupWidths = columnGroupWidths(colsByPin, this.columns);
+    this._columnsTotalWidth = this.columnGroupWidths.total;
   }
 
   protected isGroup(row: RowOrGroup<TRow>[]): row is Group<TRow>[];

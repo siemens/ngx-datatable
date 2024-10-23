@@ -1,5 +1,7 @@
 import { Component, Input, OnChanges, PipeTransform, TemplateRef } from '@angular/core';
+import { NgStyle } from '@angular/common';
 import { TableColumn, TableColumnProp } from '../../../types/table-column.type';
+import { PinnedColumns } from '../../../types/internal.types';
 
 export interface ISummaryColumn {
   summaryFunc?: (cells: any[]) => any;
@@ -32,9 +34,11 @@ function noopSumFunc(cells: any[]): void {
     @if (summaryRow && _internalColumns) {
       <datatable-body-row
         tabindex="-1"
-        [innerWidth]="innerWidth"
-        [offsetX]="offsetX"
         [columns]="_internalColumns"
+        [columnsByPin]="columnsByPin"
+        [columnsTotalWidth]="columnsTotalWidth"
+        [groupStyles]="groupStyles"
+        [cssClass]="cssClass"
         [rowHeight]="rowHeight"
         [row]="summaryRow"
         [rowIndex]="-1"
@@ -51,8 +55,15 @@ export class DataTableSummaryRowComponent implements OnChanges {
   @Input() columns: TableColumn[];
 
   @Input() rowHeight: number;
-  @Input() offsetX: number;
-  @Input() innerWidth: number;
+  @Input() columnsByPin: PinnedColumns[];
+  @Input() columnsTotalWidth: number;
+  @Input() groupStyles: {
+    left: NgStyle['ngStyle'];
+    center: NgStyle['ngStyle'];
+    right: NgStyle['ngStyle'];
+  };
+  @Input() cssClass: string;
+  @Input() verticalScrollVisible: boolean;
 
   _internalColumns: ISummaryColumn[];
   summaryRow: any = {};

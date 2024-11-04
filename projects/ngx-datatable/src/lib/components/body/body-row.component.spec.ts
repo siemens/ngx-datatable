@@ -9,7 +9,7 @@ describe('DataTableBodyRowComponent', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [DataTableBodyCellComponent, DataTableBodyRowComponent]
+      imports: [DataTableBodyCellComponent, DataTableBodyRowComponent]
     });
   });
 

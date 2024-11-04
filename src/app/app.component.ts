@@ -1,6 +1,7 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, signal, ViewEncapsulation } from '@angular/core';
 import { HashLocationStrategy, Location, LocationStrategy } from '@angular/common';
 import packageInfo from 'projects/ngx-datatable/package.json';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -22,11 +23,11 @@ import packageInfo from 'projects/ngx-datatable/package.json';
   ]
 })
 export class AppComponent {
-  state: any;
-
   version = packageInfo.version;
 
-  constructor(location: Location) {
-    this.state = location.path(true);
+  dark = signal(false);
+
+  routeActivate(outlet: RouterOutlet): void {
+    this.dark.set(outlet.activatedRoute.snapshot.data.dark);
   }
 }

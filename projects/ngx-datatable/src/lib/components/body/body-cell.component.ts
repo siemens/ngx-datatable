@@ -22,6 +22,7 @@ import { BehaviorSubject } from 'rxjs';
 import {
   ActivateEvent,
   CellContext,
+  RowIndex,
   RowOrGroup,
   SortDirection,
   SortPropDir,
@@ -149,14 +150,14 @@ export class DataTableBodyCellComponent<TRow extends { level?: number } = any>
     return this._expanded;
   }
 
-  @Input() set rowIndex(val: number) {
+  @Input() set rowIndex(val: RowIndex) {
     this._rowIndex = val;
     this.cellContext.rowIndex = val;
     this.checkValueUpdates();
     this.cd.markForCheck();
   }
 
-  get rowIndex(): number {
+  get rowIndex(): RowIndex {
     return this._rowIndex;
   }
 
@@ -306,7 +307,7 @@ export class DataTableBodyCellComponent<TRow extends { level?: number } = any>
   private _row: TRow;
   private _group: TRow[];
   private _rowHeight: number;
-  private _rowIndex: number;
+  private _rowIndex: RowIndex;
   private _expanded: boolean;
   private _element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private _treeStatus: TreeStatus;

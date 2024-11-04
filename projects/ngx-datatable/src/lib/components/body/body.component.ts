@@ -28,6 +28,7 @@ import {
   ActivateEvent,
   DragEventData,
   Group,
+  RowIndex,
   RowOrGroup,
   ScrollEvent,
   SelectionType,
@@ -88,6 +89,7 @@ import {
             </datatable-summary-row>
           }
           @for (group of rowsToRender(); track rowTrackingFn(i, group); let i = $index) {
+            <!-- getRowIndex will return here always a number, so we need the $any here. -->
             <datatable-row-wrapper
               #rowWrapper
               [attr.hidden]="
@@ -104,7 +106,7 @@ import {
               [row]="group"
               [disableCheck]="disableRowCheck"
               [expanded]="getRowExpanded(group)"
-              [rowIndex]="getRowIndex(group && group[i])"
+              [rowIndex]="$any(getRowIndex(group && group[i]))"
               [selected]="selected"
               (rowContextmenu)="rowContextmenu.emit($event)"
             >
@@ -420,7 +422,7 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   columnGroupWidths: ColumnGroupWidth;
   rowTrackingFn: TrackByFunction<RowOrGroup<TRow>>;
   listener: any;
-  rowIndexes = new WeakMap<any, any>();
+  rowIndexes = new WeakMap<RowOrGroup<TRow>, RowIndex>();
   rowExpansions: any[] = [];
 
   _rows: TRow[];
@@ -598,9 +600,8 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
 
         if (group.value) {
           // add indexes for each group item
-          group.value.forEach((g: any, i: number) => {
-            const _idx = `${rowIndex}-${i}`;
-            this.rowIndexes.set(g, _idx);
+          group.value.forEach((g: TRow, i: number) => {
+            this.rowIndexes.set(g, `${rowIndex}-${i}`);
           });
         }
         temp[idx] = group;
@@ -726,10 +727,12 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
         if (Array.isArray(rows)) {
           // Get the latest row rowindex in a group
           const row = rows[rows.length - 1];
-          idx = row ? this.getRowIndex(row) : 0;
+          // The group row, which has always a numeric index
+          idx = row ? (this.getRowIndex(row) as number) : 0;
         } else {
           if (rows) {
-            idx = this.getRowIndex(rows);
+            // normal rows always have a numeric index
+            idx = this.getRowIndex(rows) as number;
           } else {
             // When ghost cells are enabled use index to get the position of them
             idx = this.indexes().first + index;
@@ -877,8 +880,8 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
     // If the detailRowHeight is auto --> only in case of non-virtualized scroll
     if (this.scrollbarV && this.virtualization) {
       const detailRowHeight = this.getDetailRowHeight(row) * (expanded ? -1 : 1);
-      // const idx = this.rowIndexes.get(row) || 0;
-      const idx = this.getRowIndex(row);
+      // This is hopefully only called with non-grouped rows. Otherwise, the heightCache fails.
+      const idx = this.getRowIndex(row) as number;
       this.rowHeightsCache().update(idx, detailRowHeight);
     }
 
@@ -966,7 +969,7 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   /**
    * Gets the row index given a row
    */
-  getRowIndex(row: RowOrGroup<TRow>): number {
+  getRowIndex(row: RowOrGroup<TRow>): RowIndex {
     return this.rowIndexes.get(row) || 0;
   }
 

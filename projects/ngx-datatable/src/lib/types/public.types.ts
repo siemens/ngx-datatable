@@ -71,7 +71,7 @@ export interface CellContext<TRow = any> {
   column: TableColumn;
   rowHeight: number;
   isSelected: boolean;
-  rowIndex: number;
+  rowIndex: RowIndex;
   treeStatus: TreeStatus;
   disable$: BehaviorSubject<boolean>;
   onTreeAction: () => void;
@@ -174,3 +174,9 @@ export interface DragEventData {
   dragRow: any;
   dropRow?: any;
 }
+
+/**
+ * Represents the index of row. Usually a number.
+ * If the Row is grouped it returns a string with this pattern: `<indexOfGroup>-<indexOfRowInGroup>`
+ */
+export type RowIndex = number | `${number}-${number}`;

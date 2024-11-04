@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
+import { ColumnMode, RowIndex } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
@@ -107,7 +107,7 @@ export class InlineEditComponent {
     req.send();
   }
 
-  updateValue(event, cell, rowIndex: number) {
+  updateValue(event, cell, rowIndex: RowIndex) {
     console.log('inline editing rowIndex', rowIndex);
     this.editing[rowIndex + '-' + cell] = false;
     this.rows[rowIndex][cell] = event.target.value;

@@ -20,7 +20,7 @@ import { columnGroupWidths, columnsByPin, columnsByPinArr } from '../../utils/co
 import { Keys } from '../../utils/keys';
 import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 import { BehaviorSubject } from 'rxjs';
-import { ActivateEvent, RowOrGroup, TreeStatus } from '../../types/public.types';
+import { ActivateEvent, RowIndex, RowOrGroup, TreeStatus } from '../../types/public.types';
 import { NgStyle } from '@angular/common';
 import { TableColumn } from '../../types/table-column.type';
 import { ColumnGroupWidth, PinnedColumns } from '../../types/internal.types';
@@ -91,7 +91,7 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
   @Input() row: TRow;
   @Input() group: TRow[];
   @Input() isSelected: boolean;
-  @Input() rowIndex: number;
+  @Input() rowIndex: RowIndex;
   @Input() displayCheck: (row: TRow, column: TableColumn, value?: any) => boolean;
   @Input() treeStatus?: TreeStatus = 'collapsed';
   @Input() ghostLoadingIndicator = false;
@@ -112,10 +112,10 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
     if (this.isSelected) {
       cls += ' active';
     }
-    if (this.rowIndex % 2 !== 0) {
+    if (this.innerRowIndex % 2 !== 0) {
       cls += ' datatable-row-odd';
     }
-    if (this.rowIndex % 2 === 0) {
+    if (this.innerRowIndex % 2 === 0) {
       cls += ' datatable-row-even';
     }
     if (this.disable$ && this.disable$.value) {
@@ -231,5 +231,15 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
 
   onTreeAction() {
     this.treeAction.emit();
+  }
+
+  /** Returns the row index, or if in a group, the index within a group. */
+  private get innerRowIndex(): number {
+    if (typeof this.rowIndex === 'number') {
+      return this.rowIndex;
+    }
+
+    const [, innerIndex] = this.rowIndex.match(/\d+-(\d+)/);
+    return parseInt(innerIndex);
   }
 }

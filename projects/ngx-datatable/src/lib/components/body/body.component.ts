@@ -105,6 +105,46 @@ import {
               [selected]="selected"
               (rowContextmenu)="rowContextmenu.emit($event)"
             >
+              <ng-template
+                ngx-datatable-body-row
+                #bodyRow
+                let-groupRow="row"
+                let-rowIndex="index"
+                let-groupValue="groupValue"
+              >
+                @let rowItem = groupRow ?? group;
+                <datatable-body-row
+                  role="row"
+                  tabindex="-1"
+                  #rowElement
+                  [disable$]="rowWrapper.disable$"
+                  [isSelected]="selector.getRowSelected(rowItem)"
+                  [innerWidth]="innerWidth"
+                  [offsetX]="offsetX"
+                  [columns]="columns"
+                  [rowHeight]="getRowHeight(rowItem)"
+                  [row]="rowItem"
+                  [group]="groupValue"
+                  [rowIndex]="getRowIndex(rowItem)"
+                  [expanded]="getRowExpanded(rowItem)"
+                  [rowClass]="rowClass"
+                  [displayCheck]="!groupRow ? displayCheck : null"
+                  [treeStatus]="!groupRow ? $any(group)?.treeStatus : null"
+                  [ghostLoadingIndicator]="ghostLoadingIndicator"
+                  [draggable]="rowDraggable"
+                  [verticalScrollVisible]="verticalScrollVisible"
+                  (treeAction)="isRow(rowItem) ? onTreeAction(rowItem) : false"
+                  (activate)="selector.onActivate($event, rowIndex ?? indexes().first + i)"
+                  (drop)="drop($event, rowItem, rowElement)"
+                  (dragover)="dragOver($event, rowItem)"
+                  (dragenter)="dragEnter($event, rowItem, rowElement)"
+                  (dragleave)="dragLeave($event, rowItem, rowElement)"
+                  (dragstart)="drag($event, rowItem, rowElement)"
+                  (dragend)="dragEnd($event, rowItem)"
+                >
+                </datatable-body-row>
+              </ng-template>
+
               @if (rowDefTemplate) {
                 <ng-container
                   *rowDefInternal="{
@@ -116,102 +156,21 @@ import {
                 />
               } @else {
                 @if (isRow(group)) {
-                  <datatable-body-row
-                    role="row"
-                    tabindex="-1"
-                    #rowElement
-                    [disable$]="rowWrapper.disable$"
-                    [isSelected]="selector.getRowSelected(group)"
-                    [innerWidth]="innerWidth"
-                    [offsetX]="offsetX"
-                    [columns]="columns"
-                    [rowHeight]="getRowHeight(group)"
-                    [row]="group"
-                    [rowIndex]="getRowIndex(group)"
-                    [expanded]="getRowExpanded(group)"
-                    [rowClass]="rowClass"
-                    [displayCheck]="displayCheck"
-                    [treeStatus]="group?.treeStatus"
-                    [ghostLoadingIndicator]="ghostLoadingIndicator"
-                    [draggable]="rowDraggable"
-                    [verticalScrollVisible]="verticalScrollVisible"
-                    (treeAction)="onTreeAction(group)"
-                    (activate)="selector.onActivate($event, indexes().first + i)"
-                    (drop)="drop($event, group, rowElement)"
-                    (dragover)="dragOver($event, group)"
-                    (dragenter)="dragEnter($event, group, rowElement)"
-                    (dragleave)="dragLeave($event, group, rowElement)"
-                    (dragstart)="drag($event, group, rowElement)"
-                    (dragend)="dragEnd($event, group)"
-                  >
-                  </datatable-body-row>
+                  <ng-container [ngTemplateOutlet]="bodyRow"></ng-container>
                 }
               }
-
-              <ng-template #bodyRow>
-                @if (isRow(group)) {
-                  <datatable-body-row
-                    role="row"
-                    tabindex="-1"
-                    #rowElement
-                    [disable$]="rowWrapper.disable$"
-                    [isSelected]="selector.getRowSelected(group)"
-                    [innerWidth]="innerWidth"
-                    [offsetX]="offsetX"
-                    [columns]="columns"
-                    [rowHeight]="getRowHeight(group)"
-                    [row]="group"
-                    [rowIndex]="getRowIndex(group)"
-                    [expanded]="getRowExpanded(group)"
-                    [rowClass]="rowClass"
-                    [displayCheck]="displayCheck"
-                    [treeStatus]="group?.treeStatus"
-                    [ghostLoadingIndicator]="ghostLoadingIndicator"
-                    [draggable]="rowDraggable"
-                    [verticalScrollVisible]="verticalScrollVisible"
-                    (treeAction)="onTreeAction(group)"
-                    (activate)="selector.onActivate($event, indexes().first + i)"
-                    (drop)="drop($event, group, rowElement)"
-                    (dragover)="dragOver($event, group)"
-                    (dragenter)="dragEnter($event, group, rowElement)"
-                    (dragleave)="dragLeave($event, group, rowElement)"
-                    (dragstart)="drag($event, group, rowElement)"
-                    (dragend)="dragEnd($event, group)"
-                  >
-                  </datatable-body-row>
-                }
-              </ng-template>
 
               @if (isGroup(group)) {
                 <!-- The row typecast is due to angular compiler acting weird. It is obvious that it is of type TRow, but the compiler does not understand. -->
                 @for (row of group.value; track rowTrackingFn(i, row); let i = $index) {
-                  <datatable-body-row
-                    role="row"
-                    [disable$]="rowWrapper.disable$"
-                    tabindex="-1"
-                    #rowElement
-                    [isSelected]="selector.getRowSelected(row)"
-                    [innerWidth]="innerWidth"
-                    [offsetX]="offsetX"
-                    [columns]="columns"
-                    [rowHeight]="getRowHeight(row)"
-                    [row]="row"
-                    [group]="group.value"
-                    [rowIndex]="getRowIndex(row)"
-                    [expanded]="getRowExpanded(row)"
-                    [rowClass]="rowClass"
-                    [ghostLoadingIndicator]="ghostLoadingIndicator"
-                    [draggable]="rowDraggable"
-                    [verticalScrollVisible]="verticalScrollVisible"
-                    (activate)="selector.onActivate($event, i)"
-                    (drop)="drop($event, row, rowElement)"
-                    (dragover)="dragOver($event, row)"
-                    (dragenter)="dragEnter($event, row, rowElement)"
-                    (dragleave)="dragLeave($event, row, rowElement)"
-                    (dragstart)="drag($event, row, rowElement)"
-                    (dragend)="dragEnd($event, row)"
-                  >
-                  </datatable-body-row>
+                  <ng-container
+                    [ngTemplateOutlet]="bodyRow"
+                    [ngTemplateOutletContext]="{
+                      row,
+                      groupValue: group?.value,
+                      index: i
+                    }"
+                  ></ng-container>
                 }
               }
             </datatable-row-wrapper>

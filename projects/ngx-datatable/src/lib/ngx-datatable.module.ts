@@ -39,6 +39,7 @@ import {
   DatatableRowDefDirective,
   DatatableRowDefInternalDirective
 } from './components/body/body-row-def.component';
+import { DatatableBodyRowDirective } from './components/body/body-row.directive';
 
 @NgModule({
   imports: [CommonModule],
@@ -77,7 +78,8 @@ import {
     DisableRowDirective,
     DatatableRowDefComponent,
     DatatableRowDefDirective,
-    DatatableRowDefInternalDirective
+    DatatableRowDefInternalDirective,
+    DatatableBodyRowDirective
   ],
   exports: [
     DatatableComponent,
@@ -95,7 +97,8 @@ import {
     DatatableGroupHeaderTemplateDirective,
     DisableRowDirective,
     DatatableRowDefComponent,
-    DatatableRowDefDirective
+    DatatableRowDefDirective,
+    DatatableBodyRowDirective
   ]
 })
 export class NgxDatatableModule {

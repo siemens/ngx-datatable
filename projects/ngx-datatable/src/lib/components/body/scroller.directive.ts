@@ -1,6 +1,5 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
+  Directive,
   ElementRef,
   EventEmitter,
   HostBinding,
@@ -12,16 +11,15 @@ import {
   Renderer2
 } from '@angular/core';
 
-@Component({
+@Directive({
   selector: 'datatable-scroller',
-  template: ` <ng-content></ng-content> `,
+  exportAs: 'scroller',
+  standalone: true,
   host: {
     class: 'datatable-scroll'
-  },
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true
+  }
 })
-export class ScrollerComponent implements OnInit, OnDestroy {
+export class ScrollerDirective implements OnInit, OnDestroy {
   private renderer = inject(Renderer2);
 
   @Input() scrollbarV = false;
@@ -50,7 +48,7 @@ export class ScrollerComponent implements OnInit, OnDestroy {
     // manual bind so we don't always listen
     if (this.scrollbarV || this.scrollbarH) {
       const renderer = this.renderer;
-      this.parentElement = renderer.parentNode(renderer.parentNode(this.element));
+      this.parentElement = renderer.parentNode(this.element);
       this._scrollEventListener = this.onScrolled.bind(this);
       this.parentElement.addEventListener('scroll', this._scrollEventListener);
     }

@@ -1,15 +1,14 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Directive, EventEmitter, Input, Output } from '@angular/core';
 import { selectRows, selectRowsBetween } from '../../utils/selection';
 import { Keys } from '../../utils/keys';
 import { ActivateEvent, SelectionType } from '../../types/public.types';
 
-@Component({
-  selector: 'datatable-selection',
-  template: ` <ng-content></ng-content> `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Directive({
+  selector: '[datatable-selection]',
+  exportAs: 'selector',
   standalone: true
 })
-export class DataTableSelectionComponent<TRow = any> {
+export class DataTableSelectionDirective<TRow = any> {
   @Input() rows: TRow[];
   @Input() selected: TRow[];
   @Input() selectEnabled: boolean;

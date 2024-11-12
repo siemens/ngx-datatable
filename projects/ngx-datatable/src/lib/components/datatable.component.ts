@@ -413,8 +413,6 @@ export class DatatableComponent<TRow = any>
   /**
    * Property to which you can use for determining select all
    * rows on current page or not.
-   *
-   * @memberOf DatatableComponent
    */
   @Input({ transform: booleanAttribute }) selectAllRowsOnPage = false;
 
@@ -657,8 +655,6 @@ export class DatatableComponent<TRow = any>
   /**
    * Reference to the header component for manually
    * invoking functions on the header.
-   *
-   * @memberOf DatatableComponent
    */
   @ViewChild(DataTableHeaderComponent)
   headerComponent: DataTableHeaderComponent;

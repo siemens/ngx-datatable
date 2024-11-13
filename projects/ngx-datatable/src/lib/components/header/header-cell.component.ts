@@ -52,6 +52,7 @@ import {
       }
       <span (click)="onSort()" [class]="sortClass"> </span>
     </div>
+    <ng-content [resize-handle]> </ng-content>
   `,
   host: {
     class: 'datatable-header-cell'

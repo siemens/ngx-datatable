@@ -2,11 +2,13 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   HostBinding,
   HostListener,
   inject,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   TemplateRef
@@ -22,6 +24,7 @@ import {
   SortType
 } from '../../types/public.types';
 import { NgTemplateOutlet } from '@angular/common';
+import { fromEvent, Subscription, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'datatable-header-cell',
@@ -54,15 +57,19 @@ import { NgTemplateOutlet } from '@angular/common';
       }
       <span (click)="onSort()" [class]="sortClass"> </span>
     </div>
+    @if (column.resizeable) {
+      <span class="resize-handle" (mousedown)="onMousedown($event)"></span>
+    }
   `,
   host: {
-    class: 'datatable-header-cell'
+    'class': 'datatable-header-cell',
+    '[attr.resizeable]': 'column.resizeable'
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [NgTemplateOutlet]
 })
-export class DataTableHeaderCellComponent implements OnInit {
+export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
   private cd = inject(ChangeDetectorRef);
 
   @Input() sortType: SortType;
@@ -116,6 +123,8 @@ export class DataTableHeaderCellComponent implements OnInit {
   @Output() sort = new EventEmitter<InnerSortEvent>();
   @Output() select = new EventEmitter<void>();
   @Output() columnContextmenu = new EventEmitter<{ event: MouseEvent; column: TableColumn }>(false);
+  @Output() resize = new EventEmitter<{ width: number; column: TableColumn }>();
+  @Output() resizing = new EventEmitter<{ width: number; column: TableColumn }>();
 
   @HostBinding('class')
   get columnCssClasses(): string {
@@ -192,6 +201,8 @@ export class DataTableHeaderCellComponent implements OnInit {
 
   private _column: TableColumn;
   private _sorts: SortPropDir[];
+  private element = inject(ElementRef).nativeElement;
+  private subscription: Subscription;
 
   constructor() {
     this.cellContext = {
@@ -219,6 +230,10 @@ export class DataTableHeaderCellComponent implements OnInit {
     if (this.sortDir) {
       this.totalSortStatesApplied = 1;
     }
+  }
+
+  ngOnDestroy() {
+    this.destroySubscription();
   }
 
   calcSortDir(sorts: SortPropDir[]): any {
@@ -261,6 +276,41 @@ export class DataTableHeaderCellComponent implements OnInit {
       return `sort-btn sort-desc ${this.sortDescendingIcon ?? 'datatable-icon-down'}`;
     } else {
       return `sort-btn ${this.sortUnsetIcon ?? 'datatable-icon-sort-unset'}`;
+    }
+  }
+
+  protected onMousedown(event: MouseEvent): void {
+    const initialWidth = this.element.clientWidth;
+    const mouseDownScreenX = event.screenX;
+    event.stopPropagation();
+
+    const mouseup = fromEvent(document, 'mouseup');
+    this.subscription = mouseup.subscribe((ev: MouseEvent) => this.onMouseup());
+
+    const mouseMoveSub = fromEvent(document, 'mousemove')
+      .pipe(takeUntil(mouseup))
+      .subscribe((e: MouseEvent) => this.move(e, initialWidth, mouseDownScreenX));
+
+    this.subscription.add(mouseMoveSub);
+  }
+
+  private onMouseup(): void {
+    if (this.subscription && !this.subscription.closed) {
+      this.destroySubscription();
+      this.resize.emit({ width: this.element.clientWidth, column: this.column });
+    }
+  }
+
+  private move(event: MouseEvent, initialWidth: number, mouseDownScreenX: number): void {
+    const movementX = event.screenX - mouseDownScreenX;
+    const newWidth = initialWidth + movementX;
+    this.resizing.emit({ width: newWidth, column: this.column });
+  }
+
+  private destroySubscription(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+      this.subscription = undefined;
     }
   }
 }

@@ -78,7 +78,7 @@ input:focus {
 }
 
 a {
-  color: grey;
+  color: #4c4c68;
   text-decoration: none;
 }
 
@@ -88,7 +88,7 @@ a {
 }
 
 h3 {
-  background: #1f89ff;
+  background: #206ed9;
   margin: 0 0 30px 0;
   color: #fff;
   text-align: left;
@@ -98,7 +98,7 @@ h3 {
 }
 
 h3 a {
-  color: #ccc;
+  color: #fff;
 }
 
 h3 small {

@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:prod": "http-server dist/ngx-datatable -s -p 4200 -a 127.0.0.1",
     "build": "ng build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -16,7 +17,9 @@
     "test:ci": "ng test ngx-datatable-lib --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "ci": "run-s lint test:ci",
     "lint": "ng lint",
-    "e2e": "ng e2e",
+    "e2e:prepare": "playwright install",
+    "vrt": "cross-env playwright test",
+    "vrt:update": "yarn vrt --update-snapshots",
     "build-docs": "cross-env NODE_ENV=production ng build --configuration production --base-href=\"/ngx-datatable/\"",
     "predeploy-docs": "npm run build-docs",
     "deploy-docs": "angular-cli-ghpages --dir ./dist/ngx-datatable",
@@ -79,6 +82,12 @@
     "sass": "^1.77.6",
     "scss-bundle": "^3.1.1",
     "ts-node": "^10.9.2",
-    "typescript": "~5.5.4"
+    "typescript": "~5.5.4",
+    "http-server": "^13.0.0"
+  },
+  "optionalDependencies": {
+    "@axe-core/playwright": "4.8.2",
+    "@playwright/test": "1.46.0",
+    "axe-html-reporter": "2.2.3"
   }
 }

@@ -18,12 +18,11 @@ import { Page } from '../../types/internal.types';
       </li>
       @for (pg of pages; track pg.number) {
         <li
-          role="button"
           [attr.aria-label]="'page ' + pg.number"
           class="pages"
           [class.active]="pg.number === page"
         >
-          <a (click)="selectPage(pg.number)">
+          <a role="button" (click)="selectPage(pg.number)">
             {{ pg.text }}
           </a>
         </li>

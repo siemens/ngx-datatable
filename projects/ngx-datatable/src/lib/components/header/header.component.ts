@@ -48,8 +48,8 @@ import {
           @for (column of colGroup.columns; track column.$$id) {
             <datatable-header-cell
               role="columnheader"
+              #resizeable="resizeable"
               resizeable
-              [resizeEnabled]="column.resizeable"
               (resize)="onColumnResized($event, column)"
               (resizing)="onColumnResizing($event, column)"
               long-press
@@ -79,6 +79,12 @@ import {
               (select)="select.emit($event)"
               (columnContextmenu)="columnContextmenu.emit($event)"
             >
+              <span
+                resize-handle
+                (mousedown)="column.resizeable ? resizeable.onMousedown($event) : null"
+                [class.resize-handle]="column.resizeable"
+                [class.resize-handle--not-resizable]="!column.resizeable"
+              ></span>
             </datatable-header-cell>
           }
         </div>

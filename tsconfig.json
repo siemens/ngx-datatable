@@ -5,7 +5,6 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
     "module": "es2022",
     "moduleResolution": "node",
@@ -16,7 +15,6 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "noUnusedLocals": true,
-    "allowSyntheticDefaultImports": true,
     "paths": {
       "@siemens/ngx-datatable": ["dist/ngx-datatable"],
       "@siemens/ngx-datatable/*": ["dist/ngx-datatable/*"]

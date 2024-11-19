@@ -50,6 +50,7 @@ import { DataTableBodyCellComponent } from './body-cell.component';
             [disable$]="disable$"
             [treeStatus]="treeStatus"
             [ghostLoadingIndicator]="ghostLoadingIndicator"
+            [ariaLabelSelectRow]="ariaLabelSelectRow"
             (activate)="onActivate($event, ii)"
             (treeAction)="onTreeAction()"
           >
@@ -97,6 +98,7 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
   @Input() treeStatus?: TreeStatus = 'collapsed';
   @Input() ghostLoadingIndicator = false;
   @Input() verticalScrollVisible = false;
+  @Input() ariaLabelSelectRow = 'Select/Deselect row';
 
   @Input() disable$: BehaviorSubject<boolean>;
   @Input()

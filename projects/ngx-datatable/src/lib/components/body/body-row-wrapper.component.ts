@@ -45,7 +45,8 @@ import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive'
                 <input
                   #select
                   type="checkbox"
-                  [checked]="selectedGroupRows().length === group().value.length"
+                  [attr.aria-label]="ariaLabelSelectGroup"
+                  [checked]="selectedGroupRows.length === group.value.length"
                   (change)="onCheckboxChange(select.checked)"
                 />
               </label>
@@ -87,6 +88,8 @@ export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit
   @Input() groupedRows: Group<TRow>[];
   @Input() disableCheck: (row: RowOrGroup<TRow>) => boolean;
   @Input() selected: TRow[];
+  @Input() ariaLabelSelectGroup = 'Select/Deselect group';
+
   @Output() rowContextmenu = new EventEmitter<{
     event: MouseEvent;
     row: RowOrGroup<TRow>;

@@ -482,6 +482,24 @@ export class DatatableComponent<TRow = any>
   @Input({ transform: booleanAttribute }) enableClearingSortState = false;
 
   /**
+   * ARIA label for the "Select/Deselect all rows" action, used to improve accessibility for screen readers.
+   * This label provides context for users interacting with the control.
+   */
+  @Input() ariaLabelSelectAll = 'Select/Deselect all rows';
+
+  /**
+   * ARIA label for the "Select/Deselect row" action, used to improve accessibility for screen readers.
+   * This label ensures each row's selection control is clearly described.
+   */
+  @Input() ariaLabelSelectRow = 'Select/Deselect row';
+
+  /**
+   * ARIA label for the "Select/Deselect group" action, used to improve accessibility for screen readers.
+   * This label describes the selection control for grouped rows.
+   */
+  @Input() ariaLabelSelectGroup = 'Select/Deselect group';
+
+  /**
    * Body was scrolled typically in a `scrollbarV:true` scenario.
    */
   @Output() scroll: EventEmitter<ScrollEvent> = new EventEmitter();

@@ -110,6 +110,7 @@ import { ProgressBarComponent } from './progress-bar.component';
               [expanded]="getRowExpanded(group)"
               [rowIndex]="getRowIndex(group && group[i])"
               [selected]="selected"
+              [ariaLabelSelectGroup]="ariaLabelSelectGroup"
               (rowContextmenu)="rowContextmenu.emit($event)"
             >
               @if (rowDefTemplate) {
@@ -210,6 +211,7 @@ import { ProgressBarComponent } from './progress-bar.component';
                     [ghostLoadingIndicator]="ghostLoadingIndicator"
                     [draggable]="rowDraggable"
                     [verticalScrollVisible]="verticalScrollVisible"
+                    [ariaLabelSelectRow]="ariaLabelSelectRow"
                     (activate)="selector.onActivate($event, i)"
                     (drop)="drop($event, row, rowElement)"
                     (dragover)="dragOver($event, row)"
@@ -301,6 +303,8 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   @Input() rowDraggable: boolean;
   @Input() rowDragEvents: EventEmitter<DragEventData>;
   @Input() disableRowCheck: (row: TRow) => boolean;
+  @Input() ariaLabelSelectRow = 'Select/Deselect row';
+  @Input() ariaLabelSelectGroup = 'Select/Deselect group';
 
   @Input() set pageSize(val: number) {
     if (val !== this._pageSize) {

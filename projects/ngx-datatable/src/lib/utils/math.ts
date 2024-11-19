@@ -133,12 +133,6 @@ export function forceFillColumnWidths(
     .slice(startIdx + 1, allColumns.length)
     .filter(c => c.canAutoResize !== false);
 
-  for (const column of columnsToResize) {
-    if (!column.$$oldWidth) {
-      column.$$oldWidth = column.width;
-    }
-  }
-
   let additionWidthPerColumn = 0;
   let exceedsWindow = false;
   let contentWidth = getContentWidth(allColumns, defaultColWidth);
@@ -155,7 +149,7 @@ export function forceFillColumnWidths(
     for (const column of columnsToResize) {
       // don't bleed if the initialRemainingWidth is same as verticalScrollWidth
       if (exceedsWindow && allowBleed && initialRemainingWidth !== -1 * verticalScrollWidth) {
-        column.width = column.$$oldWidth || column.width || defaultColWidth;
+        column.width = column.width || defaultColWidth;
       } else {
         const newSize = (column.width || defaultColWidth) + additionWidthPerColumn;
 
@@ -177,11 +171,6 @@ export function forceFillColumnWidths(
     remainingWidth = expectedWidth - contentWidth;
     removeProcessedColumns(columnsToResize, columnsProcessed);
   } while (remainingWidth > remainingWidthLimit && columnsToResize.length !== 0);
-
-  // reset so we don't have stale values
-  for (const column of columnsToResize) {
-    column.$$oldWidth = 0;
-  }
 }
 
 /**

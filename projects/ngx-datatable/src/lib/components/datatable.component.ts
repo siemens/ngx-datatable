@@ -671,6 +671,9 @@ export class DatatableComponent<TRow = any>
   @ViewChild(DataTableHeaderComponent)
   headerComponent: DataTableHeaderComponent;
 
+  @ViewChild(DataTableHeaderComponent, { read: ElementRef })
+  headerElement: ElementRef<HTMLElement>;
+
   @ViewChild(DataTableBodyComponent, { read: ElementRef })
   private bodyElement: ElementRef<HTMLElement>;
   @ContentChild(DatatableRowDefDirective, {
@@ -947,7 +950,7 @@ export class DatatableComponent<TRow = any>
       this.bodyComponent.cd.markForCheck();
     }
 
-    if (this.headerComponent && this.headerComponent._columnGroupWidths.total !== width) {
+    if (this.headerComponent && this.headerComponent._columnGroupWidths().total !== width) {
       this.headerComponent.columns = [...this._internalColumns];
     }
 
@@ -1012,7 +1015,10 @@ export class DatatableComponent<TRow = any>
    * The body triggered a scroll event.
    */
   onBodyScroll(event: ScrollEvent): void {
-    this._offsetX.next(event.offsetX);
+    // if horizontal scroll is enabled we update the header scroll position
+    if (this.headerElement && this.scrollbarH && !isNaN(event.offsetX)) {
+      this.headerElement.nativeElement.scrollLeft = event.offsetX;
+    }
     this.scroll.emit(event);
     this.cd.detectChanges();
   }

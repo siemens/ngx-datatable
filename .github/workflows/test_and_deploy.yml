@@ -1,6 +1,7 @@
 name: Build, Test, and Deploy
 
 on: [pull_request]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -40,6 +41,17 @@ jobs:
           npm run ci --if-present
         env:
           CI: true
+
+      - name: Trigger Repository Siemens Datatable Workflow
+        if: always() # Runs even if Test step fails
+        env:
+          PAT: ${{ secrets.PLAYWRIGHT }}
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token $PAT" \
+            https://api.github.com/repos/chintankavathia/siemens-datatable/actions/workflows/test_and_deploy.yml/dispatches \
+            -d '{"ref":"test/setup-playwright"}'
 
       - name: Build Docs
         run: |

@@ -36,12 +36,7 @@ import { NgTemplateOutlet } from '@angular/common';
       }
       @if (isCheckboxable) {
         <label class="datatable-checkbox">
-          <input
-            type="checkbox"
-            [attr.aria-label]="ariaLabelSelectAll"
-            [checked]="allRowsSelected"
-            (change)="select.emit()"
-          />
+          <input type="checkbox" [checked]="allRowsSelected" (change)="select.emit()" />
         </label>
       }
       @if (column.headerTemplate) {
@@ -78,7 +73,6 @@ export class DataTableHeaderCellComponent implements OnInit {
   @Input() targetMarkerTemplate: TemplateRef<any>;
   @Input() targetMarkerContext: any;
   @Input() enableClearingSortState = false;
-  @Input() ariaLabelSelectAll = 'Select/Deselect all rows';
 
   _allRowsSelected: boolean;
 

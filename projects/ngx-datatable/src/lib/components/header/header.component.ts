@@ -80,7 +80,6 @@ import { OrderableDirective } from '../../directives/orderable.directive';
               [sortUnsetIcon]="sortUnsetIcon"
               [allRowsSelected]="allRowsSelected"
               [enableClearingSortState]="enableClearingSortState"
-              [ariaLabelSelectAll]="ariaLabelSelectAll"
               (sort)="onSort($event)"
               (select)="select.emit($event)"
               (columnContextmenu)="columnContextmenu.emit($event)"
@@ -138,7 +137,6 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
   @Input() selectionType: SelectionType;
   @Input() reorderable: boolean;
   @Input() verticalScrollVisible = false;
-  @Input() ariaLabelSelectAll = 'Select/Deselect all rows';
 
   dragEventTarget?: MouseEvent;
 

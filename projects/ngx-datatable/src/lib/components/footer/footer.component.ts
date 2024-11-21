@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { DatatableFooterDirective } from './footer.directive';
 import { PagerPageEvent } from '../../types/public.types';
+import { DataTablePagerComponent } from './pager.component';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 @Component({
   selector: 'datatable-footer',
   template: `
@@ -46,7 +48,9 @@ import { PagerPageEvent } from '../../types/public.types';
   host: {
     class: 'datatable-footer'
   },
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [NgClass, NgTemplateOutlet, DataTablePagerComponent]
 })
 export class DataTableFooterComponent {
   @Input() footerHeight: number;

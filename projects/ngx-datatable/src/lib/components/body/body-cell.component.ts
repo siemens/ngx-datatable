@@ -27,6 +27,8 @@ import {
   SortPropDir,
   TreeStatus
 } from '../../types/public.types';
+import { DataTableGhostLoaderComponent } from './ghost-loader/ghost-loader.component';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'datatable-body-cell',
@@ -89,7 +91,9 @@ import {
         <ghost-loader [columns]="[column]" [pageSize]="1"></ghost-loader>
       }
     }
-  `
+  `,
+  standalone: true,
+  imports: [NgTemplateOutlet, DataTableGhostLoaderComponent, AsyncPipe]
 })
 export class DataTableBodyCellComponent<TRow extends { level?: number } = any>
   implements DoCheck, OnDestroy
@@ -406,15 +410,15 @@ export class DataTableBodyCellComponent<TRow extends { level?: number } = any>
 
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
-    const keyCode = event.keyCode;
+    const key = event.key;
     const isTargetCell = event.target === this._element;
 
     const isAction =
-      keyCode === Keys.return ||
-      keyCode === Keys.down ||
-      keyCode === Keys.up ||
-      keyCode === Keys.left ||
-      keyCode === Keys.right;
+      key === Keys.return ||
+      key === Keys.down ||
+      key === Keys.up ||
+      key === Keys.left ||
+      key === Keys.right;
 
     if (isAction && isTargetCell) {
       event.preventDefault();

@@ -43,7 +43,8 @@ import { Page } from '../../types/internal.types';
   host: {
     class: 'datatable-pager'
   },
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true
 })
 export class DataTablePagerComponent {
   @Input() pagerLeftArrowIcon: string;

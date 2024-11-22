@@ -51,7 +51,43 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token $PAT" \
             https://api.github.com/repos/chintankavathia/siemens-datatable/actions/workflows/test_and_deploy.yml/dispatches \
-            -d '{"ref":"test/setup-playwright"}'
+            -d '{"ref":"main"}'
+
+      - name: Wait for Repository Siemens Datatable Workflow Completion
+        id: wait_workflow
+        env:
+          PAT: ${{ secrets.PLAYWRIGHT }}
+        run: |
+          STATUS="in_progress"
+          CHECK_INTERVAL=30
+          RUN_ID=""
+          echo "Polling for workflow status..."
+
+          while [ "$STATUS" = "in_progress" ] || [ "$STATUS" = "queued" ]; do
+            sleep $CHECK_INTERVAL
+
+            # Fetch latest workflow runs for Repository B
+            RESPONSE=$(curl -s -H "Authorization: token $PAT" \
+              "https://api.github.com/repos/chintankavathia/siemens-datatable/actions/runs?branch=main&status=in_progress")
+            
+            RUN_ID=$(echo $RESPONSE | jq -r '.workflow_runs[0].id')
+            STATUS=$(echo $RESPONSE | jq -r '.workflow_runs[0].status')
+          done
+
+          if [ "$STATUS" != "completed" ]; then
+            echo "Repository Siemens Datatable workflow failed or was cancelled"
+            exit 1
+          fi
+
+          CONCLUSION=$(curl -s -H "Authorization: token $PAT" \
+            "https://api.github.com/repos/chintankavathia/siemens-datatable/actions/runs/$RUN_ID" | jq -r '.conclusion')
+
+          if [ "$CONCLUSION" != "success" ]; then
+            echo "Repository Siemens Datatable workflow failed with conclusion: $CONCLUSION"
+            exit 1
+          fi
+
+          echo "Repository Siemens Datatable workflow completed successfully"
 
       - name: Build Docs
         run: |

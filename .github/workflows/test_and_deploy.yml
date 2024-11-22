@@ -66,21 +66,26 @@ jobs:
           while [ "$STATUS" = "in_progress" ] || [ "$STATUS" = "queued" ]; do
             sleep $CHECK_INTERVAL
 
+            echo "Polling for workflow status...$STATUS"
+
             # Fetch latest workflow runs for Repository B
             RESPONSE=$(curl -s -H "Authorization: token $PAT" \
               "https://api.github.com/repos/chintankavathia/siemens-datatable/actions/runs?branch=main&status=in_progress")
             
-            RUN_ID=$(echo $RESPONSE | jq -r '.workflow_runs[0].id')
+            T_RUN_ID=$(echo $RESPONSE | jq -r '.workflow_runs[0].id')
             STATUS=$(echo $RESPONSE | jq -r '.workflow_runs[0].status')
+
+            if [ "$T_RUN_ID" !== null ]; then
+              RUN_ID=$T_RUN_ID
+            fi
           done
 
-          if [ "$STATUS" != "completed" ]; then
-            echo "Repository Siemens Datatable workflow failed or was cancelled"
-            exit 1
-          fi
+          echo "Polling for workflow status...$RUN_ID"
 
           CONCLUSION=$(curl -s -H "Authorization: token $PAT" \
             "https://api.github.com/repos/chintankavathia/siemens-datatable/actions/runs/$RUN_ID" | jq -r '.conclusion')
+
+          echo "Conclusion:: $CONCLUSION"
 
           if [ "$CONCLUSION" != "success" ]; then
             echo "Repository Siemens Datatable workflow failed with conclusion: $CONCLUSION"

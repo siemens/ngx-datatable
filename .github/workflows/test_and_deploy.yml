@@ -75,7 +75,7 @@ jobs:
             T_RUN_ID=$(echo $RESPONSE | jq -r '.workflow_runs[0].id')
             STATUS=$(echo $RESPONSE | jq -r '.workflow_runs[0].status')
 
-            if [ "$T_RUN_ID" !== null ]; then
+            if [ "$T_RUN_ID" != null ]; then
               RUN_ID=$T_RUN_ID
             fi
           done

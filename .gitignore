@@ -10,3 +10,8 @@ coverage/
 yarn.lock
 /.vscode
 *.tgz
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/results/

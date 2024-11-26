@@ -41,6 +41,18 @@ jobs:
         env:
           CI: true
 
+      - name: E2E Prepare
+        run: |
+          npm run e2e:prepare --if-present
+        env:
+          CI: true
+
+      - name: E2E
+        run: |
+          npm run vrt --if-present
+        env:
+          CI: true
+
       - name: Build Docs
         run: |
           npm run build-docs --if-present

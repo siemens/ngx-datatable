@@ -14,6 +14,18 @@ jobs:
         with:
           node-version: lts/iron
 
+      - name: Clone Snapshot Repository
+        run: |
+          git clone https://$SNAPSHOT_REPO_TOKEN@github.com/chintankavathia/ngx-datatable-snapshots.git temp_snapshots
+        env:
+          SNAPSHOT_REPO_TOKEN: ${{ secrets.SNAPSHOT_REPO_TOKEN }}
+
+      - name: Copy Snapshots to Playwright Folder
+        run: |
+          mkdir -p playwright/snapshots
+          cp -r temp_snapshots/snapshots/e2e playwright/snapshots/
+          rm -rf temp_snapshots
+
       - name: Install
         uses: bahmutov/npm-install@v1
 

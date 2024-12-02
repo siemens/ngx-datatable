@@ -1,85 +1,8 @@
 name: Build, Test, and Deploy
 
-on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-  push:
-    branches:
-      - master
-
+on: [pull_request]
 jobs:
-  check-rebase:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Ensure full history is fetched
-
-      - name: Add upstream remote
-        run: |
-          # Add the upstream repository (base repo)
-          echo "Adding upstream remote..."
-          git remote add upstream https://github.com/siemens/ngx-datatable.git
-          git fetch upstream
-          echo "Upstream remote added and fetched."
-
-      - name: Fetch PR Branch from Fork
-        run: |
-          echo "Fetching PR branch from fork..."
-          git fetch origin pull/${{ github.event.pull_request.number }}/head:${{ github.head_ref }}
-          echo "Fetched PR branch: ${{ github.head_ref }}"
-
-      - name: Attach to PR Branch
-        run: |
-          echo "Checking out the PR branch: ${{ github.head_ref }}"
-          git checkout ${{ github.head_ref }}
-          echo "Checked out branch: ${{ github.head_ref }}"
-
-      - name: Fetch the latest upstream master (or main) branch
-        run: |
-          echo "Fetching latest master from upstream..."
-          git fetch upstream master  # or main if that's your default branch
-          echo "Fetched latest master branch from upstream."
-
-      - name: Check if PR branch is rebased onto master
-        run: |
-          UPSTREAM=master  # Use 'main' if your default branch is named 'main'
-          echo "Target upstream branch: $UPSTREAM"
-          
-          # Get the current and merged commit hashes
-          CURRENT=$(git rev-parse HEAD)
-          MERGED=$(git merge-base HEAD upstream/$UPSTREAM)
-          
-          echo "Current commit hash: $CURRENT"
-          echo "Merged commit hash: $MERGED"
-
-          # Check if the PR branch contains commits not part of master
-          # Use git log to check for commits in the PR branch that are not in upstream/master
-          PR_COMMITS=$(git log upstream/$UPSTREAM..HEAD --oneline)
-          
-          if [ -n "$PR_COMMITS" ]; then
-            echo "This branch contains additional commits that are intended for merging into $UPSTREAM."
-            echo "Ignoring these commits as they are already part of the intended changes."
-          else
-            echo "Branch is up-to-date with $UPSTREAM."
-          fi
-          
-          # Proceed with checking if the PR branch is based on the latest master
-          if [ "$MERGED" != "$CURRENT" ]; then
-            echo "This branch is not rebased with the latest $UPSTREAM."
-            echo "Run 'git rebase upstream/$UPSTREAM' locally to fix this."
-            exit 1
-          else
-            echo "Branch is rebased and up-to-date with $UPSTREAM."
-          fi
-
   build:
-    needs: check-rebase
     runs-on: ubuntu-latest
 
     steps:

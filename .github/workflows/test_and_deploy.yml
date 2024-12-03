@@ -15,7 +15,7 @@ jobs:
           node-version: lts/iron
 
       - name: Configure LFS Fetch URL
-        run: git config remote.origin.lfsurl https://github.com/siemens/ngx-datatable.git/info/lfs
+        run: git config remote.origin.lfsurl https://github.com/chintankavathia/ngx-datatable-snapshots.git/info/lfs
 
       - name: Pull Repository with LFS
         run: git lfs pull

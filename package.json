@@ -18,7 +18,7 @@
     "ci": "run-s lint test:ci",
     "lint": "ng lint",
     "e2e:prepare": "playwright install",
-    "lfs:prepare": "git config remote.origin.lfspushurl https://github.com/siemens/ngx-datatable.git/info/lfs && git config remote.origin.lfsurl https://github.com/siemens/ngx-datatable.git/info/lfs",
+    "lfs:prepare": "git config remote.origin.lfspushurl https://github.com/chintankavathia/ngx-datatable-snapshots.git/info/lfs && git config remote.origin.lfsurl https://github.com/chintankavathia/ngx-datatable-snapshots.git/info/lfs",
     "vrt": "cross-env playwright test",
     "vrt:local": "yarn vrt",
     "vrt:update": "yarn vrt --update-snapshots",

@@ -14,38 +14,11 @@ jobs:
         with:
           node-version: lts/iron
 
-      - name: Set the branch name
-        id: set_branch
-        run: |
-          BRANCH_NAME=${{ github.head_ref }}
-          echo "Branch name is: $BRANCH_NAME"
+      - name: Configure LFS Fetch URL
+        run: git config remote.origin.lfsurl https://github.com/chintankavathia/ngx-datatable-snapshots.git/info/lfs
 
-          # Check for remote branch
-          REMOTE_BRANCH=$(git ls-remote --heads https://$SNAPSHOT_REPO_TOKEN@github.com/chintankavathia/ngx-datatable-snapshots.git $BRANCH_NAME)
-
-          echo "Remote branch lookup result: $REMOTE_BRANCH"
-
-          if [ -n "$REMOTE_BRANCH" ]; then
-            echo "Branch $BRANCH_NAME exists"
-            echo "branch=$BRANCH_NAME" >> $GITHUB_ENV
-          else
-            echo "Branch $BRANCH_NAME does not exist, defaulting to main"
-            echo "branch=main" >> $GITHUB_ENV
-          fi
-
-      - name: Clone Snapshot Repository
-        run: |
-          git clone https://$SNAPSHOT_REPO_TOKEN@github.com/chintankavathia/ngx-datatable-snapshots.git temp_snapshots
-          cd temp_snapshots
-          git checkout ${{ env.branch }}
-        env:
-          SNAPSHOT_REPO_TOKEN: ${{ secrets.SNAPSHOT_REPO_TOKEN }}
-
-      - name: Copy Snapshots to Playwright Folder
-        run: |
-          mkdir -p playwright/snapshots
-          cp -r temp_snapshots/snapshots/e2e playwright/snapshots/
-          rm -rf temp_snapshots
+      - name: Pull Repository with LFS
+        run: git lfs pull
 
       - name: Install
         uses: bahmutov/npm-install@v1

@@ -78,7 +78,9 @@
         <datatable-progress></datatable-progress>
       </ng-content>
       <ng-content select="[empty-content]" ngProjectAs="[empty-content]">
-        <div class="empty-row" [innerHTML]="messages.emptyMessage"></div>
+        <div role="row">
+          <div role="cell" class="empty-row" [innerHTML]="messages.emptyMessage"></div>
+        </div>
       </ng-content>
     </datatable-body>
   </div>

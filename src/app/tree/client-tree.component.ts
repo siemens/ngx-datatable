@@ -25,6 +25,7 @@ import { Employee } from '../data.model';
         rowHeight="auto"
         [treeFromRelation]="'manager'"
         [treeToRelation]="'name'"
+        [treeStatusKey]="'options.treeStatus'"
         [rows]="rows"
         (treeAction)="onTreeAction($event)"
       >
@@ -49,7 +50,7 @@ import { Employee } from '../data.model';
   styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
 })
 export class ClientTreeComponent {
-  rows: (Employee & { treeStatus: TreeStatus })[] = [];
+  rows: (Employee & { options: { treeStatus: TreeStatus } })[] = [];
 
   ColumnMode = ColumnMode;
 
@@ -72,10 +73,13 @@ export class ClientTreeComponent {
 
   onTreeAction(event: any) {
     const row = event.row;
-    if (row.treeStatus === 'collapsed') {
-      row.treeStatus = 'expanded';
+    if (!row.options) {
+      row.options = {};
+    }
+    if (row.options.treeStatus === 'collapsed') {
+      row.options.treeStatus = 'expanded';
     } else {
-      row.treeStatus = 'collapsed';
+      row.options.treeStatus = 'collapsed';
     }
     this.rows = [...this.rows];
   }

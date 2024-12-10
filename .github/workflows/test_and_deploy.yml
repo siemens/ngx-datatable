@@ -14,6 +14,12 @@ jobs:
         with:
           node-version: lts/iron
 
+      - name: Configure LFS Fetch URL
+        run: git config remote.origin.lfsurl https://github.com/siemens/ngx-datatable-snapshots.git/info/lfs
+
+      - name: Pull Repository with LFS
+        run: git lfs pull
+
       - name: Install
         uses: bahmutov/npm-install@v1
 
@@ -38,6 +44,18 @@ jobs:
       - name: Test
         run: |
           npm run ci --if-present
+        env:
+          CI: true
+
+      - name: E2E Prepare
+        run: |
+          npm run e2e:prepare --if-present
+        env:
+          CI: true
+
+      - name: E2E
+        run: |
+          npm run vrt --if-present
         env:
           CI: true
 

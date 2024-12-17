@@ -142,6 +142,7 @@ import { ProgressBarComponent } from './progress-bar.component';
                     [ghostLoadingIndicator]="ghostLoadingIndicator"
                     [draggable]="rowDraggable"
                     [verticalScrollVisible]="verticalScrollVisible"
+                    [rowCheckboxAriaLabel]="rowCheckboxAriaLabel"
                     (treeAction)="onTreeAction(group)"
                     (activate)="selector.onActivate($event, indexes().first + i)"
                     (drop)="drop($event, group, rowElement)"
@@ -176,6 +177,7 @@ import { ProgressBarComponent } from './progress-bar.component';
                     [ghostLoadingIndicator]="ghostLoadingIndicator"
                     [draggable]="rowDraggable"
                     [verticalScrollVisible]="verticalScrollVisible"
+                    [rowCheckboxAriaLabel]="rowCheckboxAriaLabel"
                     (treeAction)="onTreeAction(group)"
                     (activate)="selector.onActivate($event, indexes().first + i)"
                     (drop)="drop($event, group, rowElement)"
@@ -210,6 +212,7 @@ import { ProgressBarComponent } from './progress-bar.component';
                     [ghostLoadingIndicator]="ghostLoadingIndicator"
                     [draggable]="rowDraggable"
                     [verticalScrollVisible]="verticalScrollVisible"
+                    [rowCheckboxAriaLabel]="rowCheckboxAriaLabel"
                     (activate)="selector.onActivate($event, i)"
                     (drop)="drop($event, row, rowElement)"
                     (dragover)="dragOver($event, row)"
@@ -393,6 +396,7 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   }
 
   @Input() verticalScrollVisible = false;
+  @Input() rowCheckboxAriaLabel?: string;
 
   @Output() scroll: EventEmitter<ScrollEvent> = new EventEmitter();
   @Output() page: EventEmitter<number> = new EventEmitter();

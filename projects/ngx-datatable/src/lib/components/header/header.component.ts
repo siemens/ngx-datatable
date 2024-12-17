@@ -86,6 +86,7 @@ import { DataTableHeaderCellComponent } from './header-cell.component';
                 [sortUnsetIcon]="sortUnsetIcon"
                 [allRowsSelected]="allRowsSelected"
                 [enableClearingSortState]="enableClearingSortState"
+                [ariaHeaderCheckboxMessage]="ariaHeaderCheckboxMessage"
                 (sort)="onSort($event)"
                 (select)="select.emit($event)"
                 (columnContextmenu)="columnContextmenu.emit($event)"
@@ -146,6 +147,7 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
   @Input() selectionType?: SelectionType;
   @Input() reorderable?: boolean;
   @Input() verticalScrollVisible = false;
+  @Input() ariaHeaderCheckboxMessage!: string;
 
   dragEventTarget?: MouseEvent | TouchEvent;
 

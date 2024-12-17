@@ -40,7 +40,12 @@ import { nextSortDir } from '../../utils/sort';
       }
       @if (isCheckboxable) {
         <label class="datatable-checkbox">
-          <input type="checkbox" [checked]="allRowsSelected" (change)="select.emit()" />
+          <input
+            type="checkbox"
+            [attr.aria-label]="ariaHeaderCheckboxMessage"
+            [checked]="allRowsSelected"
+            (change)="select.emit()"
+          />
         </label>
       }
       @if (column.headerTemplate) {
@@ -87,6 +92,7 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
   @Input() targetMarkerTemplate?: TemplateRef<any>;
   @Input() targetMarkerContext: any;
   @Input() enableClearingSortState = false;
+  @Input() ariaHeaderCheckboxMessage!: string;
 
   _allRowsSelected?: boolean;
 

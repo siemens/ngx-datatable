@@ -19,7 +19,7 @@ import {
 import { columnGroupWidths, columnsByPin, columnsByPinArr } from '../../utils/column';
 import { Keys } from '../../utils/keys';
 import { BehaviorSubject } from 'rxjs';
-import { ActivateEvent, RowOrGroup, TreeStatus } from '../../types/public.types';
+import { ActivateEvent, RowOrGroup, SelectionType, TreeStatus } from '../../types/public.types';
 import { AsyncPipe } from '@angular/common';
 import { TableColumn } from '../../types/table-column.type';
 import { ColumnGroupWidth, PinnedColumns } from '../../types/internal.types';
@@ -38,7 +38,7 @@ import { DataTableBodyCellComponent } from './body-cell.component';
         @for (column of colGroup.columns; track column.$$id; let ii = $index) {
           <datatable-body-cell
             role="cell"
-            tabindex="-1"
+            [attr.tabindex]="selectionType === SelectionType.cell ? '-1' : null"
             [row]="row"
             [group]="group"
             [expanded]="expanded"
@@ -62,6 +62,8 @@ import { DataTableBodyCellComponent } from './body-cell.component';
   imports: [DataTableBodyCellComponent, AsyncPipe]
 })
 export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges {
+  SelectionType = SelectionType;
+
   private cd = inject(ChangeDetectorRef);
 
   @Input() set columns(val: TableColumn[]) {
@@ -92,6 +94,7 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
   @Input() row: TRow;
   @Input() group: TRow[];
   @Input() isSelected: boolean;
+  @Input() selectionType: SelectionType;
   @Input() rowIndex: number;
   @Input() displayCheck: (row: TRow, column: TableColumn, value?: any) => boolean;
   @Input() treeStatus?: TreeStatus = 'collapsed';

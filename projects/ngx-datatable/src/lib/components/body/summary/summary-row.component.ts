@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, PipeTransform, TemplateRef } from '@angular/core';
 import { TableColumn, TableColumnProp } from '../../../types/table-column.type';
 import { DataTableBodyRowComponent } from '../body-row.component';
+import { SelectionType } from '../../../types/public.types';
 
 export interface ISummaryColumn {
   summaryFunc?: (cells: any[]) => any;
@@ -35,6 +36,7 @@ function noopSumFunc(cells: any[]): void {
         tabindex="-1"
         [innerWidth]="innerWidth"
         [offsetX]="offsetX"
+        [selectionType]="selectionType"
         [columns]="_internalColumns"
         [rowHeight]="rowHeight"
         [row]="summaryRow"
@@ -55,6 +57,7 @@ export class DataTableSummaryRowComponent implements OnChanges {
 
   @Input() rowHeight: number;
   @Input() offsetX: number;
+  @Input() selectionType: SelectionType;
   @Input() innerWidth: number;
 
   _internalColumns: ISummaryColumn[];

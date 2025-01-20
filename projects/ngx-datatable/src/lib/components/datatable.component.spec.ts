@@ -396,9 +396,8 @@ describe('DatatableComponent With Custom Templates', () => {
 });
 
 @Component({
-  template: ` <ngx-datatable [columns]="columns" [rows]="rows" [sorts]="sorts"></ngx-datatable> `,
-  imports: [DatatableComponent],
-  standalone: true
+    template: ` <ngx-datatable [columns]="columns" [rows]="rows" [sorts]="sorts"></ngx-datatable> `,
+    imports: [DatatableComponent]
 })
 class TestFixtureComponent {
   columns: any[] = [];
@@ -407,7 +406,7 @@ class TestFixtureComponent {
 }
 
 @Component({
-  template: `
+    template: `
     <ngx-datatable [rows]="rows" [sorts]="sorts">
       <ngx-datatable-column name="Id" prop="id">
         <ng-template let-column="column" ngx-datatable-header-template>
@@ -427,13 +426,12 @@ class TestFixtureComponent {
       </ngx-datatable-column>
     </ngx-datatable>
   `,
-  imports: [
-    DatatableComponent,
-    DataTableColumnDirective,
-    DataTableColumnCellDirective,
-    DataTableColumnHeaderDirective
-  ],
-  standalone: true
+    imports: [
+        DatatableComponent,
+        DataTableColumnDirective,
+        DataTableColumnCellDirective,
+        DataTableColumnHeaderDirective
+    ]
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 class TestFixtureComponentWithCustomTemplates {

@@ -38,8 +38,8 @@ import { DataTableHeaderCellComponent } from './header-cell.component';
 import { OrderableDirective } from '../../directives/orderable.directive';
 
 @Component({
-  selector: 'datatable-header',
-  template: `
+    selector: 'datatable-header',
+    template: `
     <div
       role="row"
       orderable
@@ -90,19 +90,18 @@ import { OrderableDirective } from '../../directives/orderable.directive';
       }
     </div>
   `,
-  host: {
-    class: 'datatable-header'
-  },
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [
-    OrderableDirective,
-    NgStyle,
-    DataTableHeaderCellComponent,
-    ResizeableDirective,
-    LongPressDirective,
-    DraggableDirective
-  ]
+    host: {
+        class: 'datatable-header'
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        OrderableDirective,
+        NgStyle,
+        DataTableHeaderCellComponent,
+        ResizeableDirective,
+        LongPressDirective,
+        DraggableDirective
+    ]
 })
 export class DataTableHeaderComponent implements OnDestroy, OnChanges {
   private cd = inject(ChangeDetectorRef);

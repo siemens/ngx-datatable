@@ -3,9 +3,9 @@ import { ColumnMode, DatatableComponent } from 'projects/ngx-datatable/src/publi
 import { FullEmployee } from '../data.model';
 
 @Component({
-  selector: 'responsive-demo',
-  styles: [
-    `
+    selector: 'responsive-demo',
+    styles: [
+        `
       @media screen and (max-width: 800px) {
         .desktop-hidden {
           display: initial;
@@ -23,8 +23,8 @@ import { FullEmployee } from '../data.model';
         }
       }
     `
-  ],
-  template: `
+    ],
+    template: `
     <div>
       <h3>
         Responsive Demo
@@ -112,8 +112,9 @@ import { FullEmployee } from '../data.model';
       columns will be hidden and will appear in the row detail view.
     </div>
   `,
-  // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
-  encapsulation: ViewEncapsulation.None
+    // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ResponsiveComponent {
   @ViewChild('myTable') table: DatatableComponent<FullEmployee>;

@@ -3,8 +3,8 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 import { FullEmployee } from '../data.model';
 
 @Component({
-  selector: 'column-pinning-demo',
-  template: `
+    selector: 'column-pinning-demo',
+    template: `
     <div>
       <h3>
         Column Pinning
@@ -35,7 +35,8 @@ import { FullEmployee } from '../data.model';
         </ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class ColumnPinningComponent {
   rows: FullEmployee[] = [];

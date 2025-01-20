@@ -3,8 +3,8 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'summary-row-inline-html',
-  template: `
+    selector: 'summary-row-inline-html',
+    template: `
     <div>
       <h3>
         Inline HTML template
@@ -43,7 +43,8 @@ import { Employee } from '../data.model';
         </div>
       </ng-template>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class SummaryRowInlineHtmlComponent {
   rows: Employee[] = [];

@@ -3,8 +3,8 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 import { FullEmployee } from '../data.model';
 
 @Component({
-  selector: 'row-css-demo',
-  template: `
+    selector: 'row-css-demo',
+    template: `
     <div>
       <h3>
         Row/Header/Cell CSS Class Demo
@@ -35,7 +35,8 @@ import { FullEmployee } from '../data.model';
         <ngx-datatable-column name="Age"></ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class RowCssComponent {
   rows: FullEmployee[] = [];

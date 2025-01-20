@@ -3,8 +3,8 @@ import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'template-ref-demo',
-  template: `
+    selector: 'template-ref-demo',
+    template: `
     <div>
       <h3>
         TemplateRef via Column Property
@@ -41,7 +41,8 @@ import { Employee } from '../data.model';
         }
       </ng-template>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class TemplateRefTemplatesComponent implements OnInit {
   @ViewChild('editTmpl', { static: true }) editTmpl: TemplateRef<any>;

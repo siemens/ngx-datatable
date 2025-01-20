@@ -3,8 +3,8 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 import { FullEmployee } from '../data.model';
 
 @Component({
-  selector: 'virtual-scroll-demo',
-  template: `
+    selector: 'virtual-scroll-demo',
+    template: `
     <div>
       <h3>
         Virtual Scrolling with 10k Rows
@@ -40,7 +40,8 @@ import { FullEmployee } from '../data.model';
         <ngx-datatable-column name="Row Height" prop="height" [width]="80"> </ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class VirtualScrollComponent {
   rows: FullEmployee[];

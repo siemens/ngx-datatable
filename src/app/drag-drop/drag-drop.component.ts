@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
-  selector: 'drag-drop-demo',
-  template: `
+    selector: 'drag-drop-demo',
+    template: `
     <div>
       <h3>
         Drag Drop Using Angular CDK
@@ -35,7 +35,8 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
         </ng-template>
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class DragDropComponent {
   rows = [];

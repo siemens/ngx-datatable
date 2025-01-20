@@ -3,8 +3,8 @@ import { ColumnMode, SortType, TableColumn } from 'projects/ngx-datatable/src/pu
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'client-sorting-demo',
-  template: `
+    selector: 'client-sorting-demo',
+    template: `
     <div>
       <h3>
         Client-side Sorting
@@ -30,7 +30,8 @@ import { Employee } from '../data.model';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class ClientSortingComponent {
   rows: Employee[] = [];

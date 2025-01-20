@@ -3,8 +3,8 @@ import { ColumnMode, SelectionType, TableColumn } from 'projects/ngx-datatable/s
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'multi-click-selection-demo',
-  template: `
+    selector: 'multi-click-selection-demo',
+    template: `
     <div>
       <h3>
         Multi Click Selection
@@ -53,7 +53,8 @@ import { Employee } from '../data.model';
         </ul>
       </div>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class MultiClickSelectionComponent {
   rows: Employee[] = [];

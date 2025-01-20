@@ -3,8 +3,8 @@ import { ColumnMode, DatatableComponent } from 'projects/ngx-datatable/src/publi
 import { FullEmployee } from '../data.model';
 
 @Component({
-  selector: 'row-details-demo',
-  template: `
+    selector: 'row-details-demo',
+    template: `
     <div>
       <h3>
         Row Detail Demo
@@ -86,8 +86,9 @@ import { FullEmployee } from '../data.model';
       </ngx-datatable>
     </div>
   `,
-  // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
-  encapsulation: ViewEncapsulation.None
+    // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class RowDetailsComponent {
   @ViewChild('myTable') table: DatatableComponent<FullEmployee>;

@@ -3,8 +3,8 @@ import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'basic-dark-theme-demo',
-  template: `
+    selector: 'basic-dark-theme-demo',
+    template: `
     <div>
       <h3>
         Dark Theme
@@ -32,7 +32,8 @@ import { Employee } from '../data.model';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class DarkThemeComponent {
   rows: Employee[] = [];

@@ -31,9 +31,9 @@ import { DataTableGhostLoaderComponent } from './ghost-loader/ghost-loader.compo
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'datatable-body-cell',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
+    selector: 'datatable-body-cell',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
     @if (row) {
       <div class="datatable-body-cell-label" [style.margin-left.px]="calcLeftMargin(column, row)">
         @if (column.checkboxable && (!displayCheck || displayCheck(row, column, value))) {
@@ -96,8 +96,7 @@ import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
       }
     }
   `,
-  standalone: true,
-  imports: [NgTemplateOutlet, DataTableGhostLoaderComponent, AsyncPipe]
+    imports: [NgTemplateOutlet, DataTableGhostLoaderComponent, AsyncPipe]
 })
 export class DataTableBodyCellComponent<TRow extends { level?: number } = any>
   implements DoCheck, OnDestroy

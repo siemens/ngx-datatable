@@ -4,8 +4,8 @@ import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'rx-demo',
-  template: `
+    selector: 'rx-demo',
+    template: `
     <div>
       <h3>
         RXjs Data
@@ -29,7 +29,8 @@ import { Employee } from '../data.model';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class RxDemoComponent {
   rows: Observable<Employee[]>;

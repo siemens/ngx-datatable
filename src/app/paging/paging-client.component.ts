@@ -3,8 +3,8 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'client-paging-demo',
-  template: `
+    selector: 'client-paging-demo',
+    template: `
     <div>
       <h3>
         Client-side Paging
@@ -29,7 +29,8 @@ import { Employee } from '../data.model';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class ClientPagingComponent {
   rows: Employee[] = [];

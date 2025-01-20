@@ -4,8 +4,8 @@ import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'filter-demo',
-  template: `
+    selector: 'filter-demo',
+    template: `
     <div>
       <h3>
         Client-side Search and Filtering
@@ -37,7 +37,8 @@ import { Employee } from '../data.model';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class FilterComponent {
   rows: Employee[] = [];

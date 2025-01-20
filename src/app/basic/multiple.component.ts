@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
-  selector: 'multiple-tables-demo',
-  template: `
+    selector: 'multiple-tables-demo',
+    template: `
     <div>
       <h3>
         Multiple Tables
@@ -37,7 +37,8 @@ import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class MultipleTablesComponent {
   columns1: TableColumn[] = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company' }];

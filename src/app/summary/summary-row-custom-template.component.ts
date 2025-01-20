@@ -3,8 +3,8 @@ import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'summary-row-custom-template-demo',
-  template: `
+    selector: 'summary-row-custom-template-demo',
+    template: `
     <div>
       <h3>
         Summary Row with Custom Template
@@ -38,7 +38,8 @@ import { Employee } from '../data.model';
       </ng-template>
     </div>
   `,
-  styleUrls: ['./summary-row-custom-template.component.scss']
+    styleUrls: ['./summary-row-custom-template.component.scss'],
+    standalone: false
 })
 export class SummaryRowCustomTemplateComponent implements OnInit {
   rows: Employee[] = [];

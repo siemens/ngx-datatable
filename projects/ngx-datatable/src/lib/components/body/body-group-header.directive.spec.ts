@@ -6,15 +6,14 @@ import { DatatableGroupHeaderDirective } from './body-group-header.directive';
 import { DatatableGroupHeaderTemplateDirective } from './body-group-header-template.directive';
 
 @Component({
-  selector: 'test-fixture-component',
-  template: `
+    selector: 'test-fixture-component',
+    template: `
     <ngx-datatable-group-header id="t1"></ngx-datatable-group-header>
     <ngx-datatable-group-header id="t2">
       <ng-template ngx-datatable-group-header-template></ng-template>
     </ngx-datatable-group-header>
   `,
-  standalone: true,
-  imports: [DatatableGroupHeaderDirective, DatatableGroupHeaderTemplateDirective]
+    imports: [DatatableGroupHeaderDirective, DatatableGroupHeaderTemplateDirective]
 })
 class TestFixtureComponent {}
 

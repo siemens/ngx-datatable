@@ -3,8 +3,8 @@ import { ColumnMode, SelectionType, TableColumn } from 'projects/ngx-datatable/s
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'single-selection-demo',
-  template: `
+    selector: 'single-selection-demo',
+    template: `
     <div>
       <h3>
         Single Row Selection
@@ -56,7 +56,8 @@ import { Employee } from '../data.model';
         </ul>
       </div>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class SingleSelectionComponent {
   rows: Employee[] = [];

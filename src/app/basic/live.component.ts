@@ -3,8 +3,8 @@ import { ColumnMode, DatatableComponent } from 'projects/ngx-datatable/src/publi
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'live-data-demo',
-  template: `
+    selector: 'live-data-demo',
+    template: `
     <div>
       <h3>
         Live Data Demo
@@ -39,7 +39,8 @@ import { Employee } from '../data.model';
         <ngx-datatable-column name="Company"></ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class LiveDataComponent {
   @ViewChild('mydatatable') mydatatable: DatatableComponent<Employee & { updated: string }>;

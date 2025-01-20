@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
-  selector: 'empty-demo',
-  template: `
+    selector: 'empty-demo',
+    template: `
     <div>
       <h3>
         Custom Empty Component
@@ -29,7 +29,8 @@ import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
         >
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class BasicEmptyComponent {
   columns: TableColumn[] = [

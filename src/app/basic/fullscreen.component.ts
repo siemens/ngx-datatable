@@ -3,8 +3,8 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 import { FullEmployee } from '../data.model';
 
 @Component({
-  selector: 'full-screen-demo',
-  template: `
+    selector: 'full-screen-demo',
+    template: `
     <div>
       <h3>
         Full Screen
@@ -40,7 +40,8 @@ import { FullEmployee } from '../data.model';
         ></ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class FullScreenComponent {
   rows: FullEmployee[] = [];

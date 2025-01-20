@@ -3,8 +3,8 @@ import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'server-sorting-demo',
-  template: `
+    selector: 'server-sorting-demo',
+    template: `
     <div>
       <h3>
         Server-side Sorting
@@ -31,7 +31,8 @@ import { Employee } from '../data.model';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class ServerSortingComponent {
   loading = false;

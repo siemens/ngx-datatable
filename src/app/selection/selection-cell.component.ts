@@ -3,8 +3,8 @@ import { ColumnMode, SelectionType, TableColumn } from 'projects/ngx-datatable/s
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'cell-selection-demo',
-  template: `
+    selector: 'cell-selection-demo',
+    template: `
     <div>
       <h3>
         Cell Selection
@@ -32,7 +32,8 @@ import { Employee } from '../data.model';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class CellSelectionComponent {
   rows: Employee[] = [];

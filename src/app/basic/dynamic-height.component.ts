@@ -3,8 +3,8 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 import { FullEmployee } from '../data.model';
 
 @Component({
-  selector: 'dynamic-height-demo',
-  template: `
+    selector: 'dynamic-height-demo',
+    template: `
     <div>
       <h3>
         Dynamic Height w/ Virtual Scrolling
@@ -31,7 +31,8 @@ import { FullEmployee } from '../data.model';
         <ngx-datatable-column name="Row Height" prop="height"></ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class DynamicHeightComponent {
   rows: FullEmployee[] = [];

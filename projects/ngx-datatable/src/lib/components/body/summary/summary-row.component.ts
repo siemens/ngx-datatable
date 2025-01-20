@@ -28,8 +28,8 @@ function noopSumFunc(cells: any[]): void {
 }
 
 @Component({
-  selector: 'datatable-summary-row',
-  template: `
+    selector: 'datatable-summary-row',
+    template: `
     @if (summaryRow && _internalColumns) {
       <datatable-body-row
         tabindex="-1"
@@ -43,11 +43,10 @@ function noopSumFunc(cells: any[]): void {
       </datatable-body-row>
     }
   `,
-  host: {
-    class: 'datatable-summary-row'
-  },
-  standalone: true,
-  imports: [DataTableBodyRowComponent]
+    host: {
+        class: 'datatable-summary-row'
+    },
+    imports: [DataTableBodyRowComponent]
 })
 export class DataTableSummaryRowComponent implements OnChanges {
   @Input() rows: any[];

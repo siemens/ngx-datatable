@@ -3,8 +3,8 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'inline-templates-demo',
-  template: `
+    selector: 'inline-templates-demo',
+    template: `
     <div>
       <h3>
         Expressive Templates
@@ -51,7 +51,8 @@ import { Employee } from '../data.model';
         </ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class InlineTemplatesComponent {
   rows: Employee[] = [];

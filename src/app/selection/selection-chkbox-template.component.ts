@@ -3,8 +3,8 @@ import { ColumnMode, SelectionType } from 'projects/ngx-datatable/src/public-api
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'chkbox-selection-template-demo',
-  template: `
+    selector: 'chkbox-selection-template-demo',
+    template: `
     <div>
       <h3>
         Custom Checkbox Selection
@@ -82,7 +82,8 @@ import { Employee } from '../data.model';
         </ul>
       </div>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class CustomCheckboxSelectionComponent {
   rows: Employee[] = [];

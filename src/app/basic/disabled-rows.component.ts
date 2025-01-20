@@ -4,8 +4,8 @@ import { FullEmployee } from '../data.model';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'disabled-rows-demo',
-  template: `
+    selector: 'disabled-rows-demo',
+    template: `
     <div>
       <h3>
         Disable Row
@@ -78,7 +78,8 @@ import { BehaviorSubject } from 'rxjs';
         </ngx-datatable>
       </div>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class DisabledRowsComponent {
   rows: (FullEmployee & { isDisabled?: boolean })[] = [];

@@ -3,8 +3,8 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'column-force-demo',
-  template: `
+    selector: 'column-force-demo',
+    template: `
     <div>
       <h3>
         Force Fill Column Width Distribution
@@ -42,7 +42,8 @@ import { Employee } from '../data.model';
         </ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class ColumnForceComponent {
   rows: Employee[] = [];

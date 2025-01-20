@@ -3,8 +3,8 @@ import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'basic-fixed-demo',
-  template: `
+    selector: 'basic-fixed-demo',
+    template: `
     <div>
       <h3>
         Fix Row Height
@@ -28,7 +28,8 @@ import { Employee } from '../data.model';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class BasicFixedComponent {
   rows: Employee[] = [];

@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { FullEmployee } from '../data.model';
 
 @Component({
-  selector: 'horz-vert-scrolling-demo',
-  template: `
+    selector: 'horz-vert-scrolling-demo',
+    template: `
     <div>
       <h3>
         Horizontal and Vertical Scrolling
@@ -37,7 +37,8 @@ import { FullEmployee } from '../data.model';
         ></ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class HorzVertScrollingComponent {
   rows: FullEmployee[] = [];

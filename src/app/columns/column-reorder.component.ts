@@ -3,9 +3,9 @@ import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'column-reorder-demo',
-  styles: [
-    `
+    selector: 'column-reorder-demo',
+    styles: [
+        `
       .icon {
         position: absolute;
       }
@@ -19,8 +19,8 @@ import { Employee } from '../data.model';
         left: -13px;
       }
     `
-  ],
-  template: `
+    ],
+    template: `
     <div>
       <h3>
         Reorder Column
@@ -54,7 +54,8 @@ import { Employee } from '../data.model';
         </div>
       </ng-template>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class ColumnReorderComponent {
   rows: Employee[] = [];

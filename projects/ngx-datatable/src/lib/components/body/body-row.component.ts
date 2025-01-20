@@ -26,9 +26,9 @@ import { ColumnGroupWidth, PinnedColumns } from '../../types/internal.types';
 import { DataTableBodyCellComponent } from './body-cell.component';
 
 @Component({
-  selector: 'datatable-body-row',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
+    selector: 'datatable-body-row',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
     @for (colGroup of _columnsByPin; track colGroup.type; let i = $index) {
       <div
         class="datatable-row-{{ colGroup.type }} datatable-row-group"
@@ -58,8 +58,7 @@ import { DataTableBodyCellComponent } from './body-cell.component';
       </div>
     }
   `,
-  standalone: true,
-  imports: [DataTableBodyCellComponent, AsyncPipe]
+    imports: [DataTableBodyCellComponent, AsyncPipe]
 })
 export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges {
   private cd = inject(ChangeDetectorRef);

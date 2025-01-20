@@ -3,8 +3,8 @@ import { ColumnMode, TreeStatus } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'client-side-tree-demo',
-  template: `
+    selector: 'client-side-tree-demo',
+    template: `
     <div>
       <h3>
         Flex Column Width Distribution
@@ -46,7 +46,8 @@ import { Employee } from '../data.model';
       </ngx-datatable>
     </div>
   `,
-  styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
+    styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }'],
+    standalone: false
 })
 export class ClientTreeComponent {
   rows: (Employee & { treeStatus: TreeStatus })[] = [];

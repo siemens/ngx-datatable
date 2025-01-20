@@ -3,8 +3,8 @@ import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'column-toggle-demo',
-  template: `
+    selector: 'column-toggle-demo',
+    template: `
     <div>
       <h3>
         Column Toggling
@@ -48,7 +48,8 @@ import { Employee } from '../data.model';
         </ul>
       </div>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class ColumnToggleComponent {
   rows: Employee[] = [

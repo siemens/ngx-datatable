@@ -7,16 +7,15 @@ import { DraggableDirective } from './draggable.directive';
 import { id } from '../utils/id';
 
 @Component({
-  selector: 'test-fixture-component',
-  template: `
+    selector: 'test-fixture-component',
+    template: `
     <div orderable>
       @for (item of draggables; track $index) {
         <div draggable [dragModel]="item"></div>
       }
     </div>
   `,
-  imports: [OrderableDirective, DraggableDirective],
-  standalone: true
+    imports: [OrderableDirective, DraggableDirective]
 })
 class TestFixtureComponent {
   draggables = [];

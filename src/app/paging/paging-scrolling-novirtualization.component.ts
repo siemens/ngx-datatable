@@ -5,9 +5,9 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'paging-scrolling-novirtualization-demo',
-  providers: [MockServerResultsService],
-  template: `
+    selector: 'paging-scrolling-novirtualization-demo',
+    providers: [MockServerResultsService],
+    template: `
     <div>
       <h3>
         Server-side Paging
@@ -39,7 +39,8 @@ import { Employee } from '../data.model';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class PagingScrollingNoVirtualizationComponent implements OnInit {
   page: Page = {

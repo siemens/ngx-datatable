@@ -5,15 +5,14 @@ import { DatatableRowDetailDirective } from './row-detail.directive';
 import { DatatableRowDetailTemplateDirective } from './row-detail-template.directive';
 
 @Component({
-  selector: 'test-fixture-component',
-  template: `
+    selector: 'test-fixture-component',
+    template: `
     <ngx-datatable-row-detail id="t1"></ngx-datatable-row-detail>
     <ngx-datatable-row-detail id="t2">
       <ng-template ngx-datatable-row-detail-template></ng-template>
     </ngx-datatable-row-detail>
   `,
-  imports: [DatatableRowDetailDirective, DatatableRowDetailTemplateDirective],
-  standalone: true
+    imports: [DatatableRowDetailDirective, DatatableRowDetailTemplateDirective]
 })
 class TestFixtureComponent {}
 

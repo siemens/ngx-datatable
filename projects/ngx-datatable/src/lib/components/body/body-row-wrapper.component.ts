@@ -29,9 +29,9 @@ import { DatatableGroupHeaderDirective } from './body-group-header.directive';
 import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive';
 
 @Component({
-  selector: 'datatable-row-wrapper',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
+    selector: 'datatable-row-wrapper',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
     @if (groupHeader?.template) {
       <div
         class="datatable-group-header"
@@ -69,11 +69,10 @@ import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive'
       </div>
     }
   `,
-  host: {
-    class: 'datatable-row-wrapper'
-  },
-  standalone: true,
-  imports: [NgTemplateOutlet]
+    host: {
+        class: 'datatable-row-wrapper'
+    },
+    imports: [NgTemplateOutlet]
 })
 export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit, OnChanges {
   @ViewChild('select') checkBoxInput!: ElementRef<HTMLInputElement>;

@@ -42,8 +42,8 @@ import { DataTableGhostLoaderComponent } from './ghost-loader/ghost-loader.compo
 import { ProgressBarComponent } from './progress-bar.component';
 
 @Component({
-  selector: 'datatable-body',
-  template: `
+    selector: 'datatable-body',
+    template: `
     @if (loadingIndicator) {
       <div class="custom-loading-indicator-wrapper">
         <div class="custom-loading-content">
@@ -250,23 +250,22 @@ import { ProgressBarComponent } from './progress-bar.component';
       }
     </datatable-selection>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class: 'datatable-body'
-  },
-  standalone: true,
-  imports: [
-    ProgressBarComponent,
-    DataTableGhostLoaderComponent,
-    DataTableSelectionComponent,
-    ScrollerComponent,
-    DataTableSummaryRowComponent,
-    DataTableRowWrapperComponent,
-    NgStyle,
-    DatatableRowDefInternalDirective,
-    DataTableBodyRowComponent,
-    DraggableDirective
-  ]
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'datatable-body'
+    },
+    imports: [
+        ProgressBarComponent,
+        DataTableGhostLoaderComponent,
+        DataTableSelectionComponent,
+        ScrollerComponent,
+        DataTableSummaryRowComponent,
+        DataTableRowWrapperComponent,
+        NgStyle,
+        DatatableRowDefInternalDirective,
+        DataTableBodyRowComponent,
+        DraggableDirective
+    ]
 })
 export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = any>
   implements OnInit, OnDestroy

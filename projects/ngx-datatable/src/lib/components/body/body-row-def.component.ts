@@ -17,15 +17,14 @@ import { NgTemplateOutlet } from '@angular/common';
  * This component will render that actual row template.
  */
 @Component({
-  selector: 'datatable-row-def',
-  template: `@if (rowDef.rowDefInternal.rowTemplate) {
+    selector: 'datatable-row-def',
+    template: `@if (rowDef.rowDefInternal.rowTemplate) {
     <ng-container
       [ngTemplateOutlet]="rowDef.rowDefInternal.rowTemplate"
       [ngTemplateOutletContext]="rowDef"
     />
   }`,
-  standalone: true,
-  imports: [NgTemplateOutlet]
+    imports: [NgTemplateOutlet]
 })
 export class DatatableRowDefComponent {
   rowDef = inject(RowDefToken);

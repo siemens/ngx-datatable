@@ -3,8 +3,8 @@ import { ColumnMode, SelectionType, TableColumn } from 'projects/ngx-datatable/s
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'multidisable-selection-demo',
-  template: `
+    selector: 'multidisable-selection-demo',
+    template: `
     <div>
       <h3>
         Selection Callback to Disable Selections
@@ -50,7 +50,8 @@ import { Employee } from '../data.model';
         </ul>
       </div>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class MultiDisableSelectionComponent {
   rows: Employee[] = [];

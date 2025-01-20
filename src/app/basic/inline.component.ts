@@ -3,8 +3,8 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'inline-edit-demo',
-  template: `
+    selector: 'inline-edit-demo',
+    template: `
     <div>
       <h3>
         Inline Editing
@@ -79,7 +79,8 @@ import { Employee } from '../data.model';
         </ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class InlineEditComponent {
   editing = {};

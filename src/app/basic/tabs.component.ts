@@ -3,8 +3,8 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 import { FullEmployee } from '../data.model';
 
 @Component({
-  selector: 'tabs-demo',
-  template: `
+    selector: 'tabs-demo',
+    template: `
     <div>
       <h3>
         Hidden By Default
@@ -66,7 +66,8 @@ import { FullEmployee } from '../data.model';
         }
       </div>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class TabsDemoComponent {
   rows: FullEmployee[] = [];

@@ -24,8 +24,8 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'datatable-header-cell',
-  template: `
+    selector: 'datatable-header-cell',
+    template: `
     <div class="datatable-header-cell-template-wrap">
       @if (isTarget) {
         <ng-template
@@ -55,12 +55,11 @@ import { NgTemplateOutlet } from '@angular/common';
       <span (click)="onSort()" [class]="sortClass"> </span>
     </div>
   `,
-  host: {
-    class: 'datatable-header-cell'
-  },
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [NgTemplateOutlet]
+    host: {
+        class: 'datatable-header-cell'
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgTemplateOutlet]
 })
 export class DataTableHeaderCellComponent implements OnInit {
   private cd = inject(ChangeDetectorRef);

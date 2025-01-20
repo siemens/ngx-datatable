@@ -3,8 +3,8 @@ import { ColumnMode, SelectionType, TableColumn } from 'projects/ngx-datatable/s
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'multi-selection-demo',
-  template: `
+    selector: 'multi-selection-demo',
+    template: `
     <div>
       <h3>
         Multi Select
@@ -56,7 +56,8 @@ import { Employee } from '../data.model';
         </ul>
       </div>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class MultiSelectionComponent {
   rows: Employee[] = [];

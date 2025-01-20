@@ -70,31 +70,30 @@ import { VisibilityDirective } from '../directives/visibility.directive';
 import { ProgressBarComponent } from './body/progress-bar.component';
 
 @Component({
-  selector: 'ngx-datatable',
-  templateUrl: './datatable.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
-  encapsulation: ViewEncapsulation.None,
-  styleUrls: ['./datatable.component.scss'],
-  host: {
-    class: 'ngx-datatable'
-  },
-  providers: [
-    {
-      provide: DatatableComponentToken,
-      useExisting: DatatableComponent
+    selector: 'ngx-datatable',
+    templateUrl: './datatable.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
+    encapsulation: ViewEncapsulation.None,
+    styleUrls: ['./datatable.component.scss'],
+    host: {
+        class: 'ngx-datatable'
     },
-    ColumnChangesService
-  ],
-  standalone: true,
-  imports: [
-    VisibilityDirective,
-    DataTableHeaderComponent,
-    DataTableBodyComponent,
-    DataTableFooterComponent,
-    AsyncPipe,
-    ProgressBarComponent
-  ]
+    providers: [
+        {
+            provide: DatatableComponentToken,
+            useExisting: DatatableComponent
+        },
+        ColumnChangesService
+    ],
+    imports: [
+        VisibilityDirective,
+        DataTableHeaderComponent,
+        DataTableBodyComponent,
+        DataTableFooterComponent,
+        AsyncPipe,
+        ProgressBarComponent
+    ]
 })
 export class DatatableComponent<TRow = any>
   implements OnInit, DoCheck, AfterViewInit, AfterContentInit, OnDestroy

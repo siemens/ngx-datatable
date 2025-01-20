@@ -3,12 +3,11 @@ import { TableColumn } from '../../../types/table-column.type';
 import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: `ghost-loader`,
-  templateUrl: `./ghost-loader.component.html`,
-  styleUrls: [`./ghost-loader.component.scss`],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [NgTemplateOutlet]
+    selector: `ghost-loader`,
+    templateUrl: `./ghost-loader.component.html`,
+    styleUrls: [`./ghost-loader.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgTemplateOutlet]
 })
 export class DataTableGhostLoaderComponent {
   @Input() columns: TableColumn[];

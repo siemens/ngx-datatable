@@ -5,9 +5,9 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'summary-row-server-paging-demo',
-  providers: [MockServerResultsService],
-  template: `
+    selector: 'summary-row-server-paging-demo',
+    providers: [MockServerResultsService],
+    template: `
     <div>
       <h3>
         Server-side paging
@@ -37,7 +37,8 @@ import { Employee } from '../data.model';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class SummaryRowServerPagingComponent implements OnInit {
   page: Page = {

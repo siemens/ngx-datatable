@@ -3,8 +3,8 @@ import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'default-sorting-demo',
-  template: `
+    selector: 'default-sorting-demo',
+    template: `
     <div>
       <h3>
         Client-side Sorting
@@ -43,7 +43,8 @@ import { Employee } from '../data.model';
         <ngx-datatable-column name="Gender"> </ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class DefaultSortingComponent implements OnInit {
   rows: Employee[] = [];

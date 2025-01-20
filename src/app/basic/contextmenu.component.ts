@@ -3,8 +3,8 @@ import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'contextmenu-demo',
-  template: `
+    selector: 'contextmenu-demo',
+    template: `
     <div>
       <h3>
         Context Menu Event
@@ -51,7 +51,8 @@ import { Employee } from '../data.model';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class ContextMenuDemoComponent {
   rows: Employee[] = [];

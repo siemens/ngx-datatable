@@ -9,8 +9,8 @@ import {
 } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
-  selector: 'row-grouping-demo',
-  template: `
+    selector: 'row-grouping-demo',
+    template: `
     <div>
       <h3>
         Row Grouping
@@ -149,7 +149,8 @@ import {
         </ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class RowGroupingComponent {
   @ViewChild('myTable') table: DatatableComponent<GroupedEmployee>;

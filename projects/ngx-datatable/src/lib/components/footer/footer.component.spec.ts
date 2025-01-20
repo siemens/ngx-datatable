@@ -212,7 +212,7 @@ describe('DataTableFooterComponent', () => {
  * test host component
  */
 @Component({
-  template: `
+    template: `
     <datatable-footer
       [rowCount]="rowCount"
       [pageSize]="pageSize"
@@ -247,8 +247,7 @@ describe('DataTableFooterComponent', () => {
       </ul>
     </ng-template>
   `,
-  imports: [DataTableFooterComponent],
-  standalone: true
+    imports: [DataTableFooterComponent]
 })
 class TestFixtureComponent {
   footerHeight: number;

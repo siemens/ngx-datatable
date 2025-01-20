@@ -3,8 +3,8 @@ import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'footer-demo',
-  template: `
+    selector: 'footer-demo',
+    template: `
     <div>
       <h3>
         Custom Footer
@@ -47,7 +47,8 @@ import { Employee } from '../data.model';
         </ngx-datatable-footer>
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class FooterDemoComponent {
   rows: Employee[] = [];

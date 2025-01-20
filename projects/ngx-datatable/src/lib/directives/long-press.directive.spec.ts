@@ -4,10 +4,9 @@ import { By } from '@angular/platform-browser';
 import { LongPressDirective } from './long-press.directive';
 
 @Component({
-  selector: 'test-fixture-component',
-  template: ` <div long-press></div> `,
-  imports: [LongPressDirective],
-  standalone: true
+    selector: 'test-fixture-component',
+    template: ` <div long-press></div> `,
+    imports: [LongPressDirective]
 })
 class TestFixtureComponent {}
 

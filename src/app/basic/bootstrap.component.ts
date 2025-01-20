@@ -3,8 +3,8 @@ import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
-  selector: 'basic-bootstrap-theme-demo',
-  template: `
+    selector: 'basic-bootstrap-theme-demo',
+    template: `
     <div>
       <h3>
         Bootstrap Theme
@@ -33,7 +33,8 @@ import { Employee } from '../data.model';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+    standalone: false
 })
 export class BootstrapThemeComponent {
   rows: Employee[] = [];

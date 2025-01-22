@@ -56,6 +56,13 @@ jobs:
         env:
           CI: true
 
+      - name: Upload E2E Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results
+          path: playwright/results
+
       - name: Build Docs
         run: |
           npm run build-docs --if-present

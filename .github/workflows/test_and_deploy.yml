@@ -44,15 +44,13 @@ jobs:
         env:
           CI: true
 
-      - name: E2E Prepare
-        run: |
-          npm run e2e:prepare --if-present
-        env:
-          CI: true
-
       - name: E2E
-        run: |
-          npm run e2e --if-present
+        uses: addnab/docker-run-action@v3
+        with:
+          image: mcr.microsoft.com/playwright:v1.46.0-jammy
+          options: --ipc=host -v ${{ github.workspace }}:/workspace -w /workspace
+          run: |
+            npm run e2e --if-present
         env:
           CI: true
 

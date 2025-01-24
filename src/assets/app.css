@@ -116,7 +116,8 @@ h3 small {
   width: 100%;
 }
 
-.selection-cell .datatable-body-cell.active {
+.selection-cell .datatable-body-cell.active,
+.selection-row .datatable-body-row.active .datatable-body-cell {
   background: #0829e0 !important;
   color: #fff !important;
 }

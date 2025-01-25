@@ -58,18 +58,11 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: isCI
     ? [
+        ['github'],
         [
           'html',
           {
-            open: 'on-failure',
             outputFolder: './playwright/results/preview'
-          }
-        ],
-        [
-          'junit',
-          {
-            outputFile: `./playwright/results/reports/report-e2e.xml`,
-            includeProjectInTestName: true
           }
         ],
         [
@@ -87,15 +80,6 @@ export default defineConfig({
           {
             open: isContainer ? 'never' : 'on-failure',
             outputFolder: './playwright/results/preview'
-          }
-        ],
-        [
-          'junit',
-          {
-            outputFile: `./playwright/results/reports/report-${
-              isA11y && isVrt ? 'e2e' : isA11y ? 'a11y' : 'vrt'
-            }.xml`,
-            includeProjectInTestName: true
           }
         ],
         [

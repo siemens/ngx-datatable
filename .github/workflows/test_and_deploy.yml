@@ -28,6 +28,12 @@ jobs:
       - name: Format
         run: npm run format:check
 
+      - name: Lint
+        run: |
+          npm run lint
+        env:
+          CI: true
+
       - name: Build
         run: npm run build
 

@@ -58,7 +58,7 @@ class SiTestHelpers {
     private testInfo: TestInfo
   ) {}
 
-  public async visitExample(name: string, autoScaleViewport = true): Promise<void> {
+  public async visitExample(name: string): Promise<void> {
     await test.step(
       'visitExample: ' + name,
       async () => {
@@ -71,18 +71,6 @@ class SiTestHelpers {
         await this.page.goto(newHash);
 
         await this.page.evaluate(() => document.fonts.ready);
-
-        if (autoScaleViewport) {
-          const height = await this.page.evaluate(() => document.body.scrollHeight);
-          const width = await this.page.evaluate(() => document.body.scrollWidth);
-          const viewportSize = this.page.viewportSize();
-          if (!viewportSize || viewportSize.height < height || viewportSize.width < width) {
-            await this.page.setViewportSize({
-              height: Math.max(height, viewportSize?.height ?? 0),
-              width: Math.max(width, viewportSize?.width ?? 0)
-            });
-          }
-        }
       },
       { box: true }
     );

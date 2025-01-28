@@ -19,11 +19,6 @@ if (!isA11y && !isVrt) {
   isVrt = true;
 }
 
-const baseViewport = {
-  width: 1000,
-  height: 660
-};
-
 const chromeLaunchOptions = {
   args: [
     '--disable-skia-runtime-opts',
@@ -95,7 +90,6 @@ export default defineConfig({
   use: {
     baseURL: `http://${localAddress}:${port}`,
     launchOptions: chromeLaunchOptions,
-    viewport: baseViewport,
     actionTimeout: 0,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry'
@@ -105,7 +99,13 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: {
+          width: 1280,
+          height: 780
+        }
+      }
     }
   ],
 

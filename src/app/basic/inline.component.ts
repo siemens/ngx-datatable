@@ -35,12 +35,7 @@ import { Employee } from '../data.model';
             let-row="row"
           >
             @if (editing[rowIndex + '-name']) {
-              <input
-                autofocus
-                (blur)="updateValue($event, 'name', rowIndex)"
-                type="text"
-                [value]="value"
-              />
+              <input (blur)="updateValue($event, 'name', rowIndex)" type="text" [value]="value" />
             } @else {
               <span title="Double click to edit" (dblclick)="editing[rowIndex + '-name'] = true">
                 {{ value }}

@@ -8,12 +8,7 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
   encapsulation: ViewEncapsulation.None,
-  styleUrls: [
-    './app.component.scss',
-    '../../projects/ngx-datatable/src/lib/themes/material.scss',
-    '../../projects/ngx-datatable/src/lib/themes/dark.scss',
-    '../../projects/ngx-datatable/src/lib/themes/bootstrap.scss'
-  ],
+  styleUrls: ['./app.component.scss'],
   providers: [
     Location,
     {

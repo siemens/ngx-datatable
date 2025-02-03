@@ -25,7 +25,7 @@ import { Employee } from '../data.model';
       <div style="float:left;width:75%">
         <ngx-datatable
           style="width: 90%"
-          class="material"
+          class="material selection-row"
           [rows]="rows"
           [columnMode]="ColumnMode.force"
           [headerHeight]="50"

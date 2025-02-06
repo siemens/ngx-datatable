@@ -40,6 +40,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
 import { DataTableSelectionComponent } from './selection.component';
 import { DataTableGhostLoaderComponent } from './ghost-loader/ghost-loader.component';
 import { ProgressBarComponent } from './progress-bar.component';
+import { getByNestedIndex } from '../../utils/tree';
 
 @Component({
   selector: 'datatable-body',
@@ -138,7 +139,7 @@ import { ProgressBarComponent } from './progress-bar.component';
                     [expanded]="getRowExpanded(group)"
                     [rowClass]="rowClass"
                     [displayCheck]="displayCheck"
-                    [treeStatus]="group?.treeStatus"
+                    [treeStatus]="getTreeStatus(group)"
                     [ghostLoadingIndicator]="ghostLoadingIndicator"
                     [draggable]="rowDraggable"
                     [verticalScrollVisible]="verticalScrollVisible"
@@ -172,7 +173,7 @@ import { ProgressBarComponent } from './progress-bar.component';
                     [expanded]="getRowExpanded(group)"
                     [rowClass]="rowClass"
                     [displayCheck]="displayCheck"
-                    [treeStatus]="group?.treeStatus"
+                    [treeStatus]="getTreeStatus(group)"
                     [ghostLoadingIndicator]="ghostLoadingIndicator"
                     [draggable]="rowDraggable"
                     [verticalScrollVisible]="verticalScrollVisible"
@@ -393,6 +394,8 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   }
 
   @Input() verticalScrollVisible = false;
+
+  @Input() treeStatusKey = 'treeStatus';
 
   @Output() scroll: EventEmitter<ScrollEvent> = new EventEmitter();
   @Output() page: EventEmitter<number> = new EventEmitter();
@@ -956,6 +959,13 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
    */
   getRowIndex(row: RowOrGroup<TRow>): number {
     return this.rowIndexes.get(row) || 0;
+  }
+
+  /**
+   * Returns the tree status of the row
+   */
+  getTreeStatus(row: RowOrGroup<TRow>): TreeStatus {
+    return getByNestedIndex(row, this.treeStatusKey);
   }
 
   onTreeAction(row: TRow) {

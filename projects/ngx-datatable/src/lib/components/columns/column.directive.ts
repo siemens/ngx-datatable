@@ -17,11 +17,15 @@ import { TableColumn, TableColumnProp } from '../../types/table-column.type';
 import { DataTableColumnGhostCellDirective } from './column-ghost-cell.directive';
 import { CellContext, HeaderCellContext } from '../../types/public.types';
 
-@Directive({ selector: 'ngx-datatable-column' })
+@Directive({
+  selector: 'ngx-datatable-column',
+  standalone: true
+})
 export class DataTableColumnDirective<TRow> implements TableColumn, OnChanges {
   private columnChangesService = inject(ColumnChangesService);
   @Input() name: string;
   @Input() prop: TableColumnProp;
+  @Input({ transform: booleanAttribute }) bindAsUnsafeHtml?: boolean;
   @Input({ transform: booleanAttribute }) frozenLeft: boolean;
   @Input({ transform: booleanAttribute }) frozenRight: boolean;
   @Input({ transform: numberAttribute }) flexGrow: number;

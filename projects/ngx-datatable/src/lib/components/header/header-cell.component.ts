@@ -21,6 +21,7 @@ import {
   SortPropDir,
   SortType
 } from '../../types/public.types';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'datatable-header-cell',
@@ -46,7 +47,8 @@ import {
         </ng-template>
       } @else {
         <span class="datatable-header-cell-wrapper">
-          <span class="datatable-header-cell-label draggable" (click)="onSort()" [innerHTML]="name">
+          <span class="datatable-header-cell-label draggable" (click)="onSort()">
+            {{ name }}
           </span>
         </span>
       }
@@ -56,7 +58,9 @@ import {
   host: {
     class: 'datatable-header-cell'
   },
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [NgTemplateOutlet]
 })
 export class DataTableHeaderCellComponent implements OnInit {
   private cd = inject(ChangeDetectorRef);
@@ -132,7 +136,7 @@ export class DataTableHeaderCellComponent implements OnInit {
         });
 
         if (typeof res === 'string') {
-          cls += res;
+          cls += ' ' + res;
         } else if (typeof res === 'object') {
           const keys = Object.keys(res);
           for (const k of keys) {

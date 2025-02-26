@@ -33,6 +33,13 @@ import {
   SelectionType,
   TreeStatus
 } from '../../types/public.types';
+import { DraggableDirective } from '../../directives/draggable.directive';
+import { DatatableRowDefInternalDirective } from './body-row-def.component';
+import { DataTableRowWrapperComponent } from './body-row-wrapper.component';
+import { DataTableSummaryRowComponent } from './summary/summary-row.component';
+import { DataTableSelectionComponent } from './selection.component';
+import { DataTableGhostLoaderComponent } from './ghost-loader/ghost-loader.component';
+import { ProgressBarComponent } from './progress-bar.component';
 
 @Component({
   selector: 'datatable-body',
@@ -246,7 +253,20 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'datatable-body'
-  }
+  },
+  standalone: true,
+  imports: [
+    ProgressBarComponent,
+    DataTableGhostLoaderComponent,
+    DataTableSelectionComponent,
+    ScrollerComponent,
+    DataTableSummaryRowComponent,
+    DataTableRowWrapperComponent,
+    NgStyle,
+    DatatableRowDefInternalDirective,
+    DataTableBodyRowComponent,
+    DraggableDirective
+  ]
 })
 export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = any>
   implements OnInit, OnDestroy
@@ -693,8 +713,6 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
    * heights of the rows before it (i.e. row0 and row1).
    *
    * @returns the CSS3 style to be applied
-   *
-   * @memberOf DataTableBodyComponent
    */
   rowsStyles = computed(() => {
     const rowsStyles: NgStyle['ngStyle'][] = [];
@@ -738,8 +756,6 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
    * see description for `rowsStyles` signal
    *
    * @returns the CSS3 style to be applied
-   *
-   * @memberOf DataTableBodyComponent
    */
   bottomSummaryRowsStyles = computed(() => {
     if (!this.scrollbarV || !this.rows || !this.rows.length || !this.rowsToRender()) {

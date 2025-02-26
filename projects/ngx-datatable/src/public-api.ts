@@ -40,7 +40,6 @@ export * from './lib/directives/disable-row.directive';
 
 // services
 export * from './lib/services/scrollbar-helper.service';
-export * from './lib/services/dimensions-helper.service';
 export * from './lib/services/column-changes.service';
 
 // types
@@ -59,5 +58,4 @@ export * from './lib/utils/throttle';
 export * from './lib/utils/sort';
 export * from './lib/utils/row-height-cache';
 export * from './lib/utils/column-helper';
-export * from './lib/utils/elm-from-point';
 export * from './lib/utils/tree';

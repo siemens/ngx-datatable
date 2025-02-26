@@ -18,12 +18,11 @@ import { Page } from '../../types/internal.types';
       </li>
       @for (pg of pages; track pg.number) {
         <li
-          role="button"
           [attr.aria-label]="'page ' + pg.number"
           class="pages"
           [class.active]="pg.number === page"
         >
-          <a (click)="selectPage(pg.number)">
+          <a role="button" (click)="selectPage(pg.number)">
             {{ pg.text }}
           </a>
         </li>
@@ -43,7 +42,8 @@ import { Page } from '../../types/internal.types';
   host: {
     class: 'datatable-pager'
   },
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true
 })
 export class DataTablePagerComponent {
   @Input() pagerLeftArrowIcon: string;

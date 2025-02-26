@@ -1,12 +1,4 @@
-import {
-  Component,
-  DebugElement,
-  EventEmitter,
-  Input,
-  Output,
-  TemplateRef,
-  ViewChild
-} from '@angular/core';
+import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -254,7 +246,9 @@ describe('DataTableFooterComponent', () => {
         <li>offset {{ offset }}</li>
       </ul>
     </ng-template>
-  `
+  `,
+  imports: [DataTableFooterComponent],
+  standalone: true
 })
 class TestFixtureComponent {
   footerHeight: number;
@@ -283,30 +277,9 @@ class TestFixtureComponent {
   }
 }
 
-/**
- * we use a mock DataTablePagerComponent when testing
- * the DataTableFooterComponent
- */
-@Component({
-  selector: 'datatable-pager',
-  template: ''
-})
-// eslint-disable-next-line @angular-eslint/component-class-suffix
-class DataTablePagerComponentMock {
-  @Input() pagerLeftArrowIcon: string;
-  @Input() pagerRightArrowIcon: string;
-  @Input() pagerPreviousIcon: string;
-  @Input() pagerNextIcon: string;
-  @Input() page: number;
-  @Input() size: number;
-  @Input() count: number;
-
-  @Output() change: EventEmitter<any> = new EventEmitter();
-}
-
 function setupTest() {
   return TestBed.configureTestingModule({
-    declarations: [TestFixtureComponent, DataTableFooterComponent, DataTablePagerComponentMock]
+    imports: [TestFixtureComponent]
   })
     .compileComponents()
     .then(() => {

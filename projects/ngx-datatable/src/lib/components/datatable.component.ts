@@ -41,7 +41,6 @@ import { DataTableBodyComponent } from './body/body.component';
 import { DataTableHeaderComponent } from './header/header.component';
 import { ScrollbarHelper } from '../services/scrollbar-helper.service';
 import { ColumnChangesService } from '../services/column-changes.service';
-import { DimensionsHelper } from '../services/dimensions-helper.service';
 import { throttleable } from '../utils/throttle';
 import { adjustColumnWidths, forceFillColumnWidths } from '../utils/math';
 import { sortGroupedRows, sortRows } from '../utils/sort';
@@ -65,6 +64,10 @@ import {
   SortType,
   TreeStatus
 } from '../types/public.types';
+import { AsyncPipe } from '@angular/common';
+import { DataTableFooterComponent } from './footer/footer.component';
+import { VisibilityDirective } from '../directives/visibility.directive';
+import { ProgressBarComponent } from './body/progress-bar.component';
 
 @Component({
   selector: 'ngx-datatable',
@@ -80,14 +83,23 @@ import {
     {
       provide: DatatableComponentToken,
       useExisting: DatatableComponent
-    }
+    },
+    ColumnChangesService
+  ],
+  standalone: true,
+  imports: [
+    VisibilityDirective,
+    DataTableHeaderComponent,
+    DataTableBodyComponent,
+    DataTableFooterComponent,
+    AsyncPipe,
+    ProgressBarComponent
   ]
 })
 export class DatatableComponent<TRow = any>
   implements OnInit, DoCheck, AfterViewInit, AfterContentInit, OnDestroy
 {
   private scrollbarHelper = inject(ScrollbarHelper);
-  private dimensionsHelper = inject(DimensionsHelper);
   private cd = inject(ChangeDetectorRef);
   private columnChangesService = inject(ColumnChangesService);
   private configuration = inject<INgxDatatableConfig>('configuration' as any, { optional: true });
@@ -413,8 +425,6 @@ export class DatatableComponent<TRow = any>
   /**
    * Property to which you can use for determining select all
    * rows on current page or not.
-   *
-   * @memberOf DatatableComponent
    */
   @Input({ transform: booleanAttribute }) selectAllRowsOnPage = false;
 
@@ -657,8 +667,6 @@ export class DatatableComponent<TRow = any>
   /**
    * Reference to the header component for manually
    * invoking functions on the header.
-   *
-   * @memberOf DatatableComponent
    */
   @ViewChild(DataTableHeaderComponent)
   headerComponent: DataTableHeaderComponent;
@@ -952,7 +960,7 @@ export class DatatableComponent<TRow = any>
    *
    */
   recalculateDims(): void {
-    const dims = this.dimensionsHelper.getDimensions(this.element);
+    const dims = this.element.getBoundingClientRect();
     this._innerWidth = Math.floor(dims.width);
 
     if (this.scrollbarV) {

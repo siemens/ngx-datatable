@@ -51,7 +51,7 @@ import {
           >
             <div style="padding-left:5px;height: 100%; display:flex;align-items: center;">
               <a
-                href="#"
+                href="javascript:void(0)"
                 [class.datatable-icon-right]="!expanded"
                 [class.datatable-icon-down]="expanded"
                 title="Expand/Collapse Group"
@@ -87,6 +87,7 @@ import {
                 name="{{ rowIndex }}"
                 value="0"
                 class="expectedpayment"
+                [attr.aria-label]="'ex pay1' + rowIndex"
                 (change)="checkGroup($event, row, rowIndex, group)"
                 [checked]="row.exppayyes === 1"
               />
@@ -98,6 +99,7 @@ import {
                 name="{{ rowIndex }}"
                 value="1"
                 class="expectedpayment2"
+                [attr.aria-label]="'ex pay2' + rowIndex"
                 (change)="checkGroup($event, row, rowIndex, group)"
                 [checked]="row.exppayno === 1"
               />
@@ -109,6 +111,7 @@ import {
                 name="{{ rowIndex }}"
                 value="2"
                 class="expectedpayment3"
+                [attr.aria-label]="'ex pay3' + rowIndex"
                 (change)="checkGroup($event, row, rowIndex, group)"
                 [checked]="row.exppaypending === 1"
               />
@@ -135,10 +138,10 @@ import {
             let-rowHeight="rowHeight"
           >
             <input
-              autofocus
               (blur)="updateValue($event, 'comment', rowIndex)"
               type="text"
               name="comment"
+              aria-label="comment"
               [value]="value"
             />
           </ng-template>

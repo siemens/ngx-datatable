@@ -20,7 +20,7 @@ export class MockServerResultsService {
   public getResults(page: Page): Observable<PagedData<Employee>> {
     return of(companyData)
       .pipe(map(d => this.getPagedData(page)))
-      .pipe(delay(1000 * Math.random()));
+      .pipe(delay(1500 * Math.random()));
   }
 
   /**

@@ -99,13 +99,6 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
   @Input() verticalScrollVisible = false;
 
   @Input() disable$: BehaviorSubject<boolean>;
-  @Input()
-  set offsetX(val: number) {
-    this._offsetX = val;
-  }
-  get offsetX() {
-    return this._offsetX;
-  }
 
   @HostBinding('class')
   get cssClass() {
@@ -155,7 +148,6 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
   _element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   _columnGroupWidths: ColumnGroupWidth;
   _columnsByPin: PinnedColumns[];
-  _offsetX: number;
   _columns: TableColumn[];
   _innerWidth: number;
 

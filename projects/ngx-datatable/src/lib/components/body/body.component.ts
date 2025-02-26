@@ -84,7 +84,6 @@ import { ProgressBarComponent } from './progress-bar.component';
           @if (summaryRow && summaryPosition === 'top') {
             <datatable-summary-row
               [rowHeight]="summaryHeight"
-              [offsetX]="offsetX"
               [innerWidth]="innerWidth"
               [rows]="rows"
               [columns]="columns"
@@ -130,7 +129,6 @@ import { ProgressBarComponent } from './progress-bar.component';
                     [disable$]="rowWrapper.disable$"
                     [isSelected]="selector.getRowSelected(group)"
                     [innerWidth]="innerWidth"
-                    [offsetX]="offsetX"
                     [columns]="columns"
                     [rowHeight]="getRowHeight(group)"
                     [row]="group"
@@ -164,7 +162,6 @@ import { ProgressBarComponent } from './progress-bar.component';
                     [disable$]="rowWrapper.disable$"
                     [isSelected]="selector.getRowSelected(group)"
                     [innerWidth]="innerWidth"
-                    [offsetX]="offsetX"
                     [columns]="columns"
                     [rowHeight]="getRowHeight(group)"
                     [row]="group"
@@ -199,7 +196,6 @@ import { ProgressBarComponent } from './progress-bar.component';
                     #rowElement
                     [isSelected]="selector.getRowSelected(row)"
                     [innerWidth]="innerWidth"
-                    [offsetX]="offsetX"
                     [columns]="columns"
                     [rowHeight]="getRowHeight(row)"
                     [row]="row"
@@ -228,7 +224,6 @@ import { ProgressBarComponent } from './progress-bar.component';
               role="row"
               [ngStyle]="bottomSummaryRowsStyles()"
               [rowHeight]="summaryHeight"
-              [offsetX]="offsetX"
               [innerWidth]="innerWidth"
               [rows]="rows"
               [columns]="columns"

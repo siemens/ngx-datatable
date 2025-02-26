@@ -34,7 +34,6 @@ function noopSumFunc(cells: any[]): void {
       <datatable-body-row
         tabindex="-1"
         [innerWidth]="innerWidth"
-        [offsetX]="offsetX"
         [columns]="_internalColumns"
         [rowHeight]="rowHeight"
         [row]="summaryRow"
@@ -54,7 +53,6 @@ export class DataTableSummaryRowComponent implements OnChanges {
   @Input() columns: TableColumn[];
 
   @Input() rowHeight: number;
-  @Input() offsetX: number;
   @Input() innerWidth: number;
 
   _internalColumns: ISummaryColumn[];

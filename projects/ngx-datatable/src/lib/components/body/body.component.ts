@@ -23,7 +23,7 @@ import { TableColumn } from '../../types/table-column.type';
 import { DatatableGroupHeaderDirective } from './body-group-header.directive';
 import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive';
 import { DataTableBodyRowComponent } from './body-row.component';
-import { ColumnGroupWidth } from '../../types/internal.types';
+import { ColumnGroupWidth, RowIndex } from '../../types/internal.types';
 import {
   ActivateEvent,
   DragEventData,
@@ -39,7 +39,6 @@ import { DataTableRowWrapperComponent } from './body-row-wrapper.component';
 import { DataTableSummaryRowComponent } from './summary/summary-row.component';
 import { DataTableSelectionComponent } from './selection.component';
 import { DataTableGhostLoaderComponent } from './ghost-loader/ghost-loader.component';
-import { ProgressBarComponent } from './progress-bar.component';
 
 @Component({
   selector: 'datatable-body',
@@ -107,7 +106,7 @@ import { ProgressBarComponent } from './progress-bar.component';
               [row]="group"
               [disableCheck]="disableRowCheck"
               [expanded]="getRowExpanded(group)"
-              [rowIndex]="getRowIndex(group && group[i])"
+              [rowIndex]="getRowIndex(group && group[i])?.index ?? 0"
               [selected]="selected"
               (rowContextmenu)="rowContextmenu.emit($event)"
             >
@@ -251,7 +250,6 @@ import { ProgressBarComponent } from './progress-bar.component';
   },
   standalone: true,
   imports: [
-    ProgressBarComponent,
     DataTableGhostLoaderComponent,
     DataTableSelectionComponent,
     ScrollerComponent,
@@ -428,7 +426,7 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   columnGroupWidths: ColumnGroupWidth;
   rowTrackingFn: TrackByFunction<RowOrGroup<TRow>>;
   listener: any;
-  rowIndexes = new WeakMap<any, any>();
+  rowIndexes = new WeakMap<RowOrGroup<TRow>, RowIndex>();
   rowExpansions: any[] = [];
 
   _rows: TRow[];
@@ -454,8 +452,7 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
       if (this.trackByProp) {
         return row[this.trackByProp];
       } else {
-        const idx = this.getRowIndex(row);
-        return idx;
+        return this.getRowIndex(row)?.index;
       }
     };
   }
@@ -595,13 +592,12 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
       while (rowIndex < last && rowIndex < this.groupedRows.length) {
         // Add the groups into this page
         const group = this.groupedRows[rowIndex];
-        this.rowIndexes.set(group, rowIndex);
+        this.rowIndexes.set(group, { index: rowIndex });
 
         if (group.value) {
           // add indexes for each group item
-          group.value.forEach((g: any, i: number) => {
-            const _idx = `${rowIndex}-${i}`;
-            this.rowIndexes.set(g, _idx);
+          group.value.forEach((g: TRow, i: number) => {
+            this.rowIndexes.set(g, { index: rowIndex, indexInGroup: i });
           });
         }
         temp[idx] = group;
@@ -616,7 +612,7 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
 
         if (row) {
           // add indexes for each row
-          this.rowIndexes.set(row, rowIndex);
+          this.rowIndexes.set(row, { index: rowIndex });
           temp[idx] = row;
         } else if (this.ghostLoadingIndicator && this.virtualization) {
           temp[idx] = undefined;
@@ -725,10 +721,12 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
         if (Array.isArray(rows)) {
           // Get the latest row rowindex in a group
           const row = rows[rows.length - 1];
-          idx = row ? this.getRowIndex(row) : 0;
+          // The group row, which has always a numeric index
+          idx = row ? this.getRowIndex(row).index : 0;
         } else {
           if (rows) {
-            idx = this.getRowIndex(rows);
+            // normal rows always have a numeric index
+            idx = this.getRowIndex(rows).index;
           } else {
             // When ghost cells are enabled use index to get the position of them
             idx = this.indexes().first + index;
@@ -867,8 +865,8 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
     // If the detailRowHeight is auto --> only in case of non-virtualized scroll
     if (this.scrollbarV && this.virtualization) {
       const detailRowHeight = this.getDetailRowHeight(row) * (expanded ? -1 : 1);
-      // const idx = this.rowIndexes.get(row) || 0;
-      const idx = this.getRowIndex(row);
+      // This is hopefully only called with non-grouped rows. Otherwise, the heightCache fails.
+      const idx = this.getRowIndex(row).index;
       this.rowHeightsCache().update(idx, detailRowHeight);
     }
 
@@ -949,8 +947,8 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
   /**
    * Gets the row index given a row
    */
-  getRowIndex(row: RowOrGroup<TRow>): number {
-    return this.rowIndexes.get(row) || 0;
+  getRowIndex(row: RowOrGroup<TRow>): RowIndex | undefined {
+    return this.rowIndexes.get(row);
   }
 
   onTreeAction(row: TRow) {

@@ -37,7 +37,7 @@ function noopSumFunc(cells: any[]): void {
         [columns]="_internalColumns"
         [rowHeight]="rowHeight"
         [row]="summaryRow"
-        [rowIndex]="-1"
+        [rowIndex]="{ index: -1 }"
       >
       </datatable-body-row>
     }

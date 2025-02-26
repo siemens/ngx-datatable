@@ -20,6 +20,12 @@ export class DatatableGroupHeaderDirective<TRow = any> {
   @Input('template')
   _templateInput: TemplateRef<GroupContext<TRow>>;
 
+  /**
+   * aria label text for group header checkbox
+   * required for accessibility
+   */
+  @Input() headerCheckboxAriaLabel = 'Select row group';
+
   @ContentChild(DatatableGroupHeaderTemplateDirective, { read: TemplateRef, static: true })
   _templateQuery: TemplateRef<GroupContext<TRow>>;
 

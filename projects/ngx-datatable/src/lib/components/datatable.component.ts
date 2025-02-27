@@ -444,6 +444,11 @@ export class DatatableComponent<TRow = any>
   @Input() treeToRelation: string;
 
   /**
+   * The key of the row used to store the tree status, can be nested by separating keys with "."
+   */
+  @Input() treeStatusKey = 'treeStatus';
+
+  /**
    * A flag for switching summary row on / off
    */
   @Input({ transform: booleanAttribute }) summaryRow = false;
@@ -862,7 +867,8 @@ export class DatatableComponent<TRow = any>
       this._internalRows = groupRowsByParents(
         this._internalRows,
         optionalGetterForProp(this.treeFromRelation),
-        optionalGetterForProp(this.treeToRelation)
+        optionalGetterForProp(this.treeToRelation),
+        this.treeStatusKey
       );
 
       if (this._rows && this._groupRowsBy) {
@@ -1205,7 +1211,8 @@ export class DatatableComponent<TRow = any>
     this._internalRows = groupRowsByParents(
       this._internalRows,
       optionalGetterForProp(this.treeFromRelation),
-      optionalGetterForProp(this.treeToRelation)
+      optionalGetterForProp(this.treeToRelation),
+      this.treeStatusKey
     );
 
     // Always go to first page when sorting to see the newly sorted data
@@ -1306,7 +1313,8 @@ export class DatatableComponent<TRow = any>
         this._internalRows = groupRowsByParents(
           this._internalRows,
           optionalGetterForProp(this.treeFromRelation),
-          optionalGetterForProp(this.treeToRelation)
+          optionalGetterForProp(this.treeToRelation),
+          this.treeStatusKey
         );
       }
     }

@@ -79,7 +79,11 @@
       </ng-content>
       <ng-content select="[empty-content]" ngProjectAs="[empty-content]">
         <div role="row">
-          <div role="cell" class="empty-row" [innerHTML]="messages.emptyMessage"></div>
+          <div
+            role="cell"
+            class="empty-row"
+            [innerHTML]="messages.emptyMessage ?? 'No data to display'"
+          ></div>
         </div>
       </ng-content>
     </datatable-body>
@@ -91,12 +95,12 @@
       [offset]="offset"
       [footerHeight]="footerHeight"
       [footerTemplate]="footer"
-      [totalMessage]="messages.totalMessage"
+      [totalMessage]="messages.totalMessage ?? 'total'"
       [pagerLeftArrowIcon]="cssClasses.pagerLeftArrow"
       [pagerRightArrowIcon]="cssClasses.pagerRightArrow"
       [pagerPreviousIcon]="cssClasses.pagerPrevious"
       [selectedCount]="selected.length"
-      [selectedMessage]="!!selectionType && messages.selectedMessage"
+      [selectedMessage]="!!selectionType && (messages.selectedMessage ?? 'selected')"
       [pagerNextIcon]="cssClasses.pagerNext"
       (page)="onFooterPage($event)"
     >

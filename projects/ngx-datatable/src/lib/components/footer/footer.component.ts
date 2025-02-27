@@ -28,7 +28,7 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
           @if (selectedMessage) {
             <span> {{ selectedCount?.toLocaleString() }} {{ selectedMessage }} / </span>
           }
-          {{ rowCount?.toLocaleString() }} {{ totalMessage }}
+          {{ rowCount?.toLocaleString() }} {{ totalMessage ?? 'total' }}
         </div>
         <datatable-pager
           [pagerLeftArrowIcon]="pagerLeftArrowIcon"
@@ -61,7 +61,7 @@ export class DataTableFooterComponent {
   @Input() pagerRightArrowIcon: string;
   @Input() pagerPreviousIcon: string;
   @Input() pagerNextIcon: string;
-  @Input() totalMessage: string;
+  @Input() totalMessage?: string;
   @Input() footerTemplate: DatatableFooterDirective;
 
   @Input() selectedCount = 0;

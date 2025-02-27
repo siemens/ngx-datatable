@@ -370,17 +370,7 @@ export class DatatableComponent<TRow = any>
    * totalMessage     [default] = 'total'
    * selectedMessage  [default] = 'selected'
    */
-  @Input() messages: Partial<INgxDatatableConfig['messages']> = {
-    // Message to show when array is presented
-    // but contains no values
-    emptyMessage: 'No data to display',
-
-    // Footer total message
-    totalMessage: 'total',
-
-    // Footer selected message
-    selectedMessage: 'selected'
-  };
+  @Input() messages: Partial<INgxDatatableConfig['messages']> = {};
 
   /**
    * A function which is called with the row and should return either:

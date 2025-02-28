@@ -142,8 +142,8 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
     return this._columnGroupWidths.total;
   }
 
-  @Output() activate: EventEmitter<ActivateEvent<TRow>> = new EventEmitter();
-  @Output() treeAction: EventEmitter<any> = new EventEmitter();
+  @Output() activate = new EventEmitter<ActivateEvent<TRow>>();
+  @Output() treeAction = new EventEmitter<any>();
 
   _element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   _columnGroupWidths: ColumnGroupWidth;

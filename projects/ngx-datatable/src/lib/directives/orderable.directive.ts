@@ -34,8 +34,8 @@ interface OrderPosition {
 export class OrderableDirective implements AfterContentInit, OnDestroy {
   private document = inject(DOCUMENT);
 
-  @Output() reorder: EventEmitter<OrderableReorderEvent> = new EventEmitter();
-  @Output() targetChanged: EventEmitter<TargetChangedEvent> = new EventEmitter();
+  @Output() reorder = new EventEmitter<OrderableReorderEvent>();
+  @Output() targetChanged = new EventEmitter<TargetChangedEvent>();
 
   @ContentChildren(DraggableDirective, { descendants: true })
   draggables: QueryList<DraggableDirective>;
@@ -147,7 +147,6 @@ export class OrderableDirective implements AfterContentInit, OnDestroy {
     const y = event.y || event.clientY;
     const targets = this.document.elementsFromPoint(x, y);
 
-    // eslint-disable-next-line guard-for-in
     for (const id in this.positions) {
       // current column position which throws event.
       const pos = this.positions[id];
@@ -164,7 +163,7 @@ export class OrderableDirective implements AfterContentInit, OnDestroy {
     }
   }
 
-  private createMapDiffs(): { [key: string]: DraggableDirective } {
+  private createMapDiffs(): Record<string, DraggableDirective> {
     return this.draggables.toArray().reduce((acc, curr) => {
       acc[curr.dragModel.$$id] = curr;
       return acc;

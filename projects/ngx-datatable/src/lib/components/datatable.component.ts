@@ -476,37 +476,37 @@ export class DatatableComponent<TRow = any>
   /**
    * Body was scrolled typically in a `scrollbarV:true` scenario.
    */
-  @Output() scroll: EventEmitter<ScrollEvent> = new EventEmitter();
+  @Output() scroll = new EventEmitter<ScrollEvent>();
 
   /**
    * A cell or row was focused via keyboard or mouse click.
    */
-  @Output() activate: EventEmitter<ActivateEvent<TRow>> = new EventEmitter();
+  @Output() activate = new EventEmitter<ActivateEvent<TRow>>();
 
   /**
    * A cell or row was selected.
    */
-  @Output() select: EventEmitter<{ selected: TRow[] }> = new EventEmitter();
+  @Output() select = new EventEmitter<{ selected: TRow[] }>();
 
   /**
    * Column sort was invoked.
    */
-  @Output() sort: EventEmitter<SortEvent> = new EventEmitter();
+  @Output() sort = new EventEmitter<SortEvent>();
 
   /**
    * The table was paged either triggered by the pager or the body scroll.
    */
-  @Output() page: EventEmitter<PageEvent> = new EventEmitter();
+  @Output() page = new EventEmitter<PageEvent>();
 
   /**
    * Columns were re-ordered.
    */
-  @Output() reorder: EventEmitter<ReorderEvent> = new EventEmitter();
+  @Output() reorder = new EventEmitter<ReorderEvent>();
 
   /**
    * Column was resized.
    */
-  @Output() resize: EventEmitter<ColumnResizeEvent> = new EventEmitter();
+  @Output() resize = new EventEmitter<ColumnResizeEvent>();
 
   /**
    * The context menu was invoked on the table.
@@ -522,14 +522,14 @@ export class DatatableComponent<TRow = any>
   /**
    * A row was expanded ot collapsed for tree
    */
-  @Output() treeAction: EventEmitter<{ row: TRow; rowIndex: number }> = new EventEmitter();
+  @Output() treeAction = new EventEmitter<{ row: TRow; rowIndex: number }>();
 
   /**
    * Emits HTML5 native drag events.
    * Only emits dragenter, dragover, drop events by default.
    * Set {@link rowDraggble} to true for dragstart and dragend.
    */
-  @Output() rowDragEvents: EventEmitter<DragEventData> = new EventEmitter();
+  @Output() rowDragEvents = new EventEmitter<DragEventData>();
 
   /**
    * CSS class applied if the header height if fixed height.
@@ -906,7 +906,7 @@ export class DatatableComponent<TRow = any>
    */
   recalculateColumns(
     columns: TableColumn[] = this._internalColumns,
-    forceIdx: number = -1,
+    forceIdx = -1,
     allowBleed: boolean = this.scrollbarH
   ): TableColumn[] | undefined {
     let width = this._innerWidth;

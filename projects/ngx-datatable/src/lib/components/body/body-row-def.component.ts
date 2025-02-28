@@ -76,9 +76,9 @@ export class DatatableRowDefInternalDirective implements OnInit {
   }
 }
 const RowDefToken = new InjectionToken<DatatableRowDefInternalDirective>('RowDef');
-type RowDefContext = {
+interface RowDefContext {
   template: TemplateRef<unknown>;
   rowTemplate: TemplateRef<unknown>;
   row: any;
   index: number;
-};
+}

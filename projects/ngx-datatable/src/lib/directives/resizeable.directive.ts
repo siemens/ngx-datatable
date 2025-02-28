@@ -27,8 +27,8 @@ export class ResizeableDirective implements OnDestroy, AfterViewInit {
   @Input({ transform: numberAttribute }) minWidth: number;
   @Input({ transform: numberAttribute }) maxWidth: number;
 
-  @Output() resize: EventEmitter<any> = new EventEmitter();
-  @Output() resizing: EventEmitter<any> = new EventEmitter();
+  @Output() resize = new EventEmitter<any>();
+  @Output() resizing = new EventEmitter<any>();
 
   element = inject(ElementRef).nativeElement;
   subscription: Subscription;

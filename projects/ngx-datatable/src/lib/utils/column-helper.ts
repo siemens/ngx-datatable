@@ -41,32 +41,32 @@ export function setColumnDefaults(columns: TableColumn[], defaultColumnWidth = 1
       column.name = ''; // Fixes IE and Edge displaying `null`
     }
 
-    if (!column.hasOwnProperty('resizeable')) {
+    if (!Object.hasOwn(column, 'resizeable')) {
       column.resizeable = true;
     }
 
-    if (!column.hasOwnProperty('sortable')) {
+    if (!Object.hasOwn(column, 'sortable')) {
       column.sortable = true;
     }
 
-    if (!column.hasOwnProperty('draggable')) {
+    if (!Object.hasOwn(column, 'draggable')) {
       column.draggable = true;
     }
 
-    if (!column.hasOwnProperty('canAutoResize')) {
+    if (!Object.hasOwn(column, 'canAutoResize')) {
       column.canAutoResize = true;
     }
 
-    if (!column.hasOwnProperty('width')) {
+    if (!Object.hasOwn(column, 'width')) {
       column.width = defaultColumnWidth;
     }
 
-    if (!column.hasOwnProperty('isTreeColumn')) {
+    if (!Object.hasOwn(column, 'isTreeColumn')) {
       column.isTreeColumn = false;
     } else {
       if (column.isTreeColumn && !treeColumnFound) {
         // If the first column with isTreeColumn is true found
-        // we mark that treeCoulmn is found
+        // we mark that treeColumn is found
         treeColumnFound = true;
       } else {
         // After that isTreeColumn property for any other column

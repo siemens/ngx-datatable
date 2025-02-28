@@ -113,8 +113,8 @@ export class DataTableHeaderCellComponent implements OnInit {
     return this._sorts;
   }
 
-  @Output() sort: EventEmitter<InnerSortEvent> = new EventEmitter();
-  @Output() select: EventEmitter<void> = new EventEmitter();
+  @Output() sort = new EventEmitter<InnerSortEvent>();
+  @Output() select = new EventEmitter<void>();
   @Output() columnContextmenu = new EventEmitter<{ event: MouseEvent; column: TableColumn }>(false);
 
   @HostBinding('class')

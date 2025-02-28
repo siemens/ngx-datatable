@@ -86,7 +86,7 @@ export class DataTablePagerComponent {
     return Math.max(count || 0, 1);
   }
 
-  @Output() change: EventEmitter<PagerPageEvent> = new EventEmitter();
+  @Output() change = new EventEmitter<PagerPageEvent>();
 
   _count = 0;
   _page = 1;
@@ -143,7 +143,6 @@ export class DataTablePagerComponent {
 
     for (let num = startPage; num <= endPage; num++) {
       pages.push({
-        // eslint-disable-next-line id-blacklist
         number: num,
         text: num.toString()
       });

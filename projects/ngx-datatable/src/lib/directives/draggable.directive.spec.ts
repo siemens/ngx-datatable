@@ -56,6 +56,7 @@ describe('DraggableDirective', () => {
         element.classList.add('draggable');
         mouseDown = {
           target: element,
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           preventDefault: () => {}
         } as MouseEvent;
       });

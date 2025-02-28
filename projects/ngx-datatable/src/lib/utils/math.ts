@@ -34,7 +34,7 @@ export function adjustColumnWidths(allColumns: TableColumn[], expectedWidth: num
 function scaleColumns(colsByGroup: TableColumnGroup, maxWidth: number, totalFlexGrow: number) {
   // calculate total width and flexgrow points for columns that can be resized
   for (const attr in colsByGroup) {
-    if (colsByGroup.hasOwnProperty(attr)) {
+    if (Object.hasOwn(colsByGroup, attr)) {
       for (const column of colsByGroup[attr]) {
         if (column.$$oldWidth) {
           // when manually resized, switch off auto-resize
@@ -59,7 +59,7 @@ function scaleColumns(colsByGroup: TableColumnGroup, maxWidth: number, totalFlex
     remainingWidth = 0;
 
     for (const attr in colsByGroup) {
-      if (colsByGroup.hasOwnProperty(attr)) {
+      if (Object.hasOwn(colsByGroup, attr)) {
         for (const column of colsByGroup[attr]) {
           // if the column can be resize and it hasn't reached its minimum width yet
           if (column.canAutoResize && !hasMinWidth[column.prop]) {
@@ -126,7 +126,7 @@ export function forceFillColumnWidths(
   expectedWidth: number,
   startIdx: number,
   allowBleed: boolean,
-  defaultColWidth: number = 150,
+  defaultColWidth = 150,
   verticalScrollWidth = 0
 ) {
   const columnsToResize = allColumns
@@ -186,7 +186,7 @@ function removeProcessedColumns(columnsToResize: TableColumn[], columnsProcessed
 /**
  * Gets the width of the columns
  */
-function getContentWidth(allColumns: TableColumn[], defaultColWidth: number = 150): number {
+function getContentWidth(allColumns: TableColumn[], defaultColWidth = 150): number {
   let contentWidth = 0;
 
   for (const column of allColumns) {

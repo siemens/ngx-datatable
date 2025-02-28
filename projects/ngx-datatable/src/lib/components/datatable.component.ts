@@ -474,6 +474,18 @@ export class DatatableComponent<TRow = any>
   @Input({ transform: booleanAttribute }) enableClearingSortState = false;
 
   /**
+   * aria label text for header checkbox
+   * required for accessibility
+   */
+  @Input() headerCheckboxAriaLabel = 'Select all rows';
+
+  /**
+   * aria label text for row selection checkbox
+   * required for accessibility
+   */
+  @Input() rowCheckboxAriaLabel = 'Select row';
+
+  /**
    * Body was scrolled typically in a `scrollbarV:true` scenario.
    */
   @Output() scroll: EventEmitter<ScrollEvent> = new EventEmitter();

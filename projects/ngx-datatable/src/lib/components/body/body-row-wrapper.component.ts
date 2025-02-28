@@ -45,6 +45,7 @@ import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive'
                 <input
                   #select
                   type="checkbox"
+                  [attr.aria-label]="groupHeader.headerCheckboxAriaLabel"
                   [checked]="selectedGroupRows().length === group().value.length"
                   (change)="onCheckboxChange(select.checked)"
                 />

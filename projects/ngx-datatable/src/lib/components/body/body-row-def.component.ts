@@ -10,6 +10,8 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import { RowOrGroup } from '../../types/public.types';
+import { BehaviorSubject } from 'rxjs';
 
 /**
  * This component is passed as ng-template and rendered by BodyComponent.
@@ -21,7 +23,7 @@ import { NgTemplateOutlet } from '@angular/common';
   template: `@if (rowDef.rowDefInternal.rowTemplate) {
     <ng-container
       [ngTemplateOutlet]="rowDef.rowDefInternal.rowTemplate"
-      [ngTemplateOutletContext]="rowDef"
+      [ngTemplateOutletContext]="rowContext"
     />
   }`,
   standalone: true,
@@ -29,6 +31,10 @@ import { NgTemplateOutlet } from '@angular/common';
 })
 export class DatatableRowDefComponent {
   rowDef = inject(RowDefToken);
+  rowContext = {
+    ...this.rowDef.rowDefInternal,
+    disable$: this.rowDef.rowDefInternalDisable$
+  };
 }
 
 @Directive({
@@ -55,6 +61,7 @@ export class DatatableRowDefInternalDirective implements OnInit {
   vc = inject(ViewContainerRef);
 
   @Input() rowDefInternal?: RowDefContext;
+  @Input() rowDefInternalDisable$?: BehaviorSubject<boolean>;
 
   ngOnInit(): void {
     this.vc.createEmbeddedView(
@@ -81,4 +88,5 @@ interface RowDefContext {
   rowTemplate: TemplateRef<unknown>;
   row: any;
   index: number;
+  group: RowOrGroup<unknown>;
 }

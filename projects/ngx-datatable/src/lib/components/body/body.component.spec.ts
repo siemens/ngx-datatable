@@ -3,10 +3,10 @@ import { DataTableBodyComponent } from './body.component';
 import { DataTableBodyRowComponent } from './body-row.component';
 import { DataTableRowWrapperComponent } from './body-row-wrapper.component';
 import { DataTableBodyCellComponent } from './body-cell.component';
-import { DataTableSelectionComponent } from './selection.component';
+import { DataTableSelectionDirective } from './selection.directive';
 import { DataTableSummaryRowComponent } from './summary/summary-row.component';
 import { ProgressBarComponent } from './progress-bar.component';
-import { ScrollerComponent } from './scroller.component';
+import { ScrollerDirective } from './scroller.directive';
 import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 
 describe('DataTableBodyComponent', () => {
@@ -21,10 +21,10 @@ describe('DataTableBodyComponent', () => {
         DataTableBodyRowComponent,
         DataTableRowWrapperComponent,
         DataTableBodyCellComponent,
-        DataTableSelectionComponent,
+        DataTableSelectionDirective,
         DataTableSummaryRowComponent,
         ProgressBarComponent,
-        ScrollerComponent
+        ScrollerDirective
       ],
       providers: [ScrollbarHelper]
     });

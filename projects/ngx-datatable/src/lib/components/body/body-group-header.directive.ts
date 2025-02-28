@@ -30,7 +30,7 @@ export class DatatableGroupHeaderDirective<TRow = any> {
   /**
    * Track toggling of group visibility
    */
-  @Output() toggle: EventEmitter<GroupToggleEvents<TRow>> = new EventEmitter();
+  @Output() toggle = new EventEmitter<GroupToggleEvents<TRow>>();
 
   /**
    * Toggle the expansion of a group

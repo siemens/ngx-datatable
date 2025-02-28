@@ -32,7 +32,7 @@ export class VisibilityDirective implements OnInit, OnDestroy {
   @HostBinding('class.visible')
   isVisible = false;
 
-  @Output() visible: EventEmitter<any> = new EventEmitter();
+  @Output() visible = new EventEmitter<any>();
 
   timeout: any;
 

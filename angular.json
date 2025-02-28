@@ -132,7 +132,10 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": [
+              "projects/ngx-datatable/**/*.ts",
+              "projects/ngx-datatable/**/*.html"
+            ]
           }
         }
       }

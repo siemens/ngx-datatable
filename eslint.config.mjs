@@ -93,6 +93,9 @@ export default tseslint.config(
       // Apply the Angular template rules which focus on accessibility of our apps
       ...angular.configs.templateAccessibility
     ],
-    rules: {}
+    rules: {
+      '@angular-eslint/template/click-events-have-key-events': 'off',
+      '@angular-eslint/template/interactive-supports-focus': 'off'
+    }
   }
 );

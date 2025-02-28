@@ -22,11 +22,9 @@ export class LongPressDirective implements OnDestroy {
   @Input() pressModel: TableColumn;
   @Input({ transform: numberAttribute }) duration = 500;
 
-  @Output() longPressStart: EventEmitter<{ event: MouseEvent; model: TableColumn }> =
-    new EventEmitter();
-  @Output() longPressing: EventEmitter<{ event: MouseEvent; model: TableColumn }> =
-    new EventEmitter();
-  @Output() longPressEnd: EventEmitter<{ model: TableColumn }> = new EventEmitter();
+  @Output() longPressStart = new EventEmitter<{ event: MouseEvent; model: TableColumn }>();
+  @Output() longPressing = new EventEmitter<{ event: MouseEvent; model: TableColumn }>();
+  @Output() longPressEnd = new EventEmitter<{ model: TableColumn }>();
 
   pressing: boolean;
   isLongPressing: boolean;

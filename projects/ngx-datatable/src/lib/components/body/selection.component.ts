@@ -18,8 +18,8 @@ export class DataTableSelectionComponent<TRow = any> {
   @Input() selectCheck: (value: TRow, index: number, array: TRow[]) => boolean;
   @Input() disableCheck: (row: TRow) => boolean;
 
-  @Output() activate: EventEmitter<ActivateEvent<TRow>> = new EventEmitter();
-  @Output() select: EventEmitter<{ selected: TRow[] }> = new EventEmitter();
+  @Output() activate = new EventEmitter<ActivateEvent<TRow>>();
+  @Output() select = new EventEmitter<{ selected: TRow[] }>();
 
   prevIndex: number;
 

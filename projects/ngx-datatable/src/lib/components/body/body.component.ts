@@ -389,13 +389,13 @@ export class DataTableBodyComponent<TRow extends { treeStatus?: TreeStatus } = a
 
   @Input() verticalScrollVisible = false;
 
-  @Output() scroll: EventEmitter<ScrollEvent> = new EventEmitter();
-  @Output() page: EventEmitter<number> = new EventEmitter();
-  @Output() activate: EventEmitter<ActivateEvent<TRow>> = new EventEmitter();
-  @Output() select: EventEmitter<{ selected: TRow[] }> = new EventEmitter();
-  @Output() detailToggle: EventEmitter<any> = new EventEmitter();
+  @Output() scroll = new EventEmitter<ScrollEvent>();
+  @Output() page = new EventEmitter<number>();
+  @Output() activate = new EventEmitter<ActivateEvent<TRow>>();
+  @Output() select = new EventEmitter<{ selected: TRow[] }>();
+  @Output() detailToggle = new EventEmitter<any>();
   @Output() rowContextmenu = new EventEmitter<{ event: MouseEvent; row: RowOrGroup<TRow> }>(false);
-  @Output() treeAction: EventEmitter<{ row: TRow }> = new EventEmitter();
+  @Output() treeAction = new EventEmitter<{ row: TRow }>();
 
   @ViewChild(ScrollerComponent) scroller: ScrollerComponent;
 

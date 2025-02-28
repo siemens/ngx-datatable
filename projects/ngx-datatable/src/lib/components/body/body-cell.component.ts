@@ -221,9 +221,9 @@ export class DataTableBodyCellComponent<TRow extends { level?: number } = any>
 
   @Input() ghostLoadingIndicator = false;
 
-  @Output() activate: EventEmitter<ActivateEvent<TRow>> = new EventEmitter();
+  @Output() activate = new EventEmitter<ActivateEvent<TRow>>();
 
-  @Output() treeAction: EventEmitter<any> = new EventEmitter();
+  @Output() treeAction = new EventEmitter<any>();
 
   @ViewChild('cellTemplate', { read: ViewContainerRef, static: true })
   cellTemplate: ViewContainerRef;

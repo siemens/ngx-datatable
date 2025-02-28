@@ -178,11 +178,11 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
     return this._offsetX;
   }
 
-  @Output() sort: EventEmitter<SortEvent> = new EventEmitter();
-  @Output() reorder: EventEmitter<ReorderEvent> = new EventEmitter();
-  @Output() resize: EventEmitter<ColumnResizeEvent> = new EventEmitter();
-  @Output() resizing: EventEmitter<ColumnResizeEvent> = new EventEmitter();
-  @Output() select: EventEmitter<void> = new EventEmitter();
+  @Output() sort = new EventEmitter<SortEvent>();
+  @Output() reorder = new EventEmitter<ReorderEvent>();
+  @Output() resize = new EventEmitter<ColumnResizeEvent>();
+  @Output() resizing = new EventEmitter<ColumnResizeEvent>();
+  @Output() select = new EventEmitter<void>();
   @Output() columnContextmenu = new EventEmitter<{ event: MouseEvent; column: TableColumn }>(false);
 
   _columnsByPin: PinnedColumns[];

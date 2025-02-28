@@ -17,6 +17,7 @@ import {
   DatatableRowDefComponent,
   DatatableRowDefDirective
 } from './components/body/body-row-def.component';
+import { DatatableBodyRowDirective } from './components/body/body-row.directive';
 
 @NgModule({
   imports: [
@@ -35,7 +36,8 @@ import {
     DatatableGroupHeaderTemplateDirective,
     DisableRowDirective,
     DatatableRowDefComponent,
-    DatatableRowDefDirective
+    DatatableRowDefDirective,
+    DatatableBodyRowDirective
   ],
   exports: [
     DatatableComponent,
@@ -53,7 +55,8 @@ import {
     DatatableGroupHeaderTemplateDirective,
     DisableRowDirective,
     DatatableRowDefComponent,
-    DatatableRowDefDirective
+    DatatableRowDefDirective,
+    DatatableBodyRowDirective
   ]
 })
 export class NgxDatatableModule {

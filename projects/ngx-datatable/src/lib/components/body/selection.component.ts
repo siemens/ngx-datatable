@@ -23,7 +23,7 @@ export class DataTableSelectionComponent<TRow = any> {
 
   prevIndex: number;
 
-  selectRow(event: KeyboardEvent | MouseEvent, index: number, row: TRow): void {
+  selectRow(event: Event, index: number, row: TRow): void {
     if (!this.selectEnabled) {
       return;
     }
@@ -34,12 +34,21 @@ export class DataTableSelectionComponent<TRow = any> {
     let selected: TRow[] = [];
 
     if (multi || chkbox || multiClick) {
-      if (event.shiftKey) {
+      if (event instanceof KeyboardEvent && event.shiftKey) {
         selected = selectRowsBetween([], this.rows, index, this.prevIndex);
-      } else if ((event as KeyboardEvent).key === 'a' && (event.ctrlKey || event.metaKey)) {
+      } else if (
+        event instanceof KeyboardEvent &&
+        event.key === 'a' &&
+        (event.ctrlKey || event.metaKey)
+      ) {
         // select all rows except dummy rows which are added for ghostloader in case of virtual scroll
         selected = this.rows.filter(rowItem => !!rowItem);
-      } else if (event.ctrlKey || event.metaKey || multiClick || chkbox) {
+      } else if (
+        ((event instanceof KeyboardEvent || event instanceof MouseEvent) &&
+          (event.ctrlKey || event.metaKey)) ||
+        multiClick ||
+        chkbox
+      ) {
         selected = selectRows([...this.selected], row, this.getRowSelectedIdx.bind(this));
       } else {
         selected = selectRows([], row, this.getRowSelectedIdx.bind(this));
@@ -74,10 +83,10 @@ export class DataTableSelectionComponent<TRow = any> {
 
     if (select) {
       this.selectRow(event, index, row);
-    } else if (type === 'keydown') {
-      if ((event as KeyboardEvent).key === Keys.return) {
+    } else if (event instanceof KeyboardEvent && event.type === 'keydown') {
+      if (event.key === Keys.return) {
         this.selectRow(event, index, row);
-      } else if ((event as KeyboardEvent).key === 'a' && (event.ctrlKey || event.metaKey)) {
+      } else if (event.key === 'a' && (event.ctrlKey || event.metaKey)) {
         this.selectRow(event, 0, this.rows[this.rows.length - 1]);
       } else {
         this.onKeyboardFocus(model);

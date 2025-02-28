@@ -17,7 +17,6 @@ import {
   DatatableRowDefComponent,
   DatatableRowDefDirective
 } from './components/body/body-row-def.component';
-
 @NgModule({
   imports: [
     DataTableFooterTemplateDirective,

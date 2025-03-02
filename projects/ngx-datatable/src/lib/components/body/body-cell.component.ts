@@ -30,6 +30,7 @@ import {
 } from '../../types/public.types';
 import { DataTableGhostLoaderComponent } from './ghost-loader/ghost-loader.component';
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { RowIndex } from '../../types/internal.types';
 
 @Component({
   selector: 'datatable-body-cell',
@@ -156,14 +157,15 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
     return this._expanded;
   }
 
-  @Input() set rowIndex(val: number) {
+  @Input() set rowIndex(val: RowIndex) {
     this._rowIndex = val;
-    this.cellContext.rowIndex = val;
+    this.cellContext.rowIndex = val?.index;
+    this.cellContext.rowInGroupIndex = val?.indexInGroup;
     this.checkValueUpdates();
     this.cd.markForCheck();
   }
 
-  get rowIndex(): number {
+  get rowIndex(): RowIndex {
     return this._rowIndex;
   }
 
@@ -313,7 +315,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
   private _row: TRow;
   private _group: TRow[];
   private _rowHeight: number;
-  private _rowIndex: number;
+  private _rowIndex: RowIndex;
   private _expanded: boolean;
   private _element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private _treeStatus: TreeStatus;
@@ -328,7 +330,8 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
       column: this.column,
       rowHeight: this.rowHeight,
       isSelected: this.isSelected,
-      rowIndex: this.rowIndex,
+      rowIndex: this.rowIndex?.index,
+      rowInGroupIndex: this.rowIndex?.indexInGroup,
       treeStatus: this.treeStatus,
       disable$: this.disable$,
       onTreeAction: () => this.onTreeAction()

@@ -72,6 +72,7 @@ export interface CellContext<TRow = any> {
   rowHeight: number;
   isSelected: boolean;
   rowIndex: number;
+  rowInGroupIndex?: number;
   treeStatus: TreeStatus;
   disable$: BehaviorSubject<boolean>;
   onTreeAction: () => void;

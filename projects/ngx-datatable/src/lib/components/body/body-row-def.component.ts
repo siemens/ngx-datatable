@@ -10,6 +10,8 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import { DataTableRowWrapperComponent } from './body-row-wrapper.component';
+import { RowOrGroup } from '../../types/public.types';
 
 /**
  * This component is passed as ng-template and rendered by BodyComponent.
@@ -21,7 +23,7 @@ import { NgTemplateOutlet } from '@angular/common';
   template: `@if (rowDef.rowDefInternal.rowTemplate) {
     <ng-container
       [ngTemplateOutlet]="rowDef.rowDefInternal.rowTemplate"
-      [ngTemplateOutletContext]="rowDef"
+      [ngTemplateOutletContext]="rowDef.rowDefInternal"
     />
   }`,
   standalone: true,
@@ -81,4 +83,6 @@ interface RowDefContext {
   rowTemplate: TemplateRef<unknown>;
   row: any;
   index: number;
+  rowWrapper: DataTableRowWrapperComponent;
+  group: RowOrGroup<unknown>;
 }

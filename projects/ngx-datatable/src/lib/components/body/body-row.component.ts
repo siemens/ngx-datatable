@@ -185,7 +185,15 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
       key === Keys.left ||
       key === Keys.right;
 
-    const isCtrlA = event.key === 'a' && (event.ctrlKey || event.metaKey);
+    const isCtrlA =
+      event.key === 'a' &&
+      (event.ctrlKey || event.metaKey) &&
+      (!event.target ||
+        !(event.target instanceof HTMLElement) ||
+        ((!event.target.closest('input') ||
+          event.target.closest('input[type=checkbox]') ||
+          event.target.closest('input[type=radio]')) &&
+          !event.target.closest('textarea')));
 
     if ((isAction && isTargetRow) || isCtrlA) {
       event.preventDefault();

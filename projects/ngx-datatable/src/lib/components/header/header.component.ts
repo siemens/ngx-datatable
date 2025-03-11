@@ -33,7 +33,6 @@ import {
 } from '../../types/internal.types';
 import { DraggableDirective } from '../../directives/draggable.directive';
 import { LongPressDirective } from '../../directives/long-press.directive';
-import { ResizeableDirective } from '../../directives/resizeable.directive';
 import { DataTableHeaderCellComponent } from './header-cell.component';
 import { OrderableDirective } from '../../directives/orderable.directive';
 
@@ -53,10 +52,8 @@ import { OrderableDirective } from '../../directives/orderable.directive';
           @for (column of colGroup.columns; track column.$$id) {
             <datatable-header-cell
               role="columnheader"
-              resizeable
-              [resizeEnabled]="column.resizeable"
-              (resize)="onColumnResized($event, column)"
-              (resizing)="onColumnResizing($event, column)"
+              (resize)="onColumnResized($event)"
+              (resizing)="onColumnResizing($event)"
               long-press
               [pressModel]="column"
               [pressEnabled]="reorderable && column.draggable"
@@ -99,7 +96,6 @@ import { OrderableDirective } from '../../directives/orderable.directive';
     OrderableDirective,
     NgStyle,
     DataTableHeaderCellComponent,
-    ResizeableDirective,
     LongPressDirective,
     DraggableDirective
   ]
@@ -246,11 +242,11 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
     return '100%';
   }
 
-  onColumnResized(width: number, column: TableColumn): void {
+  onColumnResized({ width, column }): void {
     this.resize.emit(this.makeResizeEvent(width, column));
   }
 
-  onColumnResizing(width: number, column: TableColumn): void {
+  onColumnResizing({ width, column }): void {
     this.resizing.emit(this.makeResizeEvent(width, column));
   }
 

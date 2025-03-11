@@ -29,7 +29,7 @@ import { DataTableBodyCellComponent } from './body-cell.component';
   selector: 'datatable-body-row',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    @for (colGroup of _columnsByPin; track colGroup.type; let i = $index) {
+    @for (colGroup of _columnsByPin; track colGroup.type) {
       <div
         class="datatable-row-{{ colGroup.type }} datatable-row-group"
         [style.width.px]="_columnGroupWidths[colGroup.type]"

@@ -19,7 +19,7 @@ import { id } from '../utils/id';
   standalone: true
 })
 class TestFixtureComponent {
-  draggables = [];
+  draggables: { $$id: string }[] = [];
   @ViewChildren(DraggableDirective) draggableDirectives!: QueryList<DraggableDirective>;
 }
 

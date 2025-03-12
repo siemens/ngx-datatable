@@ -83,7 +83,7 @@ function scaleColumns(colsByGroup: TableColumnGroup, maxWidth: number, totalFlex
     []
   );
 
-  const totalWidthAchieved = columns.reduce((acc, col) => acc + col.width, 0);
+  const totalWidthAchieved = columns.reduce((acc, col) => acc + (col.width ?? 0), 0);
   const delta = maxWidth - totalWidthAchieved;
 
   if (delta === 0) {
@@ -91,7 +91,10 @@ function scaleColumns(colsByGroup: TableColumnGroup, maxWidth: number, totalFlex
   }
 
   // adjust the first column that can be auto-resized respecting the min/max widths
-  for (const col of columns.filter(c => c.canAutoResize).sort((a, b) => a.width - b.width)) {
+  for (const col of columns
+    .filter(c => c.canAutoResize)
+    .sort((a, b) => (a.width ?? 0) - (b.width ?? 0))) {
+    col.width = col.width ?? 0;
     if (
       (delta > 0 && (!col.maxWidth || col.width + delta <= col.maxWidth)) ||
       (delta < 0 && (!col.minWidth || col.width + delta >= col.minWidth))

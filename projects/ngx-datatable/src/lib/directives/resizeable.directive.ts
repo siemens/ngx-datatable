@@ -31,7 +31,7 @@ export class ResizeableDirective implements OnDestroy, AfterViewInit {
   @Output() resizing = new EventEmitter<any>();
 
   element = inject(ElementRef).nativeElement;
-  subscription: Subscription;
+  subscription?: Subscription;
   private resizeHandle: HTMLElement;
 
   ngAfterViewInit(): void {

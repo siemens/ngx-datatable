@@ -127,7 +127,7 @@ export class DatatableComponent<TRow extends Row = any>
   /**
    * Gets the rows.
    */
-  get rows(): TRow[] {
+  get rows(): TRow[] | null | undefined {
     return this._rows;
   }
 
@@ -307,7 +307,7 @@ export class DatatableComponent<TRow extends Row = any>
     this._ghostLoadingIndicator = val;
     if (val && this.scrollbarV && !this.externalPaging) {
       // in case where we don't have predefined total page length
-      this.rows = [...(this.rows ?? []), undefined]; // undefined row will render ghost cell row at the end of the page
+      this.rows = [...(this.rows ?? []), undefined as any]; // undefined row will render ghost cell row at the end of the page
     }
   }
   get ghostLoadingIndicator(): boolean {
@@ -454,7 +454,7 @@ export class DatatableComponent<TRow extends Row = any>
    *      return row.name !== 'Ethel Price';
    *    }
    */
-  @Input() disableRowCheck: (row: TRow) => boolean;
+  @Input() disableRowCheck?: (row: TRow) => boolean;
 
   /**
    * A flag to enable drag behavior of native HTML5 drag and drop API on rows.
@@ -670,7 +670,7 @@ export class DatatableComponent<TRow extends Row = any>
    * Returns if all rows are selected.
    */
   get allRowsSelected(): boolean {
-    let allRowsSelected = this.rows && this.selected && this.selected.length === this.rows.length;
+    let allRowsSelected = !!this.rows && this.selected && this.selected.length === this.rows.length;
 
     if (this.bodyComponent && this.selectAllRowsOnPage) {
       const indexes = this.bodyComponent.indexes;
@@ -678,7 +678,7 @@ export class DatatableComponent<TRow extends Row = any>
       allRowsSelected = this.selected.length === rowsOnPage;
     }
 
-    return this.selected && this.rows && this.rows.length !== 0 && allRowsSelected;
+    return this.selected && !!this.rows && this.rows.length !== 0 && allRowsSelected;
   }
 
   element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
@@ -753,7 +753,7 @@ export class DatatableComponent<TRow extends Row = any>
         this.page.emit({
           count: this.count,
           pageSize: this.pageSize,
-          limit: this.limit,
+          limit: this.limit!,
           offset: 0
         });
       }
@@ -828,7 +828,7 @@ export class DatatableComponent<TRow extends Row = any>
       if (!map.has(key)) {
         map.set(key, [item]);
       } else {
-        map.get(key).push(item);
+        map.get(key)?.push(item);
       }
       i++;
     });
@@ -849,7 +849,7 @@ export class DatatableComponent<TRow extends Row = any>
       if (!this.ghostLoadingIndicator && !this.externalSorting && this._internalColumns) {
         this.sortInternalRows();
       } else {
-        this._internalRows = [...this.rows];
+        this._internalRows = [...(this.rows ?? [])];
       }
 
       // auto group by parent on new update
@@ -996,7 +996,7 @@ export class DatatableComponent<TRow extends Row = any>
       this.page.emit({
         count: this.count,
         pageSize: this.pageSize,
-        limit: this.limit,
+        limit: this.limit!,
         offset: this.offset
       });
     }
@@ -1021,7 +1021,7 @@ export class DatatableComponent<TRow extends Row = any>
     this.page.emit({
       count: this.count,
       pageSize: this.pageSize,
-      limit: this.limit,
+      limit: this.limit!,
       offset: this.offset
     });
 
@@ -1103,7 +1103,7 @@ export class DatatableComponent<TRow extends Row = any>
       return;
     }
 
-    let idx: number;
+    let idx: number | undefined;
     const cols = this._internalColumns.map((c, i) => {
       c = { ...c };
 
@@ -1119,7 +1119,9 @@ export class DatatableComponent<TRow extends Row = any>
       return c;
     });
 
-    this.recalculateColumns(cols, idx);
+    if (idx) {
+      this.recalculateColumns(cols, idx);
+    }
     this._internalColumns = cols;
 
     this.resize.emit({
@@ -1209,7 +1211,7 @@ export class DatatableComponent<TRow extends Row = any>
     this.page.emit({
       count: this.count,
       pageSize: this.pageSize,
-      limit: this.limit,
+      limit: this.limit!,
       offset: this.offset
     });
     this.sort.emit(event);
@@ -1235,7 +1237,7 @@ export class DatatableComponent<TRow extends Row = any>
     } else {
       let relevantRows;
       if (this.disableRowCheck) {
-        relevantRows = this.rows.filter(row => !this.disableRowCheck(row));
+        relevantRows = this.rows?.filter(row => !this.disableRowCheck?.(row));
       } else {
         relevantRows = this.rows;
       }
@@ -1267,10 +1269,12 @@ export class DatatableComponent<TRow extends Row = any>
   onTreeAction(event: { row: TRow }) {
     const row = event.row;
     // TODO: For duplicated items this will not work
-    const rowIndex = this._rows.findIndex(
+    const rowIndex = this._rows?.findIndex(
       r => r[this.treeToRelation] === event.row[this.treeToRelation]
     );
-    this.treeAction.emit({ row, rowIndex });
+    if (rowIndex) {
+      this.treeAction.emit({ row, rowIndex });
+    }
   }
 
   ngOnDestroy() {
@@ -1294,7 +1298,7 @@ export class DatatableComponent<TRow extends Row = any>
   private sortInternalRows(): void {
     // if there are no sort criteria we reset the rows with original rows
     if (!this.sorts || !this.sorts?.length) {
-      this._internalRows = this._rows;
+      this._internalRows = this._rows ?? [];
       // if there is any tree relation then re-group rows accordingly
       if (this.treeFromRelation && this.treeToRelation) {
         this._internalRows = groupRowsByParents(
@@ -1308,7 +1312,7 @@ export class DatatableComponent<TRow extends Row = any>
       const sortOnGroupHeader = this.sorts?.find(
         sortColumns => sortColumns.prop === this._groupRowsBy
       );
-      this.groupedRows = this.groupArrayBy(this._rows, this._groupRowsBy);
+      this.groupedRows = this.groupArrayBy(this._rows ?? [], this._groupRowsBy);
       this.groupedRows = sortGroupedRows(
         this.groupedRows,
         this._internalColumns,

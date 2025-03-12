@@ -32,7 +32,7 @@ export class LongPressDirective implements OnDestroy {
   mouseX = 0;
   mouseY = 0;
 
-  subscription: Subscription;
+  subscription?: Subscription;
 
   @HostBinding('class.press')
   get press(): boolean {
@@ -73,7 +73,7 @@ export class LongPressDirective implements OnDestroy {
         model: this.pressModel
       });
 
-      this.subscription.add(
+      this.subscription?.add(
         fromEvent(document, 'mousemove')
           .pipe(takeUntil(mouseup))
           .subscribe((mouseEvent: MouseEvent) => this.onMouseMove(mouseEvent))

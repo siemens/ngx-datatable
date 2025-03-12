@@ -19,6 +19,7 @@ import {
   OrderableReorderEvent,
   TargetChangedEvent
 } from '../types/internal.types';
+import { isNullOrUndefined } from '../utils/column-helper';
 
 interface OrderPosition {
   left: number;
@@ -42,7 +43,7 @@ export class OrderableDirective implements AfterContentInit, OnDestroy {
 
   positions: Record<string, OrderPosition>;
   differ: KeyValueDiffer<string, DraggableDirective> = inject(KeyValueDiffers).find({}).create();
-  lastDraggingIndex: number;
+  lastDraggingIndex?: number;
 
   ngAfterContentInit(): void {
     // HACK: Investigate Better Way
@@ -94,51 +95,58 @@ export class OrderableDirective implements AfterContentInit, OnDestroy {
     for (const dragger of this.draggables.toArray()) {
       const elm = dragger.element;
       const left = parseInt(elm.offsetLeft.toString(), 10);
-      this.positions[dragger.dragModel.$$id] = {
-        left,
-        right: left + parseInt(elm.offsetWidth.toString(), 10),
-        index: i++,
-        element: elm
-      };
+      if (dragger.dragModel.$$id) {
+        this.positions[dragger.dragModel.$$id] = {
+          left,
+          right: left + parseInt(elm.offsetWidth.toString(), 10),
+          index: i++,
+          element: elm
+        };
+      }
     }
   }
 
   onDragging({ element, model, event }: DraggableDragEvent): void {
-    const prevPos = this.positions[model.$$id];
-    const target = this.isTarget(model, event);
+    if (model.$$id) {
+      const prevPos = this.positions[model.$$id];
+      const target = this.isTarget(model, event);
 
-    if (target) {
-      if (this.lastDraggingIndex !== target.i) {
-        this.targetChanged.emit({
-          prevIndex: this.lastDraggingIndex,
-          newIndex: target.i,
-          initialIndex: prevPos.index
-        });
-        this.lastDraggingIndex = target.i;
+      if (!isNullOrUndefined(this.lastDraggingIndex)) {
+        if (target) {
+          if (this.lastDraggingIndex !== target.i) {
+            this.targetChanged.emit({
+              prevIndex: this.lastDraggingIndex,
+              newIndex: target.i,
+              initialIndex: prevPos.index
+            });
+            this.lastDraggingIndex = target.i;
+          }
+        } else if (this.lastDraggingIndex !== prevPos.index) {
+          this.targetChanged.emit({
+            prevIndex: this.lastDraggingIndex,
+            initialIndex: prevPos.index
+          });
+          this.lastDraggingIndex = prevPos.index;
+        }
       }
-    } else if (this.lastDraggingIndex !== prevPos.index) {
-      this.targetChanged.emit({
-        prevIndex: this.lastDraggingIndex,
-        initialIndex: prevPos.index
-      });
-      this.lastDraggingIndex = prevPos.index;
     }
   }
 
   onDragEnd({ element, model, event }: DraggableDragEvent): void {
-    const prevPos = this.positions[model.$$id];
+    if (model.$$id) {
+      const prevPos = this.positions[model.$$id];
+      const target = this.isTarget(model, event);
+      if (target) {
+        this.reorder.emit({
+          prevIndex: prevPos.index,
+          newIndex: target.i,
+          model
+        });
+      }
 
-    const target = this.isTarget(model, event);
-    if (target) {
-      this.reorder.emit({
-        prevIndex: prevPos.index,
-        newIndex: target.i,
-        model
-      });
+      this.lastDraggingIndex = undefined;
+      element.style.left = 'auto';
     }
-
-    this.lastDraggingIndex = undefined;
-    element.style.left = 'auto';
   }
 
   isTarget(model: TableColumn, event: MouseEvent) {
@@ -165,7 +173,9 @@ export class OrderableDirective implements AfterContentInit, OnDestroy {
 
   private createMapDiffs(): Record<string, DraggableDirective> {
     return this.draggables.toArray().reduce((acc, curr) => {
-      acc[curr.dragModel.$$id] = curr;
+      if (curr.dragModel.$$id) {
+        acc[curr.dragModel.$$id] = curr;
+      }
       return acc;
     }, {});
   }

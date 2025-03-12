@@ -77,7 +77,7 @@ import { DataTableGhostLoaderComponent } from './ghost-loader/ghost-loader.compo
           [scrollbarV]="scrollbarV"
           [scrollbarH]="scrollbarH"
           [scrollHeight]="scrollHeight()"
-          [scrollWidth]="columnGroupWidths?.total"
+          [scrollWidth]="columnGroupWidths.total"
           (scroll)="onBodyScroll($event)"
         >
           @if (summaryRow && summaryPosition === 'top') {
@@ -291,7 +291,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   @Input() summaryHeight: number;
   @Input() rowDraggable: boolean;
   @Input() rowDragEvents: EventEmitter<DragEventData>;
-  @Input() disableRowCheck: (row: TRow) => boolean;
+  @Input() disableRowCheck?: (row: TRow) => boolean;
 
   @Input() set pageSize(val: number) {
     if (val !== this._pageSize) {
@@ -435,8 +435,8 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   _pageSize: number;
   _offsetEvent = -1;
 
-  private _draggedRow: RowOrGroup<TRow>;
-  private _draggedRowElement: HTMLElement;
+  private _draggedRow?: RowOrGroup<TRow>;
+  private _draggedRowElement?: HTMLElement;
 
   /**
    * Creates an instance of DataTableBodyComponent.
@@ -615,7 +615,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
           this.rowIndexes.set(row, rowIndex);
           temp[idx] = row;
         } else if (this.ghostLoadingIndicator && this.virtualization) {
-          temp[idx] = undefined;
+          temp[idx] = undefined as any; // for ghost cells we use undefined as a placeholder
         }
 
         idx++;
@@ -957,7 +957,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
-      srcElement: this._draggedRowElement,
+      srcElement: this._draggedRowElement!,
       eventType: 'dragover',
       dragRow: this._draggedRow,
       dropRow
@@ -969,7 +969,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     this._draggedRowElement = rowComponent._element;
     this.rowDragEvents.emit({
       event,
-      srcElement: this._draggedRowElement,
+      srcElement: this._draggedRowElement!,
       eventType: 'dragstart',
       dragRow
     });
@@ -979,7 +979,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
-      srcElement: this._draggedRowElement,
+      srcElement: this._draggedRowElement!,
       targetElement: rowComponent._element,
       eventType: 'drop',
       dragRow: this._draggedRow,
@@ -995,7 +995,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
-      srcElement: this._draggedRowElement,
+      srcElement: this._draggedRowElement!,
       targetElement: rowComponent._element,
       eventType: 'dragenter',
       dragRow: this._draggedRow,
@@ -1011,7 +1011,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
-      srcElement: this._draggedRowElement,
+      srcElement: this._draggedRowElement!,
       targetElement: rowComponent._element,
       eventType: 'dragleave',
       dragRow: this._draggedRow,
@@ -1023,7 +1023,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
-      srcElement: this._draggedRowElement,
+      srcElement: this._draggedRowElement!,
       eventType: 'dragend',
       dragRow
     });

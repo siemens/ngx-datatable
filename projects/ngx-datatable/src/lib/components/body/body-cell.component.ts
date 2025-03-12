@@ -11,7 +11,6 @@ import {
   Input,
   OnDestroy,
   Output,
-  PipeTransform,
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
@@ -103,7 +102,7 @@ import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 export class DataTableBodyCellComponent<TRow extends Row = any> implements DoCheck, OnDestroy {
   private cd = inject(ChangeDetectorRef);
 
-  @Input() displayCheck: (row: RowOrGroup<TRow>, column: TableColumn, value: any) => boolean;
+  @Input() displayCheck?: (row: RowOrGroup<TRow>, column: TableColumn, value: any) => boolean;
 
   _disable$: BehaviorSubject<boolean>;
   @Input() set disable$(val: BehaviorSubject<boolean>) {
@@ -191,14 +190,17 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
 
   @Input() set sorts(val: SortPropDir[]) {
     this._sorts = val;
-    this.sortDir = this.calcSortDir(val);
+    const sortDir = this.calcSortDir(val);
+    if (sortDir) {
+      this.sortDir = sortDir;
+    }
   }
 
   get sorts(): SortPropDir[] {
     return this._sorts;
   }
 
-  @Input() set treeStatus(status: TreeStatus) {
+  @Input() set treeStatus(status: TreeStatus | undefined) {
     if (
       status !== 'collapsed' &&
       status !== 'expanded' &&
@@ -277,17 +279,17 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
   }
 
   @HostBinding('style.width.px')
-  get width(): number {
+  get width(): number | undefined {
     return this.column.width;
   }
 
   @HostBinding('style.minWidth.px')
-  get minWidth(): number {
+  get minWidth(): number | undefined {
     return this.column.minWidth;
   }
 
   @HostBinding('style.maxWidth.px')
-  get maxWidth(): number {
+  get maxWidth(): number | undefined {
     return this.column.maxWidth;
   }
 
@@ -354,8 +356,8 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
     if (!this.row || !this.column) {
       value = '';
     } else {
-      const val = this.column.$$valueGetter(this.row, this.column.prop);
-      const userPipe: PipeTransform = this.column.pipe;
+      const val = this.column.$$valueGetter?.(this.row, this.column.prop ?? '');
+      const userPipe = this.column.pipe;
 
       if (userPipe) {
         value = userPipe.transform(val);
@@ -454,7 +456,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
     });
   }
 
-  calcSortDir(sorts: SortPropDir[]): SortDirection {
+  calcSortDir(sorts?: SortPropDir[]): SortDirection | undefined {
     if (!sorts) {
       return;
     }
@@ -479,6 +481,6 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
 
   calcLeftMargin(column: TableColumn, row: RowOrGroup<TRow>): number {
     const levelIndent = column.treeLevelIndent != null ? column.treeLevelIndent : 50;
-    return column.isTreeColumn ? (row as TRow).level * levelIndent : 0;
+    return column.isTreeColumn ? ((row as TRow).level ?? 0) * levelIndent : 0;
   }
 }

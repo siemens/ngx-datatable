@@ -18,7 +18,7 @@ import { NgTemplateOutlet } from '@angular/common';
  */
 @Component({
   selector: 'datatable-row-def',
-  template: `@if (rowDef.rowDefInternal.rowTemplate) {
+  template: `@if (rowDef.rowDefInternal && rowDef.rowDefInternal.rowTemplate) {
     <ng-container
       [ngTemplateOutlet]="rowDef.rowDefInternal.rowTemplate"
       [ngTemplateOutletContext]="rowDef"
@@ -57,22 +57,24 @@ export class DatatableRowDefInternalDirective implements OnInit {
   @Input() rowDefInternal?: RowDefContext;
 
   ngOnInit(): void {
-    this.vc.createEmbeddedView(
-      this.rowDefInternal.template,
-      {
-        ...this.rowDefInternal
-      },
-      {
-        injector: Injector.create({
-          providers: [
-            {
-              provide: RowDefToken,
-              useValue: this
-            }
-          ]
-        })
-      }
-    );
+    if (this.rowDefInternal) {
+      this.vc.createEmbeddedView(
+        this.rowDefInternal.template,
+        {
+          ...this.rowDefInternal
+        },
+        {
+          injector: Injector.create({
+            providers: [
+              {
+                provide: RowDefToken,
+                useValue: this
+              }
+            ]
+          })
+        }
+      );
+    }
   }
 }
 const RowDefToken = new InjectionToken<DatatableRowDefInternalDirective>('RowDef');

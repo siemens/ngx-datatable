@@ -1,9 +1,13 @@
 import { getterForProp } from './column-prop-getters';
 import { TableColumnProp } from '../types/table-column.type';
+import { isNullOrUndefined } from './column-helper';
 
-export type OptionalValueGetter = (row: any) => any | undefined;
+export type OptionalValueGetter = ((row: any) => any) | undefined;
 export function optionalGetterForProp(prop: TableColumnProp): OptionalValueGetter {
-  return prop && (row => getterForProp(prop)(row, prop));
+  if (isNullOrUndefined(prop)) {
+    return undefined;
+  }
+  return row => getterForProp(prop)(row, prop);
 }
 
 /**
@@ -60,7 +64,7 @@ export function groupRowsByParents<TRow>(
         arr.push(toValue);
       }
       return arr;
-    }, []);
+    }, [] as TRow[]);
 
     for (let i = 0; i < l; i++) {
       // make TreeNode objects for each item
@@ -71,13 +75,15 @@ export function groupRowsByParents<TRow>(
       // link all TreeNode objects
       node = nodeById[to(rows[i])];
       let parent = 0;
-      const fromValue = from(node.row);
-      if (!!fromValue && uniqIDs.indexOf(fromValue) > -1) {
-        parent = fromValue;
+      if (node) {
+        const fromValue = from(node.row);
+        if (!!fromValue && uniqIDs.indexOf(fromValue) > -1) {
+          parent = fromValue;
+        }
+        node.parent = nodeById[parent];
+        node.row.level = node.parent.row.level + 1;
+        node.parent.children.push(node);
       }
-      node.parent = nodeById[parent];
-      node.row.level = node.parent.row.level + 1;
-      node.parent.children.push(node);
     }
 
     let resolvedRows: any[] = [];

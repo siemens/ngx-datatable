@@ -33,7 +33,6 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { INgxDatatableConfig } from '../ngx-datatable.module';
 import { groupRowsByParents, optionalGetterForProp } from '../utils/tree';
 import { TableColumn } from '../types/table-column.type';
-import { setColumnDefaults } from '../utils/column-helper';
 import { DataTableColumnDirective } from './columns/column.directive';
 import { DatatableRowDetailDirective } from './row-detail/row-detail.directive';
 import { DatatableFooterDirective } from './footer/footer.directive';
@@ -71,6 +70,7 @@ import { AsyncPipe } from '@angular/common';
 import { DataTableFooterComponent } from './footer/footer.component';
 import { VisibilityDirective } from '../directives/visibility.directive';
 import { ProgressBarComponent } from './body/progress-bar.component';
+import { toInternalColumn } from '../utils/column-helper';
 
 @Component({
   selector: 'ngx-datatable',
@@ -172,8 +172,7 @@ export class DatatableComponent<TRow extends Row = any>
    */
   @Input() set columns(val: TableColumn[]) {
     if (val) {
-      this._internalColumns = [...val];
-      setColumnDefaults(this._internalColumns, this._defaultColumnWidth);
+      this._internalColumns = toInternalColumn(val, this._defaultColumnWidth);
       this.recalculateColumns();
     }
 
@@ -792,15 +791,7 @@ export class DatatableComponent<TRow extends Row = any>
   translateColumns(val: QueryList<DataTableColumnDirective<TRow>>) {
     if (val) {
       if (val.length) {
-        this._internalColumns = val.map(column => ({
-          ...column,
-          // explicitly call getters
-          headerTemplate: column.headerTemplate,
-          cellTemplate: column.cellTemplate,
-          summaryTemplate: column.summaryTemplate,
-          ghostCellTemplate: column.ghostCellTemplate
-        }));
-        setColumnDefaults(this._internalColumns, this._defaultColumnWidth);
+        this._internalColumns = toInternalColumn(val, this._defaultColumnWidth);
         this.recalculateColumns();
         if (!this.externalSorting && this.rows?.length) {
           this.sortInternalRows();

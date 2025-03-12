@@ -157,23 +157,23 @@ export class DataTableHeaderCellComponent implements OnInit {
   }
 
   @HostBinding('attr.title')
-  get name(): string {
+  get name(): string | undefined {
     // guaranteed to have a value by setColumnDefaults() in column-helper.ts
     return this.column.headerTemplate === undefined ? this.column.name : undefined;
   }
 
   @HostBinding('style.minWidth.px')
-  get minWidth(): number {
+  get minWidth(): number | undefined {
     return this.column.minWidth;
   }
 
   @HostBinding('style.maxWidth.px')
-  get maxWidth(): number {
+  get maxWidth(): number | undefined {
     return this.column.maxWidth;
   }
 
   @HostBinding('style.width.px')
-  get width(): number {
+  get width(): number | undefined {
     return this.column.width;
   }
 
@@ -182,7 +182,7 @@ export class DataTableHeaderCellComponent implements OnInit {
   }
 
   get isCheckboxable(): boolean {
-    return this.column.headerCheckboxable;
+    return this.column.headerCheckboxable ?? false;
   }
 
   sortClass: string;
@@ -247,13 +247,13 @@ export class DataTableHeaderCellComponent implements OnInit {
     this.sort.emit({
       column: this.column,
       prevValue: this.sortDir,
-      newValue
+      newValue: newValue!
     });
   }
 
   calcSortClass(sortDir: SortDirection): string {
     if (!this.cellContext.column.sortable) {
-      return;
+      return '';
     }
     if (sortDir === SortDirection.asc) {
       return `sort-btn sort-asc ${this.sortAscendingIcon ?? 'datatable-icon-up'}`;

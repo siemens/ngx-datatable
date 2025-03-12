@@ -3,7 +3,7 @@ import { TableColumn, TableColumnProp } from '../../../types/table-column.type';
 import { DataTableBodyRowComponent } from '../body-row.component';
 
 export interface ISummaryColumn {
-  summaryFunc?: (cells: any[]) => any;
+  summaryFunc?: ((cells: any[]) => any) | null;
   summaryTemplate?: TemplateRef<any>;
 
   prop?: TableColumnProp;
@@ -23,7 +23,7 @@ function defaultSumFunc(cells: any[]): any {
   return cellsWithValues.reduce((res, cell) => res + cell);
 }
 
-function noopSumFunc(cells: any[]): void {
+function noopSumFunc(cells: any[]): null {
   return null;
 }
 
@@ -79,12 +79,15 @@ export class DataTableSummaryRowComponent implements OnChanges {
     this.columns
       .filter(col => !col.summaryTemplate)
       .forEach(col => {
-        const cellsFromSingleColumn = this.rows.map(row => row[col.prop]);
-        const sumFunc = this.getSummaryFunction(col);
+        const propName = col.prop;
+        if (propName) {
+          const cellsFromSingleColumn = this.rows.map(row => row[propName]);
+          const sumFunc = this.getSummaryFunction(col);
 
-        this.summaryRow[col.prop] = col.pipe
-          ? col.pipe.transform(sumFunc(cellsFromSingleColumn))
-          : sumFunc(cellsFromSingleColumn);
+          this.summaryRow[propName] = col.pipe
+            ? col.pipe.transform(sumFunc(cellsFromSingleColumn))
+            : sumFunc(cellsFromSingleColumn);
+        }
       });
   }
 

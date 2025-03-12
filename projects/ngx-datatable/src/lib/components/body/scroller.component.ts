@@ -29,7 +29,7 @@ export class ScrollerComponent implements OnInit, OnDestroy {
 
   @HostBinding('style.height.px')
   @Input()
-  scrollHeight: number;
+  scrollHeight?: number;
 
   @HostBinding('style.width.px')
   @Input()
@@ -79,7 +79,7 @@ export class ScrollerComponent implements OnInit, OnDestroy {
   }
 
   updateOffset(): void {
-    let direction: string;
+    let direction = '';
     if (this.scrollYPos < this.prevScrollYPos) {
       direction = 'down';
     } else if (this.scrollYPos > this.prevScrollYPos) {

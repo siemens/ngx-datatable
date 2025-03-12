@@ -1,4 +1,5 @@
 import { TableColumnProp } from '../types/table-column.type';
+import { isNullOrUndefined } from './column-helper';
 
 // maybe rename this file to prop-getters.ts
 
@@ -15,8 +16,8 @@ export function emptyStringGetter(): string {
  * Returns the appropriate getter function for this kind of prop.
  * If prop == null, returns the emptyStringGetter.
  */
-export function getterForProp(prop: TableColumnProp): ValueGetter {
-  if (prop == null) {
+export function getterForProp(prop: TableColumnProp | undefined): ValueGetter {
+  if (isNullOrUndefined(prop)) {
     return emptyStringGetter;
   }
 

@@ -36,6 +36,7 @@ import { LongPressDirective } from '../../directives/long-press.directive';
 import { ResizeableDirective } from '../../directives/resizeable.directive';
 import { DataTableHeaderCellComponent } from './header-cell.component';
 import { OrderableDirective } from '../../directives/orderable.directive';
+import { isNullOrUndefined } from '../../utils/column-helper';
 
 @Component({
   selector: 'datatable-header',
@@ -68,7 +69,7 @@ import { OrderableDirective } from '../../directives/orderable.directive';
               [dragModel]="column"
               [dragEventTarget]="dragEventTarget"
               [headerHeight]="headerHeight"
-              [isTarget]="column.isTarget"
+              [isTarget]="column.isTarget ?? false"
               [targetMarkerTemplate]="targetMarkerTemplate"
               [targetMarkerContext]="column.targetMarkerContext"
               [column]="column"
@@ -255,14 +256,14 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
   }
 
   private makeResizeEvent(width: number, column: TableColumn): ColumnResizeEvent {
-    if (width <= column.minWidth) {
-      width = column.minWidth;
-    } else if (width >= column.maxWidth) {
-      width = column.maxWidth;
+    if (!isNullOrUndefined(column.minWidth) && width <= column.minWidth) {
+      width = column.minWidth!;
+    } else if (!isNullOrUndefined(column.maxWidth) && width >= column.maxWidth) {
+      width = column.maxWidth!;
     }
     return {
       column,
-      prevValue: column.width,
+      prevValue: column.width ?? 0,
       newValue: width
     };
   }
@@ -353,7 +354,7 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
         sorts.splice(0, this.sorts.length);
       }
 
-      sorts.push({ dir: newValue, prop: column.prop });
+      sorts.push({ dir: newValue, prop: column.prop ?? '' });
     }
 
     return sorts;

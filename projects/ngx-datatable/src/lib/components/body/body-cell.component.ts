@@ -9,11 +9,8 @@ import {
   HostListener,
   inject,
   Input,
-  OnDestroy,
   Output,
-  PipeTransform,
-  ViewChild,
-  ViewContainerRef
+  PipeTransform
 } from '@angular/core';
 
 import { TableColumn } from '../../types/table-column.type';
@@ -84,7 +81,6 @@ import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
           }
         } @else {
           <ng-template
-            #cellTemplate
             [ngTemplateOutlet]="column.cellTemplate"
             [ngTemplateOutletContext]="cellContext"
           >
@@ -100,7 +96,7 @@ import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
   standalone: true,
   imports: [NgTemplateOutlet, DataTableGhostLoaderComponent, AsyncPipe]
 })
-export class DataTableBodyCellComponent<TRow extends Row = any> implements DoCheck, OnDestroy {
+export class DataTableBodyCellComponent<TRow extends Row = any> implements DoCheck {
   private cd = inject(ChangeDetectorRef);
 
   @Input() displayCheck: (row: RowOrGroup<TRow>, column: TableColumn, value: any) => boolean;
@@ -224,12 +220,6 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
 
   @Output() treeAction = new EventEmitter<any>();
 
-  @ViewChild('cellTemplate', { read: ViewContainerRef, static: true })
-  cellTemplate: ViewContainerRef;
-
-  @ViewChild('ghostLoaderTemplate', { read: ViewContainerRef, static: true })
-  ghostLoaderTemplate: ViewContainerRef;
-
   @HostBinding('class')
   get columnCssClasses(): string {
     let cls = 'datatable-body-cell';
@@ -337,15 +327,6 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
 
   ngDoCheck(): void {
     this.checkValueUpdates();
-  }
-
-  ngOnDestroy(): void {
-    if (this.cellTemplate) {
-      this.cellTemplate.clear();
-    }
-    if (this.ghostLoaderTemplate) {
-      this.ghostLoaderTemplate.clear();
-    }
   }
 
   checkValueUpdates(): void {

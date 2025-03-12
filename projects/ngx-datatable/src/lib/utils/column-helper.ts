@@ -4,11 +4,12 @@ import { getterForProp } from './column-prop-getters';
 import { TableColumn } from '../types/table-column.type';
 import { QueryList } from '@angular/core';
 import { DataTableColumnDirective } from '../components/columns/column.directive';
+import { TableColumnInternal } from '../types/internal.types';
 
 export function toInternalColumn<T>(
   columns: TableColumn<T>[] | QueryList<DataTableColumnDirective<T>>,
   defaultColumnWidth = 150
-): TableColumn<T>[] {
+): TableColumnInternal<T>[] {
   let hasTreeColumn = false;
   // TS fails to infer the type here.
   return (columns as TableColumn<T>[]).map(column => {

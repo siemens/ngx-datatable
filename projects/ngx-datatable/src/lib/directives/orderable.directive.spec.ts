@@ -4,8 +4,8 @@ import { By } from '@angular/platform-browser';
 
 import { OrderableDirective } from './orderable.directive';
 import { DraggableDirective } from './draggable.directive';
-import { id } from '../utils/id';
-import { TableColumn } from '../types/table-column.type';
+import { TableColumnInternal } from '../types/internal.types';
+import { toInternalColumn } from '../utils/column-helper';
 
 @Component({
   selector: 'test-fixture-component',
@@ -20,7 +20,7 @@ import { TableColumn } from '../types/table-column.type';
   standalone: true
 })
 class TestFixtureComponent {
-  draggables: TableColumn[] = [];
+  draggables: TableColumnInternal[] = [];
   @ViewChildren(DraggableDirective) draggableDirectives!: QueryList<DraggableDirective>;
 }
 
@@ -74,14 +74,12 @@ describe('OrderableDirective', () => {
         });
       }
 
-      function newDraggable() {
-        return {
-          $$id: id()
-        };
+      function newDraggable(name: string): TableColumnInternal {
+        return toInternalColumn([{ name }])[0];
       }
 
       beforeEach(() => {
-        component.draggables = [newDraggable(), newDraggable(), newDraggable()];
+        component.draggables = [newDraggable('d1'), newDraggable('d2'), newDraggable('d3')];
         fixture.detectChanges();
 
         checkAllSubscriptionsForActiveObservers();

@@ -71,6 +71,11 @@ import { DataTableFooterComponent } from './footer/footer.component';
 import { VisibilityDirective } from '../directives/visibility.directive';
 import { ProgressBarComponent } from './body/progress-bar.component';
 import { toInternalColumn } from '../utils/column-helper';
+import {
+  ColumnResizeEventInternal,
+  ReorderEventInternal,
+  TableColumnInternal
+} from '../types/internal.types';
 
 @Component({
   selector: 'ngx-datatable',
@@ -692,7 +697,7 @@ export class DatatableComponent<TRow extends Row = any>
   _rows: TRow[] | null | undefined;
   _groupRowsBy: keyof TRow;
   _internalRows: TRow[];
-  _internalColumns: TableColumn[];
+  _internalColumns: TableColumnInternal<TRow>[];
   _columns: TableColumn[];
   _subscriptions: Subscription[] = [];
   _ghostLoadingIndicator = false;
@@ -896,7 +901,7 @@ export class DatatableComponent<TRow extends Row = any>
    * distribution mode and scrollbar offsets.
    */
   recalculateColumns(
-    columns: TableColumn[] = this._internalColumns,
+    columns: TableColumnInternal[] = this._internalColumns,
     forceIdx = -1,
     allowBleed: boolean = this.scrollbarH
   ): TableColumn[] | undefined {
@@ -1086,7 +1091,7 @@ export class DatatableComponent<TRow extends Row = any>
   /**
    * The header triggered a column resize event.
    */
-  onColumnResize({ column, newValue, prevValue }: ColumnResizeEvent): void {
+  onColumnResize({ column, newValue, prevValue }: ColumnResizeEventInternal): void {
     /* Safari/iOS 10.2 workaround */
     if (column === undefined) {
       return;
@@ -1118,7 +1123,7 @@ export class DatatableComponent<TRow extends Row = any>
     });
   }
 
-  onColumnResizing({ column, newValue }: ColumnResizeEvent): void {
+  onColumnResizing({ column, newValue }: ColumnResizeEventInternal): void {
     if (column === undefined) {
       return;
     }
@@ -1131,7 +1136,7 @@ export class DatatableComponent<TRow extends Row = any>
   /**
    * The header triggered a column re-order event.
    */
-  onColumnReorder(event: ReorderEvent): void {
+  onColumnReorder(event: ReorderEventInternal): void {
     const { column, newValue, prevValue } = event;
     const cols = this._internalColumns.map(c => ({ ...c }));
 

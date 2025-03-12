@@ -1,4 +1,5 @@
 import { adjustColumnWidths, forceFillColumnWidths } from './math';
+import { toInternalColumn } from './column-helper';
 
 describe('Math function', () => {
   describe('forceFillColumnWidths', () => {
@@ -38,7 +39,7 @@ describe('Math function', () => {
   describe('adjustColumnWidths', () => {
     describe('flex mode', () => {
       it('should not go over/under compared to given max width', () => {
-        const cols = [
+        const cols = toInternalColumn([
           {
             prop: 'id1',
             width: 287,
@@ -74,7 +75,7 @@ describe('Math function', () => {
             flexGrow: 1,
             canAutoResize: true
           }
-        ];
+        ]);
 
         const givenTableWidth = 1180;
 
@@ -85,7 +86,7 @@ describe('Math function', () => {
       });
 
       it('should overflow if the total of given min widths is bigger than given max width', () => {
-        const cols = [
+        const cols = toInternalColumn([
           {
             prop: 'id1',
             width: 100,
@@ -100,7 +101,7 @@ describe('Math function', () => {
             flexGrow: 1,
             canAutoResize: true
           }
-        ];
+        ]);
         const maxWidth = 199;
 
         adjustColumnWidths(cols, maxWidth);
@@ -110,7 +111,7 @@ describe('Math function', () => {
       });
 
       it('should respect min widths', () => {
-        const cols = [
+        const cols = toInternalColumn([
           {
             prop: 'id1',
             width: 0,
@@ -125,7 +126,7 @@ describe('Math function', () => {
             flexGrow: 1,
             canAutoResize: true
           }
-        ];
+        ]);
 
         adjustColumnWidths(cols, 40);
 

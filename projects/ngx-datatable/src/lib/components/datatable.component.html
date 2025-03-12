@@ -13,9 +13,9 @@
         [headerHeight]="headerHeight"
         [reorderable]="reorderable"
         [targetMarkerTemplate]="targetMarkerTemplate"
-        [sortAscendingIcon]="cssClasses.sortAscending"
-        [sortDescendingIcon]="cssClasses.sortDescending"
-        [sortUnsetIcon]="cssClasses.sortUnset"
+        [sortAscendingIcon]="cssClasses?.sortAscending"
+        [sortDescendingIcon]="cssClasses?.sortDescending"
+        [sortUnsetIcon]="cssClasses?.sortUnset"
         [allRowsSelected]="allRowsSelected"
         [selectionType]="selectionType"
         [verticalScrollVisible]="verticalScrollVisible"
@@ -82,7 +82,7 @@
           <div
             role="cell"
             class="empty-row"
-            [innerHTML]="messages.emptyMessage ?? 'No data to display'"
+            [innerHTML]="messages?.emptyMessage ?? 'No data to display'"
           ></div>
         </div>
       </ng-content>
@@ -95,13 +95,13 @@
       [offset]="offset"
       [footerHeight]="footerHeight"
       [footerTemplate]="footer"
-      [totalMessage]="messages.totalMessage ?? 'total'"
-      [pagerLeftArrowIcon]="cssClasses.pagerLeftArrow"
-      [pagerRightArrowIcon]="cssClasses.pagerRightArrow"
-      [pagerPreviousIcon]="cssClasses.pagerPrevious"
+      [totalMessage]="messages?.totalMessage ?? 'total'"
+      [pagerLeftArrowIcon]="cssClasses?.pagerLeftArrow"
+      [pagerRightArrowIcon]="cssClasses?.pagerRightArrow"
+      [pagerPreviousIcon]="cssClasses?.pagerPrevious"
       [selectedCount]="selected.length"
-      [selectedMessage]="!!selectionType && (messages.selectedMessage ?? 'selected')"
-      [pagerNextIcon]="cssClasses.pagerNext"
+      [selectedMessage]="!!selectionType && (messages?.selectedMessage ?? 'selected')"
+      [pagerNextIcon]="cssClasses?.pagerNext"
       (page)="onFooterPage($event)"
     >
     </datatable-footer>

@@ -25,7 +25,7 @@ export class ScrollbarHelper {
     outer.appendChild(inner);
 
     const widthWithScroll = inner.offsetWidth;
-    outer.parentNode.removeChild(outer);
+    outer.parentNode?.removeChild(outer);
 
     return widthNoScroll - widthWithScroll;
   }

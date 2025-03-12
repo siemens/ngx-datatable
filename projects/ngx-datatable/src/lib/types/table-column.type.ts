@@ -164,7 +164,7 @@ export interface TableColumn<TRow = any> {
   /**
    * Summary function
    */
-  summaryFunc?: (cells: any[]) => any;
+  summaryFunc?: ((cells: any[]) => any) | null;
 
   /**
    * Summary cell template ref

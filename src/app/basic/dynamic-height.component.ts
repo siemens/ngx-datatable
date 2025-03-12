@@ -57,7 +57,7 @@ export class DynamicHeightComponent {
     });
   }
 
-  getRowHeight(row: FullEmployee & { height: number }) {
+  getRowHeight(row: (FullEmployee & { height: number }) | undefined) {
     console.log('ROW', row);
     if (!row) {
       return 50;

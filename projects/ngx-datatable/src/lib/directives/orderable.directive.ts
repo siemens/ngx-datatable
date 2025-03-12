@@ -137,7 +137,7 @@ export class OrderableDirective implements AfterContentInit, OnDestroy {
       });
     }
 
-    this.lastDraggingIndex = undefined;
+    this.lastDraggingIndex = -1;
     element.style.left = 'auto';
   }
 

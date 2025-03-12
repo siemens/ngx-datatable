@@ -2,9 +2,12 @@ import { getterForProp } from './column-prop-getters';
 import { TableColumnProp } from '../types/table-column.type';
 import { Row } from '../types/public.types';
 
-export type OptionalValueGetter = (row: any) => any | undefined;
+export type OptionalValueGetter = ((row: any) => any) | undefined;
 export function optionalGetterForProp(prop: TableColumnProp): OptionalValueGetter {
-  return prop && (row => getterForProp(prop)(row, prop));
+  if (prop !== undefined && prop !== null) {
+    return row => getterForProp(prop)(row, prop);
+  }
+  return undefined;
 }
 
 /**
@@ -56,7 +59,7 @@ export function groupRowsByParents<TRow extends Row>(
       const fromValue = from(node.row);
       const parent = uniqIDs.get(fromValue);
       if (parent) {
-        node.row.level = parent.row.level + 1;
+        node.row.level = (parent.row.level ?? 0) + 1;
         node.parent = parent;
         parent.children.push(node);
       } else {
@@ -79,7 +82,7 @@ class TreeNode<TRow extends Row> {
 
   constructor(row: TRow) {
     this.row = row;
-    this.parent = null;
+    this.parent = undefined;
     this.children = [];
   }
 

@@ -18,7 +18,7 @@ import {
 
 import { columnGroupWidths, columnsByPin, columnsByPinArr } from '../../utils/column';
 import { Keys } from '../../utils/keys';
-import { ActivateEvent, RowOrGroup, TreeStatus } from '../../types/public.types';
+import { ActivateEvent, Row, RowOrGroup, TreeStatus } from '../../types/public.types';
 import {
   ColumnGroupWidth,
   PinnedColumns,
@@ -64,7 +64,7 @@ import { DataTableBodyCellComponent } from './body-cell.component';
   standalone: true,
   imports: [DataTableBodyCellComponent]
 })
-export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges {
+export class DataTableBodyRowComponent<TRow extends Row = any> implements DoCheck, OnChanges {
   private cd = inject(ChangeDetectorRef);
 
   @Input() set columns(val: TableColumnInternal[]) {
@@ -95,7 +95,7 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
   @Input() row: TRow;
   @Input() group: TRow[];
   @Input() isSelected: boolean;
-  @Input() rowIndex: RowIndex | undefined;
+  @Input() rowIndex: RowIndex;
   @Input() displayCheck?: (row: TRow, column: TableColumnInternal, value?: any) => boolean;
   @Input() treeStatus?: TreeStatus = 'collapsed';
   @Input() ghostLoadingIndicator = false;

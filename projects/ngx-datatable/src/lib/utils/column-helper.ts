@@ -18,12 +18,12 @@ export function toInternalColumn<T>(
     // Thus if multiple columns are provided with
     // isTreeColumn as true, we take only the first one
     const isTreeColumn = column.isTreeColumn && !hasTreeColumn;
-    hasTreeColumn = hasTreeColumn || isTreeColumn;
+    hasTreeColumn = (hasTreeColumn || isTreeColumn) ?? false;
     return {
       ...column,
       $$id: id(),
       $$valueGetter: getterForProp(prop),
-      prop,
+      prop: prop ?? '',
       name: column.name ?? (prop ? deCamelCase(String(prop)) : ''),
       resizeable: column.resizeable ?? true,
       sortable: column.sortable ?? true,

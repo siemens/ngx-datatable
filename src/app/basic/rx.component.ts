@@ -22,7 +22,7 @@ import { AsyncPipe } from '@angular/common';
       </h3>
       <ngx-datatable
         class="material striped"
-        [rows]="rows | async"
+        [rows]="(rows | async) || []"
         [columns]="columns"
         [columnMode]="ColumnMode.force"
         [headerHeight]="50"

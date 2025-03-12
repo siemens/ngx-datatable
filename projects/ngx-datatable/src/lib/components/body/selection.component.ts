@@ -16,7 +16,7 @@ export class DataTableSelectionComponent<TRow = any> {
   @Input() selectionType: SelectionType;
   @Input() rowIdentity: any;
   @Input() selectCheck: (value: TRow, index: number, array: TRow[]) => boolean;
-  @Input() disableCheck: (row: TRow) => boolean;
+  @Input() disableCheck?: (row: TRow) => boolean;
 
   @Output() activate = new EventEmitter<ActivateEvent<TRow>>();
   @Output() select = new EventEmitter<SelectEvent<TRow>>();
@@ -62,7 +62,7 @@ export class DataTableSelectionComponent<TRow = any> {
     }
 
     if (typeof this.disableCheck === 'function') {
-      selected = selected.filter(rowData => !this.disableCheck(rowData));
+      selected = selected.filter(rowData => !this.disableCheck?.(rowData));
     }
 
     this.selected.splice(0, this.selected.length);
@@ -111,10 +111,12 @@ export class DataTableSelectionComponent<TRow = any> {
           return;
         }
       }
-      if (!model.cellElement || !isCellSelection) {
-        this.focusRow(model.rowElement, key);
-      } else if (isCellSelection) {
-        this.focusCell(model.cellElement, model.rowElement, key, model.cellIndex);
+      if (model.rowElement) {
+        if (!model.cellElement || !isCellSelection) {
+          this.focusRow(model.rowElement, key);
+        } else if (isCellSelection) {
+          this.focusCell(model.cellElement, model.rowElement, key, model.cellIndex ?? 0);
+        }
       }
     }
   }
@@ -130,7 +132,7 @@ export class DataTableSelectionComponent<TRow = any> {
     const parentElement = rowElement.parentElement;
 
     if (parentElement) {
-      let focusElement: Element;
+      let focusElement: Element | null = null;
       if (key === Keys.up) {
         focusElement = parentElement.previousElementSibling;
       } else if (key === Keys.down) {
@@ -144,7 +146,7 @@ export class DataTableSelectionComponent<TRow = any> {
   }
 
   focusCell(cellElement: HTMLElement, rowElement: HTMLElement, key: Keys, cellIndex: number): void {
-    let nextCellElement: Element;
+    let nextCellElement: Element | null = null;
 
     if (key === Keys.left) {
       nextCellElement = cellElement.previousElementSibling;

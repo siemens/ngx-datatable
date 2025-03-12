@@ -146,7 +146,7 @@ export function sortRows<TRow>(rows: TRow[], columns: TableColumn[], dirs: SortP
     /**
      * all else being equal, preserve original order of the rows (stable sort)
      */
-    return rowToIndexMap.get(rowA) < rowToIndexMap.get(rowB) ? -1 : 1;
+    return (rowToIndexMap.get(rowA) ?? '') < (rowToIndexMap.get(rowB) ?? '') ? -1 : 1;
   });
 }
 
@@ -154,7 +154,7 @@ export function sortGroupedRows<TRow>(
   groupedRows: Group<TRow>[],
   columns: TableColumn[],
   dirs: SortPropDir[],
-  sortOnGroupHeader: SortPropDir
+  sortOnGroupHeader?: SortPropDir
 ): Group<TRow>[] {
   if (sortOnGroupHeader) {
     groupedRows = sortRows(groupedRows, columns, [

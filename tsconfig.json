@@ -21,7 +21,8 @@
     },
     "useDefineForClassFields": false,
     "strictFunctionTypes": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "strictNullChecks": true
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

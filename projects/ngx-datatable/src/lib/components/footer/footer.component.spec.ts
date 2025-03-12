@@ -265,9 +265,9 @@ class TestFixtureComponent {
   pagerPreviousIcon: string;
   pagerNextIcon: string;
   totalMessage: string;
-  footerTemplate: { template: TemplateRef<any> };
+  footerTemplate?: { template: TemplateRef<any> };
   selectedCount: number;
-  selectedMessage: string;
+  selectedMessage?: string;
 
   /**
    * establishes a reference to a test template that can

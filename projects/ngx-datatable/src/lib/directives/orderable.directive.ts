@@ -13,10 +13,10 @@ import {
 } from '@angular/core';
 import { DraggableDirective } from './draggable.directive';
 import { DOCUMENT } from '@angular/common';
-import { TableColumn } from '../types/table-column.type';
 import {
   DraggableDragEvent,
   OrderableReorderEvent,
+  TableColumnInternal,
   TargetChangedEvent
 } from '../types/internal.types';
 
@@ -141,7 +141,7 @@ export class OrderableDirective implements AfterContentInit, OnDestroy {
     element.style.left = 'auto';
   }
 
-  isTarget(model: TableColumn, event: MouseEvent) {
+  isTarget(model: TableColumnInternal, event: MouseEvent) {
     let i = 0;
     const x = event.x || event.clientX;
     const y = event.y || event.clientY;

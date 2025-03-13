@@ -1,5 +1,6 @@
-import { TableColumn, TableColumnGroup } from '../types/table-column.type';
+import { TableColumn } from '../types/table-column.type';
 import { columnsByPin, columnsTotalWidth } from './column';
+import { TableColumnGroup, TableColumnInternal } from '../types/internal.types';
 
 /**
  * Calculates the Total Flex Grow
@@ -18,7 +19,7 @@ export function getTotalFlexGrow(columns: TableColumn[]) {
  * Adjusts the column widths.
  * Inspired by: https://github.com/facebook/fixed-data-table/blob/master/src/FixedDataTableWidthHelper.js
  */
-export function adjustColumnWidths(allColumns: TableColumn[], expectedWidth: number) {
+export function adjustColumnWidths(allColumns: TableColumnInternal[], expectedWidth: number) {
   const columnsWidth = columnsTotalWidth(allColumns);
   const totalFlexGrow = getTotalFlexGrow(allColumns);
   const colsByGroup = columnsByPin(allColumns);

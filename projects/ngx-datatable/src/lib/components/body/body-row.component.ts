@@ -21,8 +21,7 @@ import { Keys } from '../../utils/keys';
 import { BehaviorSubject } from 'rxjs';
 import { ActivateEvent, RowOrGroup, TreeStatus } from '../../types/public.types';
 import { AsyncPipe } from '@angular/common';
-import { TableColumn } from '../../types/table-column.type';
-import { ColumnGroupWidth, PinnedColumns } from '../../types/internal.types';
+import { ColumnGroupWidth, PinnedColumns, TableColumnInternal } from '../../types/internal.types';
 import { DataTableBodyCellComponent } from './body-cell.component';
 
 @Component({
@@ -64,12 +63,12 @@ import { DataTableBodyCellComponent } from './body-cell.component';
 export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges {
   private cd = inject(ChangeDetectorRef);
 
-  @Input() set columns(val: TableColumn[]) {
+  @Input() set columns(val: TableColumnInternal[]) {
     this._columns = val;
     this.recalculateColumns(val);
   }
 
-  get columns(): TableColumn[] {
+  get columns(): TableColumnInternal[] {
     return this._columns;
   }
 
@@ -93,7 +92,7 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
   @Input() group: TRow[];
   @Input() isSelected: boolean;
   @Input() rowIndex: number;
-  @Input() displayCheck: (row: TRow, column: TableColumn, value?: any) => boolean;
+  @Input() displayCheck: (row: TRow, column: TableColumnInternal, value?: any) => boolean;
   @Input() treeStatus?: TreeStatus = 'collapsed';
   @Input() ghostLoadingIndicator = false;
   @Input() verticalScrollVisible = false;
@@ -148,7 +147,7 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
   _element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   _columnGroupWidths: ColumnGroupWidth;
   _columnsByPin: PinnedColumns[];
-  _columns: TableColumn[];
+  _columns: TableColumnInternal[];
   _innerWidth: number;
 
   private _rowDiffer: KeyValueDiffer<keyof RowOrGroup<TRow>, any> = inject(KeyValueDiffers)
@@ -210,7 +209,7 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
     });
   }
 
-  recalculateColumns(val: TableColumn<TRow>[] = this.columns): void {
+  recalculateColumns(val: TableColumnInternal<TRow>[] = this.columns): void {
     this._columns = val;
     const colsByPin = columnsByPin(this._columns);
     this._columnsByPin = columnsByPinArr(this._columns);

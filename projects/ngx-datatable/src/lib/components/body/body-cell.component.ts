@@ -13,7 +13,6 @@ import {
   PipeTransform
 } from '@angular/core';
 
-import { TableColumn } from '../../types/table-column.type';
 import { Keys } from '../../utils/keys';
 import { BehaviorSubject } from 'rxjs';
 import {
@@ -27,6 +26,7 @@ import {
 } from '../../types/public.types';
 import { DataTableGhostLoaderComponent } from './ghost-loader/ghost-loader.component';
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { TableColumnInternal } from '../../types/internal.types';
 
 @Component({
   selector: 'datatable-body-cell',
@@ -99,7 +99,11 @@ import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 export class DataTableBodyCellComponent<TRow extends Row = any> implements DoCheck {
   private cd = inject(ChangeDetectorRef);
 
-  @Input() displayCheck: (row: RowOrGroup<TRow>, column: TableColumn, value: any) => boolean;
+  @Input() displayCheck: (
+    row: RowOrGroup<TRow>,
+    column: TableColumnInternal,
+    value: any
+  ) => boolean;
 
   _disable$: BehaviorSubject<boolean>;
   @Input() set disable$(val: BehaviorSubject<boolean>) {
@@ -163,14 +167,14 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
     return this._rowIndex;
   }
 
-  @Input() set column(column: TableColumn) {
+  @Input() set column(column: TableColumnInternal) {
     this._column = column;
     this.cellContext.column = column;
     this.checkValueUpdates();
     this.cd.markForCheck();
   }
 
-  get column(): TableColumn {
+  get column(): TableColumnInternal {
     return this._column;
   }
 
@@ -299,7 +303,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
 
   private _isSelected: boolean;
   private _sorts: SortPropDir[];
-  private _column: TableColumn;
+  private _column: TableColumnInternal;
   private _row: TRow;
   private _group: TRow[];
   private _rowHeight: number;
@@ -458,7 +462,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
     this.treeAction.emit(this.row);
   }
 
-  calcLeftMargin(column: TableColumn, row: RowOrGroup<TRow>): number {
+  calcLeftMargin(column: TableColumnInternal, row: RowOrGroup<TRow>): number {
     const levelIndent = column.treeLevelIndent != null ? column.treeLevelIndent : 50;
     return column.isTreeColumn ? (row as TRow).level * levelIndent : 0;
   }

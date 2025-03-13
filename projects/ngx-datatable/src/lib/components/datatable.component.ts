@@ -33,7 +33,6 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { INgxDatatableConfig } from '../ngx-datatable.module';
 import { groupRowsByParents, optionalGetterForProp } from '../utils/tree';
 import { TableColumn } from '../types/table-column.type';
-import { setColumnDefaults } from '../utils/column-helper';
 import { DataTableColumnDirective } from './columns/column.directive';
 import { DatatableRowDetailDirective } from './row-detail/row-detail.directive';
 import { DatatableFooterDirective } from './footer/footer.directive';
@@ -69,6 +68,12 @@ import { AsyncPipe } from '@angular/common';
 import { DataTableFooterComponent } from './footer/footer.component';
 import { VisibilityDirective } from '../directives/visibility.directive';
 import { ProgressBarComponent } from './body/progress-bar.component';
+import { toInternalColumn } from '../utils/column-helper';
+import {
+  ColumnResizeEventInternal,
+  OrderableReorderEvent,
+  TableColumnInternal
+} from '../types/internal.types';
 
 @Component({
   selector: 'ngx-datatable',
@@ -170,8 +175,7 @@ export class DatatableComponent<TRow extends Row = any>
    */
   @Input() set columns(val: TableColumn[]) {
     if (val) {
-      this._internalColumns = [...val];
-      setColumnDefaults(this._internalColumns, this._defaultColumnWidth);
+      this._internalColumns = toInternalColumn(val, this._defaultColumnWidth);
       this.recalculateColumns();
     }
 
@@ -695,7 +699,7 @@ export class DatatableComponent<TRow extends Row = any>
   _rows: TRow[] | null | undefined;
   _groupRowsBy: keyof TRow;
   _internalRows: TRow[];
-  _internalColumns: TableColumn[];
+  _internalColumns: TableColumnInternal<TRow>[];
   _columns: TableColumn[];
   _subscriptions: Subscription[] = [];
   _ghostLoadingIndicator = false;
@@ -794,15 +798,7 @@ export class DatatableComponent<TRow extends Row = any>
   translateColumns(val: QueryList<DataTableColumnDirective<TRow>>) {
     if (val) {
       if (val.length) {
-        this._internalColumns = val.map(column => ({
-          ...column,
-          // explicitly call getters
-          headerTemplate: column.headerTemplate,
-          cellTemplate: column.cellTemplate,
-          summaryTemplate: column.summaryTemplate,
-          ghostCellTemplate: column.ghostCellTemplate
-        }));
-        setColumnDefaults(this._internalColumns, this._defaultColumnWidth);
+        this._internalColumns = toInternalColumn(val, this._defaultColumnWidth);
         this.recalculateColumns();
         if (!this.externalSorting && this.rows?.length) {
           this.sortInternalRows();
@@ -907,7 +903,7 @@ export class DatatableComponent<TRow extends Row = any>
    * distribution mode and scrollbar offsets.
    */
   recalculateColumns(
-    columns: TableColumn[] = this._internalColumns,
+    columns: TableColumnInternal[] = this._internalColumns,
     forceIdx = -1,
     allowBleed: boolean = this.scrollbarH
   ): TableColumn[] | undefined {
@@ -1097,7 +1093,7 @@ export class DatatableComponent<TRow extends Row = any>
   /**
    * The header triggered a column resize event.
    */
-  onColumnResize({ column, newValue, prevValue }: ColumnResizeEvent): void {
+  onColumnResize({ column, newValue, prevValue }: ColumnResizeEventInternal): void {
     /* Safari/iOS 10.2 workaround */
     if (column === undefined) {
       return;
@@ -1129,7 +1125,7 @@ export class DatatableComponent<TRow extends Row = any>
     });
   }
 
-  onColumnResizing({ column, newValue }: ColumnResizeEvent): void {
+  onColumnResizing({ column, newValue }: ColumnResizeEventInternal): void {
     if (column === undefined) {
       return;
     }
@@ -1142,35 +1138,35 @@ export class DatatableComponent<TRow extends Row = any>
   /**
    * The header triggered a column re-order event.
    */
-  onColumnReorder({ column, newValue, prevValue }: ReorderEvent): void {
+  onColumnReorder({ model, prevIndex, newIndex }: OrderableReorderEvent): void {
     const cols = this._internalColumns.map(c => ({ ...c }));
 
     if (this.swapColumns) {
-      const prevCol = cols[newValue];
-      cols[newValue] = column;
-      cols[prevValue] = prevCol;
+      const prevCol = cols[newIndex];
+      cols[newIndex] = model;
+      cols[prevIndex] = prevCol;
     } else {
-      if (newValue > prevValue) {
-        const movedCol = cols[prevValue];
-        for (let i = prevValue; i < newValue; i++) {
+      if (newIndex > prevIndex) {
+        const movedCol = cols[prevIndex];
+        for (let i = prevIndex; i < newIndex; i++) {
           cols[i] = cols[i + 1];
         }
-        cols[newValue] = movedCol;
+        cols[newIndex] = movedCol;
       } else {
-        const movedCol = cols[prevValue];
-        for (let i = prevValue; i > newValue; i--) {
+        const movedCol = cols[prevIndex];
+        for (let i = prevIndex; i > newIndex; i--) {
           cols[i] = cols[i - 1];
         }
-        cols[newValue] = movedCol;
+        cols[newIndex] = movedCol;
       }
     }
 
     this._internalColumns = cols;
 
     this.reorder.emit({
-      column,
-      newValue,
-      prevValue
+      column: model,
+      newValue: newIndex,
+      prevValue: prevIndex
     });
   }
 

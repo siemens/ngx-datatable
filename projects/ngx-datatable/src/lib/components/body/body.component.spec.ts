@@ -1,40 +1,13 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { DataTableBodyComponent } from './body.component';
-import { DataTableBodyRowComponent } from './body-row.component';
-import { DataTableRowWrapperComponent } from './body-row-wrapper.component';
-import { DataTableBodyCellComponent } from './body-cell.component';
-import { DataTableSelectionComponent } from './selection.component';
-import { DataTableSummaryRowComponent } from './summary/summary-row.component';
-import { ProgressBarComponent } from './progress-bar.component';
-import { ScrollerComponent } from './scroller.component';
-import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 
 describe('DataTableBodyComponent', () => {
   let fixture: ComponentFixture<DataTableBodyComponent>;
   let component: DataTableBodyComponent;
 
-  // provide our implementations or mocks to the dependency injector
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        DataTableBodyComponent,
-        DataTableBodyRowComponent,
-        DataTableRowWrapperComponent,
-        DataTableBodyCellComponent,
-        DataTableSelectionComponent,
-        DataTableSummaryRowComponent,
-        ProgressBarComponent,
-        ScrollerComponent
-      ],
-      providers: [ScrollbarHelper]
-    });
-  });
-
   beforeEach(waitForAsync(() => {
-    TestBed.compileComponents().then(() => {
-      fixture = TestBed.createComponent(DataTableBodyComponent);
-      component = fixture.componentInstance;
-    });
+    fixture = TestBed.createComponent(DataTableBodyComponent);
+    component = fixture.componentInstance;
   }));
 
   describe('fixture', () => {

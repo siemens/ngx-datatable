@@ -22,7 +22,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ActivateEvent, RowOrGroup, TreeStatus } from '../../types/public.types';
 import { AsyncPipe } from '@angular/common';
 import { TableColumn } from '../../types/table-column.type';
-import { ColumnGroupWidth, PinnedColumns } from '../../types/internal.types';
+import { ColumnGroupWidth, PinnedColumns, RowIndex } from '../../types/internal.types';
 import { DataTableBodyCellComponent } from './body-cell.component';
 
 @Component({
@@ -92,7 +92,7 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
   @Input() row: TRow;
   @Input() group: TRow[];
   @Input() isSelected: boolean;
-  @Input() rowIndex: number;
+  @Input() rowIndex: RowIndex | undefined;
   @Input() displayCheck: (row: TRow, column: TableColumn, value?: any) => boolean;
   @Input() treeStatus?: TreeStatus = 'collapsed';
   @Input() ghostLoadingIndicator = false;
@@ -106,10 +106,10 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
     if (this.isSelected) {
       cls += ' active';
     }
-    if (this.rowIndex % 2 !== 0) {
+    if (this.innerRowIndex % 2 !== 0) {
       cls += ' datatable-row-odd';
     }
-    if (this.rowIndex % 2 === 0) {
+    if (this.innerRowIndex % 2 === 0) {
       cls += ' datatable-row-even';
     }
     if (this.disable$ && this.disable$.value) {
@@ -219,5 +219,13 @@ export class DataTableBodyRowComponent<TRow = any> implements DoCheck, OnChanges
 
   onTreeAction() {
     this.treeAction.emit();
+  }
+
+  /** Returns the row index, or if in a group, the index within a group. */
+  private get innerRowIndex(): number {
+    if (!this.rowIndex) {
+      return 0;
+    }
+    return this.rowIndex.indexInGroup ?? this.rowIndex.index;
   }
 }

@@ -1,6 +1,7 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'summary-row-custom-template-demo',
@@ -49,8 +50,10 @@ export class SummaryRowCustomTemplateComponent implements OnInit {
 
   ColumnMode = ColumnMode;
 
+  private dataService = inject(DataService);
+
   constructor() {
-    this.fetch(data => {
+    this.dataService.load('company.json').subscribe(data => {
       this.rows = data.splice(0, 5);
     });
   }
@@ -65,17 +68,6 @@ export class SummaryRowCustomTemplateComponent implements OnInit {
       { name: 'Gender', summaryFunc: cells => this.summaryForGender(cells) },
       { prop: 'age', summaryFunc: cells => this.avgAge(cells) }
     ];
-  }
-
-  fetch(cb) {
-    const req = new XMLHttpRequest();
-    req.open('GET', `assets/data/company.json`);
-
-    req.onload = () => {
-      cb(JSON.parse(req.response));
-    };
-
-    req.send();
   }
 
   getNames(): string[] {

@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { ColumnMode, TreeStatus } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from '../data.model';
+import { FullEmployee } from '../data.model';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'full-screen-tree-demo',
@@ -69,48 +70,37 @@ import { Employee } from '../data.model';
   styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
 })
 export class FullScreenTreeComponent {
-  rows: (Employee & { treeStatus: TreeStatus })[] = [];
+  rows: (FullEmployee & { treeStatus: TreeStatus; parentId?: string })[] = [];
   lastIndex = 15;
 
   ColumnMode = ColumnMode;
 
-  constructor(private cd: ChangeDetectorRef) {
-    this.fetch(data => {
+  constructor(
+    private cd: ChangeDetectorRef,
+    private dataService: DataService
+  ) {
+    this.dataService.load('100k.json').subscribe(data => {
       data = data.slice(1, this.lastIndex);
-      this.rows = data.map(d => {
-        d.treeStatus = 'collapsed';
-        d.parentId = null;
-        return d;
-      });
+      this.rows = data.map(d => ({
+        ...d,
+        treeStatus: 'collapsed' as const
+      }));
     });
-  }
-
-  fetch(cb) {
-    const req = new XMLHttpRequest();
-    req.open('GET', `assets/data/100k.json`);
-
-    req.onload = () => {
-      setTimeout(() => {
-        cb(JSON.parse(req.response));
-      }, 500);
-    };
-
-    req.send();
   }
 
   onTreeAction(event: any) {
     const row = event.row;
     if (row.treeStatus === 'collapsed') {
       row.treeStatus = 'loading';
-      this.fetch(data => {
-        data = data.slice(this.lastIndex, this.lastIndex + 3).map(d => {
-          d.treeStatus = 'collapsed';
-          d.parentId = row.id;
-          return d;
-        });
+      this.dataService.load('100k.json').subscribe(data => {
+        const newData = data.slice(this.lastIndex, this.lastIndex + 3).map(d => ({
+          ...d,
+          treeStatus: 'collapsed' as const,
+          parentId: row.id
+        }));
         this.lastIndex = this.lastIndex + 3;
         row.treeStatus = 'expanded';
-        this.rows = [...this.rows, ...data];
+        this.rows = [...this.rows, ...newData];
         this.cd.detectChanges();
       });
     } else {

@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { ColumnMode, SelectionType, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import {
+  ColumnMode,
+  SelectEvent,
+  SelectionType,
+  TableColumn
+} from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
@@ -86,7 +91,7 @@ export class SingleSelectionComponent {
     req.send();
   }
 
-  onSelect({ selected }) {
+  onSelect({ selected }: SelectEvent<Employee>) {
     console.log('Select Event', selected, this.selected);
   }
 

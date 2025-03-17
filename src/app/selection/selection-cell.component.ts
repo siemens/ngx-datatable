@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { ColumnMode, SelectionType, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import {
+  ColumnMode,
+  SelectEvent,
+  SelectionType,
+  TableColumn
+} from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
@@ -59,7 +64,7 @@ export class CellSelectionComponent {
     req.send();
   }
 
-  onSelect(event) {
+  onSelect(event: SelectEvent<Employee>) {
     console.log('Event: select', event, this.selected);
   }
 

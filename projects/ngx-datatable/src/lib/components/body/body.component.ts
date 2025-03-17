@@ -31,6 +31,7 @@ import {
   Row,
   RowOrGroup,
   ScrollEvent,
+  SelectEvent,
   SelectionType
 } from '../../types/public.types';
 import { DraggableDirective } from '../../directives/draggable.directive';
@@ -389,7 +390,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   @Output() scroll = new EventEmitter<ScrollEvent>();
   @Output() page = new EventEmitter<number>();
   @Output() activate = new EventEmitter<ActivateEvent<TRow>>();
-  @Output() select = new EventEmitter<{ selected: TRow[] }>();
+  @Output() select = new EventEmitter<SelectEvent<TRow>>();
   @Output() detailToggle = new EventEmitter<any>();
   @Output() rowContextmenu = new EventEmitter<{ event: MouseEvent; row: RowOrGroup<TRow> }>(false);
   @Output() treeAction = new EventEmitter<{ row: TRow }>();

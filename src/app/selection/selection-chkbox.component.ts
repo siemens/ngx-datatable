@@ -1,5 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { ColumnMode, SelectEvent, SelectionType } from 'projects/ngx-datatable/src/public-api';
+import {
+  ActivateEvent,
+  ColumnMode,
+  SelectEvent,
+  SelectionType
+} from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
@@ -96,7 +101,7 @@ export class CheckboxSelectionComponent {
     this.selected.push(...selected);
   }
 
-  onActivate(event) {
+  onActivate(event: ActivateEvent<Employee>) {
     console.log('Activate Event', event);
   }
 
@@ -112,7 +117,7 @@ export class CheckboxSelectionComponent {
     this.selected = [];
   }
 
-  displayCheck(row) {
+  displayCheck(row: Employee) {
     return row.name !== 'Ethel Price';
   }
 }

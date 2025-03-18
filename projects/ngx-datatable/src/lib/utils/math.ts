@@ -1,4 +1,4 @@
-import { TableColumn, TableColumnGroup } from '../types/table-column.type';
+import { TableColumn, TableColumnGroup, TableColumnProp } from '../types/table-column.type';
 import { columnsByPin, columnsTotalWidth } from './column';
 
 /**
@@ -50,7 +50,7 @@ function scaleColumns(colsByGroup: TableColumnGroup, maxWidth: number, totalFlex
     }
   }
 
-  const hasMinWidth = {};
+  const hasMinWidth: Record<TableColumnProp, boolean> = {};
   let remainingWidth = maxWidth;
 
   // resize columns until no width is left to be distributed

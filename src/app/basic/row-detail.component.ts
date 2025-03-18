@@ -1,5 +1,10 @@
 import { Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ColumnMode, DatatableComponent, PageEvent } from 'projects/ngx-datatable/src/public-api';
+import {
+  ColumnMode,
+  DatatableComponent,
+  DetailToggleEvents,
+  PageEvent
+} from 'projects/ngx-datatable/src/public-api';
 import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
@@ -119,7 +124,7 @@ export class RowDetailsComponent {
     this.table.rowDetail.toggleExpandRow(row);
   }
 
-  onDetailToggle(event) {
+  onDetailToggle(event: DetailToggleEvents<FullEmployee>) {
     console.log('Detail Toggled', event);
   }
 }

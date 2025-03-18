@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MockServerResultsService } from '../paging/mock-server-results-service';
 import { Page } from '../paging/model/page';
-import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
+import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
@@ -48,7 +48,7 @@ export class SummaryRowServerPagingComponent implements OnInit {
   };
   rows: Employee[] = [];
 
-  columns = [
+  columns: TableColumn[] = [
     // NOTE: cells for current page only !
     { name: 'Name', summaryFunc: cells => `${cells.length} total` },
     { name: 'Gender', summaryFunc: () => this.getGenderSummary() },

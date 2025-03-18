@@ -1,5 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { ColumnMode, SelectEvent, SelectionType } from 'projects/ngx-datatable/src/public-api';
+import {
+  ActivateEvent,
+  ColumnMode,
+  SelectEvent,
+  SelectionType
+} from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
@@ -107,7 +112,7 @@ export class CustomCheckboxSelectionComponent {
     this.selected.push(...selected);
   }
 
-  onActivate(event) {
+  onActivate(event: ActivateEvent<Employee>) {
     console.log('Activate Event', event);
   }
 

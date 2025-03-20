@@ -206,6 +206,9 @@ export class DataTableHeaderCellComponent implements OnInit {
   @HostListener('contextmenu', ['$event'])
   onContextmenu($event: MouseEvent): void {
     this.columnContextmenu.emit({ event: $event, column: this.column });
+    if (this.column.draggable) {
+      $event.preventDefault();
+    }
   }
 
   @HostListener('keydown.enter')

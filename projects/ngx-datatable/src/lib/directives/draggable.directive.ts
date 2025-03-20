@@ -14,6 +14,7 @@ import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TableColumn } from '../types/table-column.type';
 import { DraggableDragEvent } from '../types/internal.types';
+import { getPositionFromEvent, isTouchEvent } from '../utils/events';
 
 /**
  * Draggable Directive for Angular2
@@ -55,7 +56,7 @@ export class DraggableDirective implements OnDestroy, OnChanges {
     this._destroySubscription();
   }
 
-  onMouseup(event: MouseEvent): void {
+  onMouseup(event: MouseEvent | TouchEvent): void {
     if (!this.isDragging) {
       return;
     }
@@ -73,7 +74,8 @@ export class DraggableDirective implements OnDestroy, OnChanges {
     }
   }
 
-  onMousedown(event: MouseEvent): void {
+  onMousedown(event: MouseEvent | TouchEvent): void {
+    const isTouch = isTouchEvent(event);
     // we only want to drag the inner header text
     const isDragElm = (event.target as HTMLElement).classList.contains('draggable');
 
@@ -81,12 +83,12 @@ export class DraggableDirective implements OnDestroy, OnChanges {
       event.preventDefault();
       this.isDragging = true;
 
-      const mouseDownPos = { x: event.clientX, y: event.clientY };
+      const mouseDownPos = getPositionFromEvent(event);
 
-      const mouseup = fromEvent<MouseEvent>(document, 'mouseup');
+      const mouseup = fromEvent<MouseEvent | TouchEvent>(document, isTouch ? 'touchend' : 'mouseup');
       this.subscription = mouseup.subscribe(ev => this.onMouseup(ev));
 
-      const mouseMoveSub = fromEvent<MouseEvent>(document, 'mousemove')
+      const mouseMoveSub = fromEvent<MouseEvent | TouchEvent>(document, isTouch ? 'touchmove' : 'mousemove')
         .pipe(takeUntil(mouseup))
         .subscribe(ev => this.move(ev, mouseDownPos));
 
@@ -100,13 +102,13 @@ export class DraggableDirective implements OnDestroy, OnChanges {
     }
   }
 
-  move(event: MouseEvent, mouseDownPos: { x: number; y: number }): void {
+  move(event: MouseEvent | TouchEvent, mouseDownPos: { clientX: number; clientY: number }): void {
     if (!this.isDragging) {
       return;
     }
 
-    const x = event.clientX - mouseDownPos.x;
-    const y = event.clientY - mouseDownPos.y;
+    const x = getPositionFromEvent(event).clientX - mouseDownPos.clientX;
+    const y = getPositionFromEvent(event).clientY - mouseDownPos.clientY;
 
     if (this.dragX) {
       this.element.style.left = `${x}px`;

@@ -40,6 +40,12 @@ jobs:
       - name: Test
         run: npm run ci
 
+      - name: Archive coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/ngx-datatable-lib
+
       - name: Build Docs
         run: npm run build-docs
 

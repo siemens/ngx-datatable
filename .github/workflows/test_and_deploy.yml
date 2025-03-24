@@ -46,6 +46,14 @@ jobs:
           name: coverage
           path: coverage/ngx-datatable-lib
 
+      - name: Publish coverage results
+        uses: paambaati/codeclimate-action@v9.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageLocations: ${{github.workspace}}/coverage/ngx-datatable-lib/lcov.info:lcov
+        if: env.CC_TEST_REPORTER_ID
+
       - name: Build Docs
         run: npm run build-docs
 

@@ -2,6 +2,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, inject } from '@angular/core';
 import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
 import { DataService } from '../data.service';
+import { Employee } from '../data.model';
 
 @Component({
   selector: 'drag-drop-demo',
@@ -39,7 +40,7 @@ import { DataService } from '../data.service';
   `
 })
 export class DragDropComponent {
-  rows = [];
+  rows: Employee[] = [];
   loadingIndicator = true;
   reorderable = true;
 

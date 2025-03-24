@@ -158,6 +158,18 @@ export interface AllGroupsToggleEvent {
 
 export type GroupToggleEvents<TRow> = GroupToggleEvent<TRow> | AllGroupsToggleEvent;
 
+export interface DetailToggleEvent<TRow> {
+  type: 'row';
+  value: TRow;
+}
+
+export interface AllDetailToggleEvent {
+  type: 'all';
+  value: boolean;
+}
+
+export type DetailToggleEvents<TRow> = DetailToggleEvent<TRow> | AllDetailToggleEvent;
+
 export enum SelectionType {
   single = 'single',
   multi = 'multi',
@@ -169,6 +181,20 @@ export enum SelectionType {
 export interface SelectEvent<TRow> {
   selected: TRow[];
 }
+
+export interface ContextMenuEventBody<TRow> {
+  event: MouseEvent;
+  type: ContextmenuType.body;
+  content: RowOrGroup<TRow>;
+}
+
+export interface ContextMenuEvenHeader {
+  event: MouseEvent;
+  type: ContextmenuType.header;
+  content: TableColumn;
+}
+
+export type ContextMenuEvent<TRow> = ContextMenuEventBody<TRow> | ContextMenuEvenHeader;
 
 export type DragEventType =
   | 'drag'

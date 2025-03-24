@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { ColumnMode, ContextMenuEvent, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
@@ -73,7 +73,7 @@ export class ContextMenuDemoComponent {
     });
   }
 
-  onTableContextMenu(contextMenuEvent) {
+  onTableContextMenu(contextMenuEvent: ContextMenuEvent<Employee>) {
     console.log(contextMenuEvent);
 
     this.rawEvent = contextMenuEvent.event;

@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { getPositionFromEvent, isTouchEvent } from '../utils/events';
+import { getPositionFromEvent } from '../utils/events';
 
 @Directive({
   selector: '[resizeable]',
@@ -66,7 +66,7 @@ export class ResizeableDirective implements OnDestroy, AfterViewInit {
   }
 
   onMousedown(event: MouseEvent | TouchEvent): void {
-    const isTouch = isTouchEvent(event);
+    const isTouch = event instanceof TouchEvent;
     const isHandle = (event.target as HTMLElement).classList.contains('resize-handle');
     const initialWidth = this.element.clientWidth;
     const mouseDownScreenX = getPositionFromEvent(event).screenX;

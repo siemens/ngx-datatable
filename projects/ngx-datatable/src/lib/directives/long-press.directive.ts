@@ -11,7 +11,7 @@ import {
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TableColumn } from '../types/table-column.type';
-import { getPositionFromEvent, isTouchEvent } from '../utils/events';
+import { getPositionFromEvent } from '../utils/events';
 
 @Directive({
   selector: '[long-press]',
@@ -47,7 +47,7 @@ export class LongPressDirective implements OnDestroy {
   subscription: Subscription;
 
   onMouseDown(event: MouseEvent | TouchEvent): void {
-    const isTouch = isTouchEvent(event);
+    const isTouch = event instanceof TouchEvent;
 
     if (!this.pressEnabled || (!isTouch && (event as MouseEvent).button !== 0)) {
       return;

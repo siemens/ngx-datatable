@@ -14,7 +14,7 @@ import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TableColumn } from '../types/table-column.type';
 import { DraggableDragEvent } from '../types/internal.types';
-import { getPositionFromEvent, isTouchEvent } from '../utils/events';
+import { getPositionFromEvent } from '../utils/events';
 
 /**
  * Draggable Directive for Angular2
@@ -75,7 +75,7 @@ export class DraggableDirective implements OnDestroy, OnChanges {
   }
 
   onMousedown(event: MouseEvent | TouchEvent): void {
-    const isTouch = isTouchEvent(event);
+    const isTouch = event instanceof TouchEvent;
     // we only want to drag the inner header text
     const isDragElm = (event.target as HTMLElement).classList.contains('draggable');
 

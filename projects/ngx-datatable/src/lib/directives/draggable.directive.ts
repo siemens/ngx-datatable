@@ -85,10 +85,16 @@ export class DraggableDirective implements OnDestroy, OnChanges {
 
       const mouseDownPos = getPositionFromEvent(event);
 
-      const mouseup = fromEvent<MouseEvent | TouchEvent>(document, isTouch ? 'touchend' : 'mouseup');
+      const mouseup = fromEvent<MouseEvent | TouchEvent>(
+        document,
+        isTouch ? 'touchend' : 'mouseup'
+      );
       this.subscription = mouseup.subscribe(ev => this.onMouseup(ev));
 
-      const mouseMoveSub = fromEvent<MouseEvent | TouchEvent>(document, isTouch ? 'touchmove' : 'mousemove')
+      const mouseMoveSub = fromEvent<MouseEvent | TouchEvent>(
+        document,
+        isTouch ? 'touchmove' : 'mousemove'
+      )
         .pipe(takeUntil(mouseup))
         .subscribe(ev => this.move(ev, mouseDownPos));
 

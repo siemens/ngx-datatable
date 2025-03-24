@@ -93,7 +93,7 @@ import { DataTableGhostLoaderComponent } from './ghost-loader/ghost-loader.compo
           @for (group of rowsToRender(); track rowTrackingFn(i, group); let i = $index) {
             @let disabled = isRow(group) && disableRowCheck && disableRowCheck(group);
             <!-- $any(group) is needed as the typing is broken and the feature as well. See #147. -->
-            <!-- This has to be revisited and fixed. -->
+            <!-- FIXME: This has to be revisited and fixed. -->
             <datatable-row-wrapper
               [attr.hidden]="
                 ghostLoadingIndicator && (!rowCount || !virtualization || !scrollbarV) ? true : null

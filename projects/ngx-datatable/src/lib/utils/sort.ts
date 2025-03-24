@@ -1,6 +1,6 @@
 import { getterForProp } from './column-prop-getters';
 import { Group, SortDirection, SortPropDir, SortType } from '../types/public.types';
-import { TableColumn } from '../types/table-column.type';
+import { TableColumn, TableColumnProp } from '../types/table-column.type';
 
 /**
  * Gets the next sort direction
@@ -87,16 +87,19 @@ export function sortRows<TRow>(rows: TRow[], columns: TableColumn[], dirs: SortP
    * record the row ordering of results from prior sort operations (if applicable)
    * this is necessary to guarantee stable sorting behavior
    */
-  const rowToIndexMap = new Map<any, number>();
+  const rowToIndexMap = new Map<TRow, number>();
   rows.forEach((row, index) => rowToIndexMap.set(row, index));
 
   const temp = [...rows];
-  const cols = columns.reduce((obj, col) => {
-    if (col.comparator && typeof col.comparator === 'function') {
-      obj[col.prop] = col.comparator;
-    }
-    return obj;
-  }, {});
+  const cols = columns.reduce(
+    (obj, col) => {
+      if (col.comparator && typeof col.comparator === 'function') {
+        obj[col.prop] = col.comparator;
+      }
+      return obj;
+    },
+    {} as Record<TableColumnProp, TableColumn['comparator']>
+  );
 
   // cache valueGetter and compareFn so that they
   // do not need to be looked-up in the sort function body

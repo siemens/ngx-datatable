@@ -5,7 +5,6 @@ import {
   ElementRef,
   EventEmitter,
   HostBinding,
-  HostListener,
   inject,
   Input,
   numberAttribute,
@@ -15,10 +14,15 @@ import {
 } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { getPositionFromEvent } from '../utils/events';
 
 @Directive({
   selector: '[resizeable]',
-  standalone: true
+  standalone: true,
+  host: {
+    '(mousedown)': 'onMousedown($event)',
+    '(touchstart)': 'onMousedown($event)'
+  }
 })
 export class ResizeableDirective implements OnDestroy, AfterViewInit {
   private renderer = inject(Renderer2);
@@ -61,19 +65,22 @@ export class ResizeableDirective implements OnDestroy, AfterViewInit {
     }
   }
 
-  @HostListener('mousedown', ['$event'])
-  onMousedown(event: MouseEvent): void {
+  onMousedown(event: MouseEvent | TouchEvent): void {
+    const isTouch = event instanceof TouchEvent;
     const isHandle = (event.target as HTMLElement).classList.contains('resize-handle');
     const initialWidth = this.element.clientWidth;
-    const mouseDownScreenX = event.screenX;
+    const mouseDownScreenX = getPositionFromEvent(event).screenX;
 
     if (isHandle) {
       event.stopPropagation();
 
-      const mouseup = fromEvent(document, 'mouseup');
+      const mouseup = fromEvent(document, isTouch ? 'touchend' : 'mouseup');
       this.subscription = mouseup.subscribe(() => this.onMouseup());
 
-      const mouseMoveSub = fromEvent<MouseEvent>(document, 'mousemove')
+      const mouseMoveSub = fromEvent<MouseEvent | TouchEvent>(
+        document,
+        isTouch ? 'touchmove' : 'mousemove'
+      )
         .pipe(takeUntil(mouseup))
         .subscribe(e => this.move(e, initialWidth, mouseDownScreenX));
 
@@ -81,8 +88,8 @@ export class ResizeableDirective implements OnDestroy, AfterViewInit {
     }
   }
 
-  move(event: MouseEvent, initialWidth: number, mouseDownScreenX: number): void {
-    const movementX = event.screenX - mouseDownScreenX;
+  move(event: MouseEvent | TouchEvent, initialWidth: number, mouseDownScreenX: number): void {
+    const movementX = getPositionFromEvent(event).screenX - mouseDownScreenX;
     const newWidth = initialWidth + movementX;
     this.resizing.emit(newWidth);
   }

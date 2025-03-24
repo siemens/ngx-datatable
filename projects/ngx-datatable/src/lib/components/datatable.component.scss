@@ -192,6 +192,18 @@
         }
       }
 
+      @media (hover: none) {
+        touch-action: none;
+
+        .resize-handle {
+          visibility: visible;
+        }
+
+        .datatable-header-cell-label.draggable {
+          user-select: none;
+        }
+      }
+
       &:hover {
         .resize-handle--not-resizable {
           visibility: visible;

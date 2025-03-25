@@ -1,5 +1,9 @@
 import { Component, inject, ViewChild } from '@angular/core';
-import { ColumnMode, DatatableComponent } from 'projects/ngx-datatable/src/public-api';
+import {
+  ColumnMode,
+  DataTableColumnDirective,
+  DatatableComponent
+} from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
@@ -40,7 +44,9 @@ import { DataService } from '../data.service';
         <ngx-datatable-column name="Company"></ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [DatatableComponent, DataTableColumnDirective]
 })
 export class LiveDataComponent {
   @ViewChild('mydatatable') mydatatable: DatatableComponent<Employee & { updated: string }>;

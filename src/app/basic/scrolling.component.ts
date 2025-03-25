@@ -1,6 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
+import {
+  DataTableColumnDirective,
+  DatatableComponent
+} from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'horz-vert-scrolling-demo',
@@ -38,7 +42,9 @@ import { DataService } from '../data.service';
         ></ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [DatatableComponent, DataTableColumnDirective]
 })
 export class HorzVertScrollingComponent {
   rows: FullEmployee[] = [];

@@ -1,7 +1,12 @@
 import { Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
   ColumnMode,
+  DataTableColumnCellDirective,
+  DataTableColumnDirective,
+  DataTableColumnHeaderDirective,
   DatatableComponent,
+  DatatableRowDetailDirective,
+  DatatableRowDetailTemplateDirective,
   DetailToggleEvents,
   PageEvent
 } from 'projects/ngx-datatable/src/public-api';
@@ -119,7 +124,16 @@ import { DataService } from '../data.service';
     </div>
   `,
   // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [
+    DatatableComponent,
+    DatatableRowDetailDirective,
+    DatatableRowDetailTemplateDirective,
+    DataTableColumnDirective,
+    DataTableColumnCellDirective,
+    DataTableColumnHeaderDirective
+  ]
 })
 export class ResponsiveComponent {
   @ViewChild('myTable') table: DatatableComponent<FullEmployee>;

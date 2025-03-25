@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
@@ -39,7 +39,9 @@ import { DataService } from '../data.service';
       </ng-template>
     </div>
   `,
-  styleUrls: ['./summary-row-custom-template.component.scss']
+  styleUrls: ['./summary-row-custom-template.component.scss'],
+  standalone: true,
+  imports: [DatatableComponent]
 })
 export class SummaryRowCustomTemplateComponent implements OnInit {
   rows: Employee[] = [];

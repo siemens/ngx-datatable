@@ -1,5 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
+import {
+  ColumnMode,
+  DataTableColumnCellDirective,
+  DataTableColumnDirective,
+  DatatableComponent
+} from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
@@ -44,7 +49,9 @@ import { DataService } from '../data.service';
         <ngx-datatable-column name="Gender"> </ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective]
 })
 export class DefaultSortingComponent implements OnInit {
   rows: Employee[] = [];

@@ -1,8 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'rx-demo',
@@ -30,7 +31,9 @@ import { DataService } from '../data.service';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [DatatableComponent, AsyncPipe]
 })
 export class RxDemoComponent {
   rows: Observable<Employee[]>;

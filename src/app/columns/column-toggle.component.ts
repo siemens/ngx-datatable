@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import {
+  ColumnMode,
+  DataTableColumnDirective,
+  DatatableComponent,
+  TableColumn
+} from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
@@ -48,7 +53,9 @@ import { Employee } from '../data.model';
         </ul>
       </div>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [DatatableComponent, DataTableColumnDirective]
 })
 export class ColumnToggleComponent {
   rows: Employee[] = [

@@ -2,6 +2,8 @@ import { Component, inject } from '@angular/core';
 import {
   ActivateEvent,
   ColumnMode,
+  DataTableColumnDirective,
+  DatatableComponent,
   SelectEvent,
   SelectionType
 } from 'projects/ngx-datatable/src/public-api';
@@ -77,7 +79,9 @@ import { DataService } from '../data.service';
         </ul>
       </div>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [DatatableComponent, DataTableColumnDirective]
 })
 export class CheckboxSelectionComponent {
   rows: Employee[] = [];

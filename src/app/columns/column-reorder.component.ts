@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'column-reorder-demo',
@@ -55,7 +56,9 @@ import { DataService } from '../data.service';
         </div>
       </ng-template>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [DatatableComponent, NgClass]
 })
 export class ColumnReorderComponent {
   rows: Employee[] = [];

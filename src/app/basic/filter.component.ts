@@ -1,6 +1,5 @@
 import { Component, inject, ViewChild } from '@angular/core';
-import { DatatableComponent } from '../../../projects/ngx-datatable/src/lib/components/datatable.component';
-import { ColumnMode, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
@@ -38,7 +37,9 @@ import { DataService } from '../data.service';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [DatatableComponent]
 })
 export class FilterComponent {
   rows: Employee[] = [];

@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 
 import data from 'src/assets/data/company.json';
-import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
+import { ColumnMode, DatatableComponent } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 const companyData = data as any[];
@@ -55,7 +55,9 @@ export class MockServerResultsService {
       ></ngx-datatable>
     </div>
   `,
-  styleUrls: ['./scrolling-server.component.css']
+  styleUrls: ['./scrolling-server.component.css'],
+  standalone: true,
+  imports: [DatatableComponent]
 })
 export class ServerScrollingComponent implements OnInit {
   readonly headerHeight = 50;

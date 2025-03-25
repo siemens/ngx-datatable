@@ -1,5 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { ColumnMode, SortType, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import {
+  ColumnMode,
+  DatatableComponent,
+  SortType,
+  TableColumn
+} from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
@@ -31,7 +36,9 @@ import { DataService } from '../data.service';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [DatatableComponent]
 })
 export class ClientSortingComponent {
   rows: Employee[] = [];

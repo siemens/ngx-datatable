@@ -1,5 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { ColumnMode, PageEvent } from 'projects/ngx-datatable/src/public-api';
+import {
+  ColumnMode,
+  DataTableColumnCellDirective,
+  DataTableColumnDirective,
+  DatatableComponent,
+  PageEvent
+} from 'projects/ngx-datatable/src/public-api';
 import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
@@ -41,7 +47,9 @@ import { DataService } from '../data.service';
         <ngx-datatable-column name="Row Height" prop="height" [width]="80"> </ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective]
 })
 export class VirtualScrollComponent {
   rows: (FullEmployee & { height: number })[];

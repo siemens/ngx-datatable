@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
+import { ColumnMode, DatatableComponent } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
@@ -30,7 +30,9 @@ import { DataService } from '../data.service';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [DatatableComponent]
 })
 export class ClientPagingComponent {
   rows: Employee[] = [];

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MockServerResultsService } from './mock-server-results-service';
 import { Page } from './model/page';
-import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
+import { ColumnMode, DatatableComponent } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 
 @Component({
@@ -36,7 +36,9 @@ import { Employee } from '../data.model';
       >
       </ngx-datatable>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [DatatableComponent]
 })
 export class ServerPagingComponent implements OnInit {
   page: Page = {

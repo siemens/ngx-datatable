@@ -1,5 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
+import {
+  ColumnMode,
+  DataTableColumnCellDirective,
+  DataTableColumnDirective,
+  DatatableComponent
+} from 'projects/ngx-datatable/src/public-api';
 import { TreeEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
@@ -47,7 +52,9 @@ import { DataService } from '../data.service';
       </ngx-datatable>
     </div>
   `,
-  styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
+  styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }'],
+  standalone: true,
+  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective]
 })
 export class ClientTreeComponent {
   rows: TreeEmployee[] = [];

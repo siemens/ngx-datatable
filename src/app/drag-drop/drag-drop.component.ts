@@ -1,6 +1,11 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, inject } from '@angular/core';
-import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
+import {
+  ColumnMode,
+  DatatableComponent,
+  DatatableRowDefComponent,
+  DatatableRowDefDirective
+} from 'projects/ngx-datatable/src/public-api';
 import { DataService } from '../data.service';
 import { Employee } from '../data.model';
 
@@ -37,7 +42,15 @@ import { Employee } from '../data.model';
         </ng-template>
       </ngx-datatable>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [
+    DatatableComponent,
+    CdkDropList,
+    DatatableRowDefDirective,
+    DatatableRowDefComponent,
+    CdkDrag
+  ]
 })
 export class DragDropComponent {
   rows: Employee[] = [];

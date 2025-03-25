@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import {
   ActivateEvent,
   ColumnMode,
+  DatatableComponent,
   SelectEvent,
   SelectionType,
   TableColumn
@@ -63,7 +64,9 @@ import { DataService } from '../data.service';
         </ul>
       </div>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [DatatableComponent]
 })
 export class SingleSelectionComponent {
   rows: Employee[] = [];

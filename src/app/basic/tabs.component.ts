@@ -1,5 +1,9 @@
 import { Component, inject } from '@angular/core';
-import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
+import {
+  ColumnMode,
+  DataTableColumnDirective,
+  DatatableComponent
+} from 'projects/ngx-datatable/src/public-api';
 import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
@@ -67,7 +71,9 @@ import { DataService } from '../data.service';
         }
       </div>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [DatatableComponent, DataTableColumnDirective]
 })
 export class TabsDemoComponent {
   rows: FullEmployee[] = [];

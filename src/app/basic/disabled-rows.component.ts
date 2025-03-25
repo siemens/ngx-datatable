@@ -1,5 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { ColumnMode, SelectionType } from 'projects/ngx-datatable/src/public-api';
+import {
+  ColumnMode,
+  DataTableColumnCellDirective,
+  DataTableColumnDirective,
+  DatatableComponent,
+  DisableRowDirective,
+  SelectionType
+} from 'projects/ngx-datatable/src/public-api';
 import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
@@ -78,7 +85,14 @@ import { DataService } from '../data.service';
         </ngx-datatable>
       </div>
     </div>
-  `
+  `,
+  standalone: true,
+  imports: [
+    DatatableComponent,
+    DataTableColumnDirective,
+    DataTableColumnCellDirective,
+    DisableRowDirective
+  ]
 })
 export class DisabledRowsComponent {
   rows: (FullEmployee & { isDisabled?: boolean })[] = [];

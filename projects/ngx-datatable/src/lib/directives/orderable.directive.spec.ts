@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { OrderableDirective } from './orderable.directive';
 import { DraggableDirective } from './draggable.directive';
 import { id } from '../utils/id';
+import { TableColumn } from '../types/table-column.type';
 
 @Component({
   selector: 'test-fixture-component',
@@ -19,7 +20,7 @@ import { id } from '../utils/id';
   standalone: true
 })
 class TestFixtureComponent {
-  draggables = [];
+  draggables: TableColumn[] = [];
   @ViewChildren(DraggableDirective) draggableDirectives!: QueryList<DraggableDirective>;
 }
 

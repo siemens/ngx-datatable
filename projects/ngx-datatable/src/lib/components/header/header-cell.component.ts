@@ -57,6 +57,7 @@ import { InnerSortEvent, TableColumnInternal } from '../../types/internal.types'
   host: {
     class: 'datatable-header-cell'
   },
+  styleUrl: './header-cell.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [NgTemplateOutlet]

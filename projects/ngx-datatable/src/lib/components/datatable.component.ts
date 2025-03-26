@@ -458,7 +458,7 @@ export class DatatableComponent<TRow extends Row = any>
    *      return row.name !== 'Ethel Price';
    *    }
    */
-  @Input() disableRowCheck: (row: TRow) => boolean;
+  @Input() disableRowCheck?: (row: TRow) => boolean;
 
   /**
    * A flag to enable drag behavior of native HTML5 drag and drop API on rows.
@@ -1224,7 +1224,7 @@ export class DatatableComponent<TRow extends Row = any>
     } else {
       let relevantRows;
       if (this.disableRowCheck) {
-        relevantRows = this.rows.filter(row => !this.disableRowCheck(row));
+        relevantRows = this.rows.filter(row => !this.disableRowCheck!(row));
       } else {
         relevantRows = this.rows;
       }

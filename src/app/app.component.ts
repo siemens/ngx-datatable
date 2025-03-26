@@ -1,7 +1,7 @@
 import { Component, signal, ViewEncapsulation } from '@angular/core';
 import { HashLocationStrategy, Location, LocationStrategy } from '@angular/common';
 import packageInfo from 'projects/ngx-datatable/package.json';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +15,9 @@ import { RouterOutlet } from '@angular/router';
       provide: LocationStrategy,
       useClass: HashLocationStrategy
     }
-  ]
+  ],
+  standalone: true,
+  imports: [RouterLink, RouterOutlet]
 })
 export class AppComponent {
   version = packageInfo.version;

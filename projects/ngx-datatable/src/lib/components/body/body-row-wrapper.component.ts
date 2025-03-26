@@ -71,6 +71,7 @@ import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive'
   host: {
     class: 'datatable-row-wrapper'
   },
+  styleUrl: './body-row-wrapper.component.scss',
   standalone: true,
   imports: [NgTemplateOutlet]
 })

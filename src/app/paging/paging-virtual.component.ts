@@ -50,7 +50,7 @@ import { Employee } from '../data.model';
   imports: [DatatableComponent]
 })
 export class VirtualPagingComponent {
-  totalElements: number;
+  totalElements = 0;
   pageNumber: number;
   rows: Employee[];
   cache: Record<string, boolean> = {};

@@ -225,7 +225,6 @@ import { DatatableBodyRowDirective } from './body-row.directive';
     class: 'datatable-body'
   },
   styleUrl: './body.component.scss',
-  standalone: true,
   imports: [
     DataTableGhostLoaderComponent,
     DataTableSelectionComponent,

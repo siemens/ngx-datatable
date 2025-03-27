@@ -16,7 +16,6 @@ import { RouterLink, RouterOutlet } from '@angular/router';
       useClass: HashLocationStrategy
     }
   ],
-  standalone: true,
   imports: [RouterLink, RouterOutlet]
 })
 export class AppComponent {

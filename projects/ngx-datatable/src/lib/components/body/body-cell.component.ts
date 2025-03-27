@@ -93,7 +93,6 @@ import { RowIndex, TableColumnInternal } from '../../types/internal.types';
     }
   `,
   styleUrl: './body-cell.component.scss',
-  standalone: true,
   imports: [NgTemplateOutlet, DataTableGhostLoaderComponent]
 })
 export class DataTableBodyCellComponent<TRow extends Row = any> implements DoCheck {

@@ -7,7 +7,6 @@ import { TableColumnInternal } from '../../../types/internal.types';
   templateUrl: `./ghost-loader.component.html`,
   styleUrls: [`./ghost-loader.component.scss`],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [NgTemplateOutlet]
 })
 export class DataTableGhostLoaderComponent {

@@ -16,8 +16,7 @@ describe('DatatableComponent', () => {
 
   @Component({
     template: ` <ngx-datatable [columns]="columns" [rows]="rows" [sorts]="sorts"></ngx-datatable> `,
-    imports: [DatatableComponent],
-    standalone: true
+    imports: [DatatableComponent]
   })
   class TestFixtureComponent {
     columns: TableColumn[] = [];
@@ -383,8 +382,7 @@ describe('DatatableComponent With Custom Templates', () => {
       DataTableColumnDirective,
       DataTableColumnCellDirective,
       DataTableColumnHeaderDirective
-    ],
-    standalone: true
+    ]
   })
   // eslint-disable-next-line @angular-eslint/component-class-suffix
   class TestFixtureComponentWithCustomTemplates {

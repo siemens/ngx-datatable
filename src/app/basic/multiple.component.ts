@@ -38,7 +38,6 @@ import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datata
       </ngx-datatable>
     </div>
   `,
-  standalone: true,
   imports: [DatatableComponent]
 })
 export class MultipleTablesComponent {

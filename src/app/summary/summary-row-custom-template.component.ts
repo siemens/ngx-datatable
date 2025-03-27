@@ -40,7 +40,6 @@ import { DataService } from '../data.service';
     </div>
   `,
   styleUrls: ['./summary-row-custom-template.component.scss'],
-  standalone: true,
   imports: [DatatableComponent]
 })
 export class SummaryRowCustomTemplateComponent implements OnInit {

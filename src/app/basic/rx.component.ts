@@ -32,7 +32,6 @@ import { AsyncPipe } from '@angular/common';
       </ngx-datatable>
     </div>
   `,
-  standalone: true,
   imports: [DatatableComponent, AsyncPipe]
 })
 export class RxDemoComponent {

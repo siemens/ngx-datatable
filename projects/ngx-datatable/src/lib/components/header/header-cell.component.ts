@@ -66,7 +66,6 @@ import { fromEvent, Subscription, takeUntil } from 'rxjs';
   },
   styleUrl: './header-cell.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [NgTemplateOutlet]
 })
 export class DataTableHeaderCellComponent implements OnInit, OnDestroy {

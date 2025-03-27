@@ -25,7 +25,6 @@ import { RowOrGroup } from '../../types/public.types';
       [ngTemplateOutletContext]="rowContext"
     />
   }`,
-  standalone: true,
   imports: [NgTemplateOutlet]
 })
 export class DatatableRowDefComponent {

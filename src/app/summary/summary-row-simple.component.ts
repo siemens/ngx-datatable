@@ -50,7 +50,6 @@ import { DataService } from '../data.service';
     </div>
   `,
   styleUrls: ['./summary-row-simple.component.scss'],
-  standalone: true,
   imports: [DatatableComponent]
 })
 export class SummaryRowSimpleComponent {

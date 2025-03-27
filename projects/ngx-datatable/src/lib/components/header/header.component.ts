@@ -91,7 +91,6 @@ import { OrderableDirective } from '../../directives/orderable.directive';
   },
   styleUrl: './header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     OrderableDirective,
     NgStyle,

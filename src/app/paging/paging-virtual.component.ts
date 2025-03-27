@@ -46,7 +46,6 @@ import { Employee } from '../data.model';
     </div>
   `,
   styleUrls: ['./paging-virtual.component.scss'],
-  standalone: true,
   imports: [DatatableComponent]
 })
 export class VirtualPagingComponent {

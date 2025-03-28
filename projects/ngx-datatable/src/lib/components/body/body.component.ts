@@ -22,7 +22,7 @@ import { NgStyle, NgTemplateOutlet } from '@angular/common';
 import { DatatableGroupHeaderDirective } from './body-group-header.directive';
 import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive';
 import { DataTableBodyRowComponent } from './body-row.component';
-import { ColumnGroupWidth, RowIndex, TableColumnInternal } from '../../types/internal.types';
+import { ColumnGroupWidth, TableColumnInternal } from '../../types/internal.types';
 import {
   ActivateEvent,
   DragEventData,
@@ -94,7 +94,8 @@ import { DatatableBodyRowDirective } from './body-row.directive';
             ngx-datatable-body-row
             #bodyRow
             let-row="row"
-            let-rowIndex="index"
+            let-index="index"
+            let-indexInGroup="indexInGroup"
             let-groupedRows="groupedRows"
             let-disabled="disabled"
           >
@@ -109,7 +110,7 @@ import { DatatableBodyRowDirective } from './body-row.directive';
               [rowHeight]="getRowHeight(row)"
               [row]="row"
               [group]="groupedRows"
-              [rowIndex]="getRowIndex(row)"
+              [rowIndex]="{ index: index, indexInGroup: indexInGroup }"
               [expanded]="getRowExpanded(row)"
               [rowClass]="rowClass"
               [displayCheck]="displayCheck"
@@ -118,7 +119,7 @@ import { DatatableBodyRowDirective } from './body-row.directive';
               [draggable]="rowDraggable"
               [verticalScrollVisible]="verticalScrollVisible"
               (treeAction)="onTreeAction(row)"
-              (activate)="selector.onActivate($event, rowIndex ?? indexes().first + rowIndex)"
+              (activate)="selector.onActivate($event, index)"
               (drop)="drop($event, row, rowElement)"
               (dragover)="dragOver($event, row)"
               (dragenter)="dragEnter($event, row, rowElement)"
@@ -148,7 +149,7 @@ import { DatatableBodyRowDirective } from './body-row.directive';
               [row]="group"
               [disabled]="disabled"
               [expanded]="getRowExpanded(group)"
-              [rowIndex]="getRowIndex(group && $any(group)[i])?.index ?? 0"
+              [rowIndex]="indexes().first + i"
               [selected]="selected"
               (rowContextmenu)="rowContextmenu.emit($event)"
             >
@@ -170,7 +171,7 @@ import { DatatableBodyRowDirective } from './body-row.directive';
                     [ngTemplateOutlet]="bodyRow"
                     [ngTemplateOutletContext]="{
                       row: group,
-                      index: i,
+                      index: indexes().first + i,
                       disabled
                     }"
                   ></ng-container>
@@ -179,14 +180,15 @@ import { DatatableBodyRowDirective } from './body-row.directive';
 
               @if (isGroup(group)) {
                 <!-- The row typecast is due to angular compiler acting weird. It is obvious that it is of type TRow, but the compiler does not understand. -->
-                @for (row of group.value; track rowTrackingFn(i, row); let i = $index) {
+                @for (row of group.value; track rowTrackingFn($index, row)) {
                   @let disabled = disableRowCheck && disableRowCheck(row);
                   <ng-container
                     [ngTemplateOutlet]="bodyRow"
                     [ngTemplateOutletContext]="{
                       row,
                       groupedRows: group?.value,
-                      index: i,
+                      index: indexes().first + i,
+                      indexInGroup: $index,
                       disabled
                     }"
                   ></ng-container>
@@ -403,7 +405,6 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   columnGroupWidths: ColumnGroupWidth;
   rowTrackingFn: TrackByFunction<RowOrGroup<TRow>>;
   listener: any;
-  rowIndexes = new WeakMap<RowOrGroup<TRow>, RowIndex>();
   rowExpansions: any[] = [];
 
   _rows: TRow[];
@@ -429,7 +430,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       if (this.trackByProp) {
         return (row as any)[this.trackByProp];
       } else {
-        return this.getRowIndex(row)?.index;
+        return row;
       }
     };
   }
@@ -558,48 +559,14 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
    */
   updateRows(): RowOrGroup<TRow>[] {
     const { first, last } = this.indexes();
-    let rowIndex = first;
-    let idx = 0;
-    const temp: RowOrGroup<TRow>[] = [];
-
     // if grouprowsby has been specified treat row paging
     // parameters as group paging parameters ie if limit 10 has been
     // specified treat it as 10 groups rather than 10 rows
     if (this.groupedRows) {
-      while (rowIndex < last && rowIndex < this.groupedRows.length) {
-        // Add the groups into this page
-        const group = this.groupedRows[rowIndex];
-        this.rowIndexes.set(group, { index: rowIndex });
-
-        if (group.value) {
-          // add indexes for each group item
-          group.value.forEach((g: TRow, i: number) => {
-            this.rowIndexes.set(g, { index: rowIndex, indexInGroup: i });
-          });
-        }
-        temp[idx] = group;
-        idx++;
-
-        // Group index in this context
-        rowIndex++;
-      }
+      return this.groupedRows.slice(first, Math.min(last, this.groupedRows.length));
     } else {
-      while (rowIndex < last && rowIndex < this.rowCount) {
-        const row = this.rows[rowIndex];
-
-        if (row) {
-          // add indexes for each row
-          this.rowIndexes.set(row, { index: rowIndex });
-          temp[idx] = row;
-        } else if (this.ghostLoadingIndicator && this.virtualization) {
-          temp[idx] = undefined;
-        }
-
-        idx++;
-        rowIndex++;
-      }
+      return this.rows.slice(first, Math.min(last, this.rowCount));
     }
-    return temp;
   }
 
   /**
@@ -693,27 +660,10 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       }
 
       if (this.scrollbarV && this.virtualization) {
-        let idx = 0;
-
-        if (Array.isArray(rows)) {
-          // Get the latest row rowindex in a group
-          const row = rows[rows.length - 1];
-          // The group row, which has always a numeric index
-          idx = row ? this.getRowIndex(row).index : 0;
-        } else {
-          if (rows) {
-            // normal rows always have a numeric index
-            idx = this.getRowIndex(rows).index;
-          } else {
-            // When ghost cells are enabled use index to get the position of them
-            idx = this.indexes().first + index;
-          }
-        }
-
         // const pos = idx * rowHeight;
         // The position of this row would be the sum of all row heights
         // until the previous row position.
-        styles.transform = `translateY(${this.rowHeightsCache().query(idx - 1)}px)`;
+        styles.transform = `translateY(${this.rowHeightsCache().query(this.indexes().first + index - 1)}px)`;
       }
       rowsStyles.push(styles);
     });
@@ -802,8 +752,8 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
         rowHeight: this.rowHeight,
         detailRowHeight: this.getDetailRowHeight,
         externalVirtual: this.scrollbarV && this.externalPaging,
+        indexOffset: this.indexes().first,
         rowCount: this.rowCount,
-        rowIndexes: this.rowIndexes,
         rowExpansions
       });
       this.rowHeightsCache.set(Object.create(this.rowHeightsCache()));
@@ -839,19 +789,16 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     const rowExpandedIdx = this.getRowExpandedIdx(row, this.rowExpansions);
     const expanded = rowExpandedIdx > -1;
 
-    // If the detailRowHeight is auto --> only in case of non-virtualized scroll
-    if (this.scrollbarV && this.virtualization) {
-      const detailRowHeight = this.getDetailRowHeight(row) * (expanded ? -1 : 1);
-      // This is hopefully only called with non-grouped rows. Otherwise, the heightCache fails.
-      const idx = this.getRowIndex(row)?.index ?? 0;
-      this.rowHeightsCache().update(idx, detailRowHeight);
-    }
-
     // Update the toggled row and update thive nevere heights in the cache.
     if (expanded) {
       this.rowExpansions.splice(rowExpandedIdx, 1);
     } else {
       this.rowExpansions.push(row);
+    }
+
+    // If the detailRowHeight is auto --> only in case of non-virtualized scroll
+    if (this.scrollbarV && this.virtualization) {
+      this.refreshRowHeightCache();
     }
 
     this.detailToggle.emit({
@@ -919,13 +866,6 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       const id = this.rowIdentity(r);
       return id === rowId;
     });
-  }
-
-  /**
-   * Gets the row index given a row
-   */
-  getRowIndex(row: RowOrGroup<TRow>): RowIndex | undefined {
-    return this.rowIndexes.get(row);
   }
 
   onTreeAction(row: TRow) {

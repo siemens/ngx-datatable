@@ -72,7 +72,6 @@ import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive'
     class: 'datatable-row-wrapper'
   },
   styleUrl: './body-row-wrapper.component.scss',
-  standalone: true,
   imports: [NgTemplateOutlet]
 })
 export class DataTableRowWrapperComponent<TRow = any> implements DoCheck, OnInit, OnChanges {

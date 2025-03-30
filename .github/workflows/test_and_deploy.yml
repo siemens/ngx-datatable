@@ -42,6 +42,7 @@ jobs:
 
       - name: Archive coverage results
         uses: actions/upload-artifact@v4
+        if: success() || failure()
         with:
           name: coverage
           path: coverage/ngx-datatable-lib
@@ -95,6 +96,7 @@ jobs:
         run: npm run e2e
 
       - name: Upload E2E Results
+        if: success() || failure()
         uses: actions/upload-artifact@v4
         with:
           name: e2e-results

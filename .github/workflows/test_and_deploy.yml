@@ -63,13 +63,6 @@ jobs:
       - name: Build Docs
         run: npm run build-docs
 
-      - name: Deploy Docs
-        uses: JamesIves/github-pages-deploy-action@4.1.5
-        with:
-          branch: gh-pages
-          folder: dist/ngx-datatable
-        if: ${{ github.ref == 'refs/heads/master' }}
-
   e2e:
     runs-on: ubuntu-latest
     needs: build

@@ -92,6 +92,7 @@ import { RowIndex, TableColumnInternal } from '../../types/internal.types';
       }
     }
   `,
+  styleUrl: './body-cell.component.scss',
   standalone: true,
   imports: [NgTemplateOutlet, DataTableGhostLoaderComponent]
 })

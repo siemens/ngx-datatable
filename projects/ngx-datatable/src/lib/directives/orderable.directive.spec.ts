@@ -16,8 +16,7 @@ import { toInternalColumn } from '../utils/column-helper';
       }
     </div>
   `,
-  imports: [OrderableDirective, DraggableDirective],
-  standalone: true
+  imports: [OrderableDirective, DraggableDirective]
 })
 class TestFixtureComponent {
   draggables: TableColumnInternal[] = [];

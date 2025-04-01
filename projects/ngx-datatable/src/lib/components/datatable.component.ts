@@ -93,7 +93,6 @@ import {
     },
     ColumnChangesService
   ],
-  standalone: true,
   imports: [
     VisibilityDirective,
     DataTableHeaderComponent,

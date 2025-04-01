@@ -50,7 +50,6 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
   },
   styleUrl: './footer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [NgClass, NgTemplateOutlet, DataTablePagerComponent]
 })
 export class DataTableFooterComponent {

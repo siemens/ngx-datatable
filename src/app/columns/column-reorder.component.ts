@@ -57,7 +57,6 @@ import { NgClass } from '@angular/common';
       </ng-template>
     </div>
   `,
-  standalone: true,
   imports: [DatatableComponent, NgClass]
 })
 export class ColumnReorderComponent {

@@ -1,0 +1,15 @@
+@mixin pinned-columns() {
+  .datatable-row-left,
+  .datatable-row-right {
+    position: sticky;
+    z-index: 9;
+  }
+
+  .datatable-row-left {
+    left: 0;
+  }
+
+  .datatable-row-right {
+    right: 0;
+  }
+}

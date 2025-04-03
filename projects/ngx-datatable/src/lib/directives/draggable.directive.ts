@@ -75,7 +75,7 @@ export class DraggableDirective implements OnDestroy, OnChanges {
   }
 
   onMousedown(event: MouseEvent | TouchEvent): void {
-    const isTouch = event instanceof TouchEvent;
+    const isMouse = event instanceof MouseEvent;
     // we only want to drag the inner header text
     const isDragElm = (event.target as HTMLElement).classList.contains('draggable');
 
@@ -87,13 +87,13 @@ export class DraggableDirective implements OnDestroy, OnChanges {
 
       const mouseup = fromEvent<MouseEvent | TouchEvent>(
         document,
-        isTouch ? 'touchend' : 'mouseup'
+        isMouse ? 'mouseup' : 'touchend'
       );
       this.subscription = mouseup.subscribe(ev => this.onMouseup(ev));
 
       const mouseMoveSub = fromEvent<MouseEvent | TouchEvent>(
         document,
-        isTouch ? 'touchmove' : 'mousemove'
+        isMouse ? 'mousemove' : 'touchmove'
       )
         .pipe(takeUntil(mouseup))
         .subscribe(ev => this.move(ev, mouseDownPos));

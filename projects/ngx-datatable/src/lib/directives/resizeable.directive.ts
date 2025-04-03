@@ -66,7 +66,7 @@ export class ResizeableDirective implements OnDestroy, AfterViewInit {
   }
 
   onMousedown(event: MouseEvent | TouchEvent): void {
-    const isTouch = event instanceof TouchEvent;
+    const isMouse = event instanceof MouseEvent;
     const isHandle = (event.target as HTMLElement).classList.contains('resize-handle');
     const initialWidth = this.element.clientWidth;
     const mouseDownScreenX = getPositionFromEvent(event).screenX;
@@ -74,12 +74,12 @@ export class ResizeableDirective implements OnDestroy, AfterViewInit {
     if (isHandle) {
       event.stopPropagation();
 
-      const mouseup = fromEvent(document, isTouch ? 'touchend' : 'mouseup');
+      const mouseup = fromEvent(document, isMouse ? 'mouseup' : 'touchend');
       this.subscription = mouseup.subscribe(() => this.onMouseup());
 
       const mouseMoveSub = fromEvent<MouseEvent | TouchEvent>(
         document,
-        isTouch ? 'touchmove' : 'mousemove'
+        isMouse ? 'mousemove' : 'touchmove'
       )
         .pipe(takeUntil(mouseup))
         .subscribe(e => this.move(e, initialWidth, mouseDownScreenX));

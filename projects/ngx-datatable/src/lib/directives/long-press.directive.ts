@@ -47,9 +47,9 @@ export class LongPressDirective implements OnDestroy {
   subscription: Subscription;
 
   onMouseDown(event: MouseEvent | TouchEvent): void {
-    const isTouch = event instanceof TouchEvent;
+    const isMouse = event instanceof MouseEvent;
 
-    if (!this.pressEnabled || (!isTouch && (event as MouseEvent).button !== 0)) {
+    if (!this.pressEnabled || (isMouse && (event as MouseEvent).button !== 0)) {
       return;
     }
 
@@ -66,7 +66,7 @@ export class LongPressDirective implements OnDestroy {
     this.pressing.set(true);
     this.isLongPressing.set(false);
 
-    const mouseup = fromEvent(document, isTouch ? 'touchend' : 'mouseup');
+    const mouseup = fromEvent(document, isMouse ? 'mouseup' : 'touchend');
     this.subscription = mouseup.subscribe(() => this.onMouseup());
 
     this.timeout = setTimeout(() => {
@@ -77,7 +77,7 @@ export class LongPressDirective implements OnDestroy {
       });
 
       this.subscription.add(
-        fromEvent<MouseEvent | TouchEvent>(document, isTouch ? 'touchmove' : 'mousemove')
+        fromEvent<MouseEvent | TouchEvent>(document, isMouse ? 'mousemove' : 'touchmove')
           .pipe(takeUntil(mouseup))
           .subscribe(mouseEvent => this.onMove(mouseEvent))
       );

@@ -47,7 +47,7 @@ export function columnGroupWidths(groups: TableColumnGroup, all: TableColumn[]):
  * Calculates the total width of all columns
  */
 export function columnTotalWidth(columns?: TableColumn[]) {
-  return columns?.reduce((total, column) => total + column.width, 0) ?? 0;
+  return columns?.reduce((total, column) => total + (column.width ?? 0), 0) ?? 0;
 }
 
 export function columnsByPinArr(val: TableColumnInternal[]): PinnedColumns[] {

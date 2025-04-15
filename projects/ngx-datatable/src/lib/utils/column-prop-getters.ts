@@ -15,7 +15,7 @@ export function emptyStringGetter(): string {
  * Returns the appropriate getter function for this kind of prop.
  * If prop == null, returns the emptyStringGetter.
  */
-export function getterForProp(prop: TableColumnProp): ValueGetter {
+export function getterForProp(prop?: TableColumnProp): ValueGetter {
   // TODO requires better typing which will also involve adjust TableColum. So postponing it.
   if (prop == null) {
     return emptyStringGetter;
@@ -61,7 +61,7 @@ export function numericIndexGetter(row: any[], index: number): any {
  * @param obj object containing the field
  * @param fieldName field name string
  */
-export function shallowValueGetter(obj: any, fieldName: string): any {
+export function shallowValueGetter(obj: any, fieldName?: string): any {
   if (obj == null) {
     return '';
   }

@@ -9,8 +9,7 @@ import {
   HostListener,
   inject,
   Input,
-  Output,
-  PipeTransform
+  Output
 } from '@angular/core';
 
 import { Keys } from '../../utils/keys';
@@ -188,7 +187,10 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
 
   @Input() set sorts(val: SortPropDir[]) {
     this._sorts = val;
-    this.sortDir = this.calcSortDir(val);
+    const sortDir = this.calcSortDir(val);
+    if (sortDir) {
+      this.sortDir = sortDir;
+    }
   }
 
   get sorts(): SortPropDir[] {
@@ -268,7 +270,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
   }
 
   @HostBinding('style.width.px')
-  get width(): number {
+  get width(): number | undefined {
     return this.column.width;
   }
 
@@ -338,8 +340,8 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
     if (!this.row || !this.column) {
       value = '';
     } else {
-      const val = this.column.$$valueGetter(this.row, this.column.prop);
-      const userPipe: PipeTransform = this.column.pipe;
+      const val = this.column.$$valueGetter?.(this.row, this.column.prop ?? '');
+      const userPipe = this.column.pipe;
 
       if (userPipe) {
         value = userPipe.transform(val);
@@ -461,6 +463,6 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
 
   calcLeftMargin(column: TableColumnInternal, row: RowOrGroup<TRow>): number {
     const levelIndent = column.treeLevelIndent != null ? column.treeLevelIndent : 50;
-    return column.isTreeColumn ? (row as TRow).level * levelIndent : 0;
+    return column.isTreeColumn ? ((row as TRow).level ?? 0) * levelIndent : 0;
   }
 }

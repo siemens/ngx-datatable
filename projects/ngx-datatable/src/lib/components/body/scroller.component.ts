@@ -79,7 +79,7 @@ export class ScrollerComponent implements OnInit, OnDestroy {
   }
 
   updateOffset(): void {
-    let direction: string;
+    let direction = '';
     if (this.scrollYPos < this.prevScrollYPos) {
       direction = 'down';
     } else {

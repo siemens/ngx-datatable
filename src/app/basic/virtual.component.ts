@@ -73,7 +73,7 @@ export class VirtualScrollComponent {
     }, 100);
   }
 
-  getRowHeight(row: FullEmployee & { height: number }) {
-    return row.height;
+  getRowHeight(row: (FullEmployee & { height: number }) | undefined) {
+    return row?.height ?? 50;
   }
 }

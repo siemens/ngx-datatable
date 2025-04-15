@@ -28,7 +28,7 @@ export class LongPressDirective implements OnDestroy {
   isLongPressing: boolean;
   timeout: any;
 
-  subscription: Subscription;
+  subscription?: Subscription;
 
   @HostBinding('class.press')
   get press(): boolean {

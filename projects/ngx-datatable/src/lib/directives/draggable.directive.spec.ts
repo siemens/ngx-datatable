@@ -44,11 +44,8 @@ describe('DraggableDirective', () => {
 
       beforeEach(() => {
         element.classList.add('draggable');
-        mouseDown = {
-          target: element,
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          preventDefault: () => {}
-        } as MouseEvent;
+        mouseDown = new MouseEvent('mousedown');
+        Object.defineProperty(mouseDown, 'target', { value: element });
       });
 
       // or else the document:mouseup event can fire again when resizing.

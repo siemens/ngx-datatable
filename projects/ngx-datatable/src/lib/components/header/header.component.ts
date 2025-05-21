@@ -69,6 +69,7 @@ import { OrderableDirective } from '../../directives/orderable.directive';
                 [targetMarkerTemplate]="targetMarkerTemplate"
                 [targetMarkerContext]="column.targetMarkerContext"
                 [column]="column"
+                [showResizeHandle]="!$last && column.resizeable"
                 [sortType]="sortType"
                 [sorts]="sorts"
                 [selectionType]="selectionType"

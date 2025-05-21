@@ -56,13 +56,13 @@ import { fromEvent, Subscription, takeUntil } from 'rxjs';
       }
       <span (click)="onSort()" [class]="sortClass"> </span>
     </div>
-    @if (column.resizeable) {
+    @if (showResizeHandle) {
       <span class="resize-handle" (mousedown)="onMousedown($event)"></span>
     }
   `,
   host: {
     'class': 'datatable-header-cell',
-    '[attr.resizeable]': 'column.resizeable'
+    '[attr.resizeable]': 'showResizeHandle'
   },
   styleUrl: './header-cell.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -119,6 +119,8 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
     return this._sorts;
   }
 
+  @Input() showResizeHandle: boolean;
+
   @Output() sort = new EventEmitter<InnerSortEvent>();
   @Output() select = new EventEmitter<void>();
   @Output() columnContextmenu = new EventEmitter<{
@@ -135,7 +137,7 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
     if (this.column.sortable) {
       cls += ' sortable';
     }
-    if (this.column.resizeable) {
+    if (this.showResizeHandle) {
       cls += ' resizeable';
     }
     if (this.column.headerClass) {

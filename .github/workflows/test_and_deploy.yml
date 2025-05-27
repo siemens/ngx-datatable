@@ -19,11 +19,6 @@ jobs:
         with:
           node-version: lts/iron
 
-        # We cannot use built-in LFS functionality due to the missing support of custom LFS endpoints.
-        # See: https://github.com/actions/checkout/issues/365
-      - name: Pull Repository with LFS
-        run: git lfs pull
-
       - name: Install
         run: npm ci
 
@@ -68,7 +63,9 @@ jobs:
     needs: build
     container: mcr.microsoft.com/playwright:v1.46.0-jammy
     steps:
-      # The LFS situation is even worse here. As we are in another container, we need to install LFS manually.
+      # We cannot use built-in LFS functionality due to the missing support of custom LFS endpoints.
+      # See: https://github.com/actions/checkout/issues/365
+      # As we are in another container, we even need to install LFS manually.
       - name: Install LFS
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"

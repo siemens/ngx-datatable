@@ -77,6 +77,16 @@ export interface INgxDatatableConfig {
     totalMessage: string;
     /** Footer selected message */
     selectedMessage: string;
+    /** Pager screen reader message for the first page button */
+    ariaFirstPageMessage: string;
+    /** Pager screen reader message for the n-th page button */
+    ariaPageMessage: string;
+    /** Pager screen reader message for the previous page button */
+    ariaPreviousPageMessage: string;
+    /** Pager screen reader message for the next page button */
+    ariaNextPageMessage: string;
+    /** Pager screen reader message for the last page button */
+    ariaLastPageMessage: string;
   };
   cssClasses?: {
     sortAscending: string;

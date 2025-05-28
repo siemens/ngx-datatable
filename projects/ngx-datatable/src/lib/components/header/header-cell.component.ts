@@ -298,7 +298,10 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
     const mouseup = fromEvent<MouseEvent | TouchEvent>(document, isMouse ? 'mouseup' : 'touchend');
     this.subscription = mouseup.subscribe(() => this.onMouseup());
 
-    const mouseMoveSub = fromEvent<MouseEvent | TouchEvent>(document, isMouse ? 'mousemove' : 'touchmove')
+    const mouseMoveSub = fromEvent<MouseEvent | TouchEvent>(
+      document,
+      isMouse ? 'mousemove' : 'touchmove'
+    )
       .pipe(takeUntil(mouseup))
       .subscribe((e: MouseEvent | TouchEvent) => this.move(e, initialWidth, screenX));
 
@@ -312,7 +315,11 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
     }
   }
 
-  private move(event: MouseEvent | TouchEvent, initialWidth: number, mouseDownScreenX: number): void {
+  private move(
+    event: MouseEvent | TouchEvent,
+    initialWidth: number,
+    mouseDownScreenX: number
+  ): void {
     const movementX = getPositionFromEvent(event).screenX - mouseDownScreenX;
     const newWidth = initialWidth + movementX;
     this.resizing.emit({ width: newWidth, column: this.column });

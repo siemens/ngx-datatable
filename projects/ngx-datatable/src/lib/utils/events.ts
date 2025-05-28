@@ -10,5 +10,5 @@ export function getPositionFromEvent(event: MouseEvent | TouchEvent): {
   screenX: number;
   screenY: number;
 } {
-  return event instanceof MouseEvent ? event as MouseEvent : event.changedTouches[0] as Touch;
+  return event instanceof MouseEvent ? (event as MouseEvent) : (event.changedTouches[0] as Touch);
 }

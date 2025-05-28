@@ -214,7 +214,13 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
     this.destroyed = true;
   }
 
-  onLongPressStart({ event, model }: { event: MouseEvent | TouchEvent; model: TableColumnInternal<unknown> }) {
+  onLongPressStart({
+    event,
+    model
+  }: {
+    event: MouseEvent | TouchEvent;
+    model: TableColumnInternal<unknown>;
+  }) {
     model.dragging = true;
     this.dragEventTarget = event;
   }

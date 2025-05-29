@@ -35,7 +35,8 @@ export function toInternalColumn<T>(
       headerTemplate: column.headerTemplate,
       cellTemplate: column.cellTemplate,
       summaryTemplate: column.summaryTemplate,
-      ghostCellTemplate: column.ghostCellTemplate
+      ghostCellTemplate: column.ghostCellTemplate,
+      treeToggleTemplate: column.treeToggleTemplate
     };
   });
 }

@@ -141,7 +141,7 @@ export class DatatableComponent<TRow extends Row = any>
   @Input() set groupRowsBy(val: keyof TRow) {
     if (val) {
       this._groupRowsBy = val;
-      if (this._rows && this._groupRowsBy) {
+      if (this._groupRowsBy) {
         // creates a new array with the data grouped
         this.groupedRows = this.groupArrayBy(this._rows, this._groupRowsBy);
       }
@@ -856,7 +856,7 @@ export class DatatableComponent<TRow extends Row = any>
         optionalGetterForProp(this.treeToRelation)
       );
 
-      if (this._rows && this._groupRowsBy) {
+      if (this._groupRowsBy) {
         // If a column has been specified in _groupRowsBy create a new array with the data grouped by that row
         this.groupedRows = this.groupArrayBy(this._rows, this._groupRowsBy);
       }

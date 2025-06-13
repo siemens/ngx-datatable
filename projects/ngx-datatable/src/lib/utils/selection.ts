@@ -12,7 +12,7 @@ export function selectRows<TRow>(selected: TRow[], row: TRow, comparefn: any) {
 
 export function selectRowsBetween<TRow>(
   selected: TRow[],
-  rows: TRow[],
+  rows: (TRow | undefined)[],
   index: number,
   prevIndex: number
 ): TRow[] {
@@ -39,7 +39,7 @@ export function selectRowsBetween<TRow>(
     if ((reverse && lesser) || (!reverse && greater)) {
       // if in the positive range to be added to `selected`, and
       // not already in the selected array, add it
-      if (i >= range.start && i <= range.end) {
+      if (i >= range.start && i <= range.end && row) {
         selected.push(row);
       }
     }

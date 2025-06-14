@@ -23,7 +23,6 @@ import {
   SortPropDir,
   TreeStatus
 } from '../../types/public.types';
-import { DataTableGhostLoaderComponent } from './ghost-loader/ghost-loader.component';
 import { NgTemplateOutlet } from '@angular/common';
 import { RowIndex, TableColumnInternal } from '../../types/internal.types';
 
@@ -31,69 +30,63 @@ import { RowIndex, TableColumnInternal } from '../../types/internal.types';
   selector: 'datatable-body-cell',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    @if (row) {
-      <div class="datatable-body-cell-label" [style.margin-left.px]="calcLeftMargin(column, row)">
-        @if (column.checkboxable && (!displayCheck || displayCheck(row, column, value))) {
-          <label class="datatable-checkbox">
-            <input
-              type="checkbox"
-              [disabled]="disabled"
-              [checked]="isSelected"
-              (click)="onCheckboxChange($event)"
-            />
-          </label>
-        }
-        @if (column.isTreeColumn) {
-          @if (!column.treeToggleTemplate) {
-            <button
-              class="datatable-tree-button"
-              [disabled]="treeStatus === 'disabled'"
-              (click)="onTreeAction()"
-              [attr.aria-label]="treeStatus"
-            >
-              <span>
-                @if (treeStatus === 'loading') {
-                  <i class="icon datatable-icon-collapse"></i>
-                }
-                @if (treeStatus === 'collapsed') {
-                  <i class="icon datatable-icon-up"></i>
-                }
-                @if (treeStatus === 'expanded' || treeStatus === 'disabled') {
-                  <i class="icon datatable-icon-down"></i>
-                }
-              </span>
-            </button>
-          } @else {
-            <ng-template
-              [ngTemplateOutlet]="column.treeToggleTemplate"
-              [ngTemplateOutletContext]="{ cellContext: cellContext }"
-            >
-            </ng-template>
-          }
-        }
-
-        @if (!column.cellTemplate) {
-          @if (column.bindAsUnsafeHtml) {
-            <span [title]="sanitizedValue" [innerHTML]="value"> </span>
-          } @else {
-            <span [title]="sanitizedValue">{{ value }}</span>
-          }
+    <div class="datatable-body-cell-label" [style.margin-left.px]="calcLeftMargin(column, row)">
+      @if (column.checkboxable && (!displayCheck || displayCheck(row, column, value))) {
+        <label class="datatable-checkbox">
+          <input
+            type="checkbox"
+            [disabled]="disabled"
+            [checked]="isSelected"
+            (click)="onCheckboxChange($event)"
+          />
+        </label>
+      }
+      @if (column.isTreeColumn) {
+        @if (!column.treeToggleTemplate) {
+          <button
+            class="datatable-tree-button"
+            [disabled]="treeStatus === 'disabled'"
+            (click)="onTreeAction()"
+            [attr.aria-label]="treeStatus"
+          >
+            <span>
+              @if (treeStatus === 'loading') {
+                <i class="icon datatable-icon-collapse"></i>
+              }
+              @if (treeStatus === 'collapsed') {
+                <i class="icon datatable-icon-up"></i>
+              }
+              @if (treeStatus === 'expanded' || treeStatus === 'disabled') {
+                <i class="icon datatable-icon-down"></i>
+              }
+            </span>
+          </button>
         } @else {
           <ng-template
-            [ngTemplateOutlet]="column.cellTemplate"
-            [ngTemplateOutletContext]="cellContext"
+            [ngTemplateOutlet]="column.treeToggleTemplate"
+            [ngTemplateOutletContext]="{ cellContext: cellContext }"
           >
           </ng-template>
         }
-      </div>
-    } @else {
-      @if (ghostLoadingIndicator) {
-        <ghost-loader [columns]="[column]" [pageSize]="1"></ghost-loader>
       }
-    }
+
+      @if (!column.cellTemplate) {
+        @if (column.bindAsUnsafeHtml) {
+          <span [title]="sanitizedValue" [innerHTML]="value"> </span>
+        } @else {
+          <span [title]="sanitizedValue">{{ value }}</span>
+        }
+      } @else {
+        <ng-template
+          [ngTemplateOutlet]="column.cellTemplate"
+          [ngTemplateOutletContext]="cellContext"
+        >
+        </ng-template>
+      }
+    </div>
   `,
   styleUrl: './body-cell.component.scss',
-  imports: [NgTemplateOutlet, DataTableGhostLoaderComponent]
+  imports: [NgTemplateOutlet]
 })
 export class DataTableBodyCellComponent<TRow extends Row = any> implements DoCheck {
   private cd = inject(ChangeDetectorRef);

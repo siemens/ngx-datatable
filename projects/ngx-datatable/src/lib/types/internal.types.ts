@@ -1,4 +1,4 @@
-import { TableColumn } from './table-column.type';
+import { TableColumn, TableColumnProp } from './table-column.type';
 import { ValueGetter } from '../utils/column-prop-getters';
 import { Row, SortDirection } from './public.types';
 
@@ -51,7 +51,7 @@ export interface InnerSortEvent {
   newValue: SortDirection;
 }
 
-export interface TableColumnInternal<TRow extends Row = any> extends TableColumn<TRow> {
+export interface BaseTableColumnInternal<TRow extends Row = any> extends TableColumn<TRow> {
   /** Internal unique id */
   $$id: string;
 
@@ -69,6 +69,17 @@ export interface TableColumnInternal<TRow extends Row = any> extends TableColumn
   name: string;
   width: number;
 }
+
+export interface SortableTableColumnInternal<TRow extends Row = any>
+  extends BaseTableColumnInternal<TRow> {
+  comparator: Exclude<TableColumn['comparator'], undefined>;
+  prop: TableColumnProp;
+  sortable: true;
+}
+
+export type TableColumnInternal<TRow extends Row = any> =
+  | BaseTableColumnInternal<TRow>
+  | SortableTableColumnInternal<TRow>;
 
 export interface TableColumnGroup {
   left: TableColumnInternal[];

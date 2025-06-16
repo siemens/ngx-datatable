@@ -1,4 +1,4 @@
-import { TableColumn, TableColumnProp } from './table-column.type';
+import { TableColumn } from './table-column.type';
 import { ValueGetter } from '../utils/column-prop-getters';
 import { Row, SortDirection } from './public.types';
 
@@ -66,7 +66,6 @@ export interface TableColumnInternal<TRow extends Row = any> extends TableColumn
   targetMarkerContext?: any;
 
   // Those properties are never null on the internal type:
-  prop: TableColumnProp;
   name: string;
   width: number;
 }

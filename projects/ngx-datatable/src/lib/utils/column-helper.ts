@@ -5,8 +5,9 @@ import { TableColumn } from '../types/table-column.type';
 import { QueryList } from '@angular/core';
 import { DataTableColumnDirective } from '../components/columns/column.directive';
 import { TableColumnInternal } from '../types/internal.types';
+import { Row } from '../types/public.types';
 
-export function toInternalColumn<T>(
+export function toInternalColumn<T extends Row>(
   columns: TableColumn<T>[] | QueryList<DataTableColumnDirective<T>>,
   defaultColumnWidth = 150
 ): TableColumnInternal<T>[] {
@@ -14,10 +15,14 @@ export function toInternalColumn<T>(
   // TS fails to infer the type here.
   return (columns as TableColumn<T>[]).map(column => {
     const prop = column.prop ?? (column.name ? camelCase(column.name) : undefined);
+    // prop = 0 is valid
+    if (prop === undefined) {
+      throw new Error(`Column prop or name is required.`);
+    }
     // Only one column should hold the tree view,
     // Thus if multiple columns are provided with
     // isTreeColumn as true, we take only the first one
-    const isTreeColumn = column.isTreeColumn && !hasTreeColumn;
+    const isTreeColumn = !!column.isTreeColumn && !hasTreeColumn;
     hasTreeColumn = hasTreeColumn || isTreeColumn;
     return {
       ...column,

@@ -400,6 +400,7 @@ describe('DatatableComponent With Custom Templates', () => {
   });
 
   it('should sort when the table is initially rendered if `sorts` are provided', () => {
+    component.columnTwoProp = '---';
     component.rows = [{ id: 5 }, { id: 20 }, { id: 12 }];
     component.sorts = [
       {

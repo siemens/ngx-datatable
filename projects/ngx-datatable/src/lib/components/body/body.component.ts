@@ -264,7 +264,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   @Input() summaryHeight: number;
   @Input() rowDraggable: boolean;
   @Input() rowDragEvents: EventEmitter<DragEventData>;
-  @Input() disableRowCheck: (row: TRow) => boolean;
+  @Input() disableRowCheck?: (row: TRow) => boolean | undefined;
 
   @Input() set pageSize(val: number) {
     if (val !== this._pageSize) {
@@ -790,7 +790,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
-      srcElement: this._draggedRowElement,
+      srcElement: this._draggedRowElement!,
       eventType: 'dragover',
       dragRow: this._draggedRow,
       dropRow
@@ -812,7 +812,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
-      srcElement: this._draggedRowElement,
+      srcElement: this._draggedRowElement!,
       targetElement: rowComponent._element,
       eventType: 'drop',
       dragRow: this._draggedRow,
@@ -828,7 +828,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
-      srcElement: this._draggedRowElement,
+      srcElement: this._draggedRowElement!,
       targetElement: rowComponent._element,
       eventType: 'dragenter',
       dragRow: this._draggedRow,
@@ -844,7 +844,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
-      srcElement: this._draggedRowElement,
+      srcElement: this._draggedRowElement!,
       targetElement: rowComponent._element,
       eventType: 'dragleave',
       dragRow: this._draggedRow,
@@ -856,7 +856,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
-      srcElement: this._draggedRowElement,
+      srcElement: this._draggedRowElement!,
       eventType: 'dragend',
       dragRow
     });
@@ -910,7 +910,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     }
 
     if (typeof this.disableRowCheck === 'function') {
-      selected = selected.filter(rowData => !this.disableRowCheck(rowData));
+      selected = selected.filter(rowData => !this.disableRowCheck!(rowData));
     }
 
     this.selected.splice(0, this.selected.length);
@@ -938,7 +938,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
         (event as KeyboardEvent).key === 'a' &&
         ((event as KeyboardEvent).ctrlKey || (event as KeyboardEvent).metaKey)
       ) {
-        this.selectRow(event, 0, this.rows[this.rows.length - 1]);
+        this.selectRow(event, 0, row); // The row property is ignored in this case. So we can pass anything.
       } else {
         this.onKeyboardFocus(model);
       }

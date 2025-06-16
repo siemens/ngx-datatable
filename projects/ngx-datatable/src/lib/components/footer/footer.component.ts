@@ -62,10 +62,10 @@ export class DataTableFooterComponent {
   @Input() pagerPreviousIcon?: string;
   @Input() pagerNextIcon?: string;
   @Input() totalMessage: string;
-  @Input() footerTemplate: DatatableFooterDirective;
+  @Input() footerTemplate?: DatatableFooterDirective;
 
   @Input() selectedCount = 0;
-  @Input() selectedMessage: string | boolean;
+  @Input() selectedMessage?: string | boolean;
 
   @Output() page = new EventEmitter<PagerPageEvent>();
 

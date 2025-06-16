@@ -145,7 +145,7 @@ export function sortGroupedRows<TRow>(
   groupedRows: Group<TRow>[],
   columns: TableColumnInternal[],
   dirs: SortPropDir[],
-  sortOnGroupHeader: SortPropDir
+  sortOnGroupHeader: SortPropDir | undefined
 ): Group<TRow>[] {
   if (sortOnGroupHeader) {
     groupedRows = sortRows(groupedRows, columns, [

@@ -46,8 +46,8 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent]
 })
 export class TemplateRefTemplatesComponent implements OnInit {
-  @ViewChild('editTmpl', { static: true }) editTmpl: TemplateRef<any>;
-  @ViewChild('hdrTpl', { static: true }) hdrTpl: TemplateRef<any>;
+  @ViewChild('editTmpl', { static: true }) editTmpl!: TemplateRef<any>;
+  @ViewChild('hdrTpl', { static: true }) hdrTpl!: TemplateRef<any>;
 
   rows: Employee[] = [];
   columns: TableColumn[] = [];

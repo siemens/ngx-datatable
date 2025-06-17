@@ -20,7 +20,7 @@ import Spy = jasmine.Spy;
   providers: [ColumnChangesService] // usually provided by the table.component
 })
 class TestFixtureComponent {
-  columnName: string;
+  columnName?: string;
 }
 
 describe('DataTableColumnDirective', () => {

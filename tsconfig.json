@@ -20,9 +20,7 @@
       "@siemens/ngx-datatable/*": ["dist/ngx-datatable/*"]
     },
     "useDefineForClassFields": false,
-    "strictFunctionTypes": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true
+    "strict": true
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

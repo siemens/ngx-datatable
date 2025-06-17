@@ -66,7 +66,7 @@ import { DataService } from '../data.service';
 
       <div class="selected-column">
         <h4>
-          Selections <small>({{ selected?.length }})</small>
+          Selections <small>({{ selected.length }})</small>
         </h4>
         <ul>
           @for (sel of selected; track sel) {
@@ -74,7 +74,7 @@ import { DataService } from '../data.service';
               {{ sel.name }}
             </li>
           }
-          @if (!selected?.length) {
+          @if (!selected.length) {
             <li>No Selections</li>
           }
         </ul>

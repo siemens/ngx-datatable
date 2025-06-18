@@ -1,0 +1,1 @@
+import{a as o}from"./chunk-AFBLPIXW.js";import{O as r,T as i}from"./chunk-SQCAMGZL.js";var l=(()=>{class t{constructor(){this.client=i(o)}load(e){return this.client.get(`assets/data/${e}`)}static{this.\u0275fac=function(n){return new(n||t)}}static{this.\u0275prov=r({token:t,factory:t.\u0275fac,providedIn:"root"})}}return t})();export{l as a};

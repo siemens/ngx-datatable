@@ -13,4 +13,8 @@
   }
 }
 
+.datatable-row-group {
+  display: flex;
+}
+
 @include shared.pinned-columns();

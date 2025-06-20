@@ -57,7 +57,7 @@ import { getPositionFromEvent } from '../../utils/events';
       }
       <span (click)="onSort()" [class]="sortClass"> </span>
     </div>
-    @if (column.resizeable) {
+    @if (showResizeHandle) {
       <span
         class="resize-handle"
         (mousedown)="onMousedown($event)"
@@ -67,7 +67,7 @@ import { getPositionFromEvent } from '../../utils/events';
   `,
   host: {
     'class': 'datatable-header-cell',
-    '[attr.resizeable]': 'column.resizeable'
+    '[attr.resizeable]': 'showResizeHandle'
   },
   styleUrl: './header-cell.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -82,6 +82,7 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
   @Input() sortUnsetIcon?: string;
 
   @Input() isTarget?: boolean;
+  @Input() showResizeHandle?: boolean = true;
   @Input() targetMarkerTemplate?: TemplateRef<any>;
   @Input() targetMarkerContext: any;
   @Input() enableClearingSortState = false;
@@ -140,7 +141,7 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
     if (this.column.sortable) {
       cls += ' sortable';
     }
-    if (this.column.resizeable) {
+    if (this.showResizeHandle) {
       cls += ' resizeable';
     }
     if (this.column.headerClass) {

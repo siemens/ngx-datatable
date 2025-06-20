@@ -1,3 +1,7 @@
 .e2e-ignore {
   display: none;
 }
+
+nav {
+  display: none;
+}

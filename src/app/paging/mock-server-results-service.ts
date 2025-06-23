@@ -18,9 +18,12 @@ export class MockServerResultsService {
    * @returns An observable containing the employee data
    */
   public getResults(page: Page): Observable<PagedData<Employee>> {
-    return of(companyData)
-      .pipe(map(d => this.getPagedData(page)))
-      .pipe(delay(1500 * Math.random()));
+    return (
+      of(companyData)
+        .pipe(map(d => this.getPagedData(page)))
+        // 1 ms in e2e requires the app to recalculate, but it is too fast for e2e to notice.
+        .pipe(delay(window.navigator.webdriver ? 1 : 1500 * Math.random()))
+    );
   }
 
   /**

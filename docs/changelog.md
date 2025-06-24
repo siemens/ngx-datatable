@@ -2,7 +2,9 @@
 
 ## 23.0.0 (2025-06-24)
 
-*No changes since `23.0.0-rc.2`.*
+See our [release announcement](https://blog.siemens.com/2025/06/siemens-ngx-datatable-23-release/).
+
+_No changes since `23.0.0-rc.2`._
 
 See [`23.0.0-rc.0`](#2300-rc0-2025-06-18), [`23.0.0-rc.1`](#2300-rc1-2025-06-22), and [`23.0.0-rc.2`](#2300-rc2-2025-06-24)
 for all changes since the last stable release.

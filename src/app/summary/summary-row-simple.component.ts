@@ -11,7 +11,7 @@ import { DataService } from '../data.service';
         Simple Summary Row
         <small>
           <a
-            href="https://github.com/siemens/ngx-datatable/blob/master/src/app/summary/summary-row-simple.component.ts"
+            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/summary/summary-row-simple.component.ts"
           >
             Source
           </a>

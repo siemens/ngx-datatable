@@ -17,7 +17,7 @@ You can just add above to your `scss` file and then specify the class of your ng
 
 ## CSS Classes
 
-- `ngx-datatable`: Master Table class
+- `ngx-datatable`: Main Table class
 
   - `fixed-header`: The header is fixed on the table
 

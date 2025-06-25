@@ -17,7 +17,7 @@ import { Employee } from '../data.model';
         Drag Drop Using Angular CDK
         <small>
           <a
-            href="https://github.com/siemens/ngx-datatable/blob/master/src/app/drag-drop/drag-drop.component.ts"
+            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/drag-drop/drag-drop.component.ts"
             target="_blank"
           >
             Source

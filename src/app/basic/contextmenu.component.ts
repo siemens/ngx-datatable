@@ -16,7 +16,7 @@ import { DataService } from '../data.service';
         Context Menu Event
         <small>
           <a
-            href="https://github.com/siemens/ngx-datatable/blob/master/src/app/basic/contextmenu.component.ts"
+            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/contextmenu.component.ts"
             target="_blank"
           >
             Source

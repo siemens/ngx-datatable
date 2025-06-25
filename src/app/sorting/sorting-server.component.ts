@@ -16,7 +16,7 @@ import { DataService } from '../data.service';
         Server-side Sorting
         <small>
           <a
-            href="https://github.com/siemens/ngx-datatable/blob/master/src/app/sorting/sorting-server.component.ts"
+            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/sorting/sorting-server.component.ts"
             target="_blank"
           >
             Source

@@ -19,7 +19,7 @@ import { getPositionFromEvent } from '../utils/events';
  * Draggable Directive for Angular2
  *
  * Inspiration:
- *   https://github.com/AngularClass/angular2-examples/blob/master/rx-draggable/directives/draggable.ts
+ *   https://github.com/AngularClass/angular-examples/blob/master/rx-draggable/directives/draggable.ts
  *   http://stackoverflow.com/questions/35662530/how-to-implement-drag-and-drop-in-angular2
  *
  */

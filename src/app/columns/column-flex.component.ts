@@ -16,7 +16,7 @@ import { DataService } from '../data.service';
         Flex Column Width Distribution
         <small>
           <a
-            href="https://github.com/siemens/ngx-datatable/blob/master/src/app/columns/column-flex.component.ts"
+            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/columns/column-flex.component.ts"
             target="_blank"
           >
             Source

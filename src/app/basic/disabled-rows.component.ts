@@ -18,7 +18,7 @@ import { DataService } from '../data.service';
         Disable Row
         <small>
           <a
-            href="https://github.com/siemens/ngx-datatable/blob/master/src/app/basic/disabled-rows.component.ts"
+            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/disabled-rows.component.ts"
             target="_blank"
           >
             Source

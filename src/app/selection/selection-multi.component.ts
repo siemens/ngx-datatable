@@ -18,7 +18,7 @@ import { DataService } from '../data.service';
         Multi Select
         <small>
           <a
-            href="https://github.com/siemens/ngx-datatable/blob/master/src/app/selection/selection-multi.component.ts"
+            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/selection/selection-multi.component.ts"
             target="_blank"
           >
             Source

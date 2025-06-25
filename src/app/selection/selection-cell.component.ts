@@ -18,7 +18,7 @@ import { DataService } from '../data.service';
         Cell Selection
         <small>
           <a
-            href="https://github.com/siemens/ngx-datatable/blob/master/src/app/selection/selection-cell.component.ts"
+            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/selection/selection-cell.component.ts"
             target="_blank"
           >
             Source

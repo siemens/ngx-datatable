@@ -18,7 +18,7 @@ import { DataService } from '../data.service';
         Multi Click with Checkbox Selection
         <small>
           <a
-            href="https://github.com/siemens/ngx-datatable/blob/master/src/app/selection/selection-chkbox.component.ts"
+            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/selection/selection-chkbox.component.ts"
             target="_blank"
           >
             Source

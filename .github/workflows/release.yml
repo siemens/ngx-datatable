@@ -1,0 +1,36 @@
+name: Release
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    uses: ./.github/workflows/test_and_deploy.yml
+    secrets:
+      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+
+  publish:
+    runs-on: ubuntu-22.04
+    needs:
+      - build-and-test
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # semantic-release needs this
+          token: ${{ secrets.ELEMENT_BOT_GITHUB_TOKEN }} # Otherwise, branch protection rules are not bypassed.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/jod
+          cache: 'npm'
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - run: npm ci --prefer-offline --no-audit
+      - run: npx semantic-release
+        env:
+          GIT_AUTHOR_NAME: 'Siemens Element Bot'
+          GIT_AUTHOR_EMAIL: 'simpl.si@siemens.com'
+          GIT_COMMITTER_NAME: 'Siemens Element Bot'
+          GIT_COMMITTER_EMAIL: 'simpl.si@siemens.com'
+          GITHUB_TOKEN: ${{ secrets.ELEMENT_BOT_GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

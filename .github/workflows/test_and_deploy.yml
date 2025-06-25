@@ -1,6 +1,10 @@
 name: Build, Test, and Deploy
 
 on:
+  workflow_call:
+    secrets:
+      CC_TEST_REPORTER_ID:
+        required: true
   pull_request:
   push:
     branches:

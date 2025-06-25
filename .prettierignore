@@ -1,0 +1,8 @@
+# Ignore artifacts:
+.venv
+build
+coverage
+dist
+tmp
+playwright/snapshots
+CHANGELOG.md

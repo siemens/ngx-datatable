@@ -414,7 +414,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       if (this.ghostLoadingIndicator) {
         return index;
       }
-      if (this.trackByProp) {
+      if (this.trackByProp && row) {
         return (row as any)[this.trackByProp];
       } else {
         return row;
@@ -549,11 +549,12 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     // if grouprowsby has been specified treat row paging
     // parameters as group paging parameters ie if limit 10 has been
     // specified treat it as 10 groups rather than 10 rows
-    if (this.groupedRows) {
-      return this.groupedRows.slice(first, Math.min(last, this.groupedRows.length));
-    } else {
-      return this.rows.slice(first, Math.min(last, this.rowCount));
-    }
+    const rows = this.groupedRows
+      ? this.groupedRows.slice(first, Math.min(last, this.groupedRows.length))
+      : this.rows.slice(first, Math.min(last, this.rowCount));
+
+    rows.length = last - first;
+    return rows;
   }
 
   /**
@@ -960,7 +961,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       }
       if (!model.cellElement || !isCellSelection) {
         this.focusRow(model.rowElement, key);
-      } else if (isCellSelection && model.cellIndex) {
+      } else if (isCellSelection && model.cellIndex !== undefined) {
         this.focusCell(model.cellElement, model.rowElement, key, model.cellIndex);
       }
     }

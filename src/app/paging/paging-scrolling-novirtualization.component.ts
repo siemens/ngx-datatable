@@ -13,7 +13,7 @@ import { Employee } from '../data.model';
         Server-side Paging
         <small>
           <a
-            href="https://github.com/siemens/ngx-datatable/blob/master/src/app/paging/paging-scrolling-novirtualization.component.ts"
+            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/paging/paging-scrolling-novirtualization.component.ts"
             target="_blank"
           >
             Source

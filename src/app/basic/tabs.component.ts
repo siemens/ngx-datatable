@@ -15,7 +15,7 @@ import { DataService } from '../data.service';
         Hidden By Default
         <small>
           <a
-            href="https://github.com/siemens/ngx-datatable/blob/master/src/app/basic/tabs.component.ts"
+            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/tabs.component.ts"
             target="_blank"
           >
             Source

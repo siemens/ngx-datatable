@@ -24,7 +24,7 @@
     - [Custom row wrapper](api/row/row-def.md)
 - Demos
   - [Online](http://siemens.github.io/ngx-datatable/)
-  - [Source Code](https://github.com/siemens/ngx-datatable/tree/master/src/app)
+  - [Source Code](https://github.com/siemens/ngx-datatable/tree/main/src/app)
 - Contributing
   - [Building](contributing/building.md)
   - [Guidelines](contributing/guidelines.md)

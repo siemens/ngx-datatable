@@ -1,5 +1,18 @@
 # Changelog
 
+## 23.0.0 (2025-06-24)
+
+See our [release announcement](https://blog.siemens.com/2025/06/siemens-ngx-datatable-23-release/).
+
+_No changes since `23.0.0-rc.2`._
+
+See [`23.0.0-rc.0`](#2300-rc0-2025-06-18), [`23.0.0-rc.1`](#2300-rc1-2025-06-22), and [`23.0.0-rc.2`](#2300-rc2-2025-06-24)
+for all changes since the last stable release.
+
+## 23.0.0-rc.2 (2025-06-24)
+
+- Fix: fix keyboard interaction for cell selection mode
+
 ## 23.0.0-rc.1 (2025-06-22)
 
 - Feature: introduce a new `providedNgxDatatableConfig` for a standalone way to configure the datatable (#259)
@@ -50,8 +63,6 @@
 - Breaking: All inputs except `template` of `DatatableFooterDirective` have been
   dropped from the footer directive. Those were unused. Remove any usages without
   replacement.
-- Breaking: `INgxDatatableConfig.messages` now requires new keys for the pager
-  aria labels.
 - Breaking: Angular v19 or higher is required.
 - Breaking: The datatable no longer accepts `undefined` as a value of the `count`
   input.
@@ -94,7 +105,6 @@
   is deprecated from `KeyBoardEvent` and should be replaced with `key`.
 - Breaking: Vendor prefixes are no longer applied for css `transform`. The
   related helpers are removed from the public api.
-- Breaking: Angular v18.2 or above is required.
 - Breaking: Change signature from `onBodyPage({ offset }: any): void` to `onBodyPage(offset: number): void`.
 - Breaking: Almost every public API has now proper types. While this should in
   theory not affect applications it will now fail compilation if the APIs were

@@ -16,7 +16,7 @@ It was built for modern browsers using _TypeScript, CSS3 and HTML5_ and Angular 
 
 Check out the [documentation](https://siemens-com.gitbook.io/ngx-datatable/) & [demos](http://siemens.github.io/ngx-datatable/) for more information!
 
-See the [changelog](https://github.com/siemens/ngx-datatable/blob/master/docs/changelog.md) for recent changes.
+See the [changelog](https://github.com/siemens/ngx-datatable/blob/main/docs/changelog.md) for recent changes.
 
 ## Features
 

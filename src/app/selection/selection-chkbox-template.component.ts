@@ -20,7 +20,7 @@ import { DataService } from '../data.service';
         Custom Checkbox Selection
         <small>
           <a
-            href="https://github.com/siemens/ngx-datatable/blob/master/src/app/selection/selection-chkbox-template.component.ts"
+            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/selection/selection-chkbox-template.component.ts"
             target="_blank"
           >
             Source

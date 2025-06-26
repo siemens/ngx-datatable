@@ -13,7 +13,7 @@ import { AsyncPipe } from '@angular/common';
         RXjs Data
         <small>
           <a
-            href="https://github.com/siemens/ngx-datatable/blob/master/src/app/basic/rx.component.ts"
+            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/rx.component.ts"
             target="_blank"
           >
             Source

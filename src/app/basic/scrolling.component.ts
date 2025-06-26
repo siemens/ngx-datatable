@@ -14,7 +14,7 @@ import {
         Horizontal and Vertical Scrolling
         <small>
           <a
-            href="https://github.com/siemens/ngx-datatable/blob/master/src/app/basic/scrolling.component.ts"
+            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/scrolling.component.ts"
             target="_blank"
           >
             Source

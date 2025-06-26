@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start:prod": "http-server dist/ngx-datatable -s -p 4200 -a 127.0.0.1",
+    "start:prod": "http-server dist/ngx-datatable-examples -s -p 4200 -a 127.0.0.1",
     "build": "ng build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -22,7 +22,7 @@
     "e2e:update": "yarn e2e --update-snapshots",
     "build-docs": "cross-env NODE_ENV=production ng build --configuration production --base-href=\"/ngx-datatable/\"",
     "predeploy-docs": "npm run build-docs",
-    "deploy-docs": "angular-cli-ghpages --dir ./dist/ngx-datatable",
+    "deploy-docs": "angular-cli-ghpages --dir ./dist/ngx-datatable-examples",
     "package": "run-s build:lib:prod copy-files build:css",
     "prepublish:lib": "run-s ci package",
     "publish:lib": "npm publish ./dist/ngx-datatable",

@@ -22,7 +22,7 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": {
-              "base": "dist/ngx-datatable",
+              "base": "dist/ngx-datatable-examples",
               "browser": ""
             },
             "index": "src/index.html",

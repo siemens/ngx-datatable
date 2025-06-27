@@ -35,7 +35,7 @@ jobs:
         run: npm run format:check
 
       - name: Build
-        run: npm run build
+        run: npm run build:prod
 
       - name: Archive build
         uses: actions/upload-artifact@v4
@@ -60,9 +60,6 @@ jobs:
         with:
           coverageLocations: ${{github.workspace}}/coverage/ngx-datatable-lib/lcov.info:lcov
         if: env.CC_TEST_REPORTER_ID
-
-      - name: Build Docs
-        run: npm run build-docs
 
   e2e:
     runs-on: ubuntu-latest

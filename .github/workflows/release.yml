@@ -34,3 +34,21 @@ jobs:
           GIT_COMMITTER_EMAIL: 'simpl.si@siemens.com'
           GITHUB_TOKEN: ${{ secrets.ELEMENT_BOT_GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-documentation:
+    runs-on: ubuntu-22.04
+    permissions:
+      pages: write
+      id-token: write
+    needs:
+      - build-and-test
+    steps:
+      - uses: actions/configure-pages@v5
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'dist/ngx-datatable-examples'
+      - uses: actions/deploy-pages@v4

@@ -3,5 +3,6 @@
   "dest": "../../dist/ngx-datatable",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "assets": ["index.scss", "index.css"]
 }

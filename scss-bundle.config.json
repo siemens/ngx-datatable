@@ -1,6 +1,0 @@
-{
-  "bundlerOptions": {
-    "entryFile": "./projects/ngx-datatable/src/lib/components/datatable.component.scss",
-    "outFile": "./dist/ngx-datatable/index.scss"
-  }
-}

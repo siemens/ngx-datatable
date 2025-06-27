@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'multiple-tables-demo',
@@ -20,7 +20,7 @@ import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datata
         class="material"
         [rows]="rows1"
         [columns]="columns1"
-        [columnMode]="ColumnMode.force"
+        [columnMode]="'force'"
         [headerHeight]="50"
         [footerHeight]="0"
         [rowHeight]="100"
@@ -54,6 +54,4 @@ export class MultipleTablesComponent {
     { name: 'Callie', gender: 'Female' },
     { name: 'Maggie', gender: 'Female' }
   ];
-
-  ColumnMode = ColumnMode;
 }

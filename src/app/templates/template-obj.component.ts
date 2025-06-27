@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
@@ -22,7 +22,7 @@ import { DataService } from '../data.service';
         class="material"
         [rows]="rows"
         [columns]="columns"
-        [columnMode]="ColumnMode.force"
+        [columnMode]="'force'"
         [headerHeight]="50"
         [footerHeight]="50"
         rowHeight="auto"
@@ -51,8 +51,6 @@ export class TemplateRefTemplatesComponent implements OnInit {
 
   rows: Employee[] = [];
   columns: TableColumn[] = [];
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 

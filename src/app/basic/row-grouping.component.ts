@@ -1,15 +1,13 @@
 import { Component, inject, ViewChild } from '@angular/core';
 import { GroupedEmployee } from '../data.model';
 import {
-  ColumnMode,
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DatatableComponent,
   DatatableGroupHeaderDirective,
   DatatableGroupHeaderTemplateDirective,
   Group,
-  GroupToggleEvents,
-  SelectionType
+  GroupToggleEvents
 } from 'projects/ngx-datatable/src/public-api';
 import { DataService } from '../data.service';
 
@@ -33,14 +31,14 @@ import { DataService } from '../data.service';
         class="material expandable"
         [rows]="rows"
         [groupRowsBy]="'age'"
-        [columnMode]="ColumnMode.force"
+        [columnMode]="'force'"
         [scrollbarH]="true"
         [headerHeight]="50"
         [footerHeight]="50"
         [rowHeight]="40"
         [limit]="4"
         [groupExpansionDefault]="true"
-        [selectionType]="SelectionType.checkbox"
+        [selectionType]="'checkbox'"
       >
         <!-- Group Header Template -->
         <ngx-datatable-group-header
@@ -167,9 +165,6 @@ export class RowGroupingComponent {
 
   editing: Record<string, boolean> = {};
   rows: GroupedEmployee[] = [];
-
-  ColumnMode = ColumnMode;
-  SelectionType = SelectionType;
 
   private dataService = inject(DataService);
 

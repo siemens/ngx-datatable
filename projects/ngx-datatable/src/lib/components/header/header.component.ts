@@ -9,6 +9,7 @@ import {
   OnChanges,
   OnDestroy,
   Output,
+  signal,
   SimpleChanges,
   TemplateRef
 } from '@angular/core';
@@ -75,6 +76,7 @@ import { OrderableDirective } from '../../directives/orderable.directive';
                 [targetMarkerTemplate]="targetMarkerTemplate"
                 [targetMarkerContext]="column.targetMarkerContext"
                 [column]="column"
+                [showResizeHandle]="lastColumnId() !== column.$$id && column.resizeable"
                 [sortType]="sortType"
                 [sorts]="sorts"
                 [selectionType]="selectionType"
@@ -111,6 +113,8 @@ import { OrderableDirective } from '../../directives/orderable.directive';
 export class DataTableHeaderComponent implements OnDestroy, OnChanges {
   private cd = inject(ChangeDetectorRef);
   private scrollbarHelper = inject(ScrollbarHelper);
+
+  lastColumnId = signal<string | null>(null);
 
   @Input() sortAscendingIcon?: string;
   @Input() sortDescendingIcon?: string;
@@ -160,6 +164,7 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
 
   @Input() set columns(val: TableColumnInternal[]) {
     this._columns = val;
+    this.lastColumnId.set(val.length ? val[val.length - 1].$$id : null);
 
     const colsByPin = columnsByPin(val);
     this._columnsByPin = columnsByPinArr(val);

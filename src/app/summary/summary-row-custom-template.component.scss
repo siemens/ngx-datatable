@@ -7,9 +7,11 @@
     background-color: #555;
     border-radius: 20px;
     text-align: center;
-    margin: 3px 1px;
-    width: 100px;
-    padding: 2px 0px;
+    margin-block: 3px;
+    margin-inline: 1px;
+    inline-size: 100px;
+    padding-block: 2px;
+    padding-inline: 0;
 
     .chip-content {
       color: #fff;

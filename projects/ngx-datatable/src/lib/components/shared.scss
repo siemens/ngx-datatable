@@ -6,11 +6,11 @@
   }
 
   .datatable-row-left {
-    left: 0;
+    inset-inline-start: 0;
   }
 
   .datatable-row-right {
-    right: 0;
+    inset-inline-end: 0;
   }
 }
 

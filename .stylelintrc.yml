@@ -2,7 +2,7 @@ plugins:
   - stylelint-use-logical-spec
 rules:
   color-named: never
-  color-no-hex: true
+  color-no-hex: null
   liberty/use-logical-spec:
     - always
 extends:

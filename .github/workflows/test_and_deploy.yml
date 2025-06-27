@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # We need this for commit-lint
 
       - name: Set Node Version
         uses: actions/setup-node@v4

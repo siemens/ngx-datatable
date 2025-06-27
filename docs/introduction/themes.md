@@ -18,13 +18,10 @@ You can just add above to your `scss` file and then specify the class of your ng
 ## CSS Classes
 
 - `ngx-datatable`: Main Table class
-
   - `fixed-header`: The header is fixed on the table
 
 - `datatable-header`: Header row class
-
   - `datatable-header-cell`: Header cell class
-
     - `resizeable`: Cell resizeable class
     - `sortable`: Cell drag/drop sortable class
     - `longpress`: Cell long-press activated
@@ -37,10 +34,8 @@ You can just add above to your `scss` file and then specify the class of your ng
     - `draggable`: Header cell draggable class
 
 - `datatable-body-row`: Body row class
-
   - `datatable-row-even`: Odd row class
   - `datatable-row-odd`: Even row class
-
     - `datatable-body-cell`: Body cell class
       - `sort-active`: Sort active on column
       - `sort-asc`: Sort active on column with ascending applied

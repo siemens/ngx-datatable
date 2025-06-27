@@ -1,0 +1,12 @@
+plugins:
+  - stylelint-use-logical-spec
+rules:
+  color-named: never
+  color-no-hex: true
+  liberty/use-logical-spec:
+    - always
+extends:
+  - '@siemens/stylelint-config-scss/stylelintrc.yml'
+ignoreFiles:
+  - dist/**
+  - projects/**/dist/*.scss

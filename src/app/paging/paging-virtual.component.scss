@@ -1,6 +1,6 @@
 .custom-loading-indicator {
   position: sticky;
-  top: 0;
-  height: 50px;
+  inset-block-start: 0;
+  block-size: 50px;
   text-align: center;
 }

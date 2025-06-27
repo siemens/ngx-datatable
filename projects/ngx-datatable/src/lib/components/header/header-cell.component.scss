@@ -24,7 +24,7 @@
 }
 
 .datatable-header-cell-template-wrap {
-  height: inherit;
+  block-size: inherit;
 }
 
 .sort-btn {
@@ -38,11 +38,11 @@
 .resize-handle--not-resizable {
   display: inline-block;
   position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 5px;
-  padding: 0 4px;
+  inset-inline-end: 0;
+  inset-block: 0;
+  inline-size: 5px;
+  padding-block: 0;
+  padding-inline: 4px;
   visibility: hidden;
 }
 
@@ -53,6 +53,7 @@
     visibility: visible;
   }
 }
+
 :host {
   @media (hover: none) {
     touch-action: none;
@@ -74,17 +75,19 @@
 }
 
 :host::ng-deep {
+  /* stylelint-disable-next-line selector-class-pattern */
   .targetMarker {
     position: absolute;
-    top: 0;
-    bottom: 0;
+    inset-block: 0;
 
+    /* stylelint-disable-next-line selector-class-pattern */
     &.dragFromLeft {
-      right: 0;
+      inset-inline-end: 0;
     }
 
+    /* stylelint-disable-next-line selector-class-pattern */
     &.dragFromRight {
-      left: 0;
+      inset-inline-start: 0;
     }
   }
 }

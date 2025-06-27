@@ -61,6 +61,7 @@ import { OrderableDirective } from '../../directives/orderable.directive';
                 role="columnheader"
                 (resize)="onColumnResized($event)"
                 (resizing)="onColumnResizing($event)"
+                (fitToContent)="onColumnFitToContent($event, column)"
                 long-press
                 [pressModel]="column"
                 [pressEnabled]="reorderable && column.draggable"
@@ -196,6 +197,10 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
     event: MouseEvent;
     column: TableColumnInternal;
   }>(false);
+  @Output() fitToContent = new EventEmitter<{
+    headerElement: HTMLElement;
+    column: TableColumnInternal;
+  }>();
 
   _columnsByPin!: PinnedColumns[];
   _columnGroupWidths: any = {
@@ -270,6 +275,10 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
 
   onColumnResizing({ width, column }: { width: number; column: TableColumnInternal }): void {
     this.resizing.emit(this.makeResizeEvent(width, column));
+  }
+
+  onColumnFitToContent(headerElement: HTMLElement, column: TableColumnInternal) {
+    this.fitToContent.emit({ headerElement, column });
   }
 
   private makeResizeEvent(

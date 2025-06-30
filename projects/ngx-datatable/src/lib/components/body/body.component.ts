@@ -33,7 +33,6 @@ import {
   SelectEvent,
   SelectionType
 } from '../../types/public.types';
-import { DraggableDirective } from '../../directives/draggable.directive';
 import { DatatableRowDefInternalDirective } from './body-row-def.component';
 import { DataTableRowWrapperComponent } from './body-row-wrapper.component';
 import { DataTableSummaryRowComponent } from './summary/summary-row.component';
@@ -228,7 +227,6 @@ import { Keys } from '../../utils/keys';
     DataTableRowWrapperComponent,
     DatatableRowDefInternalDirective,
     DataTableBodyRowComponent,
-    DraggableDirective,
     NgTemplateOutlet,
     DatatableBodyRowDirective
   ]

@@ -42,6 +42,9 @@ export class DraggableDirective implements OnDestroy {
   isDragging = signal(false);
   private subscription?: Subscription;
 
+  private frameId?: number;
+  private last?: { x: number; y: number };
+
   constructor() {
     effect(() => {
       const target = this.dragEventTarget();
@@ -96,11 +99,10 @@ export class DraggableDirective implements OnDestroy {
     const x = clientX - mouseDownPos.clientX;
     const y = clientY - mouseDownPos.clientY;
 
-    if (this.dragX()) {
-      this.element.style.left = `${x}px`;
-    }
-    if (this.dragY()) {
-      this.element.style.top = `${y}px`;
+    this.last = { x, y };
+
+    if (!this.frameId) {
+      this.frameId = requestAnimationFrame(() => this.updatePosition());
     }
 
     this.dragging.emit({
@@ -124,7 +126,24 @@ export class DraggableDirective implements OnDestroy {
     });
   }
 
+  private updatePosition(): void {
+    this.frameId = undefined;
+    if (!this.last) {
+      return;
+    }
+    if (this.dragX()) {
+      this.element.style.left = `${this.last.x}px`;
+    }
+    if (this.dragY()) {
+      this.element.style.top = `${this.last.y}px`;
+    }
+  }
+
   private _destroySubscription(): void {
+    if (this.frameId) {
+      cancelAnimationFrame(this.frameId);
+    }
+
     if (this.subscription) {
       this.subscription.unsubscribe();
       this.subscription = undefined;

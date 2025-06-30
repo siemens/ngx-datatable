@@ -32,9 +32,9 @@ export class DraggableDirective implements OnDestroy, OnChanges {
   @Input({ transform: booleanAttribute }) dragX = true;
   @Input({ transform: booleanAttribute }) dragY = true;
 
-  @Output() dragStart = new EventEmitter<DraggableDragEvent>();
-  @Output() dragging = new EventEmitter<DraggableDragEvent>();
-  @Output() dragEnd = new EventEmitter<DraggableDragEvent>();
+  @Output() readonly dragStart = new EventEmitter<DraggableDragEvent>();
+  @Output() readonly dragging = new EventEmitter<DraggableDragEvent>();
+  @Output() readonly dragEnd = new EventEmitter<DraggableDragEvent>();
 
   element = inject(ElementRef).nativeElement;
   isDragging = false;

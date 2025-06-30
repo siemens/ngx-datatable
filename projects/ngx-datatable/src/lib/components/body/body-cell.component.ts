@@ -206,9 +206,9 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
     return this._treeStatus;
   }
 
-  @Output() activate = new EventEmitter<CellActiveEvent<TRow>>();
+  @Output() readonly activate = new EventEmitter<CellActiveEvent<TRow>>();
 
-  @Output() treeAction = new EventEmitter<any>();
+  @Output() readonly treeAction = new EventEmitter<any>();
 
   @HostBinding('class')
   get columnCssClasses(): string {

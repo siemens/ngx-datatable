@@ -27,11 +27,9 @@ export const tsConfig = typescriptEslint.config({
       'error',
       {
         preferInputSignals: false,
-        preferQuerySignals: false,
-        preferReadonlySignalProperties: false
+        preferQuerySignals: false
       }
     ],
-    '@angular-eslint/prefer-output-readonly': ['off'],
     'no-console': [
       'off',
       {

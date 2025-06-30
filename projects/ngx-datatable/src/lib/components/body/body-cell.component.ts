@@ -324,7 +324,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
   checkValueUpdates(): void {
     let value = '';
 
-    if (!this.row || !this.column || this.column.prop == undefined) {
+    if (!this.row || this.column?.prop == undefined) {
       value = '';
     } else {
       const val = this.column.$$valueGetter(this.row, this.column.prop);

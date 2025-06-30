@@ -50,7 +50,6 @@ export const tsConfig = typescriptEslint.config({
     '@typescript-eslint/no-deprecated': ['off'],
     '@typescript-eslint/naming-convention': ['off'],
     '@typescript-eslint/dot-notation': ['off'],
-    '@typescript-eslint/prefer-includes': ['off'],
     '@typescript-eslint/no-this-alias': ['off'],
     '@angular-eslint/no-input-rename': ['off'],
     '@angular-eslint/no-output-native': ['off'],

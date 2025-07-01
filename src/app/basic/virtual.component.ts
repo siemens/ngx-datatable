@@ -5,6 +5,7 @@ import {
   DatatableComponent,
   PageEvent
 } from 'projects/ngx-datatable/src/public-api';
+
 import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 

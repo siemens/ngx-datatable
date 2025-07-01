@@ -1,5 +1,5 @@
-import { adjustColumnWidths, forceFillColumnWidths } from './math';
 import { toInternalColumn } from './column-helper';
+import { adjustColumnWidths, forceFillColumnWidths } from './math';
 
 describe('Math function', () => {
   describe('forceFillColumnWidths', () => {

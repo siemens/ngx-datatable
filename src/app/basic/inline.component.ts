@@ -4,6 +4,7 @@ import {
   DataTableColumnDirective,
   DatatableComponent
 } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 

@@ -1,5 +1,4 @@
 import { Component, inject, ViewChild } from '@angular/core';
-import { GroupedEmployee } from '../data.model';
 import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
@@ -9,6 +8,8 @@ import {
   Group,
   GroupToggleEvents
 } from 'projects/ngx-datatable/src/public-api';
+
+import { GroupedEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({

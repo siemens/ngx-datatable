@@ -59,7 +59,6 @@ export const tsConfig = typescriptEslint.config({
     '@angular-eslint/directive-class-suffix': ['off'],
     '@angular-eslint/no-conflicting-lifecycle': ['off'],
     'prefer-arrow/prefer-arrow-functions': ['off'],
-    'perfectionist/sort-imports': ['off'],
     'prefer-rest-params': ['off']
   }
 });

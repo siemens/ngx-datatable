@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { DatatableComponent, PageEvent } from 'projects/ngx-datatable/src/public-api';
+
+import { Employee } from '../data.model';
 import { MockServerResultsService } from './mock-server-results-service';
 import { Page } from './model/page';
-import { DatatableComponent, PageEvent } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from '../data.model';
 
 @Component({
   selector: 'virtual-paging-demo',

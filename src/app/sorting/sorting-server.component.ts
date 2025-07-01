@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { DatatableComponent, SortEvent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 

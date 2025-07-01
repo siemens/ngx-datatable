@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+
+import { Employee } from '../data.model';
 import { MockServerResultsService } from '../paging/mock-server-results-service';
 import { Page } from '../paging/model/page';
-import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from '../data.model';
 
 @Component({
   selector: 'summary-row-server-paging-demo',

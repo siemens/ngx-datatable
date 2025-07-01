@@ -1,8 +1,9 @@
+import { NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
-import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'column-reorder-demo',

@@ -4,6 +4,7 @@ import {
   DatatableComponent,
   TableColumn
 } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 
 @Component({

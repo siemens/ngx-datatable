@@ -5,8 +5,9 @@ import {
   DatatableRowDefComponent,
   DatatableRowDefDirective
 } from 'projects/ngx-datatable/src/public-api';
-import { DataService } from '../data.service';
+
 import { Employee } from '../data.model';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'drag-drop-demo',

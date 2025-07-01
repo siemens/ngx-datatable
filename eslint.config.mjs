@@ -52,8 +52,7 @@ export const tsConfig = typescriptEslint.config({
     '@angular-eslint/no-input-rename': ['off'],
     '@angular-eslint/no-output-native': ['off'],
     '@angular-eslint/directive-class-suffix': ['off'],
-    '@angular-eslint/no-conflicting-lifecycle': ['off'],
-    'prefer-arrow/prefer-arrow-functions': ['off']
+    '@angular-eslint/no-conflicting-lifecycle': ['off']
   }
 });
 

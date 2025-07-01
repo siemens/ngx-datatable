@@ -231,6 +231,6 @@
   </nav>
 
   <main>
-    <router-outlet (activate)="routeActivate(outlet)" #outlet="outlet"></router-outlet>
+    <router-outlet #outlet="outlet" (activate)="routeActivate(outlet)"></router-outlet>
   </main>
 </div>

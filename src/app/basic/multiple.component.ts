@@ -29,11 +29,11 @@ import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/publ
       <br />
       <ngx-datatable
         class="material"
+        rowHeight="auto"
         [rows]="rows2"
         [columns]="columns2"
         [headerHeight]="50"
         [footerHeight]="50"
-        rowHeight="auto"
       >
       </ngx-datatable>
     </div>

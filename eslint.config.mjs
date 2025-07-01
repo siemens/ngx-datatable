@@ -54,7 +54,6 @@ export const tsConfig = typescriptEslint.config({
     '@typescript-eslint/no-this-alias': ['off'],
     '@angular-eslint/no-input-rename': ['off'],
     '@angular-eslint/no-output-native': ['off'],
-    '@angular-eslint/consistent-component-styles': ['off'],
     '@angular-eslint/relative-url-prefix': ['off'],
     '@angular-eslint/directive-class-suffix': ['off'],
     '@angular-eslint/no-conflicting-lifecycle': ['off'],

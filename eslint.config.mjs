@@ -67,7 +67,6 @@ export const templateConfig = typescriptEslint.config({
     '@angular-eslint/template/prefer-self-closing-tags': ['off'],
     '@angular-eslint/template/no-interpolation-in-attributes': ['off'],
     '@angular-eslint/template/prefer-static-string-properties': ['off'],
-    '@angular-eslint/template/button-has-type': ['off'],
     '@angular-eslint/template/no-positive-tabindex': ['off'],
     '@angular-eslint/template/elements-content': [
       'off',

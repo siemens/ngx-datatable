@@ -64,7 +64,6 @@ export const templateConfig = typescriptEslint.config({
     '@angular-eslint/template/prefer-ngsrc': ['off'],
     '@angular-eslint/template/no-inline-styles': ['off'],
     '@angular-eslint/template/interactive-supports-focus': ['off'],
-    '@angular-eslint/template/no-positive-tabindex': ['off'],
     '@angular-eslint/template/prefer-template-literal': ['off']
   }
 });

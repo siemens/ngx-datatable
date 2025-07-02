@@ -54,18 +54,19 @@ import { DatatableGroupHeaderDirective } from './body-group-header.directive';
           <ng-template
             [ngTemplateOutlet]="groupHeader!.template!"
             [ngTemplateOutletContext]="context"
-          >
-          </ng-template>
+          />
         </div>
       </div>
     }
     @if ((groupHeader?.template && expanded) || !groupHeader || !groupHeader.template) {
-      <ng-content> </ng-content>
+      <ng-content />
     }
     @if (rowDetail?.template && expanded) {
       <div class="datatable-row-detail" [style.height.px]="detailRowHeight">
-        <ng-template [ngTemplateOutlet]="rowDetail!.template!" [ngTemplateOutletContext]="context">
-        </ng-template>
+        <ng-template
+          [ngTemplateOutlet]="rowDetail!.template!"
+          [ngTemplateOutletContext]="context"
+        />
       </div>
     }
   `,

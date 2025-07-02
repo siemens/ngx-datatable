@@ -54,8 +54,7 @@ import { DataService } from '../data.service';
         [headerHeight]="50"
         [footerHeight]="50"
         (tableContextmenu)="onTableContextMenu($event)"
-      >
-      </ngx-datatable>
+      />
     </div>
   `,
   imports: [DatatableComponent]

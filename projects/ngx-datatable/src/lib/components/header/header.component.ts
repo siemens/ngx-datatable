@@ -90,8 +90,7 @@ import { DataTableHeaderCellComponent } from './header-cell.component';
                 (sort)="onSort($event)"
                 (select)="select.emit($event)"
                 (columnContextmenu)="columnContextmenu.emit($event)"
-              >
-              </datatable-header-cell>
+              />
             }
           </div>
         }

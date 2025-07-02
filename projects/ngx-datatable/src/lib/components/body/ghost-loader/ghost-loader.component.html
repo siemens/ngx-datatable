@@ -6,7 +6,7 @@
           @if (!col.ghostCellTemplate) {
             <div class="line ghost-cell-strip"></div>
           } @else {
-            <ng-template [ngTemplateOutlet]="col.ghostCellTemplate"></ng-template>
+            <ng-template [ngTemplateOutlet]="col.ghostCellTemplate" />
           }
         </div>
       }

@@ -56,8 +56,7 @@ import { DataTableBodyCellComponent } from './body-cell.component';
               [ariaRowCheckboxMessage]="ariaRowCheckboxMessage"
               (activate)="onActivate($event, ii)"
               (treeAction)="onTreeAction()"
-            >
-            </datatable-body-cell>
+            />
           }
         </div>
       }

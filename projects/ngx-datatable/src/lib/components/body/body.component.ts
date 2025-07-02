@@ -49,7 +49,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
     @if (loadingIndicator) {
       <div class="custom-loading-indicator-wrapper">
         <div class="custom-loading-content">
-          <ng-content select="[loading-indicator]"></ng-content>
+          <ng-content select="[loading-indicator]" />
         </div>
       </div>
     }
@@ -60,8 +60,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
         [pageSize]="pageSize"
         [rowHeight]="rowHeight"
         [ghostBodyHeight]="bodyHeight"
-      >
-      </ghost-loader>
+      />
     }
     @if (rows.length) {
       <datatable-scroller
@@ -77,8 +76,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
             [innerWidth]="innerWidth"
             [rows]="rows"
             [columns]="columns"
-          >
-          </datatable-summary-row>
+          />
         }
         <ng-template
           #bodyRow
@@ -116,8 +114,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
             (dragleave)="dragLeave($event, row, rowElement)"
             (dragstart)="drag($event, row, rowElement)"
             (dragend)="dragEnd($event, row)"
-          >
-          </datatable-body-row>
+          />
         </ng-template>
 
         <div [style.transform]="renderOffset()">
@@ -171,7 +168,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
                         index: indexes().first + i,
                         disabled
                       }"
-                    ></ng-container>
+                    />
                   }
                 }
 
@@ -188,7 +185,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
                         indexInGroup: $index,
                         disabled
                       }"
-                    ></ng-container>
+                    />
                   }
                 }
               </datatable-row-wrapper>
@@ -203,8 +200,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
           [innerWidth]="innerWidth"
           [rows]="rows"
           [columns]="columns"
-        >
-        </datatable-summary-row>
+        />
       }
     }
     @if (!rows?.length && !loadingIndicator && !ghostLoadingIndicator) {
@@ -215,7 +211,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
         [style.width]="scrollbarH ? columnGroupWidths?.total + 'px' : '100%'"
         (scroll)="onBodyScroll($event)"
       >
-        <ng-content select="[empty-content]"></ng-content>
+        <ng-content select="[empty-content]" />
       </datatable-scroller>
     }
   `,

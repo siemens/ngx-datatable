@@ -66,8 +66,7 @@ import { Keys } from '../../utils/keys';
           <ng-template
             [ngTemplateOutlet]="column.treeToggleTemplate"
             [ngTemplateOutletContext]="{ cellContext: cellContext }"
-          >
-          </ng-template>
+          />
         }
       }
 
@@ -81,8 +80,7 @@ import { Keys } from '../../utils/keys';
         <ng-template
           [ngTemplateOutlet]="column.cellTemplate"
           [ngTemplateOutletContext]="cellContext"
-        >
-        </ng-template>
+        />
       }
     </div>
   `,

@@ -22,8 +22,7 @@ import { DataTablePagerComponent } from './pager.component';
             curPage: curPage,
             offset: offset
           }"
-        >
-        </ng-template>
+        />
       } @else {
         <div class="page-count">
           @if (selectedMessage) {
@@ -41,8 +40,7 @@ import { DataTablePagerComponent } from './pager.component';
             [size]="pageSize"
             [count]="rowCount"
             (change)="page.emit($event)"
-          >
-          </datatable-pager>
+          />
         }
       }
     </div>

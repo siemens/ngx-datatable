@@ -7,7 +7,7 @@
  * const keys: Keys = 'up';
  * ```
  */
-export const Keys = {
+export const KEYS = {
   up: 'ArrowUp',
   down: 'ArrowDown',
   return: 'Enter',
@@ -16,4 +16,4 @@ export const Keys = {
   right: 'ArrowRight'
 } as const;
 
-export type Keys = (typeof Keys)[keyof typeof Keys];
+export type Keys = (typeof KEYS)[keyof typeof KEYS];

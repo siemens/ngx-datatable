@@ -38,8 +38,8 @@ import { DataService } from '../data.service';
           <h4>hidden Table</h4>
           <ngx-datatable
             class="material"
+            columnMode="force"
             [rows]="rows"
-            [columnMode]="'force'"
             [headerHeight]="50"
             [footerHeight]="50"
             [rowHeight]="50"
@@ -56,8 +56,8 @@ import { DataService } from '../data.service';
             <h4>ngIf Table</h4>
             <ngx-datatable
               class="material"
+              columnMode="force"
               [rows]="rows"
-              [columnMode]="'force'"
               [headerHeight]="50"
               [footerHeight]="50"
               [rowHeight]="50"

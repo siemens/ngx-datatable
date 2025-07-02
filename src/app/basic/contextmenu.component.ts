@@ -48,9 +48,9 @@ import { DataService } from '../data.service';
       <ngx-datatable
         class="material"
         rowHeight="auto"
+        columnMode="force"
         [rows]="rows"
         [columns]="columns"
-        [columnMode]="'force'"
         [headerHeight]="50"
         [footerHeight]="50"
         (tableContextmenu)="onTableContextMenu($event)"

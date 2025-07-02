@@ -18,9 +18,9 @@ import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/publ
       </h3>
       <ngx-datatable
         class="material"
+        columnMode="force"
         [rows]="[]"
         [columns]="columns"
-        [columnMode]="'force'"
         [headerHeight]="50"
         [footerHeight]="50"
       >

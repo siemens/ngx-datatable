@@ -48,7 +48,23 @@ export const tsConfig = typescriptEslint.config({
       }
     ],
     '@typescript-eslint/no-deprecated': ['off'],
-    '@typescript-eslint/naming-convention': ['off'],
+    '@typescript-eslint/naming-convention': [
+      'error',
+      {
+        selector: 'variable',
+        format: ['camelCase', 'UPPER_CASE'],
+        leadingUnderscore: 'allow'
+      },
+      {
+        selector: 'memberLike',
+        format: ['camelCase'],
+        leadingUnderscore: 'allow'
+      },
+      {
+        selector: 'objectLiteralProperty',
+        format: null
+      }
+    ],
     '@angular-eslint/no-input-rename': ['off'],
     '@angular-eslint/no-output-native': ['off'],
     '@angular-eslint/directive-class-suffix': ['off'],

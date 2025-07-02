@@ -3,8 +3,7 @@ import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DatatableComponent,
-  DisableRowDirective,
-  SelectionType
+  DisableRowDirective
 } from 'projects/ngx-datatable/src/public-api';
 
 import { FullEmployee } from '../data.model';
@@ -95,8 +94,6 @@ import { DataService } from '../data.service';
 })
 export class DisabledRowsComponent {
   rows: (FullEmployee & { isDisabled?: boolean })[] = [];
-
-  SelectionType = SelectionType;
 
   private dataService = inject(DataService);
 

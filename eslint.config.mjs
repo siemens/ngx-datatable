@@ -65,13 +65,7 @@ export const templateConfig = typescriptEslint.config({
     '@angular-eslint/template/no-inline-styles': ['off'],
     '@angular-eslint/template/interactive-supports-focus': ['off'],
     '@angular-eslint/template/no-positive-tabindex': ['off'],
-    '@angular-eslint/template/prefer-template-literal': ['off'],
-    '@angular-eslint/template/elements-content': [
-      'off',
-      {
-        allowList: ['aria-label', 'innerHtml', 'innerHTML', 'innerText', 'outerHTML', 'title']
-      }
-    ]
+    '@angular-eslint/template/prefer-template-literal': ['off']
   }
 });
 

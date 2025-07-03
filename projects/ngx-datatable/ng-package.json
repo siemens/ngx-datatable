@@ -4,5 +4,13 @@
   "lib": {
     "entryFile": "src/public-api.ts"
   },
-  "assets": ["index.scss", "index.css"]
+  "assets": [
+    "index.scss",
+    "index.css",
+    {
+      "input": "src/lib/themes",
+      "glob": "**/*",
+      "output": "themes"
+    }
+  ]
 }

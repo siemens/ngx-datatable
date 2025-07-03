@@ -92,8 +92,8 @@
     "typescript-eslint": "8.35.1"
   },
   "optionalDependencies": {
-    "@axe-core/playwright": "4.8.2",
-    "@playwright/test": "1.46.0",
-    "axe-html-reporter": "2.2.3"
+    "@axe-core/playwright": "4.10.2",
+    "@playwright/test": "1.53.2",
+    "axe-html-reporter": "2.2.11"
   }
 }

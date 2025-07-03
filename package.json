@@ -66,7 +66,7 @@
     "@siemens/stylelint-config-scss": "^2.2.1",
     "@types/jasmine": "~3.10.0",
     "@types/jasminewd2": "^2.0.13",
-    "@types/node": "^20.19.4",
+    "@types/node": "^22.0.0",
     "angular-eslint": "19.3.0",
     "cpx": "^1.5.0",
     "cross-env": "^7.0.3",

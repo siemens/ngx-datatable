@@ -1,0 +1,77 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "group:allNonMajor",
+    ":semanticCommits",
+    ":semanticCommitTypeAll(chore)",
+    ":prHourlyLimitNone",
+    ":prConcurrentLimitNone"
+  ],
+  "addLabels": ["dep-bump"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["e2e-local.sh"],
+      "matchStrings": [
+        "PLAYWRIGHT_IMAGE=\"(?<packageName>mcr\\.microsoft\\.com/playwright):(?<currentValue>[^\\s]+)\""
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": [
+        "Prevent Angular related major and minor updates. Those should be manually done"
+      ],
+      "matchPackageNames": [
+        "@angular/**",
+        "@angular-devkit/**",
+        "@angular-eslint/**",
+        "@angular-architects/**",
+        "@angular-builders/**",
+        "ng-packagr",
+        "rxjs",
+        "typescript",
+        "zone.js",
+        "tslib"
+      ],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
+      "groupName": "Angular dependencies",
+      "description": ["Update Angular packages"],
+      "matchPackageNames": [
+        "@angular/**",
+        "@angular-devkit/**",
+        "@angular-eslint/**",
+        "@angular-architects/**",
+        "@angular-builders/**",
+        "ng-packagr",
+        "rxjs",
+        "typescript",
+        "zone.js",
+        "tslib"
+      ],
+      "matchUpdateTypes": ["patch"],
+      "enabled": true
+    },
+    {
+      "groupName": "E2E dependencies",
+      "description": ["Update E2E packages"],
+      "matchPackageNames": [
+        "@playwright/**",
+        "@axe-core/**",
+        "axe-html-reporter",
+        "mcr.microsoft.com/playwright"
+      ]
+    },
+    {
+      "description": ["Node LTS gitlab-ci update"],
+      "matchPackageNames": ["node"],
+      "matchDatasources": ["docker"],
+      "enabled": true
+    }
+  ]
+}

@@ -78,8 +78,6 @@ export class ContextMenuDemoComponent {
   }
 
   onTableContextMenu(contextMenuEvent: ContextMenuEvent<Employee>) {
-    console.log(contextMenuEvent);
-
     this.rawEvent = contextMenuEvent.event;
     if (contextMenuEvent.type === 'body') {
       this.contextmenuRow = contextMenuEvent.content;

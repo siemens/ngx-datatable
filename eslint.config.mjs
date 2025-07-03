@@ -31,7 +31,7 @@ export const tsConfig = typescriptEslint.config({
       }
     ],
     'no-console': [
-      'off',
+      'error',
       {
         allow: ['warn', 'error']
       }

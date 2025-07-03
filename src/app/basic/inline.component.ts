@@ -96,10 +96,8 @@ export class InlineEditComponent {
   }
 
   updateValue(event: Event, cell: 'name' | 'gender', rowIndex: number) {
-    console.log('inline editing rowIndex', rowIndex);
     this.editing[rowIndex + '-' + cell] = false;
     this.rows[rowIndex][cell] = (event.target as HTMLInputElement).value;
     this.rows = [...this.rows];
-    console.log('UPDATED!', this.rows[rowIndex][cell]);
   }
 }

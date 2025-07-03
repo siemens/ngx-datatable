@@ -76,7 +76,7 @@
     "eslint-plugin-perfectionist": "4.12.2",
     "eslint-plugin-prefer-arrow": "1.2.3",
     "eslint-plugin-tsdoc": "0.4.0",
-    "http-server": "^13.1.0",
+    "http-server": "^14.0.0",
     "jasmine": "^3.99.0",
     "jasmine-core": "~5.8.0",
     "jasmine-spec-reporter": "~7.0.0",

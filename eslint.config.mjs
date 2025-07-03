@@ -52,7 +52,10 @@ export const tsConfig = typescriptEslint.config({
     '@angular-eslint/no-input-rename': ['off'],
     '@angular-eslint/no-output-native': ['off'],
     '@angular-eslint/directive-class-suffix': ['off'],
-    '@angular-eslint/no-conflicting-lifecycle': ['off']
+    '@angular-eslint/no-conflicting-lifecycle': ['off'],
+    '@angular-eslint/prefer-output-emitter-ref': ['off'],
+    '@angular-eslint/sort-keys-in-type-decorator': ['off'],
+    '@angular-eslint/prefer-inject': ['off']
   }
 });
 
@@ -65,6 +68,8 @@ export const templateConfig = typescriptEslint.config({
     '@angular-eslint/template/interactive-supports-focus': ['off'],
     '@angular-eslint/template/no-interpolation-in-attributes': ['off'],
     '@angular-eslint/template/no-positive-tabindex': ['off'],
+    '@angular-eslint/template/prefer-template-literal': ['off'],
+    '@angular-eslint/template/prefer-at-empty': ['off'],
     '@angular-eslint/template/elements-content': [
       'off',
       {

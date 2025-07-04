@@ -53,7 +53,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
         </div>
       </div>
     }
-    @if (ghostLoadingIndicator && (!rowCount || !virtualization || !scrollbarV)) {
+    @if (ghostLoadingIndicator && !rows.length && (!rowCount || !virtualization || !scrollbarV)) {
       <ghost-loader
         class="ghost-overlay"
         [columns]="columns"
@@ -348,7 +348,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     this.recalcLayout();
   }
 
-  get bodyHeight() {
+  get bodyHeight(): string {
     return this._bodyHeight;
   }
 

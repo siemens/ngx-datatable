@@ -9,6 +9,7 @@ $datatable-ghost-cell-strip-background-image: linear-gradient(
 ) !default;
 $datatable-ghost-cell-strip-radius: 4px !default;
 $datatble-ghost-cell-animation-duration: 10s;
+$datatable-ghost-row-border-color: #d9d8d9 !default;
 
 .ghost-cell-container {
   background: $datatable-ghost-cell-container-background;
@@ -19,4 +20,8 @@ $datatble-ghost-cell-animation-duration: 10s;
   background-image: $datatable-ghost-cell-strip-background-image;
   border-radius: $datatable-ghost-cell-strip-radius;
   animation-duration: $datatble-ghost-cell-animation-duration;
+}
+
+.ghost-element {
+  border-block-end: 1px solid $datatable-ghost-row-border-color;
 }

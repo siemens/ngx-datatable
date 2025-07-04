@@ -10,6 +10,7 @@ $datatable-ghost-cell-strip-background-image: linear-gradient(
 ) !default;
 $datatable-ghost-cell-strip-radius: 0 !default;
 $datatble-ghost-cell-animation-duration: 10s;
+$datatable-ghost-row-border-color: #d1d4d7 !default;
 
 @import './ghost';
 @import './rows';

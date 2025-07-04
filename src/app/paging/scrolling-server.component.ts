@@ -1,4 +1,4 @@
-import { Component, ElementRef, Injectable, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, Injectable, OnInit } from '@angular/core';
 import { DatatableComponent } from 'projects/ngx-datatable/src/public-api';
 import { Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
@@ -66,10 +66,8 @@ export class ServerScrollingComponent implements OnInit {
   rows: Employee[] = [];
   isLoading?: boolean;
 
-  constructor(
-    private serverResultsService: MockServerResultsService,
-    private el: ElementRef
-  ) {}
+  private serverResultsService = inject(MockServerResultsService);
+  private el = inject(ElementRef);
 
   ngOnInit() {
     this.onScroll(0);

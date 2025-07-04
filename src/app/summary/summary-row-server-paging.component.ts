@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
 
 import { Employee } from '../data.model';
@@ -56,7 +56,7 @@ export class SummaryRowServerPagingComponent implements OnInit {
     { name: 'Company', summaryFunc: () => null }
   ];
 
-  constructor(private serverResultsService: MockServerResultsService) {}
+  private serverResultsService = inject(MockServerResultsService);
 
   ngOnInit() {
     this.setPage(0);

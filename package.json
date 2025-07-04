@@ -61,7 +61,7 @@
     "@types/jasmine": "~5.1.0",
     "@types/jasminewd2": "^2.0.13",
     "@types/node": "^22.0.0",
-    "angular-eslint": "19.8.1",
+    "angular-eslint": "20.1.1",
     "cpy-cli": "^5.0.0",
     "cross-env": "^7.0.3",
     "eslint": "^9.30.1",

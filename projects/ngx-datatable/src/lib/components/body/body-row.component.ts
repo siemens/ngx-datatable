@@ -177,15 +177,15 @@ export class DataTableBodyRowComponent<TRow extends Row = any> implements DoChec
 
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
-    const key = event.key;
+    const key = event.key as Keys;
     const isTargetRow = event.target === this._element;
 
     const isAction =
-      key === Keys.return ||
-      key === Keys.down ||
-      key === Keys.up ||
-      key === Keys.left ||
-      key === Keys.right;
+      key === 'Enter' ||
+      key === 'ArrowDown' ||
+      key === 'ArrowUp' ||
+      key === 'ArrowLeft' ||
+      key === 'ArrowRight';
 
     const isCtrlA = event.key === 'a' && (event.ctrlKey || event.metaKey);
 

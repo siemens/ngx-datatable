@@ -388,15 +388,15 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
 
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
-    const key = event.key;
+    const key = event.key as Keys;
     const isTargetCell = event.target === this._element;
 
     const isAction =
-      key === Keys.return ||
-      key === Keys.down ||
-      key === Keys.up ||
-      key === Keys.left ||
-      key === Keys.right;
+      key === 'Enter' ||
+      key === 'ArrowDown' ||
+      key === 'ArrowUp' ||
+      key === 'ArrowLeft' ||
+      key === 'ArrowRight';
 
     if (isAction && isTargetCell) {
       event.preventDefault();

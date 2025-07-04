@@ -937,7 +937,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     if (select) {
       this.selectRow(event, index, row);
     } else if (type === 'keydown') {
-      if ((event as KeyboardEvent).key === Keys.return) {
+      if ((event as KeyboardEvent).key === 'Enter') {
         this.selectRow(event, index, row);
       } else if (
         (event as KeyboardEvent).key === 'a' &&
@@ -954,7 +954,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   onKeyboardFocus(model: ActivateEvent<TRow>): void {
     const { key } = model.event as KeyboardEvent;
     const shouldFocus =
-      key === Keys.up || key === Keys.down || key === Keys.right || key === Keys.left;
+      key === 'ArrowUp' || key === 'ArrowDown' || key === 'ArrowRight' || key === 'ArrowLeft';
 
     if (shouldFocus) {
       const isCellSelection = this.selectionType === SelectionType.cell;
@@ -984,9 +984,9 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
 
     if (parentElement) {
       let focusElement: Element | null = null;
-      if (key === Keys.up) {
+      if (key === 'ArrowUp') {
         focusElement = parentElement.previousElementSibling;
-      } else if (key === Keys.down) {
+      } else if (key === 'ArrowDown') {
         focusElement = parentElement.nextElementSibling;
       }
 
@@ -999,11 +999,11 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   focusCell(cellElement: HTMLElement, rowElement: HTMLElement, key: Keys, cellIndex: number): void {
     let nextCellElement: Element | null = null;
 
-    if (key === Keys.left) {
+    if (key === 'ArrowLeft') {
       nextCellElement = cellElement.previousElementSibling;
-    } else if (key === Keys.right) {
+    } else if (key === 'ArrowRight') {
       nextCellElement = cellElement.nextElementSibling;
-    } else if (key === Keys.up || key === Keys.down) {
+    } else if (key === 'ArrowUp' || key === 'ArrowDown') {
       const nextRowElement = this.getPrevNextRow(rowElement, key);
       if (nextRowElement) {
         const children = nextRowElement.getElementsByClassName('datatable-body-cell');

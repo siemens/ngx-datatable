@@ -27,7 +27,7 @@ import { Keys } from '../../utils/keys';
 
 @Component({
   selector: 'datatable-body-cell',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgTemplateOutlet],
   template: `
     <div class="datatable-body-cell-label" [style.margin-left.px]="calcLeftMargin(column, row)">
       @if (column.checkboxable && (!displayCheck || displayCheck(row, column, value))) {
@@ -85,7 +85,7 @@ import { Keys } from '../../utils/keys';
     </div>
   `,
   styleUrl: './body-cell.component.scss',
-  imports: [NgTemplateOutlet]
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DataTableBodyCellComponent<TRow extends Row = any> implements DoCheck {
   private cd = inject(ChangeDetectorRef);

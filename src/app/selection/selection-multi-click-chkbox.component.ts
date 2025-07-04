@@ -11,6 +11,7 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'multi-click-chkbox-selection-demo',
+  imports: [DatatableComponent, DataTableColumnDirective],
   template: `
     <div>
       <h3>
@@ -78,8 +79,7 @@ import { DataService } from '../data.service';
         </ul>
       </div>
     </div>
-  `,
-  imports: [DatatableComponent, DataTableColumnDirective]
+  `
 })
 export class MultiClickCheckboxSelectionComponent {
   rows: Employee[] = [];

@@ -11,6 +11,7 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'multi-click-selection-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -59,8 +60,7 @@ import { DataService } from '../data.service';
         </ul>
       </div>
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class MultiClickSelectionComponent {
   rows: Employee[] = [];

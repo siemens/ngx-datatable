@@ -13,6 +13,12 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'chkbox-selection-template-demo',
+  imports: [
+    DatatableComponent,
+    DataTableColumnDirective,
+    DataTableColumnHeaderDirective,
+    DataTableColumnCellDirective
+  ],
   template: `
     <div>
       <h3>
@@ -91,13 +97,7 @@ import { DataService } from '../data.service';
         </ul>
       </div>
     </div>
-  `,
-  imports: [
-    DatatableComponent,
-    DataTableColumnDirective,
-    DataTableColumnHeaderDirective,
-    DataTableColumnCellDirective
-  ]
+  `
 })
 export class CustomCheckboxSelectionComponent {
   rows: Employee[] = [];

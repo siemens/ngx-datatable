@@ -11,6 +11,7 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'full-screen-tree-demo',
+  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellTreeToggle],
   template: `
     <div>
       <h3>
@@ -73,8 +74,7 @@ import { DataService } from '../data.service';
       </ngx-datatable>
     </div>
   `,
-  styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }'],
-  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellTreeToggle]
+  styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
 })
 export class FullScreenTreeComponent {
   rows: (FullEmployee & { treeStatus: TreeStatus; parentId?: string })[] = [];

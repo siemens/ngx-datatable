@@ -6,6 +6,7 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'client-sorting-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -31,8 +32,7 @@ import { DataService } from '../data.service';
         [scrollbarV]="true"
       />
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class ClientSortingComponent {
   rows: Employee[] = [];

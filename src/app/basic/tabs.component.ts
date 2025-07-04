@@ -9,6 +9,7 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'tabs-demo',
+  imports: [DatatableComponent, DataTableColumnDirective],
   template: `
     <div>
       <h3>
@@ -71,8 +72,7 @@ import { DataService } from '../data.service';
         }
       </div>
     </div>
-  `,
-  imports: [DatatableComponent, DataTableColumnDirective]
+  `
 })
 export class TabsDemoComponent {
   rows: FullEmployee[] = [];

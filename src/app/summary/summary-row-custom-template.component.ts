@@ -6,6 +6,7 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'summary-row-custom-template-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -39,8 +40,7 @@ import { DataService } from '../data.service';
       </ng-template>
     </div>
   `,
-  styleUrl: './summary-row-custom-template.component.scss',
-  imports: [DatatableComponent]
+  styleUrl: './summary-row-custom-template.component.scss'
 })
 export class SummaryRowCustomTemplateComponent implements OnInit {
   rows: Employee[] = [];

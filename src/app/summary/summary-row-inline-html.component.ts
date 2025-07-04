@@ -9,6 +9,7 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'summary-row-inline-html',
+  imports: [DatatableComponent, DataTableColumnDirective],
   template: `
     <div>
       <h3>
@@ -45,8 +46,7 @@ import { DataService } from '../data.service';
         </div>
       </ng-template>
     </div>
-  `,
-  imports: [DatatableComponent, DataTableColumnDirective]
+  `
 })
 export class SummaryRowInlineHtmlComponent {
   rows: Employee[] = [];

@@ -54,7 +54,6 @@ export const tsConfig = typescriptEslint.config({
     '@angular-eslint/directive-class-suffix': ['off'],
     '@angular-eslint/no-conflicting-lifecycle': ['off'],
     '@angular-eslint/prefer-output-emitter-ref': ['off'],
-    '@angular-eslint/sort-keys-in-type-decorator': ['off'],
     '@angular-eslint/prefer-inject': ['off']
   }
 });

@@ -6,6 +6,7 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'template-ref-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -42,8 +43,7 @@ import { DataService } from '../data.service';
         }
       </ng-template>
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class TemplateRefTemplatesComponent implements OnInit {
   @ViewChild('editTmpl', { static: true }) editTmpl!: TemplateRef<any>;

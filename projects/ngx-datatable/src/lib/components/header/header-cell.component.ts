@@ -29,6 +29,7 @@ import { nextSortDir } from '../../utils/sort';
 
 @Component({
   selector: 'datatable-header-cell',
+  imports: [NgTemplateOutlet],
   template: `
     <div class="datatable-header-cell-template-wrap">
       @if (isTarget) {
@@ -69,13 +70,12 @@ import { nextSortDir } from '../../utils/sort';
       ></span>
     }
   `,
+  styleUrl: './header-cell.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'datatable-header-cell',
     '[attr.resizeable]': 'showResizeHandle'
-  },
-  styleUrl: './header-cell.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgTemplateOutlet]
+  }
 })
 export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
   private cd = inject(ChangeDetectorRef);

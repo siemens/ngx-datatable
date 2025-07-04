@@ -11,6 +11,7 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'multidisable-selection-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -56,8 +57,7 @@ import { DataService } from '../data.service';
         </ul>
       </div>
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class MultiDisableSelectionComponent {
   rows: Employee[] = [];

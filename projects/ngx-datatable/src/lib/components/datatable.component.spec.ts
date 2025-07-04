@@ -16,8 +16,8 @@ describe('DatatableComponent', () => {
   let component: TestFixtureComponent;
 
   @Component({
-    template: ` <ngx-datatable [columns]="columns" [rows]="rows" [sorts]="sorts" /> `,
-    imports: [DatatableComponent]
+    imports: [DatatableComponent],
+    template: ` <ngx-datatable [columns]="columns" [rows]="rows" [sorts]="sorts" /> `
   })
   class TestFixtureComponent {
     columns: TableColumn[] = [];
@@ -358,6 +358,12 @@ describe('DatatableComponent', () => {
 
 describe('DatatableComponent With Custom Templates', () => {
   @Component({
+    imports: [
+      DatatableComponent,
+      DataTableColumnDirective,
+      DataTableColumnCellDirective,
+      DataTableColumnHeaderDirective
+    ],
     template: `
       <ngx-datatable [rows]="rows" [sorts]="sorts">
         <ngx-datatable-column name="Id" prop="id">
@@ -377,13 +383,7 @@ describe('DatatableComponent With Custom Templates', () => {
           </ng-template>
         </ngx-datatable-column>
       </ngx-datatable>
-    `,
-    imports: [
-      DatatableComponent,
-      DataTableColumnDirective,
-      DataTableColumnCellDirective,
-      DataTableColumnHeaderDirective
-    ]
+    `
   })
   // eslint-disable-next-line @angular-eslint/component-class-suffix
   class TestFixtureComponentWithCustomTemplates {
@@ -445,6 +445,12 @@ describe('DatatableComponent With Custom Templates', () => {
 
 describe('DatatableComponent With Frozen columns', () => {
   @Component({
+    imports: [
+      DatatableComponent,
+      DataTableColumnDirective,
+      DataTableColumnCellDirective,
+      DataTableColumnHeaderDirective
+    ],
     template: `
       <ngx-datatable [rows]="rows">
         <ngx-datatable-column name="Name" [width]="300" [frozenLeft]="true" />
@@ -458,13 +464,7 @@ describe('DatatableComponent With Frozen columns', () => {
           [frozenRight]="true"
         />
       </ngx-datatable>
-    `,
-    imports: [
-      DatatableComponent,
-      DataTableColumnDirective,
-      DataTableColumnCellDirective,
-      DataTableColumnHeaderDirective
-    ]
+    `
   })
   // eslint-disable-next-line @angular-eslint/component-class-suffix
   class TestFixtureComponentWithFrozenColumns {

@@ -9,6 +9,7 @@ import { Employee } from '../data.model';
 
 @Component({
   selector: 'column-toggle-demo',
+  imports: [DatatableComponent, DataTableColumnDirective],
   template: `
     <div>
       <h3>
@@ -53,8 +54,7 @@ import { Employee } from '../data.model';
         </ul>
       </div>
     </div>
-  `,
-  imports: [DatatableComponent, DataTableColumnDirective]
+  `
 })
 export class ColumnToggleComponent {
   rows: Employee[] = [

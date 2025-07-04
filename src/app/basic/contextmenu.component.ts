@@ -10,6 +10,7 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'contextmenu-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -56,8 +57,7 @@ import { DataService } from '../data.service';
         (tableContextmenu)="onTableContextMenu($event)"
       />
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class ContextMenuDemoComponent {
   rows: Employee[] = [];

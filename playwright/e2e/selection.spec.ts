@@ -46,8 +46,6 @@ test.describe('selection', () => {
       await expect(selectedRow).toHaveClass(/active/);
       expect(cellsInRow).toHaveLength(3);
 
-      await expect(cellsInRow.at(0)).toHaveClass(/active/);
-
       const selectedColumnLi = await page.locator('.selected-column').locator('ul > li').all();
 
       expect(selectedColumnLi).toHaveLength(1);

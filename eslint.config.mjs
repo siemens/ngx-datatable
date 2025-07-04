@@ -67,7 +67,6 @@ export const templateConfig = typescriptEslint.config({
     '@angular-eslint/template/no-interpolation-in-attributes': ['off'],
     '@angular-eslint/template/no-positive-tabindex': ['off'],
     '@angular-eslint/template/prefer-template-literal': ['off'],
-    '@angular-eslint/template/prefer-at-empty': ['off'],
     '@angular-eslint/template/elements-content': [
       'off',
       {

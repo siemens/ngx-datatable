@@ -1,19 +1,24 @@
 import { Component, inject } from '@angular/core';
 import {
   ActivateEvent,
-  ColumnMode,
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DataTableColumnHeaderDirective,
   DatatableComponent,
-  SelectEvent,
-  SelectionType
+  SelectEvent
 } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'chkbox-selection-template-demo',
+  imports: [
+    DatatableComponent,
+    DataTableColumnDirective,
+    DataTableColumnHeaderDirective,
+    DataTableColumnCellDirective
+  ],
   template: `
     <div>
       <h3>
@@ -36,14 +41,14 @@ import { DataService } from '../data.service';
         <ngx-datatable
           style="width: 90%"
           class="material selection-row"
+          rowHeight="auto"
+          columnMode="force"
+          selectionType="checkbox"
           [rows]="rows"
-          [columnMode]="ColumnMode.force"
           [headerHeight]="50"
           [footerHeight]="50"
-          rowHeight="auto"
           [limit]="5"
           [selected]="selected"
-          [selectionType]="SelectionType.checkbox"
           (activate)="onActivate($event)"
           (select)="onSelect($event)"
         >
@@ -55,24 +60,24 @@ import { DataService } from '../data.service';
             [resizeable]="false"
           >
             <ng-template
-              ngx-datatable-header-template
               let-allRowsSelected="allRowsSelected"
               let-selectFn="selectFn"
+              ngx-datatable-header-template
             >
               <input type="checkbox" [checked]="allRowsSelected" (change)="selectFn()" />
             </ng-template>
             <ng-template
-              ngx-datatable-cell-template
               let-value="value"
               let-isSelected="isSelected"
               let-onCheckboxChangeFn="onCheckboxChangeFn"
+              ngx-datatable-cell-template
             >
               <input type="checkbox" [checked]="isSelected" (change)="onCheckboxChangeFn($event)" />
             </ng-template>
           </ngx-datatable-column>
-          <ngx-datatable-column name="Name"></ngx-datatable-column>
-          <ngx-datatable-column name="Gender"></ngx-datatable-column>
-          <ngx-datatable-column name="Company"></ngx-datatable-column>
+          <ngx-datatable-column name="Name" />
+          <ngx-datatable-column name="Gender" />
+          <ngx-datatable-column name="Company" />
         </ngx-datatable>
       </div>
 
@@ -85,27 +90,17 @@ import { DataService } from '../data.service';
             <li>
               {{ sel.name }}
             </li>
-          }
-          @if (!selected.length) {
+          } @empty {
             <li>No Selections</li>
           }
         </ul>
       </div>
     </div>
-  `,
-  imports: [
-    DatatableComponent,
-    DataTableColumnDirective,
-    DataTableColumnHeaderDirective,
-    DataTableColumnCellDirective
-  ]
+  `
 })
 export class CustomCheckboxSelectionComponent {
   rows: Employee[] = [];
   selected: Employee[] = [];
-
-  ColumnMode = ColumnMode;
-  SelectionType = SelectionType;
 
   private dataService = inject(DataService);
 
@@ -116,13 +111,12 @@ export class CustomCheckboxSelectionComponent {
   }
 
   onSelect({ selected }: SelectEvent<Employee>) {
-    console.log('Select Event', selected, this.selected);
-
     this.selected.splice(0, this.selected.length);
     this.selected.push(...selected);
   }
 
   onActivate(event: ActivateEvent<Employee>) {
+    // eslint-disable-next-line no-console
     console.log('Activate Event', event);
   }
 

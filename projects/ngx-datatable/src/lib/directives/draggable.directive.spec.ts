@@ -1,13 +1,13 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Component } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { DraggableDirective } from './draggable.directive';
 
 @Component({
   selector: 'test-fixture-component',
-  template: ` <div draggable></div> `,
-  imports: [DraggableDirective]
+  imports: [DraggableDirective],
+  template: ` <div draggable></div> `
 })
 class TestFixtureComponent {}
 

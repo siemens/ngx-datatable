@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   Directive,
@@ -9,7 +10,7 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import { NgTemplateOutlet } from '@angular/common';
+
 import { RowOrGroup } from '../../types/public.types';
 
 /**
@@ -19,13 +20,13 @@ import { RowOrGroup } from '../../types/public.types';
  */
 @Component({
   selector: 'datatable-row-def',
+  imports: [NgTemplateOutlet],
   template: `@if (rowDef.rowDefInternal.rowTemplate) {
     <ng-container
       [ngTemplateOutlet]="rowDef.rowDefInternal.rowTemplate"
       [ngTemplateOutletContext]="rowContext"
     />
-  }`,
-  imports: [NgTemplateOutlet]
+  }`
 })
 export class DatatableRowDefComponent {
   rowDef = inject(RowDefToken);

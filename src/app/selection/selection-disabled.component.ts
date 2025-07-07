@@ -1,17 +1,17 @@
 import { Component, inject } from '@angular/core';
 import {
   ActivateEvent,
-  ColumnMode,
   DatatableComponent,
   SelectEvent,
-  SelectionType,
   TableColumn
 } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'multidisable-selection-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -28,20 +28,19 @@ import { DataService } from '../data.service';
       <div style="float:left;width:75%">
         <ngx-datatable
           class="material selection-row"
+          rowHeight="auto"
+          columnMode="force"
+          selectionType="multi"
           [rows]="rows"
-          [columnMode]="ColumnMode.force"
           [columns]="columns"
           [headerHeight]="50"
           [footerHeight]="50"
-          rowHeight="auto"
           [limit]="5"
           [selectCheck]="checkSelectable"
           [selected]="selected"
-          [selectionType]="SelectionType.multi"
           (activate)="onActivate($event)"
           (select)="onSelect($event)"
-        >
-        </ngx-datatable>
+        />
       </div>
 
       <div class="selected-column">
@@ -51,15 +50,13 @@ import { DataService } from '../data.service';
             <li>
               {{ sel.name }}
             </li>
-          }
-          @if (!selected.length) {
+          } @empty {
             <li>No Selections</li>
           }
         </ul>
       </div>
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class MultiDisableSelectionComponent {
   rows: Employee[] = [];
@@ -67,9 +64,6 @@ export class MultiDisableSelectionComponent {
   selected: Employee[] = [];
 
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
-
-  ColumnMode = ColumnMode;
-  SelectionType = SelectionType;
 
   private dataService = inject(DataService);
 
@@ -80,18 +74,16 @@ export class MultiDisableSelectionComponent {
   }
 
   onSelect({ selected }: SelectEvent<Employee>) {
-    console.log('Select Event', selected, this.selected);
-
     this.selected.splice(0, this.selected.length);
     this.selected.push(...selected);
   }
 
   onActivate(event: ActivateEvent<Employee>) {
+    // eslint-disable-next-line no-console
     console.log('Activate Event', event);
   }
 
   checkSelectable(event: Employee) {
-    console.log('Checking if selectable', event);
     return event.name !== 'Ethel Price';
   }
 }

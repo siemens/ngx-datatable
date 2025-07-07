@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'multiple-tables-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -18,27 +19,24 @@ import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datata
       </h3>
       <ngx-datatable
         class="material"
+        columnMode="force"
         [rows]="rows1"
         [columns]="columns1"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="0"
         [rowHeight]="100"
-      >
-      </ngx-datatable>
+      />
       <br />
       <ngx-datatable
         class="material"
+        rowHeight="auto"
         [rows]="rows2"
         [columns]="columns2"
         [headerHeight]="50"
         [footerHeight]="50"
-        rowHeight="auto"
-      >
-      </ngx-datatable>
+      />
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class MultipleTablesComponent {
   columns1: TableColumn[] = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company' }];
@@ -54,6 +52,4 @@ export class MultipleTablesComponent {
     { name: 'Callie', gender: 'Female' },
     { name: 'Maggie', gender: 'Female' }
   ];
-
-  ColumnMode = ColumnMode;
 }

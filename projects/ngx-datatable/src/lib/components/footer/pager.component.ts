@@ -6,8 +6,9 @@ import {
   Input,
   Output
 } from '@angular/core';
-import { PagerPageEvent } from '../../types/public.types';
+
 import { Page } from '../../types/internal.types';
+import { PagerPageEvent } from '../../types/public.types';
 import { DatatableComponent } from '../datatable.component';
 
 @Component({
@@ -20,7 +21,7 @@ import { DatatableComponent } from '../datatable.component';
           [attr.aria-label]="messages.ariaFirstPageMessage ?? 'go to first page'"
           (click)="selectPage(1)"
         >
-          <i class="{{ pagerPreviousIcon ?? 'datatable-icon-prev' }}"></i>
+          <i [class]="pagerPreviousIcon ?? 'datatable-icon-prev'"></i>
         </a>
       </li>
       <li [class.disabled]="!canPrevious()">
@@ -29,13 +30,13 @@ import { DatatableComponent } from '../datatable.component';
           [attr.aria-label]="messages.ariaPreviousPageMessage ?? 'go to previous page'"
           (click)="prevPage()"
         >
-          <i class="{{ pagerLeftArrowIcon ?? 'datatable-icon-left' }}"></i>
+          <i [class]="pagerLeftArrowIcon ?? 'datatable-icon-left'"></i>
         </a>
       </li>
       @for (pg of pages; track pg.number) {
         <li
-          [attr.aria-label]="(messages.ariaPageNMessage ?? 'page') + ' ' + pg.number"
           class="pages"
+          [attr.aria-label]="(messages.ariaPageNMessage ?? 'page') + ' ' + pg.number"
           [class.active]="pg.number === page"
         >
           <a role="button" (click)="selectPage(pg.number)">
@@ -49,7 +50,7 @@ import { DatatableComponent } from '../datatable.component';
           [attr.aria-label]="messages.ariaNextPageMessage ?? 'go to next page'"
           (click)="nextPage()"
         >
-          <i class="{{ pagerRightArrowIcon ?? 'datatable-icon-right' }}"></i>
+          <i [class]="pagerRightArrowIcon ?? 'datatable-icon-right'"></i>
         </a>
       </li>
       <li [class.disabled]="!canNext()">
@@ -58,7 +59,7 @@ import { DatatableComponent } from '../datatable.component';
           [attr.aria-label]="messages.ariaLastPageMessage ?? 'go to last page'"
           (click)="selectPage(totalPages)"
         >
-          <i class="{{ pagerNextIcon ?? 'datatable-icon-skip' }}"></i>
+          <i [class]="pagerNextIcon ?? 'datatable-icon-skip'"></i>
         </a>
       </li>
     </ul>
@@ -116,7 +117,7 @@ export class DataTablePagerComponent {
     return Math.max(count || 0, 1);
   }
 
-  @Output() change = new EventEmitter<PagerPageEvent>();
+  @Output() readonly change = new EventEmitter<PagerPageEvent>();
 
   _count = 0;
   _page = 1;
@@ -156,6 +157,7 @@ export class DataTablePagerComponent {
     const maxSize = 5;
     const isMaxSized = maxSize < this.totalPages;
 
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     page = page || this.page;
 
     if (isMaxSized) {

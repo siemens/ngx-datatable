@@ -1,10 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'comparator-sorting-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -20,17 +22,15 @@ import { DataService } from '../data.service';
       </h3>
       <ngx-datatable
         class="material"
+        rowHeight="auto"
+        columnMode="force"
         [rows]="rows"
         [columns]="columns"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="50"
-        rowHeight="auto"
-      >
-      </ngx-datatable>
+      />
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class SortingComparatorComponent {
   rows: Employee[] = [];
@@ -41,8 +41,6 @@ export class SortingComparatorComponent {
     { name: 'Gender', sortable: false }
   ];
 
-  ColumnMode = ColumnMode;
-
   private dataService = inject(DataService);
 
   constructor() {
@@ -52,8 +50,6 @@ export class SortingComparatorComponent {
   }
 
   companyComparator(propA: string, propB: string) {
-    console.log('Sorting Comparator', propA, propB);
-
     // Just a simple sort function comparisoins
     if (propA.toLowerCase() < propB.toLowerCase()) {
       return -1;

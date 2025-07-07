@@ -1,6 +1,7 @@
 import { ContentChild, Directive, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
-import { DatatableGroupHeaderTemplateDirective } from './body-group-header-template.directive';
+
 import { Group, GroupContext, GroupToggleEvents, Row } from '../../types/public.types';
+import { DatatableGroupHeaderTemplateDirective } from './body-group-header-template.directive';
 
 @Directive({
   selector: 'ngx-datatable-group-header'
@@ -23,13 +24,13 @@ export class DatatableGroupHeaderDirective<TRow extends Row = any> {
   _templateQuery?: TemplateRef<GroupContext<TRow>>;
 
   get template(): TemplateRef<GroupContext<TRow>> | undefined {
-    return this._templateInput || this._templateQuery;
+    return this._templateInput ?? this._templateQuery;
   }
 
   /**
    * Track toggling of group visibility
    */
-  @Output() toggle = new EventEmitter<GroupToggleEvents<TRow>>();
+  @Output() readonly toggle = new EventEmitter<GroupToggleEvents<TRow>>();
 
   /**
    * Toggle the expansion of a group

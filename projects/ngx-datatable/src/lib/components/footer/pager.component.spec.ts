@@ -1,9 +1,9 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { DataTablePagerComponent } from './pager.component';
-import { By } from '@angular/platform-browser';
 import { ChangeDetectorRef, DebugElement } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+
 import type { DatatableComponent } from '../datatable.component';
+import { DataTablePagerComponent } from './pager.component';
 
 describe('DataTablePagerComponent', () => {
   let fixture: ComponentFixture<DataTablePagerComponent>;
@@ -258,15 +258,15 @@ describe('DataTablePagerComponent', () => {
       fixture.detectChanges();
       [firstButton, previousButton, nextButton, lastButton] = fixture.debugElement
         .queryAll(By.css('a[role=button]'))
-        .filter(it => !it.parent!.classes['pages']);
+        .filter(it => !it.parent!.classes.pages);
       pageButtons = fixture.debugElement
         .queryAll(By.css('li.pages'))
         .map((button, index) => ({ button, page: index + 1 }));
     });
 
-    function ariaLabel(element: DebugElement): string | null {
+    const ariaLabel = (element: DebugElement): string | null => {
       return element?.attributes['aria-label'] ?? null;
-    }
+    };
 
     describe('has default values without messages from table', () => {
       it('first button', () => {
@@ -293,11 +293,11 @@ describe('DataTablePagerComponent', () => {
     });
 
     describe('takes messages-overrides from table', () => {
-      function setMessages(messages: DatatableComponent['messages']) {
+      const setMessages = (messages: DatatableComponent['messages']) => {
         (pager as any).dataTable = { messages };
         // do a change detection on the real changeDetectionRef
         fixture.componentRef.injector.get(ChangeDetectorRef).detectChanges();
-      }
+      };
 
       it('first button', () => {
         setMessages({ ariaFirstPageMessage: 'link: first page' });

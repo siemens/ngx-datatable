@@ -1,15 +1,12 @@
 import { Component, inject } from '@angular/core';
-import {
-  ColumnMode,
-  DatatableComponent,
-  SortEvent,
-  TableColumn
-} from 'projects/ngx-datatable/src/public-api';
+import { DatatableComponent, SortEvent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'server-sorting-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -25,20 +22,18 @@ import { DataService } from '../data.service';
       </h3>
       <ngx-datatable
         class="material"
+        rowHeight="auto"
+        columnMode="force"
         [rows]="rows"
         [columns]="columns"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="50"
-        rowHeight="auto"
         [externalSorting]="true"
         [loadingIndicator]="loading"
         (sort)="onSort($event)"
-      >
-      </ngx-datatable>
+      />
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class ServerSortingComponent {
   loading = false;
@@ -51,8 +46,6 @@ export class ServerSortingComponent {
     { name: 'Gender', sortable: true }
   ];
 
-  ColumnMode = ColumnMode;
-
   private dataService = inject(DataService);
 
   constructor() {
@@ -63,7 +56,6 @@ export class ServerSortingComponent {
 
   onSort(event: SortEvent) {
     // event was triggered, start sort sequence
-    console.log('Sort Event', event);
     this.loading = true;
     // emulate a server request with a timeout
     setTimeout(() => {

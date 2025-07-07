@@ -1,16 +1,17 @@
 import { Component, inject } from '@angular/core';
 import {
-  ColumnMode,
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DatatableComponent,
   PageEvent
 } from 'projects/ngx-datatable/src/public-api';
+
 import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'virtual-scroll-demo',
+  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective],
   template: `
     <div>
       <h3>
@@ -26,8 +27,8 @@ import { DataService } from '../data.service';
       </h3>
       <ngx-datatable
         class="material"
+        columnMode="force"
         [rows]="rows"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="50"
         [rowHeight]="getRowHeight"
@@ -44,18 +45,15 @@ import { DataService } from '../data.service';
             <i [innerHTML]="row['name']"></i> and <i>{{ value }}</i>
           </ng-template>
         </ngx-datatable-column>
-        <ngx-datatable-column name="Row Height" prop="height" [width]="80"> </ngx-datatable-column>
+        <ngx-datatable-column name="Row Height" prop="height" [width]="80" />
       </ngx-datatable>
     </div>
-  `,
-  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective]
+  `
 })
 export class VirtualScrollComponent {
   rows: (FullEmployee & { height: number })[] = [];
   expanded = {};
   timeout: any;
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 
@@ -68,6 +66,7 @@ export class VirtualScrollComponent {
   onPage(event: PageEvent) {
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
+      // eslint-disable-next-line no-console
       console.log('paged!', event);
     }, 100);
   }

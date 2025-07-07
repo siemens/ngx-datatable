@@ -1,16 +1,23 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, inject } from '@angular/core';
 import {
-  ColumnMode,
   DatatableComponent,
   DatatableRowDefComponent,
   DatatableRowDefDirective
 } from 'projects/ngx-datatable/src/public-api';
-import { DataService } from '../data.service';
+
 import { Employee } from '../data.model';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'drag-drop-demo',
+  imports: [
+    DatatableComponent,
+    CdkDropList,
+    DatatableRowDefDirective,
+    DatatableRowDefComponent,
+    CdkDrag
+  ],
   template: `
     <div>
       <h3>
@@ -26,30 +33,23 @@ import { Employee } from '../data.model';
       </h3>
       <ngx-datatable
         class="material"
+        rowHeight="auto"
+        cdkDropList
+        columnMode="force"
         [rows]="rows"
         [loadingIndicator]="loadingIndicator"
         [columns]="columns"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="50"
-        rowHeight="auto"
         [reorderable]="reorderable"
         (cdkDropListDropped)="drop($event)"
-        cdkDropList
       >
         <ng-template rowDef>
-          <datatable-row-def cdkDrag [cdkDragPreviewContainer]="'parent'" />
+          <datatable-row-def cdkDrag cdkDragPreviewContainer="parent" />
         </ng-template>
       </ngx-datatable>
     </div>
-  `,
-  imports: [
-    DatatableComponent,
-    CdkDropList,
-    DatatableRowDefDirective,
-    DatatableRowDefComponent,
-    CdkDrag
-  ]
+  `
 })
 export class DragDropComponent {
   rows: Employee[] = [];
@@ -61,8 +61,6 @@ export class DragDropComponent {
     { name: 'Gender', sortable: false },
     { name: 'Company', sortable: false }
   ];
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 

@@ -1,27 +1,24 @@
-import { Component, signal, ViewEncapsulation } from '@angular/core';
 import { HashLocationStrategy, Location, LocationStrategy } from '@angular/common';
-import packageInfo from 'projects/ngx-datatable/package.json';
+import { Component, signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import packageInfo from 'projects/ngx-datatable/package.json';
 
 @Component({
   selector: 'app-root',
+  imports: [RouterLink, RouterOutlet],
   templateUrl: './app.component.html',
-  // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
-  encapsulation: ViewEncapsulation.None,
-  styleUrls: ['./app.component.scss'],
   providers: [
     Location,
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy
     }
-  ],
-  imports: [RouterLink, RouterOutlet]
+  ]
 })
 export class AppComponent {
   version = packageInfo.version;
 
-  dark = signal(false);
+  readonly dark = signal(false);
 
   routeActivate(outlet: RouterOutlet): void {
     this.dark.set(outlet.activatedRoute.snapshot.data.dark);

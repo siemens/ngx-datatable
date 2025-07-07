@@ -1,10 +1,12 @@
 import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'summary-row-custom-template-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -19,15 +21,14 @@ import { DataService } from '../data.service';
       </h3>
       <ngx-datatable
         class="material"
+        columnMode="force"
+        rowHeight="auto"
         [summaryRow]="true"
         [columns]="columns"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
-        [rowHeight]="'auto'"
         [summaryHeight]="55"
         [rows]="rows"
-      >
-      </ngx-datatable>
+      />
       <ng-template #nameSummaryCell let-row="row" let-value="value">
         <div class="name-container">
           @for (name of getNames(); track name) {
@@ -39,8 +40,7 @@ import { DataService } from '../data.service';
       </ng-template>
     </div>
   `,
-  styleUrls: ['./summary-row-custom-template.component.scss'],
-  imports: [DatatableComponent]
+  styleUrl: './summary-row-custom-template.component.scss'
 })
 export class SummaryRowCustomTemplateComponent implements OnInit {
   rows: Employee[] = [];
@@ -48,8 +48,6 @@ export class SummaryRowCustomTemplateComponent implements OnInit {
   @ViewChild('nameSummaryCell') nameSummaryCell!: TemplateRef<any>;
 
   columns: TableColumn[] = [];
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 

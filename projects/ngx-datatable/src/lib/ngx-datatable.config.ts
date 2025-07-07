@@ -21,6 +21,12 @@ export interface NgxDatatableMessages {
   ariaNextPageMessage: string;
   /** Pager screen reader message for the last page button */
   ariaLastPageMessage: string;
+  /** Row checkbox aria label */
+  ariaRowCheckboxMessage: string;
+  /** Header checkbox aria label */
+  ariaHeaderCheckboxMessage: string;
+  /** Group header checkbox aria label */
+  ariaGroupHeaderCheckboxMessage: string;
 }
 
 /** CSS classes for icons that override the default table icons. */
@@ -68,9 +74,9 @@ export type INgxDatatableConfig = NgxDatatableConfig;
  *
  * @param overrides The overrides of the table configuration.
  */
-export function providedNgxDatatableConfig(overrides: AllPartial<NgxDatatableConfig>): Provider {
+export const providedNgxDatatableConfig = (overrides: AllPartial<NgxDatatableConfig>): Provider => {
   return {
     provide: NGX_DATATABLE_CONFIG,
     useValue: overrides
   };
-}
+};

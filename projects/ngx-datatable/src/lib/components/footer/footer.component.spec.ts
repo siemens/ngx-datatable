@@ -2,8 +2,8 @@ import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { DataTablePagerComponent } from './pager.component';
 import { DataTableFooterComponent } from './footer.component';
+import { DataTablePagerComponent } from './pager.component';
 
 let fixture: ComponentFixture<TestFixtureComponent>;
 let component: TestFixtureComponent;
@@ -208,6 +208,7 @@ describe('DataTableFooterComponent', () => {
  * test host component
  */
 @Component({
+  imports: [DataTableFooterComponent],
   template: `
     <datatable-footer
       [rowCount]="rowCount"
@@ -223,8 +224,7 @@ describe('DataTableFooterComponent', () => {
       [selectedMessage]="selectedMessage"
       [pagerNextIcon]="pagerNextIcon"
       (page)="onPageEvent()"
-    >
-    </datatable-footer>
+    />
 
     <ng-template
       #testTemplate
@@ -242,8 +242,7 @@ describe('DataTableFooterComponent', () => {
         <li>offset {{ offset }}</li>
       </ul>
     </ng-template>
-  `,
-  imports: [DataTableFooterComponent]
+  `
 })
 class TestFixtureComponent {
   footerHeight = 0;

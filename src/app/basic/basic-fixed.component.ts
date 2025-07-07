@@ -1,10 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'basic-fixed-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -20,23 +22,19 @@ import { DataService } from '../data.service';
       </h3>
       <ngx-datatable
         class="material striped"
+        columnMode="force"
         [rows]="rows"
         [columns]="columns"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="50"
         [rowHeight]="50"
-      >
-      </ngx-datatable>
+      />
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class BasicFixedComponent {
   rows: Employee[] = [];
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 

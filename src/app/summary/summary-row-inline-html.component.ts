@@ -1,14 +1,15 @@
 import { Component, inject } from '@angular/core';
 import {
-  ColumnMode,
   DataTableColumnDirective,
   DatatableComponent
 } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'summary-row-inline-html',
+  imports: [DatatableComponent, DataTableColumnDirective],
   template: `
     <div>
       <h3>
@@ -23,20 +24,17 @@ import { DataService } from '../data.service';
       </h3>
       <ngx-datatable
         class="material"
+        rowHeight="auto"
+        columnMode="force"
         [summaryRow]="enableSummary"
         [summaryPosition]="summaryPosition"
         [summaryHeight]="100"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
-        rowHeight="auto"
         [rows]="rows"
       >
-        <ngx-datatable-column
-          prop="name"
-          [summaryTemplate]="nameSummaryCell"
-        ></ngx-datatable-column>
-        <ngx-datatable-column name="Gender" [summaryFunc]="summaryForGender"></ngx-datatable-column>
-        <ngx-datatable-column prop="age" [summaryFunc]="avgAge"></ngx-datatable-column>
+        <ngx-datatable-column prop="name" [summaryTemplate]="nameSummaryCell" />
+        <ngx-datatable-column name="Gender" [summaryFunc]="summaryForGender" />
+        <ngx-datatable-column prop="age" [summaryFunc]="avgAge" />
       </ngx-datatable>
       <ng-template #nameSummaryCell>
         <div class="name-container">
@@ -48,16 +46,13 @@ import { DataService } from '../data.service';
         </div>
       </ng-template>
     </div>
-  `,
-  imports: [DatatableComponent, DataTableColumnDirective]
+  `
 })
 export class SummaryRowInlineHtmlComponent {
   rows: Employee[] = [];
 
   enableSummary = true;
   summaryPosition = 'top';
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
 
 @Component({
   selector: 'empty-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -18,9 +19,9 @@ import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datata
       </h3>
       <ngx-datatable
         class="material"
+        columnMode="force"
         [rows]="[]"
         [columns]="columns"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="50"
       >
@@ -29,8 +30,7 @@ import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datata
         >
       </ngx-datatable>
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class BasicEmptyComponent {
   columns: TableColumn[] = [
@@ -38,5 +38,4 @@ export class BasicEmptyComponent {
     { name: 'Gender' },
     { name: 'Company', sortable: false }
   ];
-  ColumnMode = ColumnMode;
 }

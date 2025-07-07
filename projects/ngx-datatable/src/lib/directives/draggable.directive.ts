@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import { DraggableDragEvent, TableColumnInternal } from '../types/internal.types';
 import { getPositionFromEvent } from '../utils/events';
 
@@ -35,9 +36,9 @@ export class DraggableDirective implements OnDestroy {
   readonly dragX = input(false, { transform: booleanAttribute });
   readonly dragY = input(false, { transform: booleanAttribute });
 
-  dragStart = output<DraggableDragEvent>();
-  dragging = output<DraggableDragEvent>();
-  dragEnd = output<DraggableDragEvent>();
+  readonly dragStart = output<DraggableDragEvent>();
+  readonly dragging = output<DraggableDragEvent>();
+  readonly dragEnd = output<DraggableDragEvent>();
 
   isDragging = signal(false);
   private subscription?: Subscription;
@@ -50,7 +51,7 @@ export class DraggableDirective implements OnDestroy {
       const target = this.dragEventTarget();
       const dragModel = this.dragModel();
 
-      if (target && dragModel) {
+      if (target && dragModel.dragging) {
         this.onMousedown(target);
       }
     });

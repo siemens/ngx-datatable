@@ -1,15 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
 import {
-  ColumnMode,
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DatatableComponent
 } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'default-sorting-demo',
+  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective],
   template: `
     <div>
       <h3>
@@ -25,8 +26,8 @@ import { DataService } from '../data.service';
       </h3>
       <ngx-datatable
         class="material"
+        columnMode="force"
         [rows]="rows"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="50"
         [rowHeight]="50"
@@ -46,16 +47,13 @@ import { DataService } from '../data.service';
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column name="Gender"> </ngx-datatable-column>
+        <ngx-datatable-column name="Gender" />
       </ngx-datatable>
     </div>
-  `,
-  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective]
+  `
 })
 export class DefaultSortingComponent implements OnInit {
   rows: Employee[] = [];
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 

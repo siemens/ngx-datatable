@@ -1,14 +1,15 @@
 import { Component, inject } from '@angular/core';
 import {
-  ColumnMode,
   DataTableColumnDirective,
   DatatableComponent
 } from 'projects/ngx-datatable/src/public-api';
+
 import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'dynamic-height-demo',
+  imports: [DatatableComponent, DataTableColumnDirective],
   template: `
     <div>
       <h3>
@@ -24,27 +25,24 @@ import { DataService } from '../data.service';
       </h3>
       <ngx-datatable
         class="material"
+        columnMode="force"
         [rows]="rows"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="50"
         [rowHeight]="getRowHeight"
         [scrollbarV]="true"
       >
-        <ngx-datatable-column name="Name"></ngx-datatable-column>
-        <ngx-datatable-column name="Gender"></ngx-datatable-column>
-        <ngx-datatable-column name="Row Height" prop="height"></ngx-datatable-column>
+        <ngx-datatable-column name="Name" />
+        <ngx-datatable-column name="Gender" />
+        <ngx-datatable-column name="Row Height" prop="height" />
       </ngx-datatable>
     </div>
-  `,
-  imports: [DatatableComponent, DataTableColumnDirective]
+  `
 })
 export class DynamicHeightComponent {
   rows: (FullEmployee & { height: number })[] = [];
   expanded = {};
   timeout: any;
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 
@@ -57,7 +55,6 @@ export class DynamicHeightComponent {
   }
 
   getRowHeight(row: FullEmployee & { height: number }) {
-    console.log('ROW', row);
     if (!row) {
       return 50;
     }

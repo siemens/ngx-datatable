@@ -1,6 +1,5 @@
 import { Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
-  ColumnMode,
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DataTableColumnHeaderDirective,
@@ -10,30 +9,19 @@ import {
   DetailToggleEvents,
   PageEvent
 } from 'projects/ngx-datatable/src/public-api';
+
 import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'responsive-demo',
-  styles: [
-    `
-      @media screen and (max-width: 800px) {
-        .desktop-hidden {
-          display: initial;
-        }
-        .mobile-hidden {
-          display: none;
-        }
-      }
-      @media screen and (min-width: 800px) {
-        .desktop-hidden {
-          display: none;
-        }
-        .mobile-hidden {
-          display: initial;
-        }
-      }
-    `
+  imports: [
+    DatatableComponent,
+    DatatableRowDetailDirective,
+    DatatableRowDetailTemplateDirective,
+    DataTableColumnDirective,
+    DataTableColumnCellDirective,
+    DataTableColumnHeaderDirective
   ],
   template: `
     <div>
@@ -51,7 +39,7 @@ import { DataService } from '../data.service';
       <ngx-datatable
         #myTable
         class="material expandable"
-        [columnMode]="ColumnMode.force"
+        columnMode="force"
         [headerHeight]="50"
         [footerHeight]="50"
         [rowHeight]="50"
@@ -60,7 +48,7 @@ import { DataService } from '../data.service';
         (page)="onPage($event)"
       >
         <!-- Row Detail Template -->
-        <ngx-datatable-row-detail [rowHeight]="50" #myDetailRow (toggle)="onDetailToggle($event)">
+        <ngx-datatable-row-detail #myDetailRow [rowHeight]="50" (toggle)="onDetailToggle($event)">
           <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
             <div style="padding-left:60px; font-size:14px">
               <div>{{ row.gender }}, {{ row.age }}</div>
@@ -79,11 +67,11 @@ import { DataService } from '../data.service';
           <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
             <a
               href="#"
+              title="Expand/Collapse Row"
+              class="desktop-hidden"
               [class.datatable-icon-right]="!expanded"
               [class.datatable-icon-down]="expanded"
-              title="Expand/Collapse Row"
               (click)="toggleExpandRow(row)"
-              class="desktop-hidden"
             >
             </a>
           </ng-template>
@@ -123,16 +111,26 @@ import { DataService } from '../data.service';
       columns will be hidden and will appear in the row detail view.
     </div>
   `,
+  styles: `
+    @media screen and (max-width: 800px) {
+      .desktop-hidden {
+        display: initial;
+      }
+      .mobile-hidden {
+        display: none;
+      }
+    }
+    @media screen and (min-width: 800px) {
+      .desktop-hidden {
+        display: none;
+      }
+      .mobile-hidden {
+        display: initial;
+      }
+    }
+  `,
   // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
-  encapsulation: ViewEncapsulation.None,
-  imports: [
-    DatatableComponent,
-    DatatableRowDetailDirective,
-    DatatableRowDetailTemplateDirective,
-    DataTableColumnDirective,
-    DataTableColumnCellDirective,
-    DataTableColumnHeaderDirective
-  ]
+  encapsulation: ViewEncapsulation.None
 })
 export class ResponsiveComponent {
   @ViewChild('myTable') table!: DatatableComponent<FullEmployee>;
@@ -140,8 +138,6 @@ export class ResponsiveComponent {
   rows: FullEmployee[] = [];
   expanded: any = {};
   timeout: any;
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 
@@ -154,16 +150,17 @@ export class ResponsiveComponent {
   onPage(event: PageEvent) {
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
+      // eslint-disable-next-line no-console
       console.log('paged!', event);
     }, 100);
   }
 
   toggleExpandRow(row: FullEmployee) {
-    console.log('Toggled Expand Row!', row);
     this.table.rowDetail!.toggleExpandRow(row);
   }
 
   onDetailToggle(event: DetailToggleEvents<FullEmployee>) {
+    // eslint-disable-next-line no-console
     console.log('Detail Toggled', event);
   }
 }

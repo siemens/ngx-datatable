@@ -9,6 +9,7 @@ import {
   signal
 } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
+
 import { TableColumnInternal } from '../types/internal.types';
 
 @Directive({
@@ -25,14 +26,14 @@ export class LongPressDirective implements OnDestroy {
   @Input() pressModel!: TableColumnInternal;
   @Input({ transform: numberAttribute }) duration = 500;
 
-  @Output() longPressStart = new EventEmitter<{
+  @Output() readonly longPressStart = new EventEmitter<{
     event: MouseEvent | TouchEvent;
     model: TableColumnInternal;
   }>();
-  @Output() longPressEnd = new EventEmitter<{ model: TableColumnInternal }>();
+  @Output() readonly longPressEnd = new EventEmitter<{ model: TableColumnInternal }>();
 
-  pressing = signal(false);
-  isLongPressing = signal(false);
+  readonly pressing = signal(false);
+  readonly isLongPressing = signal(false);
   timeout: any;
 
   subscription?: Subscription;

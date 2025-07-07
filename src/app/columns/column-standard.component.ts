@@ -1,15 +1,16 @@
 import { Component, inject } from '@angular/core';
 import {
-  ColumnMode,
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DatatableComponent
 } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'column-standard-demo',
+  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective],
   template: `
     <div>
       <h3>
@@ -25,11 +26,11 @@ import { DataService } from '../data.service';
       </h3>
       <ngx-datatable
         class="material"
+        rowHeight="auto"
+        columnMode="standard"
         [rows]="rows"
-        [columnMode]="ColumnMode.standard"
         [headerHeight]="50"
         [footerHeight]="50"
-        rowHeight="auto"
       >
         <ngx-datatable-column name="Name" [width]="300">
           <ng-template let-value="value" ngx-datatable-cell-template>
@@ -48,13 +49,10 @@ import { DataService } from '../data.service';
         </ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `,
-  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective]
+  `
 })
 export class ColumnStandardComponent {
   rows: Employee[] = [];
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 

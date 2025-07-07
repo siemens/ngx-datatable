@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -12,28 +13,20 @@ import {
   Output
 } from '@angular/core';
 
-import { Keys } from '../../utils/keys';
-import {
-  ActivateEvent,
-  CellContext,
-  Row,
-  RowOrGroup,
-  SortDirection,
-  SortPropDir,
-  TreeStatus
-} from '../../types/public.types';
-import { NgTemplateOutlet } from '@angular/common';
 import { CellActiveEvent, RowIndex, TableColumnInternal } from '../../types/internal.types';
+import { ActivateEvent, CellContext, Row, RowOrGroup, TreeStatus } from '../../types/public.types';
+import { Keys } from '../../utils/keys';
 
 @Component({
   selector: 'datatable-body-cell',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgTemplateOutlet],
   template: `
     <div class="datatable-body-cell-label" [style.margin-left.px]="calcLeftMargin(column, row)">
       @if (column.checkboxable && (!displayCheck || displayCheck(row, column, value))) {
         <label class="datatable-checkbox">
           <input
             type="checkbox"
+            [attr.aria-label]="ariaRowCheckboxMessage"
             [disabled]="disabled"
             [checked]="isSelected"
             (click)="onCheckboxChange($event)"
@@ -44,9 +37,10 @@ import { CellActiveEvent, RowIndex, TableColumnInternal } from '../../types/inte
         @if (!column.treeToggleTemplate) {
           <button
             class="datatable-tree-button"
+            type="button"
             [disabled]="treeStatus === 'disabled'"
-            (click)="onTreeAction()"
             [attr.aria-label]="treeStatus"
+            (click)="onTreeAction()"
           >
             <span>
               @if (treeStatus === 'loading') {
@@ -64,8 +58,7 @@ import { CellActiveEvent, RowIndex, TableColumnInternal } from '../../types/inte
           <ng-template
             [ngTemplateOutlet]="column.treeToggleTemplate"
             [ngTemplateOutletContext]="{ cellContext: cellContext }"
-          >
-          </ng-template>
+          />
         }
       }
 
@@ -79,13 +72,12 @@ import { CellActiveEvent, RowIndex, TableColumnInternal } from '../../types/inte
         <ng-template
           [ngTemplateOutlet]="column.cellTemplate"
           [ngTemplateOutletContext]="cellContext"
-        >
-        </ng-template>
+        />
       }
     </div>
   `,
   styleUrl: './body-cell.component.scss',
-  imports: [NgTemplateOutlet]
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DataTableBodyCellComponent<TRow extends Row = any> implements DoCheck {
   private cd = inject(ChangeDetectorRef);
@@ -177,15 +169,6 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
     return this._row;
   }
 
-  @Input() set sorts(val: SortPropDir[]) {
-    this._sorts = val;
-    this.sortDir = this.calcSortDir(val);
-  }
-
-  get sorts(): SortPropDir[] {
-    return this._sorts;
-  }
-
   @Input() set treeStatus(status: TreeStatus | undefined) {
     if (
       status !== 'collapsed' &&
@@ -206,9 +189,11 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
     return this._treeStatus;
   }
 
-  @Output() activate = new EventEmitter<CellActiveEvent<TRow>>();
+  @Input({ required: true }) ariaRowCheckboxMessage!: string;
 
-  @Output() treeAction = new EventEmitter<any>();
+  @Output() readonly activate = new EventEmitter<CellActiveEvent<TRow>>();
+
+  @Output() readonly treeAction = new EventEmitter<any>();
 
   @HostBinding('class')
   get columnCssClasses(): string {
@@ -237,17 +222,8 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
         }
       }
     }
-    if (!this.sortDir) {
-      cls += ' sort-active';
-    }
     if (this.isFocused && !this._disabled) {
       cls += ' active';
-    }
-    if (this.sortDir === SortDirection.asc) {
-      cls += ' sort-asc';
-    }
-    if (this.sortDir === SortDirection.desc) {
-      cls += ' sort-desc';
     }
     if (this._disabled) {
       cls += ' row-disabled';
@@ -282,13 +258,11 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
 
   sanitizedValue!: string;
   value: any;
-  sortDir?: SortDirection;
   isFocused = false;
 
   cellContext: CellContext<TRow>;
 
   private _isSelected?: boolean;
-  private _sorts!: SortPropDir[];
   private _column!: TableColumnInternal;
   private _row!: TRow;
   private _group?: TRow[];
@@ -324,7 +298,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
   checkValueUpdates(): void {
     let value = '';
 
-    if (!this.row || !this.column || this.column.prop == undefined) {
+    if (!this.row || this.column?.prop == undefined) {
       value = '';
     } else {
       const val = this.column.$$valueGetter(this.row, this.column.prop);
@@ -427,16 +401,6 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
     });
   }
 
-  calcSortDir(sorts: SortPropDir[]): SortDirection | undefined {
-    if (!sorts) {
-      return undefined;
-    }
-
-    const sort = sorts.find(s => s.prop === this.column.prop);
-
-    return sort?.dir as SortDirection;
-  }
-
   stripHtml(html: string): string {
     if (!html.replace) {
       return html;
@@ -449,7 +413,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
   }
 
   calcLeftMargin(column: TableColumnInternal, row: RowOrGroup<TRow>): number {
-    const levelIndent = column.treeLevelIndent != null ? column.treeLevelIndent : 50;
+    const levelIndent = column.treeLevelIndent ?? 50;
     return column.isTreeColumn ? (row as TRow).level! * levelIndent : 0;
   }
 }

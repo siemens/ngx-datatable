@@ -20,14 +20,14 @@
         [selectionType]="selectionType"
         [verticalScrollVisible]="verticalScrollVisible"
         [enableClearingSortState]="enableClearingSortState"
+        [ariaHeaderCheckboxMessage]="messages.ariaHeaderCheckboxMessage ?? 'Select all rows'"
         (sort)="onColumnSort($event)"
         (resize)="onColumnResize($event)"
         (resizing)="onColumnResizing($event)"
         (reorder)="onColumnReorder($event)"
         (select)="onHeaderSelect()"
         (columnContextmenu)="onColumnContextmenu($event)"
-      >
-      </datatable-header>
+      />
     }
     <datatable-body
       tabindex="0"
@@ -63,19 +63,23 @@
       [summaryHeight]="summaryHeight"
       [summaryPosition]="summaryPosition"
       [verticalScrollVisible]="verticalScrollVisible"
+      [ariaRowCheckboxMessage]="messages.ariaRowCheckboxMessage ?? 'Select row'"
+      [ariaGroupHeaderCheckboxMessage]="
+        messages.ariaGroupHeaderCheckboxMessage ?? 'Select row group'
+      "
+      [disableRowCheck]="disableRowCheck"
+      [rowDraggable]="rowDraggable"
+      [rowDragEvents]="rowDragEvents"
+      [rowDefTemplate]="rowDefTemplate"
       (page)="onBodyPage($event)"
       (activate)="activate.emit($event)"
       (rowContextmenu)="onRowContextmenu($event)"
       (select)="onBodySelect($event)"
       (scroll)="onBodyScroll($event)"
       (treeAction)="onTreeAction($event)"
-      [disableRowCheck]="disableRowCheck"
-      [rowDraggable]="rowDraggable"
-      [rowDragEvents]="rowDragEvents"
-      [rowDefTemplate]="rowDefTemplate"
     >
       <ng-content select="[loading-indicator]" ngProjectAs="[loading-indicator]">
-        <datatable-progress></datatable-progress>
+        <datatable-progress />
       </ng-content>
       <ng-content select="[empty-content]" ngProjectAs="[empty-content]">
         <div role="row">
@@ -103,7 +107,6 @@
       [selectedMessage]="!!selectionType && (messages.selectedMessage ?? 'selected')"
       [pagerNextIcon]="cssClasses.pagerNext"
       (page)="onFooterPage($event)"
-    >
-    </datatable-footer>
+    />
   }
 </div>

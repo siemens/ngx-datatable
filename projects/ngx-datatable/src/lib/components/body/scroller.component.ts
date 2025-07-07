@@ -14,7 +14,7 @@ import {
 
 @Component({
   selector: 'datatable-scroller',
-  template: ` <ng-content></ng-content> `,
+  template: ` <ng-content /> `,
   host: {
     class: 'datatable-scroll'
   },
@@ -34,7 +34,7 @@ export class ScrollerComponent implements OnInit, OnDestroy {
   @Input()
   scrollWidth?: number;
 
-  @Output() scroll = new EventEmitter<any>();
+  @Output() readonly scroll = new EventEmitter<any>();
 
   scrollYPos = 0;
   scrollXPos = 0;

@@ -1,15 +1,12 @@
 import { Component, inject } from '@angular/core';
-import {
-  ColumnMode,
-  DatatableComponent,
-  SortType,
-  TableColumn
-} from 'projects/ngx-datatable/src/public-api';
+import { DatatableComponent, SortType, TableColumn } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'client-sorting-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -25,26 +22,23 @@ import { DataService } from '../data.service';
       </h3>
       <ngx-datatable
         class="material"
+        columnMode="force"
         [rows]="rows"
         [columns]="columns"
         [sortType]="SortType.multi"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="50"
         [rowHeight]="50"
         [scrollbarV]="true"
-      >
-      </ngx-datatable>
+      />
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class ClientSortingComponent {
   rows: Employee[] = [];
 
   columns: TableColumn[] = [{ name: 'Company' }, { name: 'Name' }, { name: 'Gender' }];
 
-  ColumnMode = ColumnMode;
   SortType = SortType;
 
   private dataService = inject(DataService);

@@ -1,6 +1,7 @@
 import { ContentChild, Directive, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
-import { DatatableRowDetailTemplateDirective } from './row-detail-template.directive';
+
 import { DetailToggleEvents, Row, RowDetailContext } from '../../types/public.types';
+import { DatatableRowDetailTemplateDirective } from './row-detail-template.directive';
 
 @Directive({
   selector: 'ngx-datatable-row-detail'
@@ -19,13 +20,13 @@ export class DatatableRowDetailDirective<TRow extends Row = any> {
   _templateQuery?: TemplateRef<RowDetailContext<TRow>>;
 
   get template(): TemplateRef<RowDetailContext<TRow>> | undefined {
-    return this._templateInput || this._templateQuery;
+    return this._templateInput ?? this._templateQuery;
   }
 
   /**
    * Row detail row visbility was toggled.
    */
-  @Output() toggle = new EventEmitter<DetailToggleEvents<TRow>>();
+  @Output() readonly toggle = new EventEmitter<DetailToggleEvents<TRow>>();
 
   /**
    * Toggle the expansion of the row

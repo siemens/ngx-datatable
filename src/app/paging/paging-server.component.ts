@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { DatatableComponent } from 'projects/ngx-datatable/src/public-api';
+
+import { Employee } from '../data.model';
 import { MockServerResultsService } from './mock-server-results-service';
 import { Page } from './model/page';
-import { ColumnMode, DatatableComponent } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from '../data.model';
 
 @Component({
   selector: 'server-paging-demo',
-  providers: [MockServerResultsService],
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -22,22 +23,21 @@ import { Employee } from '../data.model';
       </h3>
       <ngx-datatable
         class="material"
+        rowHeight="auto"
+        columnMode="force"
         [rows]="rows"
         [columns]="[{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }]"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="50"
-        rowHeight="auto"
         [externalPaging]="true"
         [count]="page.totalElements"
         [offset]="page.pageNumber"
         [limit]="page.size"
         (page)="setPage($event.offset)"
-      >
-      </ngx-datatable>
+      />
     </div>
   `,
-  imports: [DatatableComponent]
+  providers: [MockServerResultsService]
 })
 export class ServerPagingComponent implements OnInit {
   page: Page = {
@@ -47,10 +47,7 @@ export class ServerPagingComponent implements OnInit {
     totalPages: 0
   };
   rows: Employee[] = [];
-
-  ColumnMode = ColumnMode;
-
-  constructor(private serverResultsService: MockServerResultsService) {}
+  private serverResultsService = inject(MockServerResultsService);
 
   ngOnInit() {
     this.setPage(0);

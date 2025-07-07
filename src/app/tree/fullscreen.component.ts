@@ -1,16 +1,17 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import {
-  ColumnMode,
   DataTableColumnCellTreeToggle,
   DataTableColumnDirective,
   DatatableComponent,
   TreeStatus
 } from 'projects/ngx-datatable/src/public-api';
+
 import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'full-screen-tree-demo',
+  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellTreeToggle],
   template: `
     <div>
       <h3>
@@ -27,26 +28,30 @@ import { DataService } from '../data.service';
       <ngx-datatable
         class="material fullscreen"
         style="top: 52px"
-        [columnMode]="ColumnMode.force"
+        columnMode="force"
+        treeFromRelation="parentId"
+        treeToRelation="id"
         [headerHeight]="50"
         [footerHeight]="0"
         [rowHeight]="50"
         [scrollbarV]="true"
         [scrollbarH]="true"
         [rows]="rows"
-        [treeFromRelation]="'parentId'"
-        [treeToRelation]="'id'"
         (treeAction)="onTreeAction($event)"
       >
-        <ngx-datatable-column name="Id" [width]="80"></ngx-datatable-column>
+        <ngx-datatable-column name="Id" [width]="80" />
         <ngx-datatable-column
           name="Name"
           [isTreeColumn]="true"
           [width]="300"
           [treeLevelIndent]="20"
         >
-          <ng-template ngx-datatable-tree-toggle let-tree="cellContext">
-            <button [disabled]="tree.treeStatus === 'disabled'" (click)="tree.onTreeAction()">
+          <ng-template let-tree="cellContext" ngx-datatable-tree-toggle>
+            <button
+              type="button"
+              [disabled]="tree.treeStatus === 'disabled'"
+              (click)="tree.onTreeAction()"
+            >
               @if (tree.treeStatus === 'loading') {
                 <span> ... </span>
               }
@@ -62,30 +67,22 @@ import { DataService } from '../data.service';
             </button>
           </ng-template>
         </ngx-datatable-column>
-        <ngx-datatable-column name="Gender"></ngx-datatable-column>
-        <ngx-datatable-column name="Age"></ngx-datatable-column>
-        <ngx-datatable-column name="City" [width]="300" prop="address.city"></ngx-datatable-column>
-        <ngx-datatable-column
-          name="State"
-          [width]="300"
-          prop="address.state"
-        ></ngx-datatable-column>
+        <ngx-datatable-column name="Gender" />
+        <ngx-datatable-column name="Age" />
+        <ngx-datatable-column name="City" prop="address.city" [width]="300" />
+        <ngx-datatable-column name="State" prop="address.state" [width]="300" />
       </ngx-datatable>
     </div>
   `,
-  styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }'],
-  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellTreeToggle]
+  styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
 })
 export class FullScreenTreeComponent {
   rows: (FullEmployee & { treeStatus: TreeStatus; parentId?: string })[] = [];
   lastIndex = 15;
+  private cd = inject(ChangeDetectorRef);
+  private dataService = inject(DataService);
 
-  ColumnMode = ColumnMode;
-
-  constructor(
-    private cd: ChangeDetectorRef,
-    private dataService: DataService
-  ) {
+  constructor() {
     this.dataService.load('100k.json').subscribe(data => {
       data = data.slice(1, this.lastIndex);
       this.rows = data.map(d => ({

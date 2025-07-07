@@ -1,15 +1,16 @@
 import { Component, inject } from '@angular/core';
 import {
-  ColumnMode,
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DatatableComponent
 } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'column-force-demo',
+  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective],
   template: `
     <div>
       <h3>
@@ -25,10 +26,10 @@ import { DataService } from '../data.service';
       </h3>
       <ngx-datatable
         class="material"
-        [columnMode]="ColumnMode.force"
+        rowHeight="auto"
+        columnMode="force"
         [headerHeight]="50"
         [footerHeight]="50"
-        rowHeight="auto"
         [rows]="rows"
       >
         <ngx-datatable-column name="Name" [width]="100">
@@ -48,13 +49,10 @@ import { DataService } from '../data.service';
         </ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `,
-  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective]
+  `
 })
 export class ColumnForceComponent {
   rows: Employee[] = [];
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 

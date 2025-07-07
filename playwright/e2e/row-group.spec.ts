@@ -12,11 +12,6 @@ test.describe('row grouping', () => {
       {
         id: 'aria-required-children',
         enabled: false
-      },
-      // disable label required with forms elements
-      {
-        id: 'label',
-        enabled: false
       }
     ]);
 
@@ -28,10 +23,6 @@ test.describe('row grouping', () => {
     await si.runVisualAndA11yTests('group-selected', [
       {
         id: 'aria-required-children',
-        enabled: false
-      },
-      {
-        id: 'label',
         enabled: false
       }
     ]);
@@ -48,10 +39,6 @@ test.describe('row grouping', () => {
       {
         id: 'aria-required-children',
         enabled: false
-      },
-      {
-        id: 'label',
-        enabled: false
       }
     ]);
     groupHeader.click();
@@ -59,10 +46,6 @@ test.describe('row grouping', () => {
     await si.runVisualAndA11yTests('group-expanded', [
       {
         id: 'aria-required-children',
-        enabled: false
-      },
-      {
-        id: 'label',
         enabled: false
       }
     ]);

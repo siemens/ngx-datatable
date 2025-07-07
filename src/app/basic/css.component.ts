@@ -1,15 +1,16 @@
 import { Component, inject } from '@angular/core';
 import {
-  ColumnMode,
   DataTableColumnDirective,
   DatatableComponent,
   TableColumn
 } from 'projects/ngx-datatable/src/public-api';
+
 import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'row-css-demo',
+  imports: [DatatableComponent, DataTableColumnDirective],
   template: `
     <div>
       <h3>
@@ -25,30 +26,23 @@ import { DataService } from '../data.service';
       </h3>
       <ngx-datatable
         class="material"
+        columnMode="force"
         [rows]="rows"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [rowHeight]="50"
         [rowClass]="getRowClass"
         [scrollbarV]="true"
       >
-        <ngx-datatable-column name="Name"></ngx-datatable-column>
-        <ngx-datatable-column
-          name="Gender"
-          headerClass="is-gender"
-          [cellClass]="getCellClass"
-        ></ngx-datatable-column>
-        <ngx-datatable-column name="Age"></ngx-datatable-column>
+        <ngx-datatable-column name="Name" />
+        <ngx-datatable-column name="Gender" headerClass="is-gender" [cellClass]="getCellClass" />
+        <ngx-datatable-column name="Age" />
       </ngx-datatable>
     </div>
-  `,
-  imports: [DatatableComponent, DataTableColumnDirective]
+  `
 })
 export class RowCssComponent {
   rows: FullEmployee[] = [];
   expanded = {};
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 

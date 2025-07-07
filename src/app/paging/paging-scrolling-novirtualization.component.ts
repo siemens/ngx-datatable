@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { DatatableComponent } from 'projects/ngx-datatable/src/public-api';
+
+import { Employee } from '../data.model';
 import { MockServerResultsService } from './mock-server-results-service';
 import { Page } from './model/page';
-import { ColumnMode, DatatableComponent } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from '../data.model';
 
 @Component({
   selector: 'paging-scrolling-novirtualization-demo',
-  providers: [MockServerResultsService],
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -22,12 +23,12 @@ import { Employee } from '../data.model';
       </h3>
       <ngx-datatable
         class="material"
+        rowHeight="auto"
+        columnMode="force"
         [rows]="rows"
         [columns]="[{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }]"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="50"
-        rowHeight="auto"
         [scrollbarV]="true"
         [virtualization]="false"
         [externalPaging]="true"
@@ -36,11 +37,10 @@ import { Employee } from '../data.model';
         [limit]="page.size"
         [ghostLoadingIndicator]="isLoading > 0"
         (page)="setPage($event.offset)"
-      >
-      </ngx-datatable>
+      />
     </div>
   `,
-  imports: [DatatableComponent]
+  providers: [MockServerResultsService]
 })
 export class PagingScrollingNoVirtualizationComponent implements OnInit {
   page: Page = {
@@ -51,10 +51,8 @@ export class PagingScrollingNoVirtualizationComponent implements OnInit {
   };
   rows: Employee[] = [];
 
-  ColumnMode = ColumnMode;
   isLoading = 0;
-
-  constructor(private serverResultsService: MockServerResultsService) {}
+  private serverResultsService = inject(MockServerResultsService);
 
   ngOnInit() {
     this.setPage(0);

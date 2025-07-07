@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { DatatableFooterDirective } from './footer.directive';
-import { PagerPageEvent } from '../../types/public.types';
-import { DataTablePagerComponent } from './pager.component';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+
+import { PagerPageEvent } from '../../types/public.types';
+import { DatatableFooterDirective } from './footer.directive';
+import { DataTablePagerComponent } from './pager.component';
 @Component({
   selector: 'datatable-footer',
+  imports: [NgClass, NgTemplateOutlet, DataTablePagerComponent],
   template: `
     <div
       class="datatable-footer-inner"
@@ -21,8 +23,7 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
             curPage: curPage,
             offset: offset
           }"
-        >
-        </ng-template>
+        />
       } @else {
         <div class="page-count">
           @if (selectedMessage) {
@@ -40,18 +41,16 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
             [size]="pageSize"
             [count]="rowCount"
             (change)="page.emit($event)"
-          >
-          </datatable-pager>
+          />
         }
       }
     </div>
   `,
-  host: {
-    class: 'datatable-footer'
-  },
   styleUrl: './footer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass, NgTemplateOutlet, DataTablePagerComponent]
+  host: {
+    class: 'datatable-footer'
+  }
 })
 export class DataTableFooterComponent {
   @Input() footerHeight!: number;
@@ -68,7 +67,7 @@ export class DataTableFooterComponent {
   @Input() selectedCount = 0;
   @Input() selectedMessage?: string | boolean;
 
-  @Output() page = new EventEmitter<PagerPageEvent>();
+  @Output() readonly page = new EventEmitter<PagerPageEvent>();
 
   get isVisible(): boolean {
     return this.rowCount / this.pageSize > 1;

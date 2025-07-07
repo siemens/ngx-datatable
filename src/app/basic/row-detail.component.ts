@@ -1,6 +1,5 @@
 import { Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
-  ColumnMode,
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DatatableComponent,
@@ -9,11 +8,19 @@ import {
   DetailToggleEvents,
   PageEvent
 } from 'projects/ngx-datatable/src/public-api';
+
 import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'row-details-demo',
+  imports: [
+    DatatableComponent,
+    DatatableRowDetailDirective,
+    DatatableRowDetailTemplateDirective,
+    DataTableColumnDirective,
+    DataTableColumnCellDirective
+  ],
   template: `
     <div>
       <h3>
@@ -35,7 +42,7 @@ import { DataService } from '../data.service';
       <ngx-datatable
         #myTable
         class="material expandable"
-        [columnMode]="ColumnMode.force"
+        columnMode="force"
         [headerHeight]="50"
         [footerHeight]="50"
         [rowHeight]="50"
@@ -44,7 +51,7 @@ import { DataService } from '../data.service';
         (page)="onPage($event)"
       >
         <!-- Row Detail Template -->
-        <ngx-datatable-row-detail [rowHeight]="100" #myDetailRow (toggle)="onDetailToggle($event)">
+        <ngx-datatable-row-detail #myDetailRow [rowHeight]="100" (toggle)="onDetailToggle($event)">
           <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
             <div style="padding-left:35px;">
               <div><strong>Address</strong></div>
@@ -64,9 +71,9 @@ import { DataService } from '../data.service';
           <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
             <a
               href="javascript:void(0)"
+              title="Expand/Collapse Row"
               [class.datatable-icon-right]="!expanded"
               [class.datatable-icon-down]="expanded"
-              title="Expand/Collapse Row"
               (click)="toggleExpandRow(row)"
             >
             </a>
@@ -92,19 +99,12 @@ import { DataService } from '../data.service';
             <i [innerHTML]="row['name']"></i> and <i>{{ value }}</i>
           </ng-template>
         </ngx-datatable-column>
-        <ngx-datatable-column name="Age"></ngx-datatable-column>
+        <ngx-datatable-column name="Age" />
       </ngx-datatable>
     </div>
   `,
   // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
-  encapsulation: ViewEncapsulation.None,
-  imports: [
-    DatatableComponent,
-    DatatableRowDetailDirective,
-    DatatableRowDetailTemplateDirective,
-    DataTableColumnDirective,
-    DataTableColumnCellDirective
-  ]
+  encapsulation: ViewEncapsulation.None
 })
 export class RowDetailsComponent {
   @ViewChild('myTable') table!: DatatableComponent<FullEmployee>;
@@ -112,8 +112,6 @@ export class RowDetailsComponent {
   rows: FullEmployee[] = [];
   expanded: any = {};
   timeout: any;
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 
@@ -126,16 +124,17 @@ export class RowDetailsComponent {
   onPage(event: PageEvent) {
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
+      // eslint-disable-next-line no-console
       console.log('paged!', event);
     }, 100);
   }
 
   toggleExpandRow(row: FullEmployee) {
-    console.log('Toggled Expand Row!', row);
     this.table.rowDetail!.toggleExpandRow(row);
   }
 
   onDetailToggle(event: DetailToggleEvents<FullEmployee>) {
+    // eslint-disable-next-line no-console
     console.log('Detail Toggled', event);
   }
 }

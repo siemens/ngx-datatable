@@ -1,15 +1,16 @@
 import { Component, inject } from '@angular/core';
 import {
-  ColumnMode,
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DatatableComponent
 } from 'projects/ngx-datatable/src/public-api';
+
 import { TreeEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'client-side-tree-demo',
+  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective],
   template: `
     <div>
       <h3>
@@ -25,12 +26,12 @@ import { DataService } from '../data.service';
       </h3>
       <ngx-datatable
         class="material"
-        [columnMode]="ColumnMode.flex"
+        rowHeight="auto"
+        columnMode="flex"
+        treeFromRelation="manager"
+        treeToRelation="name"
         [headerHeight]="50"
         [footerHeight]="50"
-        rowHeight="auto"
-        [treeFromRelation]="'manager'"
-        [treeToRelation]="'name'"
         [rows]="rows"
         (treeAction)="onTreeAction($event)"
       >
@@ -52,13 +53,10 @@ import { DataService } from '../data.service';
       </ngx-datatable>
     </div>
   `,
-  styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }'],
-  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective]
+  styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
 })
 export class ClientTreeComponent {
   rows: TreeEmployee[] = [];
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 

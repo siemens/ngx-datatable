@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DataTableHeaderComponent } from './header.component';
+
 import { TableColumnInternal } from '../../types/internal.types';
+import { DataTableHeaderComponent } from './header.component';
 
 describe('DataTableHeaderComponent', () => {
   let component: DataTableHeaderComponent;
@@ -80,7 +81,7 @@ describe('DataTableHeaderComponent', () => {
   });
 });
 
-function createColumn(id: string, resizeable = true): TableColumnInternal {
+const createColumn = (id: string, resizeable = true): TableColumnInternal => {
   return {
     $$id: id,
     prop: id,
@@ -92,4 +93,4 @@ function createColumn(id: string, resizeable = true): TableColumnInternal {
     maxWidth: 200,
     isTarget: false
   } as any;
-}
+};

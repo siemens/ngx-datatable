@@ -1,15 +1,16 @@
 import { Component, inject } from '@angular/core';
 import {
-  ColumnMode,
   ContextMenuEvent,
   DatatableComponent,
   TableColumn
 } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'contextmenu-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -47,18 +48,16 @@ import { DataService } from '../data.service';
       </div>
       <ngx-datatable
         class="material"
+        rowHeight="auto"
+        columnMode="force"
         [rows]="rows"
         [columns]="columns"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="50"
-        rowHeight="auto"
         (tableContextmenu)="onTableContextMenu($event)"
-      >
-      </ngx-datatable>
+      />
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class ContextMenuDemoComponent {
   rows: Employee[] = [];
@@ -69,8 +68,6 @@ export class ContextMenuDemoComponent {
   contextmenuRow: any;
   contextmenuColumn: any;
 
-  ColumnMode = ColumnMode;
-
   private dataService = inject(DataService);
 
   constructor() {
@@ -80,8 +77,6 @@ export class ContextMenuDemoComponent {
   }
 
   onTableContextMenu(contextMenuEvent: ContextMenuEvent<Employee>) {
-    console.log(contextMenuEvent);
-
     this.rawEvent = contextMenuEvent.event;
     if (contextMenuEvent.type === 'body') {
       this.contextmenuRow = contextMenuEvent.content;

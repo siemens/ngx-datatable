@@ -1,14 +1,15 @@
 import { Component, inject, ViewChild } from '@angular/core';
 import {
-  ColumnMode,
   DataTableColumnDirective,
   DatatableComponent
 } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'live-data-demo',
+  imports: [DatatableComponent, DataTableColumnDirective],
   template: `
     <div>
       <h3>
@@ -31,21 +32,20 @@ import { DataService } from '../data.service';
       <ngx-datatable
         #mydatatable
         class="material"
+        rowHeight="auto"
+        columnMode="force"
+        trackByProp="updated"
         [headerHeight]="50"
         [limit]="5"
-        [columnMode]="ColumnMode.force"
         [footerHeight]="50"
-        rowHeight="auto"
-        [trackByProp]="'updated'"
         [rows]="rows"
       >
-        <ngx-datatable-column name="Name"></ngx-datatable-column>
-        <ngx-datatable-column name="Gender"></ngx-datatable-column>
-        <ngx-datatable-column name="Company"></ngx-datatable-column>
+        <ngx-datatable-column name="Name" />
+        <ngx-datatable-column name="Gender" />
+        <ngx-datatable-column name="Company" />
       </ngx-datatable>
     </div>
-  `,
-  imports: [DatatableComponent, DataTableColumnDirective]
+  `
 })
 export class LiveDataComponent {
   @ViewChild('mydatatable') mydatatable!: DatatableComponent<Employee & { updated: string }>;
@@ -55,8 +55,6 @@ export class LiveDataComponent {
   active = true;
   temp: (Employee & { updated: string })[] = [];
   cols = ['name', 'gender', 'company'] as const;
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 

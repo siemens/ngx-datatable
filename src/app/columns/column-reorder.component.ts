@@ -1,27 +1,13 @@
+import { NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
-import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'column-reorder-demo',
-  styles: [
-    `
-      .icon {
-        position: absolute;
-      }
-      .datatable-icon-down {
-        top: 0px;
-      }
-      .datatable-icon-up {
-        top: 40px;
-      }
-      .dragFromLeft .icon {
-        left: -13px;
-      }
-    `
-  ],
+  imports: [DatatableComponent, NgClass],
   template: `
     <div>
       <h3>
@@ -37,18 +23,17 @@ import { NgClass } from '@angular/common';
       </h3>
       <ngx-datatable
         class="material"
+        rowHeight="auto"
+        columnMode="force"
         [rows]="rows"
         [loadingIndicator]="loadingIndicator"
         [columns]="columns"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="50"
-        rowHeight="auto"
         [reorderable]="reorderable"
         [swapColumns]="swapColumns"
         [targetMarkerTemplate]="targetMarkerTemplate"
-      >
-      </ngx-datatable>
+      />
       <ng-template #targetMarkerTemplate let-class="class">
         <div [ngClass]="class">
           <div class="icon datatable-icon-down"></div>
@@ -57,7 +42,20 @@ import { NgClass } from '@angular/common';
       </ng-template>
     </div>
   `,
-  imports: [DatatableComponent, NgClass]
+  styles: `
+    .icon {
+      position: absolute;
+    }
+    .datatable-icon-down {
+      top: 0px;
+    }
+    .datatable-icon-up {
+      top: 40px;
+    }
+    .dragFromLeft .icon {
+      left: -13px;
+    }
+  `
 })
 export class ColumnReorderComponent {
   rows: Employee[] = [];
@@ -70,8 +68,6 @@ export class ColumnReorderComponent {
     { name: 'Gender' },
     { name: 'Company', sortable: false }
   ];
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 

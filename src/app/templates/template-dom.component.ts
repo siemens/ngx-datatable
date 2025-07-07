@@ -1,16 +1,22 @@
 import { Component, inject } from '@angular/core';
 import {
-  ColumnMode,
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DataTableColumnHeaderDirective,
   DatatableComponent
 } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'inline-templates-demo',
+  imports: [
+    DatatableComponent,
+    DataTableColumnDirective,
+    DataTableColumnHeaderDirective,
+    DataTableColumnCellDirective
+  ],
   template: `
     <div>
       <h3>
@@ -26,11 +32,11 @@ import { DataService } from '../data.service';
       </h3>
       <ngx-datatable
         class="material"
+        rowHeight="auto"
+        columnMode="force"
         [rows]="rows"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="50"
-        rowHeight="auto"
       >
         <ngx-datatable-column name="Name">
           <ng-template let-column="column" ngx-datatable-header-template>
@@ -42,7 +48,7 @@ import { DataService } from '../data.service';
         </ngx-datatable-column>
         <ngx-datatable-column name="Gender">
           <ng-template let-column="column" let-sort="sortFn" ngx-datatable-header-template>
-            <span tabindex="1" (click)="sort()" (keyup)="sort()">{{ column.name }}</span>
+            <span (click)="sort()">{{ column.name }}</span>
           </ng-template>
           <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
             My name is: <i [innerHTML]="row['name']"></i> and <i>{{ value }}</i>
@@ -58,19 +64,11 @@ import { DataService } from '../data.service';
         </ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `,
-  imports: [
-    DatatableComponent,
-    DataTableColumnDirective,
-    DataTableColumnHeaderDirective,
-    DataTableColumnCellDirective
-  ]
+  `
 })
 export class InlineTemplatesComponent {
   rows: Employee[] = [];
   joke = 'knock knock';
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 

@@ -1,8 +1,9 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { DataTableBodyRowComponent } from '../body-row.component';
-import { TableColumnInternal } from '../../../types/internal.types';
 
-function defaultSumFunc(cells: any[]): any {
+import { TableColumnInternal } from '../../../types/internal.types';
+import { DataTableBodyRowComponent } from '../body-row.component';
+
+const defaultSumFunc = (cells: any[]): any => {
   const cellsWithValues = cells.filter(cell => !!cell);
 
   if (!cellsWithValues.length) {
@@ -13,14 +14,15 @@ function defaultSumFunc(cells: any[]): any {
   }
 
   return cellsWithValues.reduce((res, cell) => res + cell);
-}
+};
 
-function noopSumFunc(cells: any[]): void {
+const noopSumFunc = (cells: any[]): void => {
   return;
-}
+};
 
 @Component({
   selector: 'datatable-summary-row',
+  imports: [DataTableBodyRowComponent],
   template: `
     @if (summaryRow && _internalColumns) {
       <datatable-body-row
@@ -30,14 +32,12 @@ function noopSumFunc(cells: any[]): void {
         [rowHeight]="rowHeight"
         [row]="summaryRow"
         [rowIndex]="{ index: -1 }"
-      >
-      </datatable-body-row>
+      />
     }
   `,
   host: {
     class: 'datatable-summary-row'
-  },
-  imports: [DataTableBodyRowComponent]
+  }
 })
 export class DataTableSummaryRowComponent implements OnChanges {
   @Input() rows!: any[];

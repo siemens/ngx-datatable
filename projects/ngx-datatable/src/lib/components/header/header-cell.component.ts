@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -13,7 +14,9 @@ import {
   Output,
   TemplateRef
 } from '@angular/core';
-import { nextSortDir } from '../../utils/sort';
+import { fromEvent, Subscription, takeUntil } from 'rxjs';
+
+import { InnerSortEvent, TableColumnInternal } from '../../types/internal.types';
 import {
   HeaderCellContext,
   SelectionType,
@@ -21,33 +24,35 @@ import {
   SortPropDir,
   SortType
 } from '../../types/public.types';
-import { NgTemplateOutlet } from '@angular/common';
-import { InnerSortEvent, TableColumnInternal } from '../../types/internal.types';
-import { fromEvent, Subscription, takeUntil } from 'rxjs';
 import { getPositionFromEvent } from '../../utils/events';
+import { nextSortDir } from '../../utils/sort';
 
 @Component({
   selector: 'datatable-header-cell',
+  imports: [NgTemplateOutlet],
   template: `
     <div class="datatable-header-cell-template-wrap">
       @if (isTarget) {
         <ng-template
           [ngTemplateOutlet]="targetMarkerTemplate!"
           [ngTemplateOutletContext]="targetMarkerContext"
-        >
-        </ng-template>
+        />
       }
       @if (isCheckboxable) {
         <label class="datatable-checkbox">
-          <input type="checkbox" [checked]="allRowsSelected" (change)="select.emit()" />
+          <input
+            type="checkbox"
+            [attr.aria-label]="ariaHeaderCheckboxMessage"
+            [checked]="allRowsSelected"
+            (change)="select.emit()"
+          />
         </label>
       }
       @if (column.headerTemplate) {
         <ng-template
           [ngTemplateOutlet]="column.headerTemplate"
           [ngTemplateOutletContext]="cellContext"
-        >
-        </ng-template>
+        />
       } @else {
         <span class="datatable-header-cell-wrapper">
           <span class="datatable-header-cell-label draggable" (click)="onSort()">
@@ -55,7 +60,7 @@ import { getPositionFromEvent } from '../../utils/events';
           </span>
         </span>
       }
-      <span (click)="onSort()" [class]="sortClass"> </span>
+      <span [class]="sortClass" (click)="onSort()"> </span>
     </div>
     @if (showResizeHandle) {
       <span
@@ -65,13 +70,12 @@ import { getPositionFromEvent } from '../../utils/events';
       ></span>
     }
   `,
+  styleUrl: './header-cell.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'datatable-header-cell',
     '[attr.resizeable]': 'showResizeHandle'
-  },
-  styleUrl: './header-cell.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgTemplateOutlet]
+  }
 })
 export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
   private cd = inject(ChangeDetectorRef);
@@ -86,6 +90,7 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
   @Input() targetMarkerTemplate?: TemplateRef<any>;
   @Input() targetMarkerContext: any;
   @Input() enableClearingSortState = false;
+  @Input() ariaHeaderCheckboxMessage!: string;
 
   _allRowsSelected?: boolean;
 
@@ -125,14 +130,14 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
     return this._sorts;
   }
 
-  @Output() sort = new EventEmitter<InnerSortEvent>();
-  @Output() select = new EventEmitter<void>();
-  @Output() columnContextmenu = new EventEmitter<{
+  @Output() readonly sort = new EventEmitter<InnerSortEvent>();
+  @Output() readonly select = new EventEmitter<void>();
+  @Output() readonly columnContextmenu = new EventEmitter<{
     event: MouseEvent;
     column: TableColumnInternal;
   }>(false);
-  @Output() resize = new EventEmitter<{ width: number; column: TableColumnInternal }>();
-  @Output() resizing = new EventEmitter<{ width: number; column: TableColumnInternal }>();
+  @Output() readonly resize = new EventEmitter<{ width: number; column: TableColumnInternal }>();
+  @Output() readonly resizing = new EventEmitter<{ width: number; column: TableColumnInternal }>();
 
   @HostBinding('class')
   get columnCssClasses(): string {

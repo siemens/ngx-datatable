@@ -6,7 +6,7 @@ cd $(dirname $0)
 export MSYS_NO_PATHCONV=1
 
 # Keep image version in sync with image used in .gitlab-ci.yml
-PLAYWRIGHT_IMAGE="mcr.microsoft.com/playwright:v1.46.0-jammy"
+PLAYWRIGHT_IMAGE="mcr.microsoft.com/playwright:v1.53.2-jammy"
 OS=$(uname -s)
 CWD=$(pwd)
 

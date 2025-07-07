@@ -9,13 +9,14 @@ import {
   PipeTransform,
   TemplateRef
 } from '@angular/core';
-import { DataTableColumnHeaderDirective } from './column-header.directive';
-import { DataTableColumnCellDirective } from './column-cell.directive';
-import { DataTableColumnCellTreeToggle } from './tree.directive';
+
 import { ColumnChangesService } from '../../services/column-changes.service';
-import { TableColumn, TableColumnProp } from '../../types/table-column.type';
-import { DataTableColumnGhostCellDirective } from './column-ghost-cell.directive';
 import { CellContext, HeaderCellContext, Row } from '../../types/public.types';
+import { TableColumn, TableColumnProp } from '../../types/table-column.type';
+import { DataTableColumnCellDirective } from './column-cell.directive';
+import { DataTableColumnGhostCellDirective } from './column-ghost-cell.directive';
+import { DataTableColumnHeaderDirective } from './column-header.directive';
+import { DataTableColumnCellTreeToggle } from './tree.directive';
 
 @Directive({
   selector: 'ngx-datatable-column'
@@ -69,7 +70,7 @@ export class DataTableColumnDirective<TRow extends Row> implements TableColumn, 
   _cellTemplateQuery?: TemplateRef<CellContext<TRow>>;
 
   get cellTemplate(): TemplateRef<CellContext<TRow>> | undefined {
-    return this._cellTemplateInput || this._cellTemplateQuery;
+    return this._cellTemplateInput ?? this._cellTemplateQuery;
   }
 
   @Input('headerTemplate')
@@ -79,7 +80,7 @@ export class DataTableColumnDirective<TRow extends Row> implements TableColumn, 
   _headerTemplateQuery?: TemplateRef<HeaderCellContext>;
 
   get headerTemplate(): TemplateRef<HeaderCellContext> | undefined {
-    return this._headerTemplateInput || this._headerTemplateQuery;
+    return this._headerTemplateInput ?? this._headerTemplateQuery;
   }
 
   @Input('treeToggleTemplate')
@@ -89,7 +90,7 @@ export class DataTableColumnDirective<TRow extends Row> implements TableColumn, 
   _treeToggleTemplateQuery?: TemplateRef<any>;
 
   get treeToggleTemplate(): TemplateRef<any> | undefined {
-    return this._treeToggleTemplateInput || this._treeToggleTemplateQuery;
+    return this._treeToggleTemplateInput ?? this._treeToggleTemplateQuery;
   }
 
   @Input('ghostCellTemplate')
@@ -99,7 +100,7 @@ export class DataTableColumnDirective<TRow extends Row> implements TableColumn, 
   _ghostCellTemplateQuery?: TemplateRef<void>;
 
   get ghostCellTemplate(): TemplateRef<void> | undefined {
-    return this._ghostCellTemplateInput || this._ghostCellTemplateQuery;
+    return this._ghostCellTemplateInput ?? this._ghostCellTemplateQuery;
   }
 
   private isFirstChange = true;

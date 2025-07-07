@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { DatatableComponent, PageEvent } from 'projects/ngx-datatable/src/public-api';
+
+import { Employee } from '../data.model';
 import { MockServerResultsService } from './mock-server-results-service';
 import { Page } from './model/page';
-import { ColumnMode, DatatableComponent, PageEvent } from 'projects/ngx-datatable/src/public-api';
-import { Employee } from '../data.model';
 
 @Component({
   selector: 'virtual-paging-demo',
-  providers: [MockServerResultsService],
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -22,13 +23,13 @@ import { Employee } from '../data.model';
       </h3>
       <ngx-datatable
         class="material"
+        columnMode="force"
         [rows]="rows"
         [columns]="[
           { name: 'Name', sortable: false },
           { name: 'Gender', sortable: false },
           { name: 'Company', sortable: false }
         ]"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [loadingIndicator]="isLoading > 0"
         [ghostLoadingIndicator]="isLoading > 0"
@@ -45,23 +46,19 @@ import { Employee } from '../data.model';
       </ngx-datatable>
     </div>
   `,
-  styleUrls: ['./paging-virtual.component.scss'],
-  imports: [DatatableComponent]
+  styleUrl: './paging-virtual.component.scss',
+  providers: [MockServerResultsService]
 })
 export class VirtualPagingComponent {
   totalElements = 0;
-  pageNumber: number;
+  pageNumber = 0;
   rows?: Employee[];
   cache: Record<string, boolean> = {};
   cachePageSize = 0;
 
-  ColumnMode = ColumnMode;
-
   isLoading = 0;
 
-  constructor(private serverResultsService: MockServerResultsService) {
-    this.pageNumber = 0;
-  }
+  private serverResultsService = inject(MockServerResultsService);
 
   setPage(pageInfo: PageEvent) {
     // Current page number is determined by last call to setPage
@@ -101,9 +98,7 @@ export class VirtualPagingComponent {
 
       // Create array to store data if missing
       // The array should have the correct number of with "holes" for missing data
-      if (!this.rows) {
-        this.rows = new Array<Employee>(this.totalElements || 0);
-      }
+      this.rows ??= new Array<Employee>(this.totalElements || 0);
 
       // Calc starting row offset
       // This is the position to insert the new data

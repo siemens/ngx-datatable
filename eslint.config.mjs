@@ -27,13 +27,11 @@ export const tsConfig = typescriptEslint.config({
       'error',
       {
         preferInputSignals: false,
-        preferQuerySignals: false,
-        preferReadonlySignalProperties: false
+        preferQuerySignals: false
       }
     ],
-    '@angular-eslint/prefer-output-readonly': ['off'],
     'no-console': [
-      'off',
+      'error',
       {
         allow: ['warn', 'error']
       }
@@ -50,22 +48,12 @@ export const tsConfig = typescriptEslint.config({
       }
     ],
     '@typescript-eslint/no-deprecated': ['off'],
-    '@typescript-eslint/prefer-optional-chain': ['off'],
-    '@typescript-eslint/prefer-nullish-coalescing': ['off'],
     '@typescript-eslint/naming-convention': ['off'],
-    '@typescript-eslint/dot-notation': ['off'],
-    '@typescript-eslint/prefer-includes': ['off'],
-    '@typescript-eslint/no-this-alias': ['off'],
     '@angular-eslint/no-input-rename': ['off'],
     '@angular-eslint/no-output-native': ['off'],
-    '@angular-eslint/sort-lifecycle-methods': ['off'],
-    '@angular-eslint/consistent-component-styles': ['off'],
-    '@angular-eslint/relative-url-prefix': ['off'],
     '@angular-eslint/directive-class-suffix': ['off'],
     '@angular-eslint/no-conflicting-lifecycle': ['off'],
-    'prefer-arrow/prefer-arrow-functions': ['off'],
-    'perfectionist/sort-imports': ['off'],
-    'prefer-rest-params': ['off']
+    '@angular-eslint/prefer-output-emitter-ref': ['off']
   }
 });
 
@@ -76,18 +64,7 @@ export const templateConfig = typescriptEslint.config({
     '@angular-eslint/template/prefer-ngsrc': ['off'],
     '@angular-eslint/template/no-inline-styles': ['off'],
     '@angular-eslint/template/interactive-supports-focus': ['off'],
-    '@angular-eslint/template/prefer-self-closing-tags': ['off'],
-    '@angular-eslint/template/attributes-order': ['off'],
-    '@angular-eslint/template/no-interpolation-in-attributes': ['off'],
-    '@angular-eslint/template/prefer-static-string-properties': ['off'],
-    '@angular-eslint/template/button-has-type': ['off'],
-    '@angular-eslint/template/no-positive-tabindex': ['off'],
-    '@angular-eslint/template/elements-content': [
-      'off',
-      {
-        allowList: ['aria-label', 'innerHtml', 'innerHTML', 'innerText', 'outerHTML', 'title']
-      }
-    ]
+    '@angular-eslint/template/prefer-template-literal': ['off']
   }
 });
 

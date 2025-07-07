@@ -1,10 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'basic-dark-theme-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -20,21 +22,19 @@ import { DataService } from '../data.service';
       </h3>
       <ngx-datatable
         class="dark"
+        rowHeight="auto"
+        columnMode="force"
         [rows]="rows"
         [loadingIndicator]="loadingIndicator"
         [columns]="columns"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="40"
         [summaryRow]="true"
         [footerHeight]="40"
         [limit]="10"
-        rowHeight="auto"
         [reorderable]="reorderable"
-      >
-      </ngx-datatable>
+      />
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class DarkThemeComponent {
   rows: Employee[] = [];
@@ -46,8 +46,6 @@ export class DarkThemeComponent {
     { name: 'Gender', summaryFunc: cells => this.summaryForGender(cells) },
     { name: 'Company', summaryFunc: () => null }
   ];
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 

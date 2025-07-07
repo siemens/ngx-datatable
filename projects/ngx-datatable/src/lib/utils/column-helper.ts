@@ -1,17 +1,18 @@
-import { camelCase, deCamelCase } from './camel-case';
-import { id } from './id';
-import { getterForProp } from './column-prop-getters';
-import { TableColumn } from '../types/table-column.type';
 import { QueryList } from '@angular/core';
+
 import { DataTableColumnDirective } from '../components/columns/column.directive';
 import { TableColumnInternal } from '../types/internal.types';
 import { Row } from '../types/public.types';
+import { TableColumn } from '../types/table-column.type';
+import { camelCase, deCamelCase } from './camel-case';
+import { getterForProp } from './column-prop-getters';
+import { id } from './id';
 import { orderByComparator } from './sort';
 
-export function toInternalColumn<T extends Row>(
+export const toInternalColumn = <T extends Row>(
   columns: TableColumn<T>[] | QueryList<DataTableColumnDirective<T>>,
   defaultColumnWidth = 150
-): TableColumnInternal<T>[] {
+): TableColumnInternal<T>[] => {
   let hasTreeColumn = false;
   // TS fails to infer the type here.
   return (columns as TableColumn<T>[]).map(column => {
@@ -44,4 +45,4 @@ export function toInternalColumn<T extends Row>(
       treeToggleTemplate: column.treeToggleTemplate
     } as TableColumnInternal; // TS cannot cast here
   });
-}
+};

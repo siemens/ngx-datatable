@@ -1,17 +1,17 @@
 import { Component, inject } from '@angular/core';
 import {
   ActivateEvent,
-  ColumnMode,
   DatatableComponent,
   SelectEvent,
-  SelectionType,
   TableColumn
 } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'multi-selection-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -35,19 +35,18 @@ import { DataService } from '../data.service';
 
         <ngx-datatable
           class="material selection-row"
+          rowHeight="auto"
+          columnMode="force"
+          selectionType="multi"
           [rows]="rows"
-          [columnMode]="ColumnMode.force"
           [columns]="columns"
           [headerHeight]="50"
           [footerHeight]="50"
-          rowHeight="auto"
           [limit]="5"
           [selected]="selected"
-          [selectionType]="SelectionType.multi"
           (activate)="onActivate($event)"
           (select)="onSelect($event)"
-        >
-        </ngx-datatable>
+        />
       </div>
 
       <div class="selected-column">
@@ -57,15 +56,13 @@ import { DataService } from '../data.service';
             <li>
               {{ sel.name }}
             </li>
-          }
-          @if (!selected.length) {
+          } @empty {
             <li>No Selections</li>
           }
         </ul>
       </div>
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class MultiSelectionComponent {
   rows: Employee[] = [];
@@ -73,9 +70,6 @@ export class MultiSelectionComponent {
   selected: Employee[] = [];
 
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
-
-  ColumnMode = ColumnMode;
-  SelectionType = SelectionType;
 
   private dataService = inject(DataService);
 
@@ -86,13 +80,12 @@ export class MultiSelectionComponent {
   }
 
   onSelect({ selected }: SelectEvent<Employee>) {
-    console.log('Select Event', selected, this.selected);
-
     this.selected.splice(0, this.selected.length);
     this.selected.push(...selected);
   }
 
   onActivate(event: ActivateEvent<Employee>) {
+    // eslint-disable-next-line no-console
     console.log('Activate Event', event);
   }
 }

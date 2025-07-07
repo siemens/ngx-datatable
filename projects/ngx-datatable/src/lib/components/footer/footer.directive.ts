@@ -1,6 +1,7 @@
 import { ContentChild, Directive, Input, TemplateRef } from '@angular/core';
-import { DataTableFooterTemplateDirective } from './footer-template.directive';
+
 import { FooterContext } from '../../types/public.types';
+import { DataTableFooterTemplateDirective } from './footer-template.directive';
 
 @Directive({
   selector: 'ngx-datatable-footer'
@@ -13,6 +14,6 @@ export class DatatableFooterDirective {
   _templateQuery?: TemplateRef<FooterContext>;
 
   get template(): TemplateRef<FooterContext> | undefined {
-    return this._templateInput || this._templateQuery;
+    return this._templateInput ?? this._templateQuery;
   }
 }

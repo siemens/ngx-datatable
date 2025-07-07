@@ -7,7 +7,7 @@ const isContainer = !!process.env.PLAYWRIGHT_CONTAINER;
 const port = process.env.PORT ?? '4200';
 const localAddress = process.env.LOCAL_ADDRESS ?? 'localhost';
 const isCI = !!process.env.CI;
-const webServerCommand = 'yarn start:prod';
+const webServerCommand = 'npm run start:prod';
 
 let isA11y =
   !!process.env.PLAYWRIGHT_isa11y && process.env.PLAYWRIGHT_isa11y.toLocaleLowerCase() !== 'false';

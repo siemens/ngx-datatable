@@ -1,22 +1,22 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, QueryList, ViewChildren } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { OrderableDirective } from './orderable.directive';
-import { DraggableDirective } from './draggable.directive';
 import { TableColumnInternal } from '../types/internal.types';
 import { toInternalColumn } from '../utils/column-helper';
+import { DraggableDirective } from './draggable.directive';
+import { OrderableDirective } from './orderable.directive';
 
 @Component({
   selector: 'test-fixture-component',
+  imports: [OrderableDirective, DraggableDirective],
   template: `
     <div orderable>
       @for (item of draggables; track $index) {
         <div draggable [dragModel]="item"></div>
       }
     </div>
-  `,
-  imports: [OrderableDirective, DraggableDirective]
+  `
 })
 class TestFixtureComponent {
   draggables: TableColumnInternal[] = [];
@@ -56,7 +56,7 @@ describe('OrderableDirective', () => {
     });
 
     describe('when a draggable is removed', () => {
-      function checkAllSubscriptionsForActiveObservers() {
+      const checkAllSubscriptionsForActiveObservers = () => {
         const subs = directive.draggables.map(d => {
           expect(d.dragEnd.isStopped).toBe(false);
           expect(d.dragStart.isStopped).toBe(false);
@@ -71,11 +71,11 @@ describe('OrderableDirective', () => {
           expect(sub.dragStart.length).toBe(1);
           expect(sub.dragEnd.length).toBe(1);
         });
-      }
+      };
 
-      function newDraggable(name: string): TableColumnInternal {
+      const newDraggable = (name: string): TableColumnInternal => {
         return toInternalColumn([{ name }])[0];
-      }
+      };
 
       beforeEach(() => {
         component.draggables = [newDraggable('d1'), newDraggable('d2'), newDraggable('d3')];

@@ -1,9 +1,9 @@
-import { Component, ElementRef, Injectable, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, Injectable, OnInit } from '@angular/core';
+import { DatatableComponent } from 'projects/ngx-datatable/src/public-api';
 import { Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
-
 import data from 'src/assets/data/company.json';
-import { ColumnMode, DatatableComponent } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 
 const companyData = data as any[];
@@ -27,7 +27,7 @@ export class MockServerResultsService {
 
 @Component({
   selector: 'server-scrolling-demo',
-  providers: [MockServerResultsService],
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -43,20 +43,20 @@ export class MockServerResultsService {
       </h3>
       <ngx-datatable
         class="material server-scrolling-demo"
+        columnMode="force"
         [rows]="rows"
         [columns]="[{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }]"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="headerHeight"
         [rowHeight]="rowHeight"
         [loadingIndicator]="isLoading"
         [ghostLoadingIndicator]="isLoading"
         [scrollbarV]="true"
         (scroll)="onScroll($event.offsetY)"
-      ></ngx-datatable>
+      />
     </div>
   `,
-  styleUrls: ['./scrolling-server.component.css'],
-  imports: [DatatableComponent]
+  styleUrl: './scrolling-server.component.css',
+  providers: [MockServerResultsService]
 })
 export class ServerScrollingComponent implements OnInit {
   readonly headerHeight = 50;
@@ -66,12 +66,8 @@ export class ServerScrollingComponent implements OnInit {
   rows: Employee[] = [];
   isLoading?: boolean;
 
-  ColumnMode = ColumnMode;
-
-  constructor(
-    private serverResultsService: MockServerResultsService,
-    private el: ElementRef
-  ) {}
+  private serverResultsService = inject(MockServerResultsService);
+  private el = inject(ElementRef);
 
   ngOnInit() {
     this.onScroll(0);

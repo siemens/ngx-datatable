@@ -1,20 +1,26 @@
 import { Component, inject, ViewChild } from '@angular/core';
-import { GroupedEmployee } from '../data.model';
 import {
-  ColumnMode,
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DatatableComponent,
   DatatableGroupHeaderDirective,
   DatatableGroupHeaderTemplateDirective,
   Group,
-  GroupToggleEvents,
-  SelectionType
+  GroupToggleEvents
 } from 'projects/ngx-datatable/src/public-api';
+
+import { GroupedEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'row-grouping-demo',
+  imports: [
+    DatatableComponent,
+    DatatableGroupHeaderDirective,
+    DatatableGroupHeaderTemplateDirective,
+    DataTableColumnDirective,
+    DataTableColumnCellDirective
+  ],
   template: `
     <div>
       <h3>
@@ -31,22 +37,22 @@ import { DataService } from '../data.service';
       <ngx-datatable
         #myTable
         class="material expandable"
+        groupRowsBy="age"
+        columnMode="force"
+        selectionType="checkbox"
         [rows]="rows"
-        [groupRowsBy]="'age'"
-        [columnMode]="ColumnMode.force"
         [scrollbarH]="true"
         [headerHeight]="50"
         [footerHeight]="50"
         [rowHeight]="40"
         [limit]="4"
         [groupExpansionDefault]="true"
-        [selectionType]="SelectionType.checkbox"
       >
         <!-- Group Header Template -->
         <ngx-datatable-group-header
+          #myGroupHeader
           [rowHeight]="34"
           [checkboxable]="true"
-          #myGroupHeader
           (toggle)="onDetailToggle($event)"
         >
           <ng-template
@@ -57,9 +63,9 @@ import { DataService } from '../data.service';
             <div style="padding-left:5px;height: 100%; display:flex;align-items: center;">
               <a
                 href="javascript:void(0)"
+                title="Expand/Collapse Group"
                 [class.datatable-icon-right]="!expanded"
                 [class.datatable-icon-down]="expanded"
-                title="Expand/Collapse Group"
                 (click)="toggleExpandGroup(group)"
               >
                 <b>Age: {{ group ? group.value[0].age : '' }}</b>
@@ -72,104 +78,89 @@ import { DataService } from '../data.service';
         <ngx-datatable-column
           name="Exp. Pay."
           prop=""
+          editable="true"
           [headerCheckboxable]="true"
           [checkboxable]="true"
-          editable="true"
           [frozenLeft]="true"
           [sortable]="false"
         >
           <ng-template
-            ngx-datatable-cell-template
             let-rowIndex="rowIndex"
             let-value="value"
             let-row="row"
             let-group="group"
+            ngx-datatable-cell-template
           >
-            <label for="ep1{{ rowIndex }}" class="datatable-checkbox">
+            <label class="datatable-checkbox" [attr.for]="'ep1' + rowIndex">
               <input
                 type="checkbox"
-                id="ep1{{ rowIndex }}"
-                name="{{ rowIndex }}"
                 value="0"
                 class="expectedpayment"
+                [id]="'ep1' + rowIndex"
+                [name]="rowIndex"
                 [attr.aria-label]="'ex pay1' + rowIndex"
-                (change)="checkGroup($event, row, rowIndex, group!)"
                 [checked]="row.exppayyes === 1"
+                (change)="checkGroup($event, row, rowIndex, group!)"
               />
             </label>
-            <label for="ep2{{ rowIndex }}" class="datatable-checkbox">
+            <label class="datatable-checkbox" [attr.for]="'ep2' + rowIndex">
               <input
                 type="checkbox"
-                id="ep2{{ rowIndex }}"
-                name="{{ rowIndex }}"
                 value="1"
                 class="expectedpayment2"
+                [id]="'ep2' + rowIndex"
+                [name]="rowIndex"
                 [attr.aria-label]="'ex pay2' + rowIndex"
-                (change)="checkGroup($event, row, rowIndex, group!)"
                 [checked]="row.exppayno === 1"
+                (change)="checkGroup($event, row, rowIndex, group!)"
               />
             </label>
-            <label for="ep3{{ rowIndex }}" class="datatable-checkbox">
+            <label class="datatable-checkbox" [attr.for]="'ep3' + rowIndex">
               <input
                 type="checkbox"
-                id="ep3{{ rowIndex }}"
-                name="{{ rowIndex }}"
                 value="2"
                 class="expectedpayment3"
+                [id]="'ep3' + rowIndex"
+                [name]="rowIndex"
                 [attr.aria-label]="'ex pay3' + rowIndex"
-                (change)="checkGroup($event, row, rowIndex, group!)"
                 [checked]="row.exppaypending === 1"
+                (change)="checkGroup($event, row, rowIndex, group!)"
               />
             </label>
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column
-          name="Source"
-          prop="source"
-          editable="false"
-          [frozenLeft]="true"
-        ></ngx-datatable-column>
-        <ngx-datatable-column name="Name" prop="name" editable="true"></ngx-datatable-column>
-        <ngx-datatable-column name="Gender" prop="gender"></ngx-datatable-column>
-        <ngx-datatable-column name="Age" prop="age"></ngx-datatable-column>
+        <ngx-datatable-column name="Source" prop="source" editable="false" [frozenLeft]="true" />
+        <ngx-datatable-column name="Name" prop="name" editable="true" />
+        <ngx-datatable-column name="Gender" prop="gender" />
+        <ngx-datatable-column name="Age" prop="age" />
         <ngx-datatable-column name="Comment" prop="comment">
           <ng-template
-            ngx-datatable-cell-template
             let-rowIndex="rowIndex"
             let-value="value"
             let-row="row"
             let-group="group"
             let-rowHeight="rowHeight"
+            ngx-datatable-cell-template
           >
             <input
-              (blur)="updateValue($event, 'comment', rowIndex)"
               type="text"
               name="comment"
               aria-label="comment"
               [value]="value"
+              (blur)="updateValue($event, 'comment', rowIndex)"
             />
           </ng-template>
         </ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `,
-  imports: [
-    DatatableComponent,
-    DatatableGroupHeaderDirective,
-    DatatableGroupHeaderTemplateDirective,
-    DataTableColumnDirective,
-    DataTableColumnCellDirective
-  ]
+  `
 })
 export class RowGroupingComponent {
   @ViewChild('myTable') table!: DatatableComponent<GroupedEmployee>;
 
   editing: Record<string, boolean> = {};
   rows: GroupedEmployee[] = [];
-
-  ColumnMode = ColumnMode;
-  SelectionType = SelectionType;
 
   private dataService = inject(DataService);
 
@@ -204,8 +195,8 @@ export class RowGroupingComponent {
     if (group.length === 2) {
       // There are only 2 lines in a group
       if (
-        ['Calculated', 'Funder'].indexOf(group[0].source!) > -1 &&
-        ['Calculated', 'Funder'].indexOf(group[1].source!) > -1
+        ['Calculated', 'Funder'].includes(group[0].source!) &&
+        ['Calculated', 'Funder'].includes(group[1].source!)
       ) {
         // Sources are funder and calculated
         if (group[0].startdate === group[1].startdate && group[0].enddate === group[1].enddate) {
@@ -228,7 +219,6 @@ export class RowGroupingComponent {
             ) {
               expectedPaymentDealtWith = false;
             }
-            console.log('expectedPaymentDealtWith', expectedPaymentDealtWith);
           }
         }
       }
@@ -242,7 +232,6 @@ export class RowGroupingComponent {
         ) {
           expectedPaymentDealtWith = false;
         }
-        console.log('expectedPaymentDealtWith', expectedPaymentDealtWith);
       }
     }
 
@@ -254,8 +243,6 @@ export class RowGroupingComponent {
           rowFilter.exppaypending === 0 && rowFilter.exppayyes === 0 && rowFilter.exppayno === 0
       ).length === 0
     ) {
-      console.log('expected payment dealt with');
-
       // check if can set the group status
       const numberOfExpPayYes = group.filter(rowFilter => rowFilter.exppayyes === 1).length;
       const numberOfSourceFunder = group.filter(
@@ -267,11 +254,6 @@ export class RowGroupingComponent {
       const numberOfSourceManual = group.filter(
         rowFilter => rowFilter.exppayyes === 1 && rowFilter.source === 'Manual'
       ).length;
-
-      console.log('numberOfExpPayYes', numberOfExpPayYes);
-      console.log('numberOfSourceFunder', numberOfSourceFunder);
-      console.log('numberOfSourceCalculated', numberOfSourceCalculated);
-      console.log('numberOfSourceManual', numberOfSourceManual);
 
       if (numberOfExpPayYes > 0) {
         if (numberOfExpPayYes === numberOfSourceFunder) {
@@ -287,6 +269,8 @@ export class RowGroupingComponent {
     }
 
     group[0].groupstatus = groupStatus;
+    // eslint-disable-next-line no-console
+    console.log('expectedPaymentDealtWith', expectedPaymentDealtWith);
   }
 
   updateValue(event: Event, cell: 'comment', rowIndex: number) {
@@ -296,11 +280,11 @@ export class RowGroupingComponent {
   }
 
   toggleExpandGroup(group: Group<GroupedEmployee>) {
-    console.log('Toggled Expand Group!', group);
     this.table.groupHeader!.toggleExpandGroup(group);
   }
 
   onDetailToggle(event: GroupToggleEvents<GroupedEmployee>) {
+    // eslint-disable-next-line no-console
     console.log('Detail Toggled', event);
   }
 }

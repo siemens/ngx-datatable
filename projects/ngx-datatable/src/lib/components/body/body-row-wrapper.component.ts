@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   booleanAttribute,
   ChangeDetectionStrategy,
@@ -20,15 +21,15 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { NgTemplateOutlet } from '@angular/common';
-import { DatatableComponentToken } from '../../utils/table-token';
+
 import { Group, GroupContext, Row, RowDetailContext, RowOrGroup } from '../../types/public.types';
-import { DatatableGroupHeaderDirective } from './body-group-header.directive';
+import { DatatableComponentToken } from '../../utils/table-token';
 import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive';
+import { DatatableGroupHeaderDirective } from './body-group-header.directive';
 
 @Component({
   selector: 'datatable-row-wrapper',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgTemplateOutlet],
   template: `
     @if (isGroup(row) && groupHeader?.template) {
       <div
@@ -43,6 +44,7 @@ import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive'
                 <input
                   #select
                   type="checkbox"
+                  [attr.aria-label]="ariaGroupHeaderCheckboxMessage"
                   [checked]="selectedGroupRows().length === row.value.length"
                   (change)="onCheckboxChange(select.checked, row)"
                 />
@@ -52,26 +54,27 @@ import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive'
           <ng-template
             [ngTemplateOutlet]="groupHeader!.template!"
             [ngTemplateOutletContext]="context"
-          >
-          </ng-template>
+          />
         </div>
       </div>
     }
     @if ((groupHeader?.template && expanded) || !groupHeader || !groupHeader.template) {
-      <ng-content> </ng-content>
+      <ng-content />
     }
     @if (rowDetail?.template && expanded) {
-      <div [style.height.px]="detailRowHeight" class="datatable-row-detail">
-        <ng-template [ngTemplateOutlet]="rowDetail!.template!" [ngTemplateOutletContext]="context">
-        </ng-template>
+      <div class="datatable-row-detail" [style.height.px]="detailRowHeight">
+        <ng-template
+          [ngTemplateOutlet]="rowDetail!.template!"
+          [ngTemplateOutletContext]="context"
+        />
       </div>
     }
   `,
+  styleUrl: './body-row-wrapper.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'datatable-row-wrapper'
-  },
-  styleUrl: './body-row-wrapper.component.scss',
-  imports: [NgTemplateOutlet]
+  }
 })
 export class DataTableRowWrapperComponent<TRow extends Row = any>
   implements DoCheck, OnInit, OnChanges
@@ -87,16 +90,17 @@ export class DataTableRowWrapperComponent<TRow extends Row = any>
   @Input() groupedRows?: Group<TRow>[];
   @Input() selected!: TRow[];
   @Input() disabled?: boolean;
-  @Output() rowContextmenu = new EventEmitter<{
+  @Output() readonly rowContextmenu = new EventEmitter<{
     event: MouseEvent;
     row: RowOrGroup<TRow>;
   }>(false);
 
   @Input() rowIndex!: number;
 
-  selectedGroupRows = signal<TRow[]>([]);
+  readonly selectedGroupRows = signal<TRow[]>([]);
 
   @Input({ transform: booleanAttribute }) expanded = false;
+  @Input({ required: true }) ariaGroupHeaderCheckboxMessage!: string;
 
   context!: RowDetailContext<TRow> | GroupContext<TRow>;
 
@@ -108,12 +112,8 @@ export class DataTableRowWrapperComponent<TRow extends Row = any>
   private tableComponent = inject(DatatableComponentToken);
   private cd = inject(ChangeDetectorRef);
 
-  ngOnInit(): void {
-    this.selectedRowsDiffer = this.iterableDiffers.find(this.selected ?? []).create();
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['row']) {
+    if (changes.row) {
       // this component renders either a group header or a row. Never both.
       if (this.isGroup(this.row)) {
         this.context = {
@@ -130,12 +130,16 @@ export class DataTableRowWrapperComponent<TRow extends Row = any>
         };
       }
     }
-    if (changes['rowIndex']) {
+    if (changes.rowIndex) {
       this.context.rowIndex = this.rowIndex;
     }
-    if (changes['expanded']) {
+    if (changes.expanded) {
       this.context.expanded = this.expanded;
     }
+  }
+
+  ngOnInit(): void {
+    this.selectedRowsDiffer = this.iterableDiffers.find(this.selected ?? []).create();
   }
 
   ngDoCheck(): void {

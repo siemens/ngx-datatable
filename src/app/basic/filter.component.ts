@@ -1,10 +1,12 @@
 import { Component, inject, ViewChild } from '@angular/core';
-import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'filter-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -27,18 +29,16 @@ import { DataService } from '../data.service';
       <ngx-datatable
         #table
         class="material"
+        rowHeight="auto"
+        columnMode="force"
         [columns]="columns"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
         [footerHeight]="50"
-        rowHeight="auto"
         [limit]="10"
         [rows]="rows"
-      >
-      </ngx-datatable>
+      />
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class FilterComponent {
   rows: Employee[] = [];
@@ -47,8 +47,6 @@ export class FilterComponent {
 
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
   @ViewChild(DatatableComponent) table!: DatatableComponent<Employee>;
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 
@@ -66,8 +64,8 @@ export class FilterComponent {
     const val = (event.target as HTMLInputElement).value.toLowerCase();
 
     // filter our data and update the rows
-    this.rows = this.temp.filter(function (d) {
-      return d.name.toLowerCase().indexOf(val) !== -1 || !val;
+    this.rows = this.temp.filter(d => {
+      return d.name.toLowerCase().includes(val) || !val;
     });
     // Whenever the filter changes, always go back to the first page
     this.table.offset = 0;

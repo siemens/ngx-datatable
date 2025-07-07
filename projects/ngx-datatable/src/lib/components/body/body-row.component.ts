@@ -16,9 +16,6 @@ import {
   SimpleChanges
 } from '@angular/core';
 
-import { columnGroupWidths, columnsByPin, columnsByPinArr } from '../../utils/column';
-import { Keys } from '../../utils/keys';
-import { ActivateEvent, Row, RowOrGroup, TreeStatus } from '../../types/public.types';
 import {
   CellActiveEvent,
   ColumnGroupWidth,
@@ -26,16 +23,19 @@ import {
   RowIndex,
   TableColumnInternal
 } from '../../types/internal.types';
+import { ActivateEvent, Row, RowOrGroup, TreeStatus } from '../../types/public.types';
+import { columnGroupWidths, columnsByPin, columnsByPinArr } from '../../utils/column';
+import { Keys } from '../../utils/keys';
 import { DataTableBodyCellComponent } from './body-cell.component';
 
 @Component({
   selector: 'datatable-body-row',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [DataTableBodyCellComponent],
   template: `
     @for (colGroup of _columnsByPin; track colGroup.type) {
       @if (colGroup.columns.length) {
         <div
-          class="datatable-row-{{ colGroup.type }} datatable-row-group"
+          [class]="'datatable-row-' + colGroup.type + ' datatable-row-group'"
           [style.width.px]="_columnGroupWidths[colGroup.type]"
           [class.row-disabled]="disabled"
         >
@@ -53,17 +53,24 @@ import { DataTableBodyCellComponent } from './body-cell.component';
               [displayCheck]="displayCheck"
               [disabled]="disabled"
               [treeStatus]="treeStatus"
+              [ariaRowCheckboxMessage]="ariaRowCheckboxMessage"
               (activate)="onActivate($event, ii)"
               (treeAction)="onTreeAction()"
-            >
-            </datatable-body-cell>
+            />
           }
         </div>
       }
     }
   `,
   styleUrl: './body-row.component.scss',
-  imports: [DataTableBodyCellComponent]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class]': 'cssClass',
+    '[class.active]': 'isSelected',
+    '[class.datatable-row-odd]': 'innerRowIndex % 2 !== 0',
+    '[class.datatable-row-even]': 'innerRowIndex % 2 === 0',
+    '[class.row-disabled]': 'disabled'
+  }
 })
 export class DataTableBodyRowComponent<TRow extends Row = any> implements DoCheck, OnChanges {
   private cd = inject(ChangeDetectorRef);
@@ -100,24 +107,12 @@ export class DataTableBodyRowComponent<TRow extends Row = any> implements DoChec
   @Input() displayCheck?: (row: TRow, column: TableColumnInternal, value?: any) => boolean;
   @Input() treeStatus?: TreeStatus = 'collapsed';
   @Input() verticalScrollVisible = false;
+  @Input() ariaRowCheckboxMessage!: string;
 
   @Input() disabled?: boolean;
 
-  @HostBinding('class')
   get cssClass() {
     let cls = 'datatable-body-row';
-    if (this.isSelected) {
-      cls += ' active';
-    }
-    if (this.innerRowIndex % 2 !== 0) {
-      cls += ' datatable-row-odd';
-    }
-    if (this.innerRowIndex % 2 === 0) {
-      cls += ' datatable-row-even';
-    }
-    if (this.disabled) {
-      cls += ' row-disabled';
-    }
 
     if (this.rowClass) {
       const res = this.rowClass(this.row);
@@ -145,8 +140,8 @@ export class DataTableBodyRowComponent<TRow extends Row = any> implements DoChec
     return this._columnGroupWidths.total;
   }
 
-  @Output() activate = new EventEmitter<ActivateEvent<TRow>>();
-  @Output() treeAction = new EventEmitter<any>();
+  @Output() readonly activate = new EventEmitter<ActivateEvent<TRow>>();
+  @Output() readonly treeAction = new EventEmitter<any>();
 
   _element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   _columnGroupWidths!: ColumnGroupWidth;
@@ -223,7 +218,7 @@ export class DataTableBodyRowComponent<TRow extends Row = any> implements DoChec
   }
 
   /** Returns the row index, or if in a group, the index within a group. */
-  private get innerRowIndex(): number {
+  protected get innerRowIndex(): number {
     return this.rowIndex?.indexInGroup ?? this.rowIndex?.index ?? 0;
   }
 }

@@ -1,22 +1,23 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DatatableComponent } from './datatable.component';
-import { DataTableBodyRowComponent } from './body/body-row.component';
-import { DataTableBodyCellComponent } from './body/body-cell.component';
-import { DataTableColumnDirective } from './columns/column.directive';
-import { DataTableColumnCellDirective } from './columns/column-cell.directive';
-import { DataTableColumnHeaderDirective } from './columns/column-header.directive';
+
 import { SortPropDir } from '../types/public.types';
 import { TableColumn } from '../types/table-column.type';
+import { DataTableBodyCellComponent } from './body/body-cell.component';
+import { DataTableBodyRowComponent } from './body/body-row.component';
+import { DataTableColumnCellDirective } from './columns/column-cell.directive';
+import { DataTableColumnHeaderDirective } from './columns/column-header.directive';
+import { DataTableColumnDirective } from './columns/column.directive';
+import { DatatableComponent } from './datatable.component';
 
 describe('DatatableComponent', () => {
   let fixture: ComponentFixture<TestFixtureComponent>;
   let component: TestFixtureComponent;
 
   @Component({
-    template: ` <ngx-datatable [columns]="columns" [rows]="rows" [sorts]="sorts"></ngx-datatable> `,
-    imports: [DatatableComponent]
+    imports: [DatatableComponent],
+    template: ` <ngx-datatable [columns]="columns" [rows]="rows" [sorts]="sorts" /> `
   })
   class TestFixtureComponent {
     columns: TableColumn[] = [];
@@ -357,6 +358,12 @@ describe('DatatableComponent', () => {
 
 describe('DatatableComponent With Custom Templates', () => {
   @Component({
+    imports: [
+      DatatableComponent,
+      DataTableColumnDirective,
+      DataTableColumnCellDirective,
+      DataTableColumnHeaderDirective
+    ],
     template: `
       <ngx-datatable [rows]="rows" [sorts]="sorts">
         <ngx-datatable-column name="Id" prop="id">
@@ -376,13 +383,7 @@ describe('DatatableComponent With Custom Templates', () => {
           </ng-template>
         </ngx-datatable-column>
       </ngx-datatable>
-    `,
-    imports: [
-      DatatableComponent,
-      DataTableColumnDirective,
-      DataTableColumnCellDirective,
-      DataTableColumnHeaderDirective
-    ]
+    `
   })
   // eslint-disable-next-line @angular-eslint/component-class-suffix
   class TestFixtureComponentWithCustomTemplates {
@@ -444,22 +445,26 @@ describe('DatatableComponent With Custom Templates', () => {
 
 describe('DatatableComponent With Frozen columns', () => {
   @Component({
-    template: `
-      <ngx-datatable [rows]="rows">
-        <ngx-datatable-column name="Name" [width]="300" [frozenLeft]="true"> </ngx-datatable-column>
-        <ngx-datatable-column name="Gender"> </ngx-datatable-column>
-        <ngx-datatable-column name="Age"> </ngx-datatable-column>
-        <ngx-datatable-column name="City" [width]="150" prop="address.city"> </ngx-datatable-column>
-        <ngx-datatable-column name="State" [width]="300" prop="address.state" [frozenRight]="true">
-        </ngx-datatable-column>
-      </ngx-datatable>
-    `,
     imports: [
       DatatableComponent,
       DataTableColumnDirective,
       DataTableColumnCellDirective,
       DataTableColumnHeaderDirective
-    ]
+    ],
+    template: `
+      <ngx-datatable [rows]="rows">
+        <ngx-datatable-column name="Name" [width]="300" [frozenLeft]="true" />
+        <ngx-datatable-column name="Gender" />
+        <ngx-datatable-column name="Age" />
+        <ngx-datatable-column name="City" prop="address.city" [width]="150" />
+        <ngx-datatable-column
+          name="State"
+          prop="address.state"
+          [width]="300"
+          [frozenRight]="true"
+        />
+      </ngx-datatable>
+    `
   })
   // eslint-disable-next-line @angular-eslint/component-class-suffix
   class TestFixtureComponentWithFrozenColumns {
@@ -545,21 +550,21 @@ describe('DatatableComponent With Frozen columns', () => {
 /**
  * mimics the act of a user clicking a column to sort it
  */
-function sortBy({ column }: { column: number }, fixture: ComponentFixture<unknown>) {
+const sortBy = ({ column }: { column: number }, fixture: ComponentFixture<unknown>) => {
   const columnIndex = column - 1;
   const headerCellDe = fixture.debugElement.queryAll(By.css('datatable-header-cell'))[columnIndex];
   const de = headerCellDe.query(By.css('span:last-child'));
   de.triggerEventHandler('click', null);
-}
+};
 
 /**
  * test helper function to return text content of a cell within the
  * body of the ngx-datatable component
  */
-function textContent(
+const textContent = (
   { row, column }: { row: number; column: number },
   fixture: ComponentFixture<unknown>
-) {
+) => {
   const [rowIndex, columnIndex] = [row - 1, column - 1];
   const bodyRowDe = fixture.debugElement.queryAll(By.directive(DataTableBodyRowComponent))[
     rowIndex
@@ -567,4 +572,4 @@ function textContent(
   const bodyCellDe = bodyRowDe.queryAll(By.directive(DataTableBodyCellComponent))[columnIndex];
 
   return bodyCellDe.nativeElement.textContent;
-}
+};

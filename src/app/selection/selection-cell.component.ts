@@ -1,17 +1,17 @@
 import { Component, inject } from '@angular/core';
 import {
   ActivateEvent,
-  ColumnMode,
   DatatableComponent,
   SelectEvent,
-  SelectionType,
   TableColumn
 } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'cell-selection-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -27,29 +27,24 @@ import { DataService } from '../data.service';
       </h3>
       <ngx-datatable
         class="material selection-cell"
+        columnMode="force"
+        selectionType="cell"
         [rows]="rows"
-        [columnMode]="ColumnMode.force"
         [columns]="columns"
         [headerHeight]="50"
         [footerHeight]="50"
         [rowHeight]="50"
         [selected]="selected"
-        [selectionType]="SelectionType.cell"
         (select)="onSelect($event)"
         (activate)="onActivate($event)"
-      >
-      </ngx-datatable>
+      />
     </div>
-  `,
-  imports: [DatatableComponent]
+  `
 })
 export class CellSelectionComponent {
   rows: Employee[] = [];
   selected: Employee[] = [];
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
-
-  ColumnMode = ColumnMode;
-  SelectionType = SelectionType;
 
   private dataService = inject(DataService);
 
@@ -60,10 +55,12 @@ export class CellSelectionComponent {
   }
 
   onSelect(event: SelectEvent<Employee>) {
+    // eslint-disable-next-line no-console
     console.log('Event: select', event, this.selected);
   }
 
   onActivate(event: ActivateEvent<Employee>) {
+    // eslint-disable-next-line no-console
     console.log('Event: activate', event);
   }
 }

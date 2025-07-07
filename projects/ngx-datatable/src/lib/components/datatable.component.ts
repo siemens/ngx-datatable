@@ -25,24 +25,17 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-
-import { DatatableGroupHeaderDirective } from './body/body-group-header.directive';
-
 import { Subscription } from 'rxjs';
-import { groupRowsByParents, optionalGetterForProp } from '../utils/tree';
-import { TableColumn } from '../types/table-column.type';
-import { DataTableColumnDirective } from './columns/column.directive';
-import { DatatableRowDetailDirective } from './row-detail/row-detail.directive';
-import { DatatableFooterDirective } from './footer/footer.directive';
-import { DataTableBodyComponent } from './body/body.component';
-import { DataTableHeaderComponent } from './header/header.component';
-import { ScrollbarHelper } from '../services/scrollbar-helper.service';
+
+import { VisibilityDirective } from '../directives/visibility.directive';
+import { NGX_DATATABLE_CONFIG, NgxDatatableConfig } from '../ngx-datatable.config';
 import { ColumnChangesService } from '../services/column-changes.service';
-import { throttleable } from '../utils/throttle';
-import { adjustColumnWidths, forceFillColumnWidths } from '../utils/math';
-import { sortGroupedRows, sortRows } from '../utils/sort';
-import { DatatableRowDefDirective } from './body/body-row-def.component';
-import { DatatableComponentToken } from '../utils/table-token';
+import { ScrollbarHelper } from '../services/scrollbar-helper.service';
+import {
+  ColumnResizeEventInternal,
+  ReorderEventInternal,
+  TableColumnInternal
+} from '../types/internal.types';
 import {
   ActivateEvent,
   ColumnMode,
@@ -64,22 +57,35 @@ import {
   SortType,
   TreeStatus
 } from '../types/public.types';
-import { DataTableFooterComponent } from './footer/footer.component';
-import { VisibilityDirective } from '../directives/visibility.directive';
-import { ProgressBarComponent } from './body/progress-bar.component';
+import { TableColumn } from '../types/table-column.type';
 import { toInternalColumn } from '../utils/column-helper';
-import {
-  ColumnResizeEventInternal,
-  ReorderEventInternal,
-  TableColumnInternal
-} from '../types/internal.types';
-import { NGX_DATATABLE_CONFIG, NgxDatatableConfig } from '../ngx-datatable.config';
+import { adjustColumnWidths, forceFillColumnWidths } from '../utils/math';
+import { sortGroupedRows, sortRows } from '../utils/sort';
+import { DatatableComponentToken } from '../utils/table-token';
+import { throttleable } from '../utils/throttle';
+import { groupRowsByParents, optionalGetterForProp } from '../utils/tree';
+import { DatatableGroupHeaderDirective } from './body/body-group-header.directive';
+import { DatatableRowDefDirective } from './body/body-row-def.component';
+import { DataTableBodyComponent } from './body/body.component';
+import { ProgressBarComponent } from './body/progress-bar.component';
+import { DataTableColumnDirective } from './columns/column.directive';
+import { DataTableFooterComponent } from './footer/footer.component';
+import { DatatableFooterDirective } from './footer/footer.directive';
+import { DataTableHeaderComponent } from './header/header.component';
+import { DatatableRowDetailDirective } from './row-detail/row-detail.directive';
 
 @Component({
   selector: 'ngx-datatable',
+  imports: [
+    VisibilityDirective,
+    DataTableHeaderComponent,
+    DataTableBodyComponent,
+    DataTableFooterComponent,
+    ProgressBarComponent
+  ],
   templateUrl: './datatable.component.html',
+  styleUrl: './datatable.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./datatable.component.scss'],
   host: {
     class: 'ngx-datatable'
   },
@@ -89,13 +95,6 @@ import { NGX_DATATABLE_CONFIG, NgxDatatableConfig } from '../ngx-datatable.confi
       useExisting: DatatableComponent
     },
     ColumnChangesService
-  ],
-  imports: [
-    VisibilityDirective,
-    DataTableHeaderComponent,
-    DataTableBodyComponent,
-    DataTableFooterComponent,
-    ProgressBarComponent
   ]
 })
 export class DatatableComponent<TRow extends Row = any>
@@ -372,7 +371,10 @@ export class DatatableComponent<TRow extends Row = any>
    *   ariaPreviousPageMessage: 'go to previous page',
    *   ariaPageNMessage: 'page',
    *   ariaNextPageMessage: 'go to next page',
-   *   ariaLastPageMessage: 'go to last page'
+   *   ariaLastPageMessage: 'go to last page',
+   *   ariaRowCheckboxMessage: 'Select row',
+   *   ariaHeaderCheckboxMessage: 'Select all rows',
+   *   ariaGroupHeaderCheckboxMessage: 'Select row group'
    * }
    * ```
    */
@@ -480,56 +482,56 @@ export class DatatableComponent<TRow extends Row = any>
   /**
    * Body was scrolled typically in a `scrollbarV:true` scenario.
    */
-  @Output() scroll = new EventEmitter<ScrollEvent>();
+  @Output() readonly scroll = new EventEmitter<ScrollEvent>();
 
   /**
    * A cell or row was focused via keyboard or mouse click.
    */
-  @Output() activate = new EventEmitter<ActivateEvent<TRow>>();
+  @Output() readonly activate = new EventEmitter<ActivateEvent<TRow>>();
 
   /**
    * A cell or row was selected.
    */
-  @Output() select = new EventEmitter<SelectEvent<TRow>>();
+  @Output() readonly select = new EventEmitter<SelectEvent<TRow>>();
 
   /**
    * Column sort was invoked.
    */
-  @Output() sort = new EventEmitter<SortEvent>();
+  @Output() readonly sort = new EventEmitter<SortEvent>();
 
   /**
    * The table was paged either triggered by the pager or the body scroll.
    */
-  @Output() page = new EventEmitter<PageEvent>();
+  @Output() readonly page = new EventEmitter<PageEvent>();
 
   /**
    * Columns were re-ordered.
    */
-  @Output() reorder = new EventEmitter<ReorderEvent>();
+  @Output() readonly reorder = new EventEmitter<ReorderEvent>();
 
   /**
    * Column was resized.
    */
-  @Output() resize = new EventEmitter<ColumnResizeEvent>();
+  @Output() readonly resize = new EventEmitter<ColumnResizeEvent>();
 
   /**
    * The context menu was invoked on the table.
    * type indicates whether the header or the body was clicked.
    * content contains either the column or the row that was clicked.
    */
-  @Output() tableContextmenu = new EventEmitter<ContextMenuEvent<TRow>>(false);
+  @Output() readonly tableContextmenu = new EventEmitter<ContextMenuEvent<TRow>>(false);
 
   /**
    * A row was expanded ot collapsed for tree
    */
-  @Output() treeAction = new EventEmitter<{ row: TRow; rowIndex: number }>();
+  @Output() readonly treeAction = new EventEmitter<{ row: TRow; rowIndex: number }>();
 
   /**
    * Emits HTML5 native drag events.
    * Only emits dragenter, dragover, drop events by default.
    * Set {@link rowDraggble} to true for dragstart and dragend.
    */
-  @Output() rowDragEvents = new EventEmitter<DragEventData>();
+  @Output() readonly rowDragEvents = new EventEmitter<DragEventData>();
 
   /**
    * CSS class applied if the header height if fixed height.
@@ -709,7 +711,7 @@ export class DatatableComponent<TRow extends Row = any>
   // the column widths are initially calculated without vertical scroll offset
   // this makes horizontal scroll to appear on load even if columns can fit in view
   // this will be set to true once rows are available and rendered on UI
-  private _rowInitDone = signal(false);
+  private readonly _rowInitDone = signal(false);
 
   constructor() {
     // apply global settings from Module.forRoot
@@ -738,6 +740,55 @@ export class DatatableComponent<TRow extends Row = any>
     this.recalculate();
   }
 
+  /*
+   * Lifecycle hook that is called when Angular dirty checks a directive.
+   */
+  ngDoCheck(): void {
+    const rowDiffers = this.rowDiffer.diff(this.rows);
+    if (rowDiffers || this.disableRowCheck) {
+      // we don't sort again when ghost loader adds a dummy row
+      if (!this.ghostLoadingIndicator && !this.externalSorting && this._internalColumns) {
+        this.sortInternalRows();
+      } else {
+        this._internalRows = [...this.rows];
+      }
+
+      // auto group by parent on new update
+      this._internalRows = groupRowsByParents(
+        this._internalRows,
+        optionalGetterForProp(this.treeFromRelation),
+        optionalGetterForProp(this.treeToRelation)
+      );
+
+      if (this._groupRowsBy) {
+        // If a column has been specified in _groupRowsBy create a new array with the data grouped by that row
+        this.groupedRows = this.groupArrayBy(this._rows, this._groupRowsBy);
+      }
+      if (rowDiffers) {
+        queueMicrotask(() => {
+          this._rowInitDone.set(true);
+          this.recalculate();
+          this.cd.markForCheck();
+        });
+      }
+
+      this.recalculatePages();
+      this.cd.markForCheck();
+    }
+  }
+
+  /**
+   * Lifecycle hook that is called after a component's
+   * content has been fully initialized.
+   */
+  ngAfterContentInit() {
+    if (this.columnTemplates.length) {
+      this.translateColumns(this.columnTemplates);
+    }
+    this._subscriptions.push(this.columnTemplates.changes.subscribe(v => this.translateColumns(v)));
+    this.listenForColumnInputChanges();
+  }
+
   /**
    * Lifecycle hook that is called after a component's
    * view has been fully initialized.
@@ -763,18 +814,6 @@ export class DatatableComponent<TRow extends Row = any>
         });
       }
     });
-  }
-
-  /**
-   * Lifecycle hook that is called after a component's
-   * content has been fully initialized.
-   */
-  ngAfterContentInit() {
-    if (this.columnTemplates.length) {
-      this.translateColumns(this.columnTemplates);
-    }
-    this._subscriptions.push(this.columnTemplates.changes.subscribe(v => this.translateColumns(v)));
-    this.listenForColumnInputChanges();
   }
 
   /**
@@ -840,43 +879,6 @@ export class DatatableComponent<TRow extends Row = any>
 
     // convert map back to a simple array of objects
     return Array.from(map, x => addGroup(x[0], x[1]));
-  }
-
-  /*
-   * Lifecycle hook that is called when Angular dirty checks a directive.
-   */
-  ngDoCheck(): void {
-    const rowDiffers = this.rowDiffer.diff(this.rows);
-    if (rowDiffers || this.disableRowCheck) {
-      // we don't sort again when ghost loader adds a dummy row
-      if (!this.ghostLoadingIndicator && !this.externalSorting && this._internalColumns) {
-        this.sortInternalRows();
-      } else {
-        this._internalRows = [...this.rows];
-      }
-
-      // auto group by parent on new update
-      this._internalRows = groupRowsByParents(
-        this._internalRows,
-        optionalGetterForProp(this.treeFromRelation),
-        optionalGetterForProp(this.treeToRelation)
-      );
-
-      if (this._groupRowsBy) {
-        // If a column has been specified in _groupRowsBy create a new array with the data grouped by that row
-        this.groupedRows = this.groupArrayBy(this._rows, this._groupRowsBy);
-      }
-      if (rowDiffers) {
-        queueMicrotask(() => {
-          this._rowInitDone.set(true);
-          this.recalculate();
-          this.cd.markForCheck();
-        });
-      }
-
-      this.recalculatePages();
-      this.cd.markForCheck();
-    }
   }
 
   /**
@@ -1286,7 +1288,7 @@ export class DatatableComponent<TRow extends Row = any>
 
   private sortInternalRows(): void {
     // if there are no sort criteria we reset the rows with original rows
-    if (!this.sorts || !this.sorts?.length) {
+    if (!this.sorts?.length) {
       this._internalRows = this._rows;
       // if there is any tree relation then re-group rows accordingly
       if (this.treeFromRelation && this.treeToRelation) {
@@ -1297,7 +1299,7 @@ export class DatatableComponent<TRow extends Row = any>
         );
       }
     }
-    if (this.groupedRows && this.groupedRows.length) {
+    if (this.groupedRows?.length) {
       const sortOnGroupHeader = this.sorts?.find(
         sortColumns => sortColumns.prop === this._groupRowsBy
       );

@@ -1,16 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { DataTableBodyRowComponent } from './body-row.component';
 import { Component } from '@angular/core';
-import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
-import { TableColumn } from '../../types/table-column.type';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+
+import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 import { RowIndex } from '../../types/internal.types';
+import { TableColumn } from '../../types/table-column.type';
 import { toInternalColumn } from '../../utils/column-helper';
+import { DataTableBodyRowComponent } from './body-row.component';
 
 describe('DataTableBodyRowComponent', () => {
   @Component({
-    template: ` <datatable-body-row [rowIndex]="rowIndex" [row]="row" [columns]="columns" /> `,
-    imports: [DataTableBodyRowComponent]
+    imports: [DataTableBodyRowComponent],
+    template: ` <datatable-body-row [rowIndex]="rowIndex" [row]="row" [columns]="columns" /> `
   })
   class TestHostComponent {
     rowIndex: RowIndex = { index: 0 };

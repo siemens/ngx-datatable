@@ -1,3 +1,4 @@
+import { NgClass, NgStyle } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -13,16 +14,10 @@ import {
   SimpleChanges,
   TemplateRef
 } from '@angular/core';
-import { columnGroupWidths, columnsByPin, columnsByPinArr } from '../../utils/column';
-import {
-  Row,
-  SelectionType,
-  SortDirection,
-  SortEvent,
-  SortPropDir,
-  SortType
-} from '../../types/public.types';
-import { NgClass, NgStyle } from '@angular/common';
+
+import { DraggableDirective } from '../../directives/draggable.directive';
+import { LongPressDirective } from '../../directives/long-press.directive';
+import { OrderableDirective } from '../../directives/orderable.directive';
 import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 import {
   ColumnResizeEventInternal,
@@ -33,21 +28,35 @@ import {
   TableColumnInternal,
   TargetChangedEvent
 } from '../../types/internal.types';
-import { DraggableDirective } from '../../directives/draggable.directive';
-import { LongPressDirective } from '../../directives/long-press.directive';
+import {
+  Row,
+  SelectionType,
+  SortDirection,
+  SortEvent,
+  SortPropDir,
+  SortType
+} from '../../types/public.types';
+import { columnGroupWidths, columnsByPin, columnsByPinArr } from '../../utils/column';
 import { DataTableHeaderCellComponent } from './header-cell.component';
-import { OrderableDirective } from '../../directives/orderable.directive';
 
 @Component({
   selector: 'datatable-header',
+  imports: [
+    OrderableDirective,
+    NgStyle,
+    DataTableHeaderCellComponent,
+    LongPressDirective,
+    DraggableDirective,
+    NgClass
+  ],
   template: `
     <div
       role="row"
       orderable
+      class="datatable-header-inner"
+      [style.width.px]="_columnGroupWidths.total"
       (reorder)="onColumnReordered($event)"
       (targetChanged)="onTargetChanged($event)"
-      [style.width.px]="_columnGroupWidths.total"
-      class="datatable-header-inner"
     >
       @for (colGroup of _columnsByPin; track colGroup.type) {
         @if (colGroup.columns.length) {
@@ -59,14 +68,10 @@ import { OrderableDirective } from '../../directives/orderable.directive';
             @for (column of colGroup.columns; track column.$$id) {
               <datatable-header-cell
                 role="columnheader"
-                (resize)="onColumnResized($event)"
-                (resizing)="onColumnResizing($event)"
                 long-press
+                draggable
                 [pressModel]="column"
                 [pressEnabled]="reorderable && column.draggable"
-                (longPressStart)="onLongPressStart($event)"
-                (longPressEnd)="onLongPressEnd($event)"
-                draggable
                 [dragX]="reorderable && column.draggable && column.dragging"
                 [dragY]="false"
                 [dragModel]="column"
@@ -85,36 +90,32 @@ import { OrderableDirective } from '../../directives/orderable.directive';
                 [sortUnsetIcon]="sortUnsetIcon"
                 [allRowsSelected]="allRowsSelected"
                 [enableClearingSortState]="enableClearingSortState"
+                [ariaHeaderCheckboxMessage]="ariaHeaderCheckboxMessage"
+                (resize)="onColumnResized($event)"
+                (resizing)="onColumnResizing($event)"
+                (longPressStart)="onLongPressStart($event)"
+                (longPressEnd)="onLongPressEnd($event)"
                 (sort)="onSort($event)"
                 (select)="select.emit($event)"
                 (columnContextmenu)="columnContextmenu.emit($event)"
-              >
-              </datatable-header-cell>
+              />
             }
           </div>
         }
       }
     </div>
   `,
-  host: {
-    class: 'datatable-header'
-  },
   styleUrl: './header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    OrderableDirective,
-    NgStyle,
-    DataTableHeaderCellComponent,
-    LongPressDirective,
-    DraggableDirective,
-    NgClass
-  ]
+  host: {
+    class: 'datatable-header'
+  }
 })
 export class DataTableHeaderComponent implements OnDestroy, OnChanges {
   private cd = inject(ChangeDetectorRef);
   private scrollbarHelper = inject(ScrollbarHelper);
 
-  lastColumnId = signal<string | null>(null);
+  readonly lastColumnId = signal<string | null>(null);
 
   @Input() sortAscendingIcon?: string;
   @Input() sortDescendingIcon?: string;
@@ -145,6 +146,7 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
   @Input() selectionType?: SelectionType;
   @Input() reorderable?: boolean;
   @Input() verticalScrollVisible = false;
+  @Input() ariaHeaderCheckboxMessage!: string;
 
   dragEventTarget?: MouseEvent | TouchEvent;
 
@@ -187,12 +189,12 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
     return this._offsetX;
   }
 
-  @Output() sort = new EventEmitter<SortEvent>();
-  @Output() reorder = new EventEmitter<ReorderEventInternal>();
-  @Output() resize = new EventEmitter<ColumnResizeEventInternal>();
-  @Output() resizing = new EventEmitter<ColumnResizeEventInternal>();
-  @Output() select = new EventEmitter<void>();
-  @Output() columnContextmenu = new EventEmitter<{
+  @Output() readonly sort = new EventEmitter<SortEvent>();
+  @Output() readonly reorder = new EventEmitter<ReorderEventInternal>();
+  @Output() readonly resize = new EventEmitter<ColumnResizeEventInternal>();
+  @Output() readonly resizing = new EventEmitter<ColumnResizeEventInternal>();
+  @Output() readonly select = new EventEmitter<void>();
+  @Output() readonly columnContextmenu = new EventEmitter<{
     event: MouseEvent;
     column: TableColumnInternal;
   }>(false);

@@ -1,10 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { ColumnMode, DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+import { DatatableComponent, TableColumn } from 'projects/ngx-datatable/src/public-api';
+
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'summary-row-simple-demo',
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -30,27 +32,25 @@ import { DataService } from '../data.service';
         <div>
           <label for="position-select">Position</label>
           <select id="position-select" (change)="onPositionSelectChange($event)">
-            <option [value]="'top'">Top</option>
-            <option [value]="'bottom'">Bottom</option>
+            <option value="top">Top</option>
+            <option value="bottom">Bottom</option>
           </select>
         </div>
       </div>
       <ngx-datatable
         class="material"
+        rowHeight="auto"
+        columnMode="force"
         [summaryRow]="enableSummary"
         [summaryPosition]="summaryPosition"
         [columns]="columns"
-        [columnMode]="ColumnMode.force"
         [headerHeight]="50"
-        rowHeight="auto"
         [summaryHeight]="55"
         [rows]="rows"
-      >
-      </ngx-datatable>
+      />
     </div>
   `,
-  styleUrls: ['./summary-row-simple.component.scss'],
-  imports: [DatatableComponent]
+  styleUrl: './summary-row-simple.component.scss'
 })
 export class SummaryRowSimpleComponent {
   rows: Employee[] = [];
@@ -63,8 +63,6 @@ export class SummaryRowSimpleComponent {
 
   enableSummary = true;
   summaryPosition = 'top';
-
-  ColumnMode = ColumnMode;
 
   private dataService = inject(DataService);
 

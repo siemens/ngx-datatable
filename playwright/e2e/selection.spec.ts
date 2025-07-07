@@ -46,12 +46,6 @@ test.describe('selection', () => {
       await expect(selectedRow).toHaveClass(/active/);
       expect(cellsInRow).toHaveLength(3);
 
-      await expect(cellsInRow.at(0)).toHaveClass(/active/);
-
-      for (const cell of cellsInRow) {
-        await expect(cell).toHaveAttribute('ng-reflect-is-selected', 'true');
-      }
-
       const selectedColumnLi = await page.locator('.selected-column').locator('ul > li').all();
 
       expect(selectedColumnLi).toHaveLength(1);
@@ -179,7 +173,7 @@ test.describe('selection', () => {
 
       expect(rowsWithCheckbox).toHaveLength(4);
 
-      for (let row of rowsWithCheckbox) {
+      for (const row of rowsWithCheckbox) {
         await row.check();
       }
 

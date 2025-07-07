@@ -69,7 +69,8 @@ export const tsConfig = typescriptEslint.config({
     '@angular-eslint/no-output-native': ['off'],
     '@angular-eslint/directive-class-suffix': ['off'],
     '@angular-eslint/no-conflicting-lifecycle': ['off'],
-    '@angular-eslint/prefer-output-emitter-ref': ['off']
+    '@angular-eslint/prefer-output-emitter-ref': ['off'],
+    '@angular-eslint/no-developer-preview': ['off']
   }
 });
 

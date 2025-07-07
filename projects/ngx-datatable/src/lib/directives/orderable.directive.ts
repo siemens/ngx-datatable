@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import {
-  computed,
-  contentChildren,
+  AfterContentInit,
+  ContentChildren,
   Directive,
   effect,
   inject,
@@ -10,8 +10,11 @@ import {
   KeyValueDiffers,
   OnDestroy,
   output,
-  OutputRefSubscription
+  OutputRefSubscription,
+  QueryList,
+  signal
 } from '@angular/core';
+import { startWith } from 'rxjs';
 
 import {
   DraggableDragEvent,
@@ -32,25 +35,19 @@ interface OrderPosition {
 @Directive({
   selector: '[orderable]'
 })
-export class OrderableDirective implements OnDestroy {
+export class OrderableDirective implements AfterContentInit, OnDestroy {
   private document = inject(DOCUMENT);
 
   readonly reorder = output<ReorderEventInternal>();
   readonly targetChanged = output<TargetChangedEvent>();
 
-  readonly draggables = contentChildren<DraggableDirective>(DraggableDirective, {
-    descendants: true
-  });
+  // This should be contentChildren() query, but there is an open Angular issue with signal queries (https://github.com/angular/angular/issues/59067)
+  // This problem causes the orderable directive to fail because the contentChildren query is resolved too early.
+  // At that state, the input is not yet set, resulting in a NG0950 error.
+  @ContentChildren(DraggableDirective, { descendants: true })
+  draggablesQueryList!: QueryList<DraggableDirective>;
 
-  readonly diffMap = computed(() => {
-    return this.draggables().reduce(
-      (acc, curr) => {
-        acc[curr.dragModel().$$id] = curr;
-        return acc;
-      },
-      {} as Record<string, DraggableDirective>
-    );
-  });
+  readonly draggables = signal<DraggableDirective[]>([]);
 
   readonly subscriptions = new Map<string, OutputRefSubscription[]>();
 
@@ -62,7 +59,21 @@ export class OrderableDirective implements OnDestroy {
 
   constructor() {
     effect(() => {
-      this.updateSubscriptions(this.diffMap());
+      const diffMap = this.draggables().reduce(
+        (acc, curr) => {
+          acc[curr.dragModel().$$id] = curr;
+          return acc;
+        },
+        {} as Record<string, DraggableDirective>
+      );
+
+      this.updateSubscriptions(diffMap);
+    });
+  }
+
+  ngAfterContentInit(): void {
+    this.draggablesQueryList.changes.pipe(startWith(this.draggablesQueryList)).subscribe(() => {
+      this.draggables.set(this.draggablesQueryList.toArray());
     });
   }
 
@@ -87,7 +98,7 @@ export class OrderableDirective implements OnDestroy {
     if (!currentValue) {
       return;
     }
-    const subs = this.subscriptions.get(key) || [];
+    const subs = this.subscriptions.get(key) ?? [];
     subs.push(
       currentValue.dragStart.subscribe(() => this.onDragStart()),
       currentValue.dragging.subscribe(e => this.onDragging(e)),

@@ -40,8 +40,8 @@ export class DraggableDirective implements OnDestroy {
   readonly dragging = output<DraggableDragEvent>();
   readonly dragEnd = output<DraggableDragEvent>();
 
-  isDragging = signal(false);
-  private subscription?: Subscription;
+  readonly isDragging = signal(false);
+  subscription?: Subscription;
 
   private frameId?: number;
   private last?: { x: number; y: number };

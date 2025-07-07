@@ -33,8 +33,8 @@ export class DraggableDirective implements OnDestroy {
   readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   readonly dragModel = input.required<TableColumnInternal>();
   readonly dragEventTarget = input<MouseEvent | TouchEvent>();
-  readonly dragX = input(false, { transform: booleanAttribute });
-  readonly dragY = input(false, { transform: booleanAttribute });
+  readonly dragX = input(true, { transform: booleanAttribute });
+  readonly dragY = input(true, { transform: booleanAttribute });
 
   readonly dragStart = output<DraggableDragEvent>();
   readonly dragging = output<DraggableDragEvent>();

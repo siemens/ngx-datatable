@@ -102,9 +102,7 @@ export class DraggableDirective implements OnDestroy {
 
     this.last = { x, y };
 
-    if (!this.frameId) {
-      this.frameId = requestAnimationFrame(() => this.updatePosition());
-    }
+    this.frameId ??= requestAnimationFrame(() => this.updatePosition());
 
     this.dragging.emit({
       event,

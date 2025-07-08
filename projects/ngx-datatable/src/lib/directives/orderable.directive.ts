@@ -86,8 +86,8 @@ export class OrderableDirective implements AfterContentInit, OnDestroy {
     if (!differResult) {
       return;
     }
-    differResult.forEachAddedItem(this.subscribeToDraggable);
-    differResult.forEachRemovedItem(this.unsubscribeFromDraggable);
+    differResult.forEachAddedItem(record => this.subscribeToDraggable(record));
+    differResult.forEachRemovedItem(record => this.unsubscribeFromDraggable(record));
   }
 
   private subscribeToDraggable = (

@@ -81,7 +81,7 @@ export class DraggableDirective implements OnDestroy {
 
     this._destroySubscription();
 
-    this.subscription = mouseup$.subscribe(this.onMouseup.bind(this));
+    this.subscription = mouseup$.subscribe(mouseUpEvent => this.onMouseup(mouseUpEvent));
     this.subscription.add(mousemove$.subscribe(ev => this.move(ev, mouseDownPos)));
 
     this.dragStart.emit({

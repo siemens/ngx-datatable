@@ -908,7 +908,7 @@ export class DatatableComponent<TRow extends Row = any>
   }
 
   /**
-   * Recalulcates the column widths based on column width
+   * Recalculates the column widths based on column width
    * distribution mode and scrollbar offsets.
    */
   recalculateColumns(
@@ -1129,6 +1129,63 @@ export class DatatableComponent<TRow extends Row = any>
     column.$$oldWidth = newValue;
     const idx = this._internalColumns.indexOf(column);
     this.recalculateColumns(this._internalColumns, idx);
+  }
+
+  /**
+   * Triggered when double clicked on resize handler
+   */
+  onColumnFitToContent({
+    headerElement,
+    column
+  }: {
+    headerElement: HTMLElement;
+    column: TableColumnInternal;
+  }): void {
+    const columnCells = Array.from(
+      this.bodyElement.nativeElement.querySelectorAll('datatable-body-cell')
+    );
+
+    const selectedColumnItems = columnCells.filter(
+      c => c.getAttribute('header-id') === column.$$id
+    );
+
+    // this element has to be a form, otherwise form elements within a cell
+    // will be validated while being cloned. This can cause issues such as
+    // radio buttons being reset and losing their values.
+    const eDummyContainer = document.createElement('form');
+    // position fixed, so it isn't restricted to the boundaries of the parent
+    eDummyContainer.style.position = 'fixed';
+    eDummyContainer.style.padding = '16px';
+
+    const eBodyContainer = this.bodyElement.nativeElement;
+
+    selectedColumnItems
+      .concat(headerElement)
+      .forEach(el => this.cloneItemIntoDummy(el, eDummyContainer));
+
+    eBodyContainer.appendChild(eDummyContainer);
+
+    const dummyContainerWidth = eDummyContainer.offsetWidth;
+
+    // we are finished with the dummy container, so get rid of it
+    eBodyContainer.removeChild(eDummyContainer);
+
+    this.onColumnResize({ column, newValue: dummyContainerWidth, prevValue: column.width });
+  }
+
+  private cloneItemIntoDummy(eCell: Element, eDummyContainer: HTMLElement): void {
+    // make a deep clone of the cell
+    const eCellClone: HTMLElement = eCell.cloneNode(true) as HTMLElement;
+    // the original has a fixed width, we remove this to allow the natural width based on content
+    eCellClone.style.width = '';
+    // the original has position = absolute, we need to remove this so it's positioned normally
+    eCellClone.style.position = 'static';
+    eCellClone.style.left = '';
+
+    const eCloneParent = document.createElement('div');
+
+    eCloneParent.append(eCellClone);
+    eDummyContainer.appendChild(eCloneParent);
   }
 
   /**

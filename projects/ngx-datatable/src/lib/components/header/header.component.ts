@@ -93,6 +93,7 @@ import { DataTableHeaderCellComponent } from './header-cell.component';
                 [ariaHeaderCheckboxMessage]="ariaHeaderCheckboxMessage"
                 (resize)="onColumnResized($event)"
                 (resizing)="onColumnResizing($event)"
+                (fitToContent)="onColumnFitToContent($event, column)"
                 (longPressStart)="onLongPressStart($event)"
                 (longPressEnd)="onLongPressEnd($event)"
                 (sort)="onSort($event)"
@@ -198,6 +199,10 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
     event: MouseEvent;
     column: TableColumnInternal;
   }>(false);
+  @Output() readonly fitToContent = new EventEmitter<{
+    headerElement: HTMLElement;
+    column: TableColumnInternal;
+  }>();
 
   _columnsByPin!: PinnedColumns[];
   _columnGroupWidths: any = {
@@ -272,6 +277,10 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
 
   onColumnResizing({ width, column }: { width: number; column: TableColumnInternal }): void {
     this.resizing.emit(this.makeResizeEvent(width, column));
+  }
+
+  onColumnFitToContent(headerElement: HTMLElement, column: TableColumnInternal) {
+    this.fitToContent.emit({ headerElement, column });
   }
 
   private makeResizeEvent(

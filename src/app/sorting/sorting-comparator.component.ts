@@ -49,7 +49,7 @@ export class SortingComparatorComponent {
     });
   }
 
-  companyComparator(propA: string, propB: string) {
+  companyComparator(propA: string, propB: string): number {
     // Just a simple sort function comparisoins
     if (propA.toLowerCase() < propB.toLowerCase()) {
       return -1;

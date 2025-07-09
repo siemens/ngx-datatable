@@ -201,7 +201,7 @@ describe('DataTablePagerComponent', () => {
     };
 
     describe('takes messages-overrides from table', () => {
-      const setMessages = (messages: DatatableComponent['messages']) => {
+      const setMessages = (messages: DatatableComponent['messages']): void => {
         (pager as any).dataTable = { messages };
         // do a change detection on the real changeDetectionRef
         fixture.componentRef.injector.get(ChangeDetectorRef).detectChanges();

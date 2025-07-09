@@ -8,7 +8,7 @@ import {
 /**
  * Returns the columns by pin.
  */
-export const columnsByPin = (cols: TableColumnInternal[]) => {
+export const columnsByPin = (cols: TableColumnInternal[]): TableColumnGroup => {
   const ret: TableColumnGroup = {
     left: [],
     center: [],
@@ -48,7 +48,7 @@ export const columnGroupWidths = (
 /**
  * Calculates the total width of all columns
  */
-export const columnTotalWidth = (columns?: TableColumnInternal[]) => {
+export const columnTotalWidth = (columns?: TableColumnInternal[]): number => {
   return columns?.reduce((total, column) => total + column.width, 0) ?? 0;
 };
 

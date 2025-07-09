@@ -185,7 +185,7 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
     this._offsetX = val;
     this.setStylesByGroup();
   }
-  get offsetX() {
+  get offsetX(): number {
     return this._offsetX;
   }
 
@@ -234,12 +234,12 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
   }: {
     event: MouseEvent | TouchEvent;
     model: TableColumnInternal<Row>;
-  }) {
+  }): void {
     model.dragging = true;
     this.dragEventTarget = event;
   }
 
-  onLongPressEnd({ model }: { model: TableColumnInternal<Row> }) {
+  onLongPressEnd({ model }: { model: TableColumnInternal<Row> }): void {
     this.dragEventTarget = undefined;
 
     // delay resetting so sort can be
@@ -378,7 +378,7 @@ export class DataTableHeaderComponent implements OnDestroy, OnChanges {
     return sorts;
   }
 
-  setStylesByGroup() {
+  setStylesByGroup(): void {
     this._styleByGroup.left = this.calcStylesByGroup('left');
     this._styleByGroup.center = this.calcStylesByGroup('center');
     this._styleByGroup.right = this.calcStylesByGroup('right');

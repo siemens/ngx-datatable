@@ -92,7 +92,7 @@ export class FullScreenTreeComponent {
     });
   }
 
-  onTreeAction(event: any) {
+  onTreeAction(event: any): void {
     const row = event.row;
     if (row.treeStatus === 'collapsed') {
       row.treeStatus = 'loading';

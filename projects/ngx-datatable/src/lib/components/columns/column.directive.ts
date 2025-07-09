@@ -105,7 +105,7 @@ export class DataTableColumnDirective<TRow extends Row> implements TableColumn, 
 
   private isFirstChange = true;
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     if (this.isFirstChange) {
       this.isFirstChange = false;
     } else {

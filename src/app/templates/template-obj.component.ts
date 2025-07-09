@@ -50,7 +50,13 @@ export class TemplateRefTemplatesComponent implements OnInit {
   @ViewChild('hdrTpl', { static: true }) hdrTpl!: TemplateRef<any>;
 
   rows: Employee[] = [];
-  columns: TableColumn[] = [];
+  columns: TableColumn[] = [
+    {
+      cellTemplate: this.editTmpl,
+      headerTemplate: this.hdrTpl,
+      name: 'Gender'
+    }
+  ];
 
   private dataService = inject(DataService);
 
@@ -60,7 +66,7 @@ export class TemplateRefTemplatesComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.columns = [
       {
         cellTemplate: this.editTmpl,

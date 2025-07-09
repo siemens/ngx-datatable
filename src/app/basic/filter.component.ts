@@ -60,7 +60,7 @@ export class FilterComponent {
     });
   }
 
-  updateFilter(event: KeyboardEvent) {
+  updateFilter(event: KeyboardEvent): void {
     const val = (event.target as HTMLInputElement).value.toLowerCase();
 
     // filter our data and update the rows

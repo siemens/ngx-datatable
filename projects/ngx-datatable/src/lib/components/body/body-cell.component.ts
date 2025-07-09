@@ -100,7 +100,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
     this.cd.markForCheck();
   }
 
-  get group() {
+  get group(): TRow[] | undefined {
     return this._group;
   }
 
@@ -111,7 +111,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
     this.cd.markForCheck();
   }
 
-  get rowHeight() {
+  get rowHeight(): number {
     return this._rowHeight;
   }
 
@@ -408,7 +408,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
     return html.replace(/<\/?[^>]+(>|$)/g, '');
   }
 
-  onTreeAction() {
+  onTreeAction(): void {
     this.treeAction.emit(this.row);
   }
 

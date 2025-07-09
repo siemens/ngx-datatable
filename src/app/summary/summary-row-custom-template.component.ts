@@ -57,7 +57,7 @@ export class SummaryRowCustomTemplateComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.columns = [
       {
         prop: 'name',
@@ -73,7 +73,7 @@ export class SummaryRowCustomTemplateComponent implements OnInit {
     return this.rows.map(row => row.name).map(fullName => fullName.split(' ')[1]);
   }
 
-  private summaryForGender(cells: string[]) {
+  private summaryForGender(cells: string[]): string {
     const males = cells.filter(cell => cell === 'male').length;
     const females = cells.filter(cell => cell === 'female').length;
 

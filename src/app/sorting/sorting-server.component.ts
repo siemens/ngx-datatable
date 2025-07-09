@@ -54,7 +54,7 @@ export class ServerSortingComponent {
     });
   }
 
-  onSort(event: SortEvent) {
+  onSort(event: SortEvent): void {
     // event was triggered, start sort sequence
     this.loading = true;
     // emulate a server request with a timeout

@@ -347,7 +347,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     this.recalcLayout();
   }
 
-  get bodyHeight() {
+  get bodyHeight(): string {
     return this._bodyHeight;
   }
 
@@ -446,7 +446,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     }
   }
 
-  private toggleStateChange(type: string, value: any) {
+  private toggleStateChange(type: string, value: any): void {
     if (type === 'group' || type === 'row') {
       this.toggleRowExpansion(value);
     }
@@ -785,11 +785,11 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     });
   }
 
-  onTreeAction(row: TRow) {
+  onTreeAction(row: TRow): void {
     this.treeAction.emit({ row });
   }
 
-  dragOver(event: DragEvent, dropRow: RowOrGroup<TRow>) {
+  dragOver(event: DragEvent, dropRow: RowOrGroup<TRow>): void {
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
@@ -800,7 +800,11 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     });
   }
 
-  drag(event: DragEvent, dragRow: RowOrGroup<TRow>, rowComponent: DataTableBodyRowComponent<TRow>) {
+  drag(
+    event: DragEvent,
+    dragRow: RowOrGroup<TRow>,
+    rowComponent: DataTableBodyRowComponent<TRow>
+  ): void {
     this._draggedRow = dragRow;
     this._draggedRowElement = rowComponent._element;
     this.rowDragEvents.emit({
@@ -811,7 +815,11 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     });
   }
 
-  drop(event: DragEvent, dropRow: RowOrGroup<TRow>, rowComponent: DataTableBodyRowComponent<TRow>) {
+  drop(
+    event: DragEvent,
+    dropRow: RowOrGroup<TRow>,
+    rowComponent: DataTableBodyRowComponent<TRow>
+  ): void {
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
@@ -827,7 +835,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     event: DragEvent,
     dropRow: RowOrGroup<TRow>,
     rowComponent: DataTableBodyRowComponent<TRow>
-  ) {
+  ): void {
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
@@ -843,7 +851,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     event: DragEvent,
     dropRow: RowOrGroup<TRow>,
     rowComponent: DataTableBodyRowComponent<TRow>
-  ) {
+  ): void {
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
@@ -855,7 +863,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     });
   }
 
-  dragEnd(event: DragEvent, dragRow: RowOrGroup<TRow>) {
+  dragEnd(event: DragEvent, dragRow: RowOrGroup<TRow>): void {
     event.preventDefault();
     this.rowDragEvents.emit({
       event,
@@ -867,7 +875,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     this._draggedRowElement = undefined;
   }
 
-  updateColumnGroupWidths() {
+  updateColumnGroupWidths(): void {
     const colsByPin = columnsByPin(this._columns);
     this.columnGroupWidths = columnGroupWidths(colsByPin, this._columns);
   }

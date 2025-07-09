@@ -66,7 +66,7 @@ export class SummaryRowInlineHtmlComponent {
     return this.rows.map(row => row.name).map(fullName => fullName.split(' ')[1]);
   }
 
-  summaryForGender(cells: string[]) {
+  summaryForGender(cells: string[]): string {
     const males = cells.filter(cell => cell === 'male').length;
     const females = cells.filter(cell => cell === 'female').length;
 

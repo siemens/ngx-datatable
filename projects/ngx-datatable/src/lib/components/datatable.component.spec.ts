@@ -550,7 +550,7 @@ describe('DatatableComponent With Frozen columns', () => {
 /**
  * mimics the act of a user clicking a column to sort it
  */
-const sortBy = ({ column }: { column: number }, fixture: ComponentFixture<unknown>) => {
+const sortBy = ({ column }: { column: number }, fixture: ComponentFixture<unknown>): void => {
   const columnIndex = column - 1;
   const headerCellDe = fixture.debugElement.queryAll(By.css('datatable-header-cell'))[columnIndex];
   const de = headerCellDe.query(By.css('span:last-child'));
@@ -564,7 +564,7 @@ const sortBy = ({ column }: { column: number }, fixture: ComponentFixture<unknow
 const textContent = (
   { row, column }: { row: number; column: number },
   fixture: ComponentFixture<unknown>
-) => {
+): string => {
   const [rowIndex, columnIndex] = [row - 1, column - 1];
   const bodyRowDe = fixture.debugElement.queryAll(By.directive(DataTableBodyRowComponent))[
     rowIndex

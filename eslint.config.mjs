@@ -47,6 +47,14 @@ export const tsConfig = typescriptEslint.config({
         ]
       }
     ],
+    '@typescript-eslint/explicit-function-return-type': [
+      'error',
+      {
+        allowExpressions: true,
+        allowTypedFunctionExpressions: true,
+        allowDirectConstAssertionInArrowFunctions: true
+      }
+    ],
     '@typescript-eslint/no-deprecated': ['off'],
     '@typescript-eslint/naming-convention': [
       'error',

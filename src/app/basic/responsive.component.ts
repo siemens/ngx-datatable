@@ -147,7 +147,7 @@ export class ResponsiveComponent {
     });
   }
 
-  onPage(event: PageEvent) {
+  onPage(event: PageEvent): void {
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
       // eslint-disable-next-line no-console
@@ -155,11 +155,11 @@ export class ResponsiveComponent {
     }, 100);
   }
 
-  toggleExpandRow(row: FullEmployee) {
+  toggleExpandRow(row: FullEmployee): void {
     this.table.rowDetail!.toggleExpandRow(row);
   }
 
-  onDetailToggle(event: DetailToggleEvents<FullEmployee>) {
+  onDetailToggle(event: DetailToggleEvents<FullEmployee>): void {
     // eslint-disable-next-line no-console
     console.log('Detail Toggled', event);
   }

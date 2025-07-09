@@ -49,7 +49,7 @@ export class DataTableSummaryRowComponent implements OnChanges {
   _internalColumns!: TableColumnInternal[];
   summaryRow: any = {};
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     if (!this.columns.length || !this.rows.length) {
       return;
     }
@@ -57,14 +57,14 @@ export class DataTableSummaryRowComponent implements OnChanges {
     this.updateValues();
   }
 
-  private updateInternalColumns() {
+  private updateInternalColumns(): void {
     this._internalColumns = this.columns.map(col => ({
       ...col,
       cellTemplate: col.summaryTemplate
     }));
   }
 
-  private updateValues() {
+  private updateValues(): void {
     this.summaryRow = {};
 
     this.columns

@@ -147,7 +147,7 @@ export class DatatableComponent<TRow extends Row = any>
     }
   }
 
-  get groupRowsBy() {
+  get groupRowsBy(): keyof TRow | undefined {
     return this._groupRowsBy;
   }
 
@@ -781,7 +781,7 @@ export class DatatableComponent<TRow extends Row = any>
    * Lifecycle hook that is called after a component's
    * content has been fully initialized.
    */
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     if (this.columnTemplates.length) {
       this.translateColumns(this.columnTemplates);
     }
@@ -835,7 +835,7 @@ export class DatatableComponent<TRow extends Row = any>
   /**
    * Translates the templates to the column objects
    */
-  translateColumns(val: QueryList<DataTableColumnDirective<TRow>>) {
+  translateColumns(val: QueryList<DataTableColumnDirective<TRow>>): void {
     if (val) {
       if (val.length) {
         this._internalColumns = toInternalColumn(val, this._defaultColumnWidth);
@@ -854,7 +854,7 @@ export class DatatableComponent<TRow extends Row = any>
    * @param originalArray the original array passed via parameter
    * @param groupBy the key of the column to group the data by
    */
-  groupArrayBy(originalArray: (TRow | undefined)[], groupBy: keyof TRow) {
+  groupArrayBy(originalArray: (TRow | undefined)[], groupBy: keyof TRow): Group<TRow>[] {
     // create a map to hold groups with their corresponding results
     const map = new Map<TRow[keyof TRow], TRow[]>();
     let i = 0;
@@ -875,7 +875,7 @@ export class DatatableComponent<TRow extends Row = any>
       i++;
     });
 
-    const addGroup = (key: TRow[keyof TRow], value: TRow[]) => ({ key, value });
+    const addGroup = (key: TRow[keyof TRow], value: TRow[]): Group<TRow> => ({ key, value });
 
     // convert map back to a simple array of objects
     return Array.from(map, x => addGroup(x[0], x[1]));
@@ -1019,7 +1019,7 @@ export class DatatableComponent<TRow extends Row = any>
   /**
    * The footer triggered a page event.
    */
-  onFooterPage(event: PagerPageEvent) {
+  onFooterPage(event: PagerPageEvent): void {
     this.offset = event.page - 1;
     this.bodyComponent.updateOffsetY(this.offset);
 
@@ -1259,7 +1259,7 @@ export class DatatableComponent<TRow extends Row = any>
   /**
    * A row was expanded or collapsed for tree
    */
-  onTreeAction(event: { row: TRow }) {
+  onTreeAction(event: { row: TRow }): void {
     const row = event.row;
     // TODO: For duplicated items this will not work
     const rowIndex = this._rows.findIndex(
@@ -1268,7 +1268,7 @@ export class DatatableComponent<TRow extends Row = any>
     this.treeAction.emit({ row, rowIndex });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 

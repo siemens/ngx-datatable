@@ -69,11 +69,11 @@ export class ServerScrollingComponent implements OnInit {
   private serverResultsService = inject(MockServerResultsService);
   private el = inject(ElementRef);
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.onScroll(0);
   }
 
-  onScroll(offsetY: number) {
+  onScroll(offsetY: number): void {
     // total height of all rows in the viewport
     const viewHeight = this.el.nativeElement.getBoundingClientRect().height - this.headerHeight;
 
@@ -95,7 +95,7 @@ export class ServerScrollingComponent implements OnInit {
     }
   }
 
-  private loadPage(limit: number) {
+  private loadPage(limit: number): void {
     // set the loading flag, which serves two purposes:
     // 1) it prevents the same page from being loaded twice
     // 2) it enables display of the loading indicator

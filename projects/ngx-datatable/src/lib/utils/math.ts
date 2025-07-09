@@ -5,7 +5,7 @@ import { columnsByPin, columnTotalWidth } from './column';
 /**
  * Calculates the Total Flex Grow
  */
-export const getTotalFlexGrow = (columns: TableColumn[]) => {
+export const getTotalFlexGrow = (columns: TableColumn[]): number => {
   let totalFlexGrow = 0;
 
   for (const c of columns) {
@@ -19,7 +19,10 @@ export const getTotalFlexGrow = (columns: TableColumn[]) => {
  * Adjusts the column widths.
  * Inspired by: https://github.com/facebookarchive/fixed-data-table/blob/master/src/FixedDataTableWidthHelper.js
  */
-export const adjustColumnWidths = (allColumns: TableColumnInternal[], expectedWidth: number) => {
+export const adjustColumnWidths = (
+  allColumns: TableColumnInternal[],
+  expectedWidth: number
+): void => {
   const columnsWidth = columnTotalWidth(allColumns);
   const totalFlexGrow = getTotalFlexGrow(allColumns);
   const colsByGroup = columnsByPin(allColumns);
@@ -32,7 +35,11 @@ export const adjustColumnWidths = (allColumns: TableColumnInternal[], expectedWi
 /**
  * Resizes columns based on the flexGrow property, while respecting manually set widths
  */
-const scaleColumns = (colsByGroup: TableColumnGroup, maxWidth: number, totalFlexGrow: number) => {
+const scaleColumns = (
+  colsByGroup: TableColumnGroup,
+  maxWidth: number,
+  totalFlexGrow: number
+): void => {
   const columns = Object.values(colsByGroup).flat();
   let remainingWidth = maxWidth;
 
@@ -118,7 +125,7 @@ export const forceFillColumnWidths = (
   allowBleed: boolean,
   defaultColWidth = 150,
   verticalScrollWidth = 0
-) => {
+): void => {
   const columnsToResize = allColumns
     .slice(startIdx + 1, allColumns.length)
     .filter(c => c.canAutoResize !== false);
@@ -171,7 +178,7 @@ export const forceFillColumnWidths = (
 const removeProcessedColumns = (
   columnsToResize: TableColumn[],
   columnsProcessed: TableColumn[]
-) => {
+): void => {
   for (const column of columnsProcessed) {
     const index = columnsToResize.indexOf(column);
     columnsToResize.splice(index, 1);

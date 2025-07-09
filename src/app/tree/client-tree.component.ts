@@ -64,7 +64,7 @@ export class ClientTreeComponent {
     this.dataService.load('company_tree.json').subscribe(data => (this.rows = data));
   }
 
-  onTreeAction(event: any) {
+  onTreeAction(event: any): void {
     const row = event.row;
     if (row.treeStatus === 'collapsed') {
       row.treeStatus = 'expanded';

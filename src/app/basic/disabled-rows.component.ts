@@ -103,16 +103,16 @@ export class DisabledRowsComponent {
     });
   }
 
-  isRowDisabled(row: FullEmployee & { isDisabled?: boolean }) {
+  isRowDisabled(row: FullEmployee & { isDisabled?: boolean }): boolean {
     return !(!row.isDisabled && row.age < 40);
   }
 
-  disableRow(rowIndex: number) {
+  disableRow(rowIndex: number): void {
     this.rows[rowIndex].isDisabled = true;
     this.rows = [...this.rows];
   }
 
-  updateValue(event: Event, cell: 'gender' | 'age', rowIndex: number) {
+  updateValue(event: Event, cell: 'gender' | 'age', rowIndex: number): void {
     const target = event.target as HTMLInputElement;
     this.rows = [...this.rows];
     if (cell === 'age' && this.rows[rowIndex][cell] > 40) {

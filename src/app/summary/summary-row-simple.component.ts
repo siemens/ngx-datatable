@@ -72,12 +72,12 @@ export class SummaryRowSimpleComponent {
     });
   }
 
-  onPositionSelectChange($event: Event) {
+  onPositionSelectChange($event: Event): void {
     const target = $event.target as HTMLSelectElement;
     this.summaryPosition = target.value;
   }
 
-  private summaryForGender(cells: string[]) {
+  private summaryForGender(cells: string[]): string {
     const males = cells.filter(cell => cell === 'male').length;
     const females = cells.filter(cell => cell === 'female').length;
 

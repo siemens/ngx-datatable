@@ -52,7 +52,7 @@ export class VisibilityDirective implements OnInit, OnDestroy {
   }
 
   runCheck(): void {
-    const check = () => {
+    const check = (): void => {
       // https://davidwalsh.name/offsetheight-visibility
       const { offsetHeight, offsetWidth } = this.element.nativeElement;
 

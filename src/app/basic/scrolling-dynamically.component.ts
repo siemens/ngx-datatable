@@ -98,7 +98,7 @@ export class ScrollingDynamicallyComponent {
     });
   }
 
-  updateValue(event: Event, cell: 'gender' | 'name', rowIndex: number) {
+  updateValue(event: Event, cell: 'gender' | 'name', rowIndex: number): void {
     this.editing[rowIndex + '-' + cell] = false;
     this.rows[rowIndex][cell] = (event.target as HTMLInputElement | HTMLSelectElement).value;
     this.rows = [...this.rows];

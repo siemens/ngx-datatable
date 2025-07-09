@@ -76,7 +76,7 @@ export class ContextMenuDemoComponent {
     });
   }
 
-  onTableContextMenu(contextMenuEvent: ContextMenuEvent<Employee>) {
+  onTableContextMenu(contextMenuEvent: ContextMenuEvent<Employee>): void {
     this.rawEvent = contextMenuEvent.event;
     if (contextMenuEvent.type === 'body') {
       this.contextmenuRow = contextMenuEvent.content;

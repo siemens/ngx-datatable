@@ -170,7 +170,7 @@ export class RowGroupingComponent {
     });
   }
 
-  checkGroup(event: Event, row: GroupedEmployee, rowIndex: number, group: GroupedEmployee[]) {
+  checkGroup(event: Event, row: GroupedEmployee, rowIndex: number, group: GroupedEmployee[]): void {
     let groupStatus = 'Pending';
     let expectedPaymentDealtWith = true;
     const target = event.target as HTMLInputElement;
@@ -273,17 +273,17 @@ export class RowGroupingComponent {
     console.log('expectedPaymentDealtWith', expectedPaymentDealtWith);
   }
 
-  updateValue(event: Event, cell: 'comment', rowIndex: number) {
+  updateValue(event: Event, cell: 'comment', rowIndex: number): void {
     this.editing[rowIndex + '-' + cell] = false;
     this.rows[rowIndex][cell] = (event.target as HTMLInputElement).value;
     this.rows = [...this.rows];
   }
 
-  toggleExpandGroup(group: Group<GroupedEmployee>) {
+  toggleExpandGroup(group: Group<GroupedEmployee>): void {
     this.table.groupHeader!.toggleExpandGroup(group);
   }
 
-  onDetailToggle(event: GroupToggleEvents<GroupedEmployee>) {
+  onDetailToggle(event: GroupToggleEvents<GroupedEmployee>): void {
     // eslint-disable-next-line no-console
     console.log('Detail Toggled', event);
   }

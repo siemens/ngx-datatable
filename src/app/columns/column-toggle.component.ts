@@ -74,7 +74,7 @@ export class ColumnToggleComponent {
 
   allColumns: TableColumn[] = [{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }];
 
-  toggle(col: TableColumn) {
+  toggle(col: TableColumn): void {
     const isChecked = this.isChecked(col);
 
     if (isChecked) {
@@ -84,7 +84,7 @@ export class ColumnToggleComponent {
     }
   }
 
-  isChecked(col: TableColumn) {
+  isChecked(col: TableColumn): boolean {
     return this.columns.find(c => c.name === col.name) !== undefined;
   }
 }

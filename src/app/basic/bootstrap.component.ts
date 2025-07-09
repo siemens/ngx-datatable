@@ -59,7 +59,7 @@ export class BootstrapThemeComponent {
     });
   }
 
-  private summaryForGender(cells: string[]) {
+  private summaryForGender(cells: string[]): string {
     const males = cells.filter(cell => cell === 'male').length;
     const females = cells.filter(cell => cell === 'female').length;
 

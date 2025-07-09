@@ -57,7 +57,7 @@ describe('OrderableDirective', () => {
     });
 
     describe('when a draggable is removed', () => {
-      const checkAllSubscriptionsForActiveObservers = () => {
+      const checkAllSubscriptionsForActiveObservers = (): void => {
         const subs = directive.draggables().map(d => {
           expect(d.dragStart['listeners']).not.toHaveSize(0);
           expect(d.dragEnd['listeners']).not.toHaveSize(0);

@@ -266,7 +266,7 @@ class TestFixtureComponent {
   @ViewChild('testTemplate', { read: TemplateRef, static: true })
   testTemplate!: TemplateRef<any>;
 
-  onPageEvent() {
+  onPageEvent(): void {
     return;
   }
 }
@@ -282,7 +282,7 @@ class Page {
   pageCount!: DebugElement;
   datatablePager!: DebugElement;
 
-  detectChangesAndRunQueries() {
+  detectChangesAndRunQueries(): void {
     fixture.detectChanges();
 
     const de = fixture.debugElement;

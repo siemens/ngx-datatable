@@ -63,7 +63,7 @@ export class VirtualScrollComponent {
     });
   }
 
-  onPage(event: PageEvent) {
+  onPage(event: PageEvent): void {
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
       // eslint-disable-next-line no-console
@@ -71,7 +71,7 @@ export class VirtualScrollComponent {
     }, 100);
   }
 
-  getRowHeight(row: FullEmployee & { height: number }) {
+  getRowHeight(row: FullEmployee & { height: number }): number {
     return row.height;
   }
 }

@@ -111,7 +111,7 @@ export class DataTableBodyRowComponent<TRow extends Row = any> implements DoChec
 
   @Input() disabled?: boolean;
 
-  get cssClass() {
+  get cssClass(): string {
     let cls = 'datatable-body-row';
 
     if (this.rowClass) {
@@ -213,7 +213,7 @@ export class DataTableBodyRowComponent<TRow extends Row = any> implements DoChec
     this._columnGroupWidths = columnGroupWidths(colsByPin, this._columns);
   }
 
-  onTreeAction() {
+  onTreeAction(): void {
     this.treeAction.emit();
   }
 

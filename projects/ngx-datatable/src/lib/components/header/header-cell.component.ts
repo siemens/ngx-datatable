@@ -98,7 +98,7 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
     this._allRowsSelected = value;
     this.cellContext.allRowsSelected = value;
   }
-  get allRowsSelected() {
+  get allRowsSelected(): boolean | undefined {
     return this._allRowsSelected;
   }
 
@@ -240,7 +240,7 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
     this.onSort();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.sortClass = this.calcSortClass(this.sortDir);
     // If there is already a default sort then start the counter with 1.
     if (this.sortDir) {
@@ -248,7 +248,7 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.destroySubscription();
   }
 

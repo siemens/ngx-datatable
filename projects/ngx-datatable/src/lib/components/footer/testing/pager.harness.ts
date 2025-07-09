@@ -11,38 +11,38 @@ export class PagerHarness extends ComponentHarness {
   private currentPageElement = this.locatorFor('.pages.active');
 
   /** Returns the amount of currently rendered page buttons. */
-  async pageCount() {
+  async pageCount(): Promise<number> {
     return this.pages().then(pages => pages.length);
   }
 
-  async currentPage() {
+  async currentPage(): Promise<number> {
     return this.currentPageElement()
       .then(page => page.text())
       .then(text => parseInt(text));
   }
 
-  async hasPrevious() {
+  async hasPrevious(): Promise<boolean> {
     return this.previous()
       .then(previous => previous.hasClass('disabled'))
       .then(disabled => !disabled);
   }
 
-  async hasNext() {
+  async hasNext(): Promise<boolean> {
     return this.next()
       .then(next => next.hasClass('disabled'))
       .then(disabled => !disabled);
   }
 
-  async clickPrevious() {
+  async clickPrevious(): Promise<void> {
     return this.previousButton().then(previous => previous.click());
   }
 
-  async clickNext() {
+  async clickNext(): Promise<void> {
     return this.nextButton().then(next => next.click());
   }
 
   /** Clicks a page by the visible page number. */
-  async clickPage(pageNumber: number) {
+  async clickPage(pageNumber: number): Promise<void> {
     const pages = await this.pages();
     return await parallel(() => pages.map(page => page.text()))
       .then(pageTexts => pageTexts.indexOf(`${pageNumber}`))
@@ -50,7 +50,7 @@ export class PagerHarness extends ComponentHarness {
   }
 
   /** Returns the range of rendered pages in the format: `first-last` */
-  async pageRange() {
+  async pageRange(): Promise<string> {
     return this.pages()
       .then(pages => parallel(() => [pages[0].text(), pages[pages.length - 1].text()]))
       .then(counts => counts.join('-'));

@@ -49,7 +49,7 @@ export class ServerPagingComponent implements OnInit {
   rows: Employee[] = [];
   private serverResultsService = inject(MockServerResultsService);
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.setPage(0);
   }
 
@@ -57,7 +57,7 @@ export class ServerPagingComponent implements OnInit {
    * Populate the table with new data based on the page number
    * @param page The page to select
    */
-  setPage(page: number) {
+  setPage(page: number): void {
     this.page.pageNumber = page;
     this.serverResultsService.getResults(this.page).subscribe(pagedData => {
       this.page = pagedData.page;

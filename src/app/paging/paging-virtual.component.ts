@@ -60,7 +60,7 @@ export class VirtualPagingComponent {
 
   private serverResultsService = inject(MockServerResultsService);
 
-  setPage(pageInfo: PageEvent) {
+  setPage(pageInfo: PageEvent): void {
     // Current page number is determined by last call to setPage
     // This is the page the UI is currently displaying
     // The current page is based on the UI pagesize and scroll position

@@ -8,7 +8,7 @@ export const throttle = (func: any, wait: number, options?: any) => {
   let timeout: any = null;
   let previous = 0;
 
-  const later = () => {
+  const later = (): void => {
     previous = options.leading === false ? 0 : +new Date();
     timeout = null;
     result = func(...args);

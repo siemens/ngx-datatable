@@ -29,7 +29,7 @@ export class DisableRowDirective {
     });
   }
 
-  private disableAllElements() {
+  private disableAllElements(): void {
     const hostElement = this.elementRef?.nativeElement;
     if (!hostElement) {
       return;

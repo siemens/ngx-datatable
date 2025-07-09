@@ -87,15 +87,15 @@ export class LiveDataComponent {
     this.active = false;
   }
 
-  add() {
+  add(): void {
     this.rows.splice(0, 0, this.temp[this.count++]);
   }
 
-  remove() {
+  remove(): void {
     this.rows.splice(0, this.rows.length);
   }
 
-  updateRandom() {
+  updateRandom(): void {
     const rowNum = this.randomNum(0, 5);
     const cellNum = this.randomNum(0, 3);
     const newRow = this.randomNum(0, 100);

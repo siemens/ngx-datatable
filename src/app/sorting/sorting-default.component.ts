@@ -57,7 +57,7 @@ export class DefaultSortingComponent implements OnInit {
 
   private dataService = inject(DataService);
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.dataService.load('company.json').subscribe(data => {
       this.rows = data;
     });

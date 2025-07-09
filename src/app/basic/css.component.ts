@@ -52,7 +52,7 @@ export class RowCssComponent {
     });
   }
 
-  getRowClass(row: FullEmployee) {
+  getRowClass(row: FullEmployee): { [key: string]: boolean } {
     return {
       'age-is-ten': row.age % 10 === 0
     };

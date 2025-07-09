@@ -73,7 +73,7 @@ export class DragDropComponent {
     });
   }
 
-  drop(event: CdkDragDrop<any>) {
+  drop(event: CdkDragDrop<any>): void {
     moveItemInArray(this.rows, event.previousIndex, event.currentIndex);
     this.rows = [...this.rows];
   }

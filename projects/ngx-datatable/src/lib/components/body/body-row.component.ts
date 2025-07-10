@@ -45,7 +45,6 @@ import { DataTableBodyCellComponent } from './body-cell.component';
               tabindex="-1"
               [row]="row"
               [group]="group"
-              [expanded]="expanded"
               [isSelected]="isSelected"
               [rowIndex]="rowIndex"
               [column]="column"

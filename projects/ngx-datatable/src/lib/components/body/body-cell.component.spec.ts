@@ -1,28 +1,145 @@
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { Component, ComponentRef, TemplateRef, viewChild, AfterViewInit } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
+import { TableColumnInternal } from '../../types/internal.types';
 import { toInternalColumn } from '../../utils/column-helper';
 import { numericIndexGetter } from '../../utils/column-prop-getters';
 import { DataTableBodyCellComponent } from './body-cell.component';
+import { BodyCellHarness } from './testing/body-cell.harness';
+
+@Component({
+  selector: 'mock-cell-template',
+  imports: [DataTableBodyCellComponent],
+  template: `<ng-template #template let-row="row">Custom Cell Template {{ row.id }} </ng-template>
+    <datatable-body-cell [row]="row" [column]="column" /> `
+})
+class MockCellTemplateComponent implements AfterViewInit {
+  row = { id: 1 };
+  column: TableColumnInternal<any> = toInternalColumn([{ prop: 'id' }])[0];
+  readonly template = viewChild('template', { read: TemplateRef<any> });
+
+  ngAfterViewInit() {
+    this.column = {
+      ...this.column,
+      cellTemplate: this.template()
+    };
+  }
+}
 
 describe('DataTableBodyCellComponent', () => {
   let fixture: ComponentFixture<DataTableBodyCellComponent>;
-  let component: DataTableBodyCellComponent;
+  let component: ComponentRef<DataTableBodyCellComponent>;
+  let harness: BodyCellHarness;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(waitForAsync(async () => {
     fixture = TestBed.createComponent(DataTableBodyCellComponent);
-    component = fixture.componentInstance;
+    component = fixture.componentRef;
+    component.setInput('row', ['Hello']);
+    component.setInput('column', {});
+    component.setInput('ariaRowCheckboxMessage', 'checkbox message');
+    harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, BodyCellHarness);
   }));
 
-  describe('prop tests', () => {
-    // verify there wasn't a mistake where the falsey 0 value
-    // resulted in a code path for missing column prop
-    it('should get value from zero-index prop', () => {
-      component.row = ['Hello'];
-      const columns = toInternalColumn([{ name: 'First Column', prop: 0 }]);
-      expect(columns[0].$$valueGetter).toBe(numericIndexGetter);
+  it('should get value from zero-index prop', async () => {
+    const columns = toInternalColumn([{ name: 'First Column', prop: 0 }]);
+    expect(columns[0].$$valueGetter).toBe(numericIndexGetter);
 
-      component.column = columns[0];
-      expect(component.value).toEqual('Hello');
+    component.setInput('column', columns[0]);
+
+    const cellText = await harness.getBodyCellText();
+    expect(cellText).toEqual('Hello');
+  });
+
+  it('should have min width when column has minWidth', async () => {
+    const columns = toInternalColumn([{ name: 'Min Width Column', prop: 0, minWidth: 500 }]);
+    component.setInput('column', columns[0]);
+
+    const cellElement = await harness.bodyCellWidth();
+    expect(cellElement).toBe(500);
+  });
+
+  it('should honour maxWidth when provided', async () => {
+    const columns = toInternalColumn([{ name: 'Min Width Column', prop: 0, maxWidth: 10 }]);
+    component.setInput('column', columns[0]);
+
+    const cellElement = await harness.bodyCellWidth();
+    expect(cellElement).toBe(10);
+  });
+
+  describe('checkboxable', () => {
+    beforeEach(() => {
+      component.setInput('row', { id: 1 });
+      const columns = toInternalColumn([{ name: 'Checkbox', prop: 'id', checkboxable: true }]);
+      component.setInput('column', columns[0]);
+    });
+
+    it('should rendder checkbox', async () => {
+      const checkbox = await harness.getCheckbox();
+      expect(checkbox).not.toBeNull();
+    });
+
+    it('should emit activate event on checkbox click', async () => {
+      const checkbox = await harness.getCheckbox();
+      expect(checkbox).not.toBeNull();
+
+      const activateEventSpy = spyOn(component.instance.activate, 'emit');
+
+      checkbox?.click();
+      expect(activateEventSpy).toHaveBeenCalled();
+    });
+
+    it('should not emit activate event on checkbox click when disabled', async () => {
+      component.setInput('disabled', true);
+      const checkbox = await harness.getCheckbox();
+      expect(checkbox).not.toBeNull();
+
+      const activateEventSpy = spyOn(component.instance.activate, 'emit');
+
+      checkbox?.click();
+      expect(activateEventSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('treeToggle', () => {
+    beforeEach(() => {
+      component.setInput('row', { id: 1 });
+      const columns = toInternalColumn([{ name: 'Tree', prop: 'id', isTreeColumn: true }]);
+      component.setInput('column', columns[0]);
+    });
+
+    it('should render tree toggle button when isTreeColumn is true', async () => {
+      const button = await harness.hasTreeToggleButton();
+      expect(button).toBe(true);
+    });
+
+    it('should be collapsed by default', async () => {
+      const isCollapsed = await harness.getTreeToggleButtonStatus();
+      expect(isCollapsed).toBe('collapsed');
+    });
+
+    it('should emit treeAction event on button click', async () => {
+      const button = await harness.hasTreeToggleButton();
+      expect(button).toBe(true);
+
+      const treeActionSpy = spyOn(component.instance.treeAction, 'emit');
+
+      await harness.clickTreeToggleButton();
+      expect(treeActionSpy).toHaveBeenCalledWith({ id: 1 });
+    });
+  });
+
+  describe('cell template', () => {
+    let templateFixture: ComponentFixture<MockCellTemplateComponent>;
+    beforeEach(async () => {
+      templateFixture = TestBed.createComponent(MockCellTemplateComponent);
+      harness = await TestbedHarnessEnvironment.harnessForFixture(templateFixture, BodyCellHarness);
+      templateFixture.detectChanges();
+    });
+
+    it('should render custom cell template when provided along with cell context', async () => {
+      const cellText = await harness.getBodyCellText();
+      expect(cellText).toBe('Custom Cell Template 1'); // Assuming the template renders this text
     });
   });
 });

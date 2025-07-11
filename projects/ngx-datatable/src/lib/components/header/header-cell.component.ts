@@ -296,7 +296,7 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
   }
 
   protected onMousedown(event: MouseEvent | TouchEvent): void {
-    const isMouse = event instanceof MouseEvent;
+    const isMouse = event instanceof MouseEvent || event.type === 'mousedown';
     const initialWidth = this.element.clientWidth;
     const { screenX } = getPositionFromEvent(event);
     event.stopPropagation();

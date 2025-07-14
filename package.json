@@ -89,7 +89,7 @@
     "stylelint-use-logical-spec": "5.0.1",
     "ts-node": "^10.9.2",
     "typescript": "~5.5.4",
-    "typescript-eslint": "8.36.0"
+    "typescript-eslint": "8.37.0"
   },
   "optionalDependencies": {
     "@axe-core/playwright": "4.10.2",

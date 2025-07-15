@@ -3,7 +3,7 @@ import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DatatableComponent
-} from 'projects/ngx-datatable/src/public-api';
+} from '@siemens/ngx-datatable';
 
 import { TreeEmployee } from '../data.model';
 import { DataService } from '../data.service';

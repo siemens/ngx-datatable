@@ -1,9 +1,5 @@
 import { Component, inject } from '@angular/core';
-import {
-  ContextMenuEvent,
-  DatatableComponent,
-  TableColumn
-} from 'projects/ngx-datatable/src/public-api';
+import { ContextMenuEvent, DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';

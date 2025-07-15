@@ -4,7 +4,7 @@ import {
   DataTableColumnDirective,
   DatatableComponent,
   TreeStatus
-} from 'projects/ngx-datatable/src/public-api';
+} from '@siemens/ngx-datatable';
 
 import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';

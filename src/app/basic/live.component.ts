@@ -1,8 +1,5 @@
 import { Component, inject, ViewChild } from '@angular/core';
-import {
-  DataTableColumnDirective,
-  DatatableComponent
-} from 'projects/ngx-datatable/src/public-api';
+import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';

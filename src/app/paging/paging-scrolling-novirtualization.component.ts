@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { DatatableComponent } from 'projects/ngx-datatable/src/public-api';
+import { DatatableComponent } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
 import { MockServerResultsService } from './mock-server-results-service';

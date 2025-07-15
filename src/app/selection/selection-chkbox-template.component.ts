@@ -6,7 +6,7 @@ import {
   DataTableColumnHeaderDirective,
   DatatableComponent,
   SelectEvent
-} from 'projects/ngx-datatable/src/public-api';
+} from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';

@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, Injectable, OnInit } from '@angular/core';
-import { DatatableComponent } from 'projects/ngx-datatable/src/public-api';
+import { DatatableComponent } from '@siemens/ngx-datatable';
 import { Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import data from 'src/assets/data/company.json';

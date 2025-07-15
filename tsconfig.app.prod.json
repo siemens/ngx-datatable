@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "paths": {
+      "@siemens/ngx-datatable": ["dist/ngx-datatable"]
+    }
+  }
+}

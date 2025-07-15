@@ -7,7 +7,7 @@ import {
   DatatableGroupHeaderTemplateDirective,
   Group,
   GroupToggleEvents
-} from 'projects/ngx-datatable/src/public-api';
+} from '@siemens/ngx-datatable';
 
 import { GroupedEmployee } from '../data.model';
 import { DataService } from '../data.service';

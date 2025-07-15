@@ -16,8 +16,7 @@
     "esModuleInterop": true,
     "noUnusedLocals": true,
     "paths": {
-      "@siemens/ngx-datatable": ["dist/ngx-datatable"],
-      "@siemens/ngx-datatable/*": ["dist/ngx-datatable/*"]
+      "@siemens/ngx-datatable": ["projects/ngx-datatable/src/public-api.ts"]
     },
     "useDefineForClassFields": false,
     "strict": true

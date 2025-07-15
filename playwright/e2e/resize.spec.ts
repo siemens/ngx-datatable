@@ -20,7 +20,7 @@ test.describe('resize and pinning', () => {
     await si.runVisualAndA11yTests('check-resize-attribute');
 
     // Resize name column
-    const resizeHandler = nameColumn.locator('span[class="resize-handle"]');
+    const resizeHandler = nameColumn.locator('.resize-handle');
     const originBoundingBox = await resizeHandler.boundingBox();
     const increaseWidthBy = 300;
 

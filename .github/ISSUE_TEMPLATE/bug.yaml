@@ -1,0 +1,52 @@
+name: Bug Report
+title: '[BUG]: '
+labels: ['bug']
+description: |
+  Please use this template to submit a bug report for ngx-datatable. 
+  Ensure that you have searched the existing issues to avoid duplicates.
+body:
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current Behavior
+      description: Describe the current behavior.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: Describe the expected behavior.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction of the Issue
+      description: |
+        Please provide the steps to reproduce the issue and a simple reproduction. 
+        You can use this stackblitz example: https://stackblitz.com/fork/github/siemens/ngx-datatable/tree/main/projects/stackblitz
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: |
+        Please provide the version of ngx-datatable you are using.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: What browsers are you seeing the problem on?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge

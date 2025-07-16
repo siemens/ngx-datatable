@@ -17,12 +17,12 @@ describe('DataTableBodyCellComponent', () => {
     // verify there wasn't a mistake where the falsey 0 value
     // resulted in a code path for missing column prop
     it('should get value from zero-index prop', () => {
-      component.row = ['Hello'];
+      fixture.componentRef.setInput('row', ['Hello']);
       const columns = toInternalColumn([{ name: 'First Column', prop: 0 }]);
       expect(columns[0].$$valueGetter).toBe(numericIndexGetter);
 
-      component.column = columns[0];
-      expect(component.value).toEqual('Hello');
+      fixture.componentRef.setInput('column', columns[0]);
+      expect(component.value()).toEqual('Hello');
     });
   });
 });

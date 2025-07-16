@@ -1,6 +1,6 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
     "config:recommended",
     "group:allNonMajor",
     ":semanticCommits",
@@ -8,23 +8,23 @@
     ":prHourlyLimitNone",
     ":prConcurrentLimitNone"
   ],
-  "addLabels": ["dep-bump"],
-  "customManagers": [
+  addLabels: ["dep-bump"],
+  customManagers: [
     {
-      "customType": "regex",
-      "fileMatch": ["e2e-local.sh"],
-      "matchStrings": [
+      customType: "regex",
+      managerFilePatterns: ["/e2e-local.sh/"],
+      matchStrings: [
         "PLAYWRIGHT_IMAGE=\"(?<packageName>mcr\\.microsoft\\.com/playwright):(?<currentValue>[^\\s]+)\""
       ],
-      "datasourceTemplate": "docker"
+      datasourceTemplate: "docker"
     }
   ],
-  "packageRules": [
+  packageRules: [
     {
-      "description": [
+      description: [
         "Prevent Angular related major and minor updates. Those should be manually done"
       ],
-      "matchPackageNames": [
+      matchPackageNames: [
         "@angular/**",
         "@angular-devkit/**",
         "@angular-eslint/**",
@@ -36,13 +36,13 @@
         "zone.js",
         "tslib"
       ],
-      "matchUpdateTypes": ["major", "minor"],
-      "enabled": false
+      matchUpdateTypes: ["major", "minor"],
+      enabled: false
     },
     {
-      "groupName": "Angular dependencies",
-      "description": ["Update Angular packages"],
-      "matchPackageNames": [
+      groupName: "Angular dependencies",
+      description: ["Update Angular packages"],
+      matchPackageNames: [
         "@angular/**",
         "@angular-devkit/**",
         "@angular-eslint/**",
@@ -54,13 +54,13 @@
         "zone.js",
         "tslib"
       ],
-      "matchUpdateTypes": ["patch"],
-      "enabled": true
+      matchUpdateTypes: ["patch"],
+      enabled: true
     },
     {
-      "groupName": "E2E dependencies",
-      "description": ["Update E2E packages"],
-      "matchPackageNames": [
+      groupName: "E2E dependencies",
+      description: ["Update E2E packages"],
+      matchPackageNames: [
         "@playwright/**",
         "@axe-core/**",
         "axe-html-reporter",
@@ -68,10 +68,10 @@
       ]
     },
     {
-      "description": ["Node LTS gitlab-ci update"],
-      "matchPackageNames": ["node"],
-      "matchDatasources": ["docker"],
-      "enabled": true
+      description: ["Node LTS gitlab-ci update"],
+      matchPackageNames: ["node"],
+      matchDatasources: ["docker"],
+      enabled: true
     }
   ]
 }

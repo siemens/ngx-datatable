@@ -138,6 +138,7 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
   }>(false);
   @Output() readonly resize = new EventEmitter<{ width: number; column: TableColumnInternal }>();
   @Output() readonly resizing = new EventEmitter<{ width: number; column: TableColumnInternal }>();
+  @Output() readonly fitToContent = new EventEmitter<HTMLElement>();
 
   @HostBinding('class')
   get columnCssClasses(): string {
@@ -238,6 +239,15 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
   @HostListener('keydown.enter')
   enter(): void {
     this.onSort();
+  }
+
+  @HostListener('dblclick', ['$event'])
+  onDblClick(event: MouseEvent): void {
+    const isHandle = (event.target as HTMLElement).classList.contains('resize-handle');
+    if (isHandle) {
+      event.stopPropagation();
+      this.fitToContent.emit(this.element);
+    }
   }
 
   ngOnInit() {

@@ -44,6 +44,7 @@ import { DataTableBodyCellComponent } from './body-cell.component';
             <datatable-body-cell
               role="cell"
               tabindex="-1"
+              [attr.header-id]="column.$$id"
               [row]="row"
               [group]="group"
               [expanded]="expanded"

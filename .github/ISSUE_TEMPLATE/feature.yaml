@@ -1,0 +1,31 @@
+name: Feature Request
+title: '[FEATURE]: '
+labels: ['enhancement']
+description: |
+  Please use this template to submit a feature request for ngx-datatable. 
+  Ensure that you have searched the existing issues to avoid duplicates.
+body:
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this feature needed? What problem does it solve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed solution
+      description: Describe the solution you would like to see implemented.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: |
+        Please describe any alternative solutions or features you considered.
+    validations:
+      required: true

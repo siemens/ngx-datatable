@@ -60,12 +60,13 @@ jobs:
           path: coverage/ngx-datatable-lib
 
       - name: Publish coverage results
-        uses: paambaati/codeclimate-action@v9.0.0
+        uses: qltysh/qlty-action/coverage@v1
         env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+          QLTY_COVERAGE_TOKEN: ${{ secrets.QLTY_COVERAGE_TOKEN }}
         with:
-          coverageLocations: ${{github.workspace}}/coverage/ngx-datatable-lib/lcov.info:lcov
-        if: env.CC_TEST_REPORTER_ID
+          token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
+          files: ${{github.workspace}}/coverage/ngx-datatable-lib/lcov.info
+        if: env.QLTY_COVERAGE_TOKEN
 
   e2e:
     runs-on: ubuntu-latest

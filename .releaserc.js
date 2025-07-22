@@ -5,8 +5,8 @@ export default {
   tagFormat: '${version}',
   branches: [
     {
-      name: 'maintenance/+([0-9])?(.{+([0-9]),x}).x',
-      channel: "${name.replace(/^maintenance\\\\//g, '')}"
+      name: 'release/+([0-9])?(.{+([0-9]),x}).x',
+      channel: "${name.replace(/^release\\\\//g, '')}"
     },
     'main',
     {

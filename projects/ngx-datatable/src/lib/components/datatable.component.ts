@@ -768,7 +768,7 @@ export class DatatableComponent<TRow extends Row = any>
         optionalGetterForProp(this.treeToRelation)
       );
 
-      if (this._groupRowsBy) {
+      if (this._groupRowsBy && rowDiffers) {
         // If a column has been specified in _groupRowsBy create a new array with the data grouped by that row
         this.groupedRows = this.groupArrayBy(this._rows, this._groupRowsBy);
       }

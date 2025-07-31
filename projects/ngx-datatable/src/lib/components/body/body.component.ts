@@ -422,6 +422,8 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       }
       if (this.trackByProp && row) {
         return (row as any)[this.trackByProp];
+      } else if (row && this.isGroup(row)) {
+        return row.key ?? index;
       } else {
         return row ?? index;
       }

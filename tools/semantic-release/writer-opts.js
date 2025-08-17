@@ -28,12 +28,13 @@ function transform(commit) {
 
   if (hiddenTypes.has(commit.type)) {
     if (normalizedNotes.length > 0) {
-      normalizedNotes.map(note => ({
+      const transformedNotes = normalizedNotes.map(note => ({
+        ...note,
         text: `${commit.scope ? `**${commit.scope}:** ` : ''}${note.text}`
       }));
       // Add to the hiddenTypeCommitNotes if there are notes and the type is hidden
       // The notes will be added to the context in finalizeContext
-      hiddenTypeCommitNotes.push(...normalizedNotes);
+      hiddenTypeCommitNotes.push(...transformedNotes);
     }
     return;
   }

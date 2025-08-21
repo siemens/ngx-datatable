@@ -41,12 +41,27 @@ export class PagerHarness extends ComponentHarness {
     return this.nextButton().then(next => next.click());
   }
 
+  async pressPrevious(key: ' ' | 'Enter') {
+    return this.previousButton().then(previous => previous.dispatchEvent('keydown', { key }));
+  }
+
+  async pressNext(key: ' ' | 'Enter') {
+    return this.nextButton().then(next => next.dispatchEvent('keydown', { key }));
+  }
+
   /** Clicks a page by the visible page number. */
   async clickPage(pageNumber: number) {
     const pages = await this.pages();
     return await parallel(() => pages.map(page => page.text()))
       .then(pageTexts => pageTexts.indexOf(`${pageNumber}`))
       .then(index => pages[index].click());
+  }
+
+  async pressPage(pageNumber: number, key: ' ' | 'Enter') {
+    const pages = await this.pages();
+    return await parallel(() => pages.map(page => page.text()))
+      .then(pageTexts => pageTexts.indexOf(`${pageNumber}`))
+      .then(index => pages[index].dispatchEvent('keydown', { key }));
   }
 
   /** Returns the range of rendered pages in the format: `first-last` */

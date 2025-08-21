@@ -29,9 +29,11 @@ import { DatatableComponent } from '../datatable.component';
     <ul class="pager">
       <li [class.disabled]="!canPrevious()">
         <a
-          tabindex="0"
           role="button"
+          [tabindex]="canPrevious() ? 0 : -1"
           [attr.aria-label]="messages.ariaFirstPageMessage ?? 'go to first page'"
+          (keydown.enter)="selectPage(1)"
+          (keydown.space)="selectPage(1)"
           (click)="selectPage(1)"
         >
           <i [class]="pagerPreviousIcon() ?? 'datatable-icon-prev'"></i>
@@ -39,9 +41,11 @@ import { DatatableComponent } from '../datatable.component';
       </li>
       <li [class.disabled]="!canPrevious()">
         <a
-          tabindex="0"
           role="button"
+          [tabindex]="canPrevious() ? 0 : -1"
           [attr.aria-label]="messages.ariaPreviousPageMessage ?? 'go to previous page'"
+          (keydown.enter)="prevPage()"
+          (keydown.space)="prevPage()"
           (click)="prevPage()"
         >
           <i [class]="pagerLeftArrowIcon() ?? 'datatable-icon-left'"></i>
@@ -53,16 +57,24 @@ import { DatatableComponent } from '../datatable.component';
           [attr.aria-label]="(messages.ariaPageNMessage ?? 'page') + ' ' + pg.number"
           [class.active]="pg.number === page()"
         >
-          <a tabindex="0" role="button" (click)="selectPage(pg.number)">
+          <a
+            tabindex="0"
+            role="button"
+            (keydown.enter)="selectPage(pg.number)"
+            (keydown.space)="selectPage(pg.number)"
+            (click)="selectPage(pg.number)"
+          >
             {{ pg.text }}
           </a>
         </li>
       }
       <li [class.disabled]="!canNext()">
         <a
-          tabindex="0"
           role="button"
+          [tabindex]="canNext() ? 0 : -1"
           [attr.aria-label]="messages.ariaNextPageMessage ?? 'go to next page'"
+          (keydown.enter)="nextPage()"
+          (keydown.space)="nextPage()"
           (click)="nextPage()"
         >
           <i [class]="pagerRightArrowIcon() ?? 'datatable-icon-right'"></i>
@@ -70,9 +82,11 @@ import { DatatableComponent } from '../datatable.component';
       </li>
       <li [class.disabled]="!canNext()">
         <a
-          tabindex="0"
           role="button"
+          [tabindex]="canNext() ? 0 : -1"
           [attr.aria-label]="messages.ariaLastPageMessage ?? 'go to last page'"
+          (keydown.enter)="selectPage(totalPages())"
+          (keydown.space)="selectPage(totalPages())"
           (click)="selectPage(totalPages())"
         >
           <i [class]="pagerNextIcon() ?? 'datatable-icon-skip'"></i>

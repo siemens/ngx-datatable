@@ -1,3 +1,16 @@
+# [24.2.0](https://github.com/siemens/ngx-datatable/compare/24.1.0...24.2.0) (2025-08-21)
+
+
+### Features
+
+* support custom classes for tree toggle icons ([117d24e](https://github.com/siemens/ngx-datatable/commit/117d24eb310655f5490457d8d833bf4496c262f7))
+
+
+### Bug Fixes
+
+* **pagination:** allow space/enter event to paginate ([714c5c0](https://github.com/siemens/ngx-datatable/commit/714c5c04d5946fa383bc6183c4cf48d05a771829)), closes [#373](https://github.com/siemens/ngx-datatable/issues/373)
+* rows are not interactive when using disableRowCheck with grouped rows ([c689f09](https://github.com/siemens/ngx-datatable/commit/c689f09a46d44121d79e83cb21f8c3ee727a9e25))
+
 # [24.1.0](https://github.com/siemens/ngx-datatable/compare/24.0.0...24.1.0) (2025-07-16)
 
 

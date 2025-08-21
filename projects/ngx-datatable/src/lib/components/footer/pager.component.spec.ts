@@ -106,6 +106,15 @@ describe('DataTablePagerComponent', () => {
       expect(await harness.currentPage()).toEqual(1);
     });
 
+    it('should set current page to previous page when space/enter is pressed', async () => {
+      footer.curPage.set(3);
+      await harness.pressPrevious(' ');
+      expect(await harness.currentPage()).toEqual(2);
+
+      await harness.pressPrevious('Enter');
+      expect(await harness.currentPage()).toEqual(1);
+    });
+
     it('should emit change event', async () => {
       spyOn(footer.page, 'emit');
       footer.curPage.set(2);
@@ -130,6 +139,15 @@ describe('DataTablePagerComponent', () => {
       footer.curPage.set(2);
       await harness.clickNext();
       expect(await harness.currentPage()).toEqual(3);
+    });
+
+    it('should set current page to next page when space/enter is pressed', async () => {
+      footer.curPage.set(3);
+      await harness.pressNext(' ');
+      expect(await harness.currentPage()).toEqual(4);
+
+      await harness.pressNext('Enter');
+      expect(await harness.currentPage()).toEqual(5);
     });
 
     it('should emit change event', async () => {
@@ -159,10 +177,18 @@ describe('DataTablePagerComponent', () => {
         expect(await harness.currentPage()).toEqual(3);
       });
 
+      it('should set current page using keyboard', async () => {
+        await harness.pressPage(3, 'Enter');
+        expect(await harness.currentPage()).toEqual(3);
+      });
+
       it('should emit change event', async () => {
         spyOn(footer.page, 'emit');
         await harness.clickPage(3);
         expect(footer.page.emit).toHaveBeenCalledWith({ page: 3 });
+
+        await harness.pressPage(4, 'Enter');
+        expect(footer.page.emit).toHaveBeenCalledWith({ page: 4 });
       });
     });
 

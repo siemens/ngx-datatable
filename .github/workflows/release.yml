@@ -48,7 +48,7 @@ jobs:
         with:
           name: dist
           path: dist
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: 'dist/ngx-datatable-examples'
       - uses: actions/deploy-pages@v4

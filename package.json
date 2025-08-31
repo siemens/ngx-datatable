@@ -71,7 +71,7 @@
     "eslint-plugin-tsdoc": "0.4.0",
     "http-server": "^14.0.0",
     "jasmine": "^5.0.0",
-    "jasmine-core": "~5.9.0",
+    "jasmine-core": "~5.10.0",
     "jasmine-spec-reporter": "~7.0.0",
     "karma": "~6.4.4",
     "karma-chrome-launcher": "~3.2.0",
@@ -88,7 +88,7 @@
     "stylelint-use-logical-spec": "5.0.1",
     "ts-node": "^10.9.2",
     "typescript": "~5.5.4",
-    "typescript-eslint": "8.40.0"
+    "typescript-eslint": "8.41.0"
   },
   "optionalDependencies": {
     "@axe-core/playwright": "4.10.2",

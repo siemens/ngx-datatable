@@ -41,13 +41,22 @@ jobs:
       pages: write
       id-token: write
     needs:
-      - build-and-test
+      - publish
     steps:
-      - uses: actions/configure-pages@v5
-      - uses: actions/download-artifact@v5
+      # semantic release will update the package.json version so
+      # we need to build the artifacts again to have the correct version number in the docs.
+      - uses: actions/checkout@v5
         with:
-          name: dist
-          path: dist
+          fetch-depth: 0
+          token: ${{ secrets.ELEMENT_BOT_GITHUB_TOKEN }}
+      - uses: actions/setup-node@v5
+        with:
+          node-version: lts/jod
+          cache: 'npm'
+      - run: npm ci --prefer-offline --no-audit
+      - run: npm run build:lib:prod
+      - run: npm run build:prod
+      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
           path: 'dist/ngx-datatable-examples'

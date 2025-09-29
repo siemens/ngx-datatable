@@ -1,3 +1,16 @@
+# [24.3.0](https://github.com/siemens/ngx-datatable/compare/24.2.0...24.3.0) (2025-09-29)
+
+
+### Features
+
+* **columns:** support hidden columns ([ea5a410](https://github.com/siemens/ngx-datatable/commit/ea5a410e31a7c5f5b4b5896c5f3580f860a430c8))
+
+
+### Bug Fixes
+
+* **column-pinning:** hide vertical divider if no horizontal scroll ([556e964](https://github.com/siemens/ngx-datatable/commit/556e9640176dcf521e9fb2da2a8436bf99a194ae))
+* **sort:** sort on grouped header column throws errors ([dd86662](https://github.com/siemens/ngx-datatable/commit/dd866626469ab56ae527788514eda71a57a70a32))
+
 # [24.2.0](https://github.com/siemens/ngx-datatable/compare/24.1.0...24.2.0) (2025-08-21)
 
 

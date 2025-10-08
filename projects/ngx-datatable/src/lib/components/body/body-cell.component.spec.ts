@@ -115,7 +115,6 @@ describe('DataTableBodyCellComponent', () => {
       component.setInput('row', { id: 1 });
       const columns = toInternalColumn([{ name: 'Tree', prop: 'id', isTreeColumn: true }]);
       component.setInput('column', columns[0]);
-      component.setInput('treeStatus', '');
     });
 
     it('should render tree toggle button when isTreeColumn is true', async () => {

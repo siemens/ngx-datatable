@@ -17,7 +17,7 @@ jobs:
         with:
           fetch-depth: 0 # semantic-release needs this
           token: ${{ secrets.ELEMENT_BOT_GITHUB_TOKEN }} # Otherwise, branch protection rules are not bypassed.
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: lts/jod
           cache: 'npm'
@@ -49,7 +49,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.ELEMENT_BOT_GITHUB_TOKEN }}
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: lts/jod
           cache: 'npm'

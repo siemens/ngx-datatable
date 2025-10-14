@@ -1,5 +1,15 @@
 # Architecture
 
+## Component Architecture Overview
+
+The ngx-datatable library is built with a modular architecture that separates concerns and provides flexibility for various use cases. The following diagram illustrates the key components and their relationships:
+
+![NGX-Datatable Component Diagram](datatable.drawio.svg)
+
+> 📝 **Edit this diagram**: [Open in draw.io](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&dark=auto#G1UG6iHjAhl-LXjIS6xWEyQLyCQWv72rZ0)
+>
+> To edit: Click the draw.io link above, make your changes, then export as SVG and save back to `docs/introduction/datatable.drawio.svg`
+
 ### Manifesto
 
 There is some things that it doesn't do nor do we plan to do. Lets say you have a requirement to have the

@@ -686,7 +686,7 @@ export class DatatableComponent<TRow extends Row = any>
       allRowsSelected = this.selected.length === rowsOnPage;
     }
 
-    return this.selected && this.rows && this.rows.length !== 0 && allRowsSelected;
+    return this.selected && this.rows?.length !== 0 && allRowsSelected;
   }
 
   element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
@@ -949,11 +949,15 @@ export class DatatableComponent<TRow extends Row = any>
       adjustColumnWidths(columns, width);
     }
 
+    // The type of width is wrong here.
+    // It can also be undefined, thus the eslint-rule must be disabled.
+    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     if (this.bodyComponent && this.bodyComponent.columnGroupWidths.total !== width) {
       this.bodyComponent.columns = [...this._internalColumns];
       this.bodyComponent.cd.markForCheck();
     }
 
+    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     if (this.headerComponent && this.headerComponent._columnGroupWidths.total !== width) {
       this.headerComponent.columns = [...this._internalColumns];
     }

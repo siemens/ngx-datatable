@@ -420,7 +420,7 @@ export class DatatableComponent<TRow extends Row = any>
    * Property to which you can use for custom tracking of rows.
    * Example: 'name'
    */
-  @Input() trackByProp?: string;
+  @Input() trackByProp?: keyof TRow;
 
   /**
    * Property to which you can use for determining select all

@@ -25,3 +25,15 @@ datatable-scroller {
 [hidden] {
   display: none !important; // stylelint-disable-line declaration-no-important
 }
+
+datatable-summary-row.sticky {
+  position: sticky;
+  z-index: 99;
+
+  &.top {
+    top: 0;
+  }
+  &.bottom {
+    bottom: 0;
+  }
+}

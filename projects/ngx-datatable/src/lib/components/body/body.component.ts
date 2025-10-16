@@ -83,6 +83,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
       >
         @if (summaryRow && summaryPosition === 'top') {
           <datatable-summary-row
+            [class]="stickySummaryRow ? 'sticky top' : ''"
             [rowHeight]="summaryHeight"
             [innerWidth]="innerWidth"
             [rows]="rows"
@@ -207,6 +208,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
       @if (summaryRow && summaryPosition === 'bottom') {
         <datatable-summary-row
           role="row"
+          [class]="stickySummaryRow ? 'sticky bottom' : ''"
           [rowHeight]="summaryHeight"
           [innerWidth]="innerWidth"
           [rows]="rows"
@@ -355,6 +357,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   @Input() verticalScrollVisible = false;
   @Input({ required: true }) ariaRowCheckboxMessage!: string;
   @Input({ required: true }) cssClasses!: Partial<Required<NgxDatatableConfig>['cssClasses']>;
+  @Input({ required: true }) stickySummaryRow!: boolean;
 
   @Output() readonly scroll = new EventEmitter<ScrollEvent>();
   @Output() readonly page = new EventEmitter<number>();

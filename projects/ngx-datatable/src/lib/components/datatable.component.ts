@@ -482,6 +482,11 @@ export class DatatableComponent<TRow extends Row = any>
   @Input({ transform: booleanAttribute }) enableClearingSortState = false;
 
   /**
+   * When enabled it will keep the summary row always visible on top or bottom when scrolling.
+   */
+  @Input({ transform: booleanAttribute }) stickySummaryRow = false;
+
+  /**
    * Body was scrolled typically in a `scrollbarV:true` scenario.
    */
   @Output() readonly scroll = new EventEmitter<ScrollEvent>();

@@ -52,7 +52,7 @@
     "@angular/compiler-cli": "19.2.15",
     "@angular/language-service": "19.2.15",
     "@axe-core/playwright": "4.10.2",
-    "@playwright/test": "1.56.0",
+    "@playwright/test": "1.56.1",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@siemens/commitlint-config": "^2.2.1",

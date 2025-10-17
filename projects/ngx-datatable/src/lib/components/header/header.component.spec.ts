@@ -14,6 +14,13 @@ describe('DataTableHeaderComponent', () => {
 
   beforeEach(async () => {
     fixture = TestBed.createComponent(DataTableHeaderComponent);
+    fixture.componentRef.setInput('columns', []);
+    fixture.componentRef.setInput('innerWidth', 200);
+    fixture.componentRef.setInput('sorts', []);
+    fixture.componentRef.setInput('sortType', 'single');
+    fixture.componentRef.setInput('headerHeight', 50);
+    fixture.componentRef.setInput('ariaHeaderCheckboxMessage', 'Select all rows');
+
     harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, HeaderHarness);
     componentRef = fixture.componentRef;
   });
@@ -76,7 +83,7 @@ describe('DataTableHeaderComponent', () => {
     componentRef.instance.resizing.subscribe(event => {
       const { column, newValue } = event;
       column.width = newValue;
-      componentRef.setInput('columns', [...componentRef.instance.columns]);
+      componentRef.setInput('columns', [...componentRef.instance.columns()]);
     });
 
     const initialWidth = await harness.getColumnWidth(0);
@@ -175,50 +182,63 @@ describe('DataTableHeaderComponent', () => {
 
     componentRef.instance.reorder.subscribe(event => {
       const { newValue, prevValue } = event;
-      const columns = componentRef.instance.columns;
+
+      // Get fresh reference to columns
+      const currentColumns = [...componentRef.instance.columns()];
       const columnIndex = prevValue;
-      const movedColumn = columns.splice(columnIndex, 1)[0];
-      columns.splice(newValue, 0, movedColumn);
-      componentRef.setInput('columns', columns);
-      // TODO remove this once we migrate to signal inputs
-      componentRef.instance.columns = columns;
+      const movedColumn = currentColumns.splice(columnIndex, 1)[0];
+      currentColumns.splice(newValue, 0, movedColumn);
+
+      // Update columns
+      componentRef.setInput('columns', currentColumns);
+      tick();
     });
 
+    fixture.detectChanges();
     tick();
-    const headerCells = fixture.debugElement.queryAll(By.css('.draggable'));
+    const headerCells = fixture.debugElement.queryAll(By.css('datatable-header-cell.draggable'));
 
+    // Get the first cell (Column 1) that we want to drag
     const firstCell = headerCells[0].nativeElement;
-    const clientRect = (firstCell as HTMLElement).getBoundingClientRect();
+    const secondCell = headerCells[1].nativeElement;
 
+    // Get positions
+    const firstRect = firstCell.getBoundingClientRect();
+    const secondRect = secondCell.getBoundingClientRect();
+
+    // Start drag on first cell
     const mouseDownEvent = new MouseEvent('mousedown', {
-      clientX: clientRect.x,
-      screenX: clientRect.x,
-      clientY: clientRect.y,
-      screenY: clientRect.y,
+      clientX: firstRect.left + firstRect.width / 2,
+      clientY: firstRect.top + firstRect.height / 2,
       bubbles: true
     });
     firstCell.dispatchEvent(mouseDownEvent);
-
-    // Wait 500ms after mousedown to consider it as long press
-    await new Promise(resolve => setTimeout(resolve, 500));
-
     fixture.detectChanges();
 
+    // Wait for drag start delay
+    tick(500);
+    fixture.detectChanges();
+
+    // Move to the second cell position
     const mouseMoveEvent = new MouseEvent('mousemove', {
-      clientX: clientRect.x + 200,
-      screenX: clientRect.x + 200,
-      clientY: clientRect.y,
-      screenY: clientRect.y
+      clientX: secondRect.left + secondRect.width / 2,
+      clientY: secondRect.top + secondRect.height / 2,
+      bubbles: true
     });
     document.dispatchEvent(mouseMoveEvent);
+    fixture.detectChanges();
+    tick();
 
+    // End drag
     const mouseUpEvent = new MouseEvent('mouseup', {
-      clientX: clientRect.x + 200,
-      screenX: clientRect.x + 200,
-      clientY: clientRect.y,
-      screenY: clientRect.y
+      clientX: secondRect.left + secondRect.width / 2,
+      clientY: secondRect.top + secondRect.height / 2,
+      bubbles: true
     });
     document.dispatchEvent(mouseUpEvent);
+
+    // Allow time for any async operations
+    tick(200);
 
     expect(await harness.getColumnName(0)).toBe('Column 2');
     expect(await harness.getColumnName(1)).toBe('Column 1');
@@ -236,7 +256,7 @@ describe('DataTableHeaderComponent', () => {
       ])
     );
     const leftGroupStyle = await harness.getTransformStyle('left');
-    expect(leftGroupStyle).toBe('');
+    expect(leftGroupStyle).toBe('width: 100px;');
     componentRef.setInput('offsetX', 100);
 
     expect(await harness.getTransformStyle('left')).toBe(leftGroupStyle);
@@ -244,6 +264,6 @@ describe('DataTableHeaderComponent', () => {
     const centerGroupStyle = await harness.getTransformStyle('center');
     expect(centerGroupStyle).toContain('translateX(-100px)');
 
-    expect(await harness.getTransformStyle('right')).toBe('');
+    expect(await harness.getTransformStyle('right')).toBe('width: 200px;');
   });
 });

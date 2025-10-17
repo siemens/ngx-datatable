@@ -1,3 +1,13 @@
+## [24.3.1](https://github.com/siemens/ngx-datatable/compare/24.3.0...24.3.1) (2025-10-17)
+
+
+* Revert "feat(columns): support hidden columns" ([de31669](https://github.com/siemens/ngx-datatable/commit/de3166913ddf96e2d54b6ea1daf2ab5e85516341))
+
+
+### Bug Fixes
+
+* show the correct number of pages when using row grouping ([7d1141c](https://github.com/siemens/ngx-datatable/commit/7d1141c35589c7e3966f2f841c7419ecd3ecf8e5))
+
 # [24.3.0](https://github.com/siemens/ngx-datatable/compare/24.2.0...24.3.0) (2025-09-29)
 
 

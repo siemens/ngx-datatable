@@ -250,7 +250,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   @Input() groupHeader?: DatatableGroupHeaderDirective;
   @Input() selectCheck?: (value: TRow, index: number, array: TRow[]) => boolean;
   @Input() displayCheck?: (row: TRow, column: TableColumnInternal, value?: any) => boolean;
-  @Input() trackByProp?: string;
+  @Input() trackByProp?: keyof TRow;
   @Input() rowClass?: (row: TRow) => string | Record<string, boolean>;
   @Input() groupedRows?: Group<TRow>[];
   @Input() groupExpansionDefault?: boolean;
@@ -419,8 +419,8 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       if (this.ghostLoadingIndicator) {
         return index;
       }
-      if (this.trackByProp && row) {
-        return (row as any)[this.trackByProp];
+      if (this.trackByProp && row && this.isRow(row)) {
+        return row[this.trackByProp];
       } else if (row && this.isGroup(row)) {
         return row.key ?? index;
       } else {

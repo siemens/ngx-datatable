@@ -5,6 +5,7 @@ import {
   ChangeDetectorRef,
   Component,
   computed,
+  effect,
   EventEmitter,
   HostBinding,
   inject,
@@ -19,6 +20,7 @@ import {
   SimpleChanges,
   TemplateRef,
   TrackByFunction,
+  untracked,
   ViewChild
 } from '@angular/core';
 
@@ -339,7 +341,7 @@ export class DataTableBodyComponent<TRow extends Row = any>
   readonly rowsToRender = computed(() => {
     return this.updateRows();
   });
-  readonly rowHeightsCache = signal(new RowHeightCache());
+  readonly rowHeightsCache = computed(() => this.computeRowHeightsCache());
   offsetY = 0;
   readonly indexes = signal<{ first: number; last: number }>({ first: 0, last: 0 });
   readonly columnGroupWidths = computed(() => {
@@ -348,7 +350,7 @@ export class DataTableBodyComponent<TRow extends Row = any>
   });
   rowTrackingFn: TrackByFunction<RowOrGroup<TRow> | undefined>;
   listener: any;
-  rowExpansions: any[] = [];
+  readonly rowExpansions = signal<any[]>([]);
 
   _rows!: (TRow | undefined)[];
   readonly _bodyHeight = computed(() => {
@@ -381,6 +383,15 @@ export class DataTableBodyComponent<TRow extends Row = any>
         return row ?? index;
       }
     };
+    effect(() => {
+      if (
+        this.groupedRows() &&
+        untracked(() => this.rowExpansions().length) === 0 &&
+        this.groupExpansionDefault
+      ) {
+        this.rowExpansions.update(expansions => [...expansions, ...this.groupedRows()!]);
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -648,38 +659,25 @@ export class DataTableBodyComponent<TRow extends Row = any>
    * Refreshes the full Row Height cache.  Should be used
    * when the entire row array state has changed.
    */
-  refreshRowHeightCache(): void {
+  computeRowHeightsCache(): RowHeightCache {
+    const cache = new RowHeightCache();
     if (!this.scrollbarV() || (this.scrollbarV() && !this.virtualization())) {
-      return;
+      return cache;
     }
-
-    // clear the previous row height cache if already present.
-    // this is useful during sorts, filters where the state of the
-    // rows array is changed.
-    this.rowHeightsCache().clearCache();
 
     // Initialize the tree only if there are rows inside the tree.
     if (this.rows().length) {
-      const rowExpansions = new Set<TRow>();
-      if (this.rowDetail()) {
-        for (const row of this.rows()) {
-          if (row && this.getRowExpanded(row)) {
-            rowExpansions.add(row);
-          }
-        }
-      }
-
-      this.rowHeightsCache().initCache({
+      cache.initCache({
         rows: this.rows(),
         rowHeight: this.rowHeight(),
         detailRowHeight: this.getDetailRowHeight,
         externalVirtual: this.scrollbarV() && this.externalPaging(),
         indexOffset: this.indexes().first,
         rowCount: this.rowCount(),
-        rowExpansions
+        rowExpansions: new Set<TRow>(this.rowDetail() ? this.rowExpansions() : [])
       });
-      this.rowHeightsCache.set(Object.create(this.rowHeightsCache()));
     }
+    return cache;
   }
 
   /**
@@ -689,19 +687,17 @@ export class DataTableBodyComponent<TRow extends Row = any>
    * status in case of sorting and filtering of the row set.
    */
   toggleRowExpansion(row: TRow): void {
-    const rowExpandedIdx = this.getRowExpandedIdx(row, this.rowExpansions);
+    const rowExpandedIdx = this.getRowExpandedIdx(row, this.rowExpansions());
     const expanded = rowExpandedIdx > -1;
 
     // Update the toggled row and update thive nevere heights in the cache.
     if (expanded) {
-      this.rowExpansions.splice(rowExpandedIdx, 1);
+      this.rowExpansions.update(expansions => {
+        expansions.splice(rowExpandedIdx, 1);
+        return [...expansions];
+      });
     } else {
-      this.rowExpansions.push(row);
-    }
-
-    // If the detailRowHeight is auto --> only in case of non-virtualized scroll
-    if (this.scrollbarV() && this.virtualization()) {
-      this.refreshRowHeightCache();
+      this.rowExpansions.update(expansions => [...expansions, row]);
     }
   }
 
@@ -710,13 +706,11 @@ export class DataTableBodyComponent<TRow extends Row = any>
    */
   toggleAllRows(expanded: boolean): void {
     // clear prev expansions
-    this.rowExpansions = [];
+    this.rowExpansions.set([]);
 
     const rows = this.groupedRows() ?? this.rows();
     if (expanded) {
-      for (const row of rows) {
-        this.rowExpansions.push(row);
-      }
+      this.rowExpansions.set([...rows]);
     }
 
     if (this.scrollbarV()) {
@@ -729,7 +723,6 @@ export class DataTableBodyComponent<TRow extends Row = any>
    * Recalculates the table
    */
   recalcLayout(): void {
-    this.refreshRowHeightCache();
     this.updateIndexes();
   }
 
@@ -737,13 +730,7 @@ export class DataTableBodyComponent<TRow extends Row = any>
    * Returns if the row was expanded and set default row expansion when row expansion is empty
    */
   getRowExpanded(row: RowOrGroup<TRow>): boolean {
-    if (this.rowExpansions.length === 0 && this.groupExpansionDefault) {
-      for (const group of this.groupedRows()!) {
-        this.rowExpansions.push(group);
-      }
-    }
-
-    return this.getRowExpandedIdx(row, this.rowExpansions) > -1;
+    return this.getRowExpandedIdx(row, this.rowExpansions()) > -1;
   }
 
   getRowExpandedIdx(row: RowOrGroup<TRow>, expanded: RowOrGroup<TRow>[]): number {

@@ -1,3 +1,11 @@
+## [24.3.2](https://github.com/siemens/ngx-datatable/compare/24.3.1...24.3.2) (2025-10-24)
+
+
+### Bug Fixes
+
+* `headerHeight="auto"` should be supported ([a22f149](https://github.com/siemens/ngx-datatable/commit/a22f14981aec2544a7b1203d94b3fcef63202f74)), closes [#473](https://github.com/siemens/ngx-datatable/issues/473)
+* support parallel usage of grouping and details ([a4fabd7](https://github.com/siemens/ngx-datatable/commit/a4fabd7e1e5fd3fa6523b13d69fee155ce26b5ca)), closes [#147](https://github.com/siemens/ngx-datatable/issues/147)
+
 ## [24.3.1](https://github.com/siemens/ngx-datatable/compare/24.3.0...24.3.1) (2025-10-17)
 
 

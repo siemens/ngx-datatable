@@ -1,6 +1,6 @@
 {
   "name": "@siemens/ngx-datatable",
-  "version": "24.3.1",
+  "version": "24.3.2",
   "description": "ngx-datatable is an Angular table grid component for presenting large and complex data.",
   "publishConfig": {
     "access": "public"

@@ -6,7 +6,6 @@ import {
   Component,
   computed,
   EventEmitter,
-  HostBinding,
   inject,
   Input,
   input,
@@ -255,7 +254,8 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'datatable-body',
-    '[style.height]': '_bodyHeight()'
+    '[style.height]': '_bodyHeight()',
+    '[style.width]': '_bodyWidth()'
   }
 })
 export class DataTableBodyComponent<TRow extends Row = any>
@@ -303,15 +303,6 @@ export class DataTableBodyComponent<TRow extends Row = any>
   readonly offset = input<number>(0);
 
   readonly rowCount = input<number>(0);
-
-  @HostBinding('style.width')
-  get bodyWidth(): string {
-    if (this.scrollbarH()) {
-      return this.innerWidth() + 'px';
-    } else {
-      return '100%';
-    }
-  }
 
   readonly bodyHeight = input<string | number>();
   readonly verticalScrollVisible = input(false);
@@ -365,6 +356,13 @@ export class DataTableBodyComponent<TRow extends Row = any>
   groupExpansions: Group<TRow>[] = [];
 
   _rows!: (TRow | undefined)[];
+  readonly _bodyWidth = computed(() => {
+    if (this.scrollbarH()) {
+      return this.innerWidth() + 'px';
+    } else {
+      return '100%';
+    }
+  });
   readonly _bodyHeight = computed(() => {
     if (this.scrollbarV()) {
       return this.bodyHeight() + 'px';

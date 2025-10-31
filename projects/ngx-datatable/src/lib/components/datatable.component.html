@@ -84,11 +84,9 @@
       </ng-content>
       <ng-content select="[empty-content]" ngProjectAs="[empty-content]">
         <div role="row">
-          <div
-            role="cell"
-            class="empty-row"
-            [innerHTML]="messages.emptyMessage ?? 'No data to display'"
-          ></div>
+          <div role="cell" class="empty-row">
+            {{ messages.emptyMessage ?? 'No data to display' }}
+          </div>
         </div>
       </ng-content>
     </datatable-body>

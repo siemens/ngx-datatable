@@ -1,3 +1,10 @@
+## [24.3.3](https://github.com/siemens/ngx-datatable/compare/24.3.2...24.3.3) (2025-10-31)
+
+
+### Bug Fixes
+
+* always call `<ngx-datatable-row-detail [rowHeight]="function">` with correct index ([4076829](https://github.com/siemens/ngx-datatable/commit/407682915b1743494fb300bdddc197b9c64a00e3))
+
 ## [24.3.2](https://github.com/siemens/ngx-datatable/compare/24.3.1...24.3.2) (2025-10-24)
 
 

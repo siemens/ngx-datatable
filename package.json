@@ -1,6 +1,6 @@
 {
   "name": "ngx-datatable",
-  "version": "24.3.2",
+  "version": "24.3.3",
   "commitlint": {
     "extends": [
       "@siemens/commitlint-config/.commitlintrc.js"

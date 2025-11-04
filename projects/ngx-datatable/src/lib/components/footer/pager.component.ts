@@ -27,70 +27,62 @@ import { DatatableComponent } from '../datatable.component';
   selector: 'ngx-datatable-pager',
   template: `
     <ul class="pager">
-      <li [class.disabled]="!canPrevious()">
-        <a
-          role="button"
-          [tabindex]="canPrevious() ? 0 : -1"
+      <li>
+        <button
+          type="button"
+          class="page-button"
+          [disabled]="!canPrevious()"
           [attr.aria-label]="messages.ariaFirstPageMessage ?? 'go to first page'"
-          (keydown.enter)="selectPage(1)"
-          (keydown.space)="selectPage(1)"
           (click)="selectPage(1)"
         >
           <i [class]="pagerPreviousIcon() ?? 'datatable-icon-prev'"></i>
-        </a>
+        </button>
       </li>
-      <li [class.disabled]="!canPrevious()">
-        <a
-          role="button"
-          [tabindex]="canPrevious() ? 0 : -1"
+      <li>
+        <button
+          type="button"
+          class="page-button"
+          [disabled]="!canPrevious()"
           [attr.aria-label]="messages.ariaPreviousPageMessage ?? 'go to previous page'"
-          (keydown.enter)="prevPage()"
-          (keydown.space)="prevPage()"
           (click)="prevPage()"
         >
           <i [class]="pagerLeftArrowIcon() ?? 'datatable-icon-left'"></i>
-        </a>
+        </button>
       </li>
       @for (pg of pages(); track pg.number) {
-        <li
-          class="pages"
-          [attr.aria-label]="(messages.ariaPageNMessage ?? 'page') + ' ' + pg.number"
-          [class.active]="pg.number === page()"
-        >
-          <a
-            tabindex="0"
-            role="button"
-            (keydown.enter)="selectPage(pg.number)"
-            (keydown.space)="selectPage(pg.number)"
+        <li class="pages">
+          <button
+            type="button"
+            class="page-button"
+            [class.active]="pg.number === page()"
+            [attr.aria-label]="(messages.ariaPageNMessage ?? 'page') + ' ' + pg.number"
             (click)="selectPage(pg.number)"
           >
             {{ pg.text }}
-          </a>
+          </button>
         </li>
       }
-      <li [class.disabled]="!canNext()">
-        <a
-          role="button"
-          [tabindex]="canNext() ? 0 : -1"
+      <li>
+        <button
+          type="button"
+          class="page-button"
+          [disabled]="!canNext()"
           [attr.aria-label]="messages.ariaNextPageMessage ?? 'go to next page'"
-          (keydown.enter)="nextPage()"
-          (keydown.space)="nextPage()"
           (click)="nextPage()"
         >
           <i [class]="pagerRightArrowIcon() ?? 'datatable-icon-right'"></i>
-        </a>
+        </button>
       </li>
-      <li [class.disabled]="!canNext()">
-        <a
-          role="button"
-          [tabindex]="canNext() ? 0 : -1"
+      <li>
+        <button
+          type="button"
+          class="page-button"
+          [disabled]="!canNext()"
           [attr.aria-label]="messages.ariaLastPageMessage ?? 'go to last page'"
-          (keydown.enter)="selectPage(totalPages())"
-          (keydown.space)="selectPage(totalPages())"
           (click)="selectPage(totalPages())"
         >
           <i [class]="pagerNextIcon() ?? 'datatable-icon-skip'"></i>
-        </a>
+        </button>
       </li>
     </ul>
   `,

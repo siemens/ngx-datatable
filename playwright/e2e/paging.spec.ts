@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+
 import { expect, test } from '../support/test-helpers';
 
 test.describe('paging', () => {
@@ -142,10 +143,10 @@ const pagerTest = async (page: Page, numberOfRows: number) => {
   const pager = page.locator('datatable-pager');
   expect(pager).toBeTruthy();
 
-  const firstPageButton = page.getByLabel('go to first page').locator('..');
-  const previousButton = page.getByLabel('go to previous page').locator('..');
-  const nextButton = page.getByLabel('go to next page').locator('..');
-  const lastButton = page.getByLabel('go to last page').locator('..');
+  const firstPageButton = page.getByLabel('go to first page');
+  const previousButton = page.getByLabel('go to previous page');
+  const nextButton = page.getByLabel('go to next page');
+  const lastButton = page.getByLabel('go to last page');
 
   await page.waitForSelector('span[title="Ethel Price"]');
 
@@ -155,11 +156,11 @@ const pagerTest = async (page: Page, numberOfRows: number) => {
   await expect(page.getByRole('cell', { name: 'Ethel Price' })).toBeVisible();
   await expect(page.getByRole('cell', { name: 'Beryl Rice' })).toBeVisible();
 
-  await expect(firstPageButton).toHaveClass(/disabled/);
-  await expect(previousButton).toHaveClass(/disabled/);
+  await expect(firstPageButton).toBeDisabled();
+  await expect(previousButton).toBeDisabled();
 
-  await expect(nextButton).not.toHaveClass(/disabled/);
-  await expect(lastButton).not.toHaveClass(/disabled/);
+  await expect(nextButton).not.toBeDisabled();
+  await expect(lastButton).not.toBeDisabled();
 
   await lastButton.click();
 
@@ -168,11 +169,11 @@ const pagerTest = async (page: Page, numberOfRows: number) => {
   await expect(page.getByRole('cell', { name: 'Ethel Price' })).not.toBeVisible();
   await expect(page.getByRole('cell', { name: 'Beryl Rice' })).not.toBeVisible();
 
-  await expect(firstPageButton).not.toHaveClass(/disabled/);
-  await expect(previousButton).not.toHaveClass(/disabled/);
+  await expect(firstPageButton).not.toBeDisabled();
+  await expect(previousButton).not.toBeDisabled();
 
-  await expect(nextButton).toHaveClass(/disabled/);
-  await expect(lastButton).toHaveClass(/disabled/);
+  await expect(nextButton).toBeDisabled();
+  await expect(lastButton).toBeDisabled();
 
   await expect(page.getByRole('cell', { name: 'Humphrey Curtis' })).toBeVisible();
   await expect(page.getByRole('cell', { name: 'Christine Compton' })).toBeVisible();

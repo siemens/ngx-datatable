@@ -956,13 +956,11 @@ export class DatatableComponent<TRow extends Row = any>
 
     // The type of width is wrong here.
     // It can also be undefined, thus the eslint-rule must be disabled.
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     if (this.bodyComponent && this.bodyComponent.columnGroupWidths().total !== width) {
       this._internalColumns = [...this._internalColumns];
       this.bodyComponent.cd.markForCheck();
     }
 
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     if (this.headerComponent && this.headerComponent._columnGroupWidths().total !== width) {
       this._internalColumns = [...this._internalColumns];
     }

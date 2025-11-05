@@ -70,7 +70,8 @@ export const tsConfig = typescriptEslint.config({
     '@angular-eslint/directive-class-suffix': ['off'],
     '@angular-eslint/no-conflicting-lifecycle': ['off'],
     '@angular-eslint/prefer-output-emitter-ref': ['off'],
-    '@angular-eslint/no-developer-preview': ['off']
+    '@angular-eslint/no-developer-preview': ['off'],
+    '@angular-eslint/prefer-host-metadata-property': ['off']
   }
 });
 

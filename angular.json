@@ -127,7 +127,11 @@
           "options": {
             "main": "projects/ngx-datatable/src/test.ts",
             "tsConfig": "projects/ngx-datatable/tsconfig.spec.json",
-            "karmaConfig": "projects/ngx-datatable/karma.conf.js"
+            "karmaConfig": "projects/ngx-datatable/karma.conf.js",
+            "codeCoverageExclude": [
+              "projects/ngx-datatable/**/*.module.ts",
+              "projects/ngx-datatable/**/testing/**/*.ts"
+            ]
           }
         },
         "lint": {

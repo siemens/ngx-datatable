@@ -63,7 +63,7 @@
     "@types/jasmine": "~5.1.0",
     "@types/jasminewd2": "^2.0.13",
     "@types/node": "^24.0.0",
-    "angular-eslint": "20.5.1",
+    "angular-eslint": "20.5.2",
     "axe-html-reporter": "2.2.11",
     "cpy-cli": "^6.0.0",
     "eslint": "^9.30.1",

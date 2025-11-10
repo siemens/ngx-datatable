@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { DatatableComponent, SortEvent, TableColumn } from '@siemens/ngx-datatable';
+import { DatatableComponent, SortPropDir, TableColumn } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
@@ -30,7 +30,7 @@ import { DataService } from '../data.service';
         [footerHeight]="50"
         [externalSorting]="true"
         [loadingIndicator]="loading"
-        (sort)="onSort($event)"
+        (sortsChange)="onSort($event)"
       />
     </div>
   `
@@ -54,7 +54,7 @@ export class ServerSortingComponent {
     });
   }
 
-  onSort(event: SortEvent) {
+  onSort(event: SortPropDir[]) {
     // event was triggered, start sort sequence
     this.loading = true;
     // emulate a server request with a timeout
@@ -63,7 +63,7 @@ export class ServerSortingComponent {
       // this is only for demo purposes, normally
       // your server would return the result for
       // you and you would just set the rows prop
-      const sort = event.sorts[0];
+      const sort = event[0];
       type SortProp = 'company' | 'name' | 'gender';
       rows.sort(
         (a, b) =>

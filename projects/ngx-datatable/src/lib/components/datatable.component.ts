@@ -355,7 +355,7 @@ export class DatatableComponent<TRow extends Row = any>
    * Array of sorted columns by property and type.
    * Default value: `[]`
    */
-  @Input() sorts: SortPropDir[] = [];
+  readonly sorts = model<SortPropDir[]>([]);
 
   /**
    * Css class overrides
@@ -517,6 +517,18 @@ export class DatatableComponent<TRow extends Row = any>
 
   /**
    * Column sort was invoked.
+   * @deprecated Use two-way binding on `sorts` instead.
+   *
+   * Before:
+   * ```html
+   * <ngx-datatable [sorts]="mySorts" (sort)="onSort($event)"></ngx-datatable>
+   * ```
+   *
+   * After:
+   * ```html
+   * <ngx-datatable [sorts]="mySorts" (sortsChange)="onSort({sorts: $event})"></ngx-datatable>
+   * <!-- or -->
+   * <ngx-datatable [(sorts)]="mySorts"></ngx-datatable>
    */
   readonly sort = output<SortEvent>();
 
@@ -824,7 +836,7 @@ export class DatatableComponent<TRow extends Row = any>
           pageSize: this.pageSize,
           limit: this.limit,
           offset: 0,
-          sorts: this.sorts
+          sorts: this.sorts()
         });
       }
     });
@@ -1017,7 +1029,7 @@ export class DatatableComponent<TRow extends Row = any>
         pageSize: this.pageSize,
         limit: this.limit,
         offset: this.offset,
-        sorts: this.sorts
+        sorts: this.sorts()
       });
     }
   }
@@ -1042,7 +1054,7 @@ export class DatatableComponent<TRow extends Row = any>
       pageSize: this.pageSize,
       limit: this.limit,
       offset: this.offset,
-      sorts: this.sorts
+      sorts: this.sorts()
     });
 
     if (this.selectAllRowsOnPage()) {
@@ -1192,7 +1204,7 @@ export class DatatableComponent<TRow extends Row = any>
       });
     }
 
-    this.sorts = event.sorts;
+    this.sorts.set(event.sorts);
 
     // this could be optimized better since it will resort
     // the rows again on the 'push' detection...
@@ -1217,7 +1229,7 @@ export class DatatableComponent<TRow extends Row = any>
       pageSize: this.pageSize,
       limit: this.limit,
       offset: this.offset,
-      sorts: this.sorts
+      sorts: this.sorts()
     });
     this.sort.emit(event);
   }
@@ -1287,7 +1299,7 @@ export class DatatableComponent<TRow extends Row = any>
 
   private sortInternalRows(): void {
     // if there are no sort criteria we reset the rows with original rows
-    if (!this.sorts?.length) {
+    if (!this.sorts()?.length) {
       this._internalRows = this._rows;
       // if there is any tree relation then re-group rows accordingly
       if (this.treeFromRelation() && this.treeToRelation()) {
@@ -1299,19 +1311,19 @@ export class DatatableComponent<TRow extends Row = any>
       }
     }
     if (this.groupedRows?.length) {
-      const sortOnGroupHeader = this.sorts?.find(
+      const sortOnGroupHeader = this.sorts()?.find(
         sortColumns => sortColumns.prop === this._groupRowsBy
       );
       this.groupedRows = this.groupArrayBy(this._rows, this._groupRowsBy!);
       this.groupedRows = sortGroupedRows(
         this.groupedRows,
         this._internalColumns,
-        this.sorts,
+        this.sorts(),
         sortOnGroupHeader
       );
       this._internalRows = [...this._internalRows];
     } else {
-      this._internalRows = sortRows(this._internalRows, this._internalColumns, this.sorts);
+      this._internalRows = sortRows(this._internalRows, this._internalColumns, this.sorts());
     }
   }
 }

@@ -1,4 +1,3 @@
-import { DOCUMENT } from '@angular/common';
 import {
   booleanAttribute,
   computed,
@@ -9,7 +8,8 @@ import {
   numberAttribute,
   OnDestroy,
   output,
-  signal
+  signal,
+  DOCUMENT
 } from '@angular/core';
 
 import { TableColumnInternal } from '../types/internal.types';

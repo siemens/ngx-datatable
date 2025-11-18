@@ -1,4 +1,3 @@
-import { DOCUMENT } from '@angular/common';
 import {
   AfterContentInit,
   ContentChildren,
@@ -12,7 +11,8 @@ import {
   output,
   OutputRefSubscription,
   QueryList,
-  signal
+  signal,
+  DOCUMENT
 } from '@angular/core';
 import { startWith } from 'rxjs';
 

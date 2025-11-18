@@ -17,7 +17,7 @@
     "format:check": "prettier --check .",
     "build:lib:prod": "ng build ngx-datatable-lib --configuration production",
     "copy-files": "cpy \"{LICENSE,README.md}\" dist/ngx-datatable/ && cpy \"src/assets/**/*\" \"dist/ngx-datatable/assets\"",
-    "build:css": "sass --no-source-map dist/ngx-datatable/themes && sass --no-source-map dist/ngx-datatable",
+    "build:css": "sass --no-source-map dist/ngx-datatable/themes",
     "test": "npm run lint:commit && npm run lint:scss && npm run lint && npm run test:unit",
     "test:unit": "ng test ngx-datatable-lib --watch=false",
     "test:watch": "ng test ngx-datatable-lib",

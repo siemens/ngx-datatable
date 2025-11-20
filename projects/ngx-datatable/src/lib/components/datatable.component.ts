@@ -234,7 +234,7 @@ export class DatatableComponent<TRow extends Row = any>
     this._offset = val;
   }
   get offset(): number {
-    return Math.max(Math.min(this._offset, Math.ceil(this.rowCount / this.pageSize) - 1), 0);
+    return Math.max(Math.min(this._offset, Math.ceil(this.rowCount() / this.pageSize) - 1), 0);
   }
 
   /**
@@ -667,7 +667,7 @@ export class DatatableComponent<TRow extends Row = any>
     }
     return 0;
   });
-  rowCount = 0;
+  readonly rowCount = computed(() => this.calcRowCount());
   rowDiffer: IterableDiffer<TRow | undefined> = inject(IterableDiffers).find([]).create();
   /** This counter is increased, when the rowDiffer detects a change. This will cause an update of _internalRows. */
   private readonly _rowDiffCount = signal(0);
@@ -765,12 +765,6 @@ export class DatatableComponent<TRow extends Row = any>
       this.count();
       // Recalculate without tracking other signals
       untracked(() => this.recalculateDims());
-    });
-    // Recalculates the rowCount when internal rows change
-    // TODO: This should be a computed signal.
-    effect(() => {
-      this._internalRows();
-      this.rowCount = untracked(() => this.calcRowCount());
     });
   }
 
@@ -961,7 +955,6 @@ export class DatatableComponent<TRow extends Row = any>
    */
   recalculatePages(): void {
     this.pageSize = this.calcPageSize();
-    this.rowCount = this.calcRowCount();
   }
 
   /**

@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-24.04
     needs:
       - build-and-test
+    permissions:
+      id-token: write
     steps:
       - uses: actions/checkout@v5
         with:
@@ -33,7 +35,6 @@ jobs:
           GIT_COMMITTER_NAME: 'Siemens Element Bot'
           GIT_COMMITTER_EMAIL: 'simpl.si@siemens.com'
           GITHUB_TOKEN: ${{ secrets.ELEMENT_BOT_GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-documentation:
     runs-on: ubuntu-24.04

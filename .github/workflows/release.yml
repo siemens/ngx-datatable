@@ -15,7 +15,7 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # semantic-release needs this
           token: ${{ secrets.ELEMENT_BOT_GITHUB_TOKEN }} # Otherwise, branch protection rules are not bypassed.
@@ -46,7 +46,7 @@ jobs:
     steps:
       # semantic release will update the package.json version so
       # we need to build the artifacts again to have the correct version number in the docs.
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.ELEMENT_BOT_GITHUB_TOKEN }}

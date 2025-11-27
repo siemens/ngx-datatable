@@ -327,10 +327,10 @@ describe('DatatableComponent', () => {
     component.columns = columns;
     fixture.detectChanges();
 
-    const datatableComponent = fixture.debugElement.query(
+    const datatableComponent: DatatableComponent = fixture.debugElement.query(
       By.directive(DatatableComponent)
     ).componentInstance;
-    datatableComponent.offset = 1;
+    datatableComponent.offset.set(1);
 
     // sort by `id` descending
     sortBy({ column: 1 }, fixture);
@@ -338,7 +338,7 @@ describe('DatatableComponent', () => {
     sortBy({ column: 1 }, fixture);
     fixture.detectChanges();
 
-    expect(datatableComponent.offset).toBe(0);
+    expect(datatableComponent.offset()).toBe(0);
   });
 
   it('should support array data', () => {

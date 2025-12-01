@@ -279,6 +279,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   readonly rowClass = input<(row: TRow) => string | Record<string, boolean>>();
   readonly groupedRows = input<Group<TRow>[]>();
   // TODO: Find a better way to handle default expansion state with signal input
+  // eslint-disable-next-line @angular-eslint/prefer-signals
   @Input() groupExpansionDefault?: boolean;
   readonly innerWidth = input.required<number>();
   readonly virtualization = input<boolean>();

@@ -21,7 +21,7 @@ jobs:
           token: ${{ secrets.ELEMENT_BOT_GITHUB_TOKEN }} # Otherwise, branch protection rules are not bypassed.
       - uses: actions/setup-node@v6
         with:
-          node-version: lts/jod
+          node-version: lts/krypton
           cache: 'npm'
       - uses: actions/download-artifact@v6
         with:
@@ -52,7 +52,7 @@ jobs:
           token: ${{ secrets.ELEMENT_BOT_GITHUB_TOKEN }}
       - uses: actions/setup-node@v6
         with:
-          node-version: lts/jod
+          node-version: lts/krypton
           cache: 'npm'
       - run: npm ci --prefer-offline --no-audit
       - run: npm run build:lib:prod

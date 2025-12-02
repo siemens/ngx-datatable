@@ -23,7 +23,7 @@ jobs:
       - name: Set Node Version
         uses: actions/setup-node@v6
         with:
-          node-version: lts/iron
+          node-version: lts/krypton
 
       - name: Install
         run: npm ci

@@ -57,7 +57,7 @@
     "@semantic-release/git": "^10.0.1",
     "@siemens/commitlint-config": "^2.2.1",
     "@siemens/eslint-config-angular": "^2.2.1",
-    "@siemens/eslint-plugin-defaultvalue": "^2.2.1",
+    "@siemens/eslint-plugin-defaultvalue": "^3.0.0",
     "@siemens/prettier-config": "^2.2.1",
     "@siemens/stylelint-config-scss": "^2.2.1",
     "@types/jasmine": "~5.1.0",

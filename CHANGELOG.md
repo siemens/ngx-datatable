@@ -1,3 +1,127 @@
+# [25.0.0](https://github.com/siemens/ngx-datatable/compare/24.3.3...25.0.0) (2025-12-02)
+
+
+### Features
+
+* convert `selected` to signal model with two-way binding ([85ed2ae](https://github.com/siemens/ngx-datatable/commit/85ed2ae7559b14245b500e4a3e1f19b6d41de1c4))
+* convert `sorts` to signal model with two-way binding ([e2f4928](https://github.com/siemens/ngx-datatable/commit/e2f4928f9838177bc7590b17366bf722cc5277c9))
+* update to Angular 20 ([327e91b](https://github.com/siemens/ngx-datatable/commit/327e91b62a3f52e76c8195aeb1863b7f95601198))
+
+
+### Bug Fixes
+
+* always apply `role="row"` on summary row ([59f9b09](https://github.com/siemens/ngx-datatable/commit/59f9b09a39b3217b2e4869fabef7142d7e21cdc2))
+* column `compareFn` should not use sort direction ([208ac4a](https://github.com/siemens/ngx-datatable/commit/208ac4a7a5860dd1d899f5274f8e5d7a4e41775b))
+* use actual buttons in pager ([8ad98e9](https://github.com/siemens/ngx-datatable/commit/8ad98e956a98ab97c0775cb7bc61504514d5c155))
+* use existing row and cell class styles on ghost rows ([a2cfbdd](https://github.com/siemens/ngx-datatable/commit/a2cfbdd6f7765ff167f5a094f390b60c804b82f3))
+
+
+### BREAKING CHANGES
+
+* The table no longer calls `TableColumn.compareFn`
+  with the sort direction.
+  The table already applies the proper direction.
+  This change only removes the parameter, the sorting itself remains unchanged.
+  
+  Any usages of the direction in custom `compareFn` must be removed.
+  Implementations which use this property can always return the value for `direction='desc'`,
+  to achieve the same result as before.
+* Angular 20+ is required.
+  Follow the Angular update guide to update your app: <https://angular.dev/update-guide?v=19.0-20.0>;
+* The pager component now uses buttons instead of anchors.
+  We did this change to properly reflect the nature of those buttons,
+  which have never been anchors in terms of behavior.
+  
+  This change affects custom themes. Please adjust them accordingly:
+  ```scss
+  // Before
+  .datatable-pager li a {
+    // styling
+  }
+  
+  // After
+  .datatable-pager .page-button {
+    // Override default button styles
+    border: 0;
+    background none;
+    // previous styling
+  }
+  ```
+* The selected input no longer mutates the original array
+  passed to the component. Applications that rely on the array being updated
+  in place must switch to two-way binding with [(selected)] to maintain
+  reactivity.
+* Ghost loader rows will now always use the existing `datatable-body-row` and `datatable-body-cell` classes for styling.
+  
+  This change ensures consistent styling between regular rows and ghost loader rows, improving visual consistency across the table. Previously, ghost loaders did not always apply these row styles, which caused ghost rows to not have the correct height, cell padding, and bottom border.
+  
+  To override or customize ghost loader styles, use the `ghost-element` and `ghost-cell` classes.
+* Several fields and methods are removed from the public API.
+  Those fields were never intended to be exposed.
+* Previously, the `groupedRows` input was updated by the datatable,
+  when `groupRowsBy` was used. This behavior was dropped. `groupedRows` will only contain
+  application provided values. The table calculates internal the actual `groupedRows`
+  without exposing them.
+* `@siemens/ngx-datatable` no longer contains an `index.scss` and `index.css`.
+  Those files were empty, and its usages can be removed without further changes.
+* Migration to Angular signal inputs/outputs.
+  
+  All components now use Angular’s `input()`, `model()`, and `output()` functions
+  instead of the `@Input`/`@Output` decorators. Consider the following
+  implications for your code:
+  
+  Template bindings: No changes required! Continue using [inputName] and
+  (outputName) in templates as before.
+  
+  Programmatic access: Use template binding whenever possible. If not
+  possible, understand that setting input values programmatically is only
+  possible for model() inputs. Reading input values programmatically also
+  requires adjustments for the signal API:
+  ```ts
+  class Component {
+    @ViewChild(DatatableComponent) private datatableComponent!: DatatableComponent;
+    myFunction(): void {
+      // Before
+      const value = this.datatableComponent.rows;
+      // After
+      const value = this.datatableComponent.rows();
+    }
+  }
+  ```
+  
+  If programmatically subscribing to outputs is needed, read the following guide:
+  https://angular.dev/guide/components/outputs#subscribing-to-outputs-programmatically
+
+### DEPRECATIONS
+
+* The `DatatableComponent.sort` output is deprecated; use (sortsChange) or two-way binding instead.
+  
+  Before:
+  ```html
+  <ngx-datatable [sorts]="mySorts" (sort)="onSort($event)"></ngx-datatable>
+  ```
+  
+  After:
+  ```html
+  <ngx-datatable [sorts]="mySorts" (sortsChange)="onSort({sorts: $event})"></ngx-datatable>
+  <!-- or -->
+  <ngx-datatable [(sorts)]="mySorts"></ngx-datatable>
+  ```
+* The `DatatableComponent.select` output is deprecated; use (selectedChange)
+  or two-way binding instead .
+  
+  Before:
+  ```html
+  <ngx-datatable [selected]="mySelection" (select)="onSelect($event)"></ngx-datatable>
+  ```
+  
+  After:
+  ```html
+  <ngx-datatable [(selected)]="mySelection" (selectedChange)="onSelect({selected: $event})"></ngx-datatable>
+  <!-- or -->
+  <ngx-datatable [(selected)]="mySelection"></ngx-datatable>
+  ```
+
 ## [24.3.3](https://github.com/siemens/ngx-datatable/compare/24.3.2...24.3.3) (2025-10-31)
 
 

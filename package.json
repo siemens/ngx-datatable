@@ -59,7 +59,7 @@
     "@siemens/eslint-config-angular": "^2.2.1",
     "@siemens/eslint-plugin-defaultvalue": "^2.2.1",
     "@siemens/prettier-config": "^2.2.1",
-    "@siemens/stylelint-config-scss": "^2.2.1",
+    "@siemens/stylelint-config-scss": "^3.0.0",
     "@types/jasmine": "~5.1.0",
     "@types/jasminewd2": "^2.0.13",
     "@types/node": "^24.0.0",

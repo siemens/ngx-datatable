@@ -22,6 +22,11 @@
   rebaseWhen: "conflicted",
   packageRules: [
     {
+      groupName: "Siemens lint dependencies",
+      description: ["Update Siemens lint packages together"],
+      matchSourceUrls: ["https://github.com/siemens/lint"]
+    },
+    {
       description: [
         "Prevent Angular related major and minor updates. Those should be manually done"
       ],

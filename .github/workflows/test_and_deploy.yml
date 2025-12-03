@@ -43,6 +43,9 @@ jobs:
           name: dist
           path: dist
 
+      - name: Install chromium
+        run: npx playwright install --with-deps chromium
+
       - name: Test
         run: npm run ci
 

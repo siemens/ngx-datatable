@@ -1,16 +1,7 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import {
-  Component,
-  ComponentRef,
-  provideZonelessChangeDetection,
-  TemplateRef,
-  viewChild,
-  AfterViewInit,
-  signal
-} from '@angular/core';
+import { Component, ComponentRef, computed, signal, TemplateRef, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TableColumnInternal } from '../../types/internal.types';
 import { toInternalColumn } from '../../utils/column-helper';
 import { numericIndexGetter } from '../../utils/column-prop-getters';
 import { DataTableBodyCellComponent } from './body-cell.component';
@@ -31,17 +22,12 @@ import { BodyCellHarness } from './testing/body-cell.harness';
       }"
     /> `
 })
-class MockCellTemplateComponent implements AfterViewInit {
+class MockCellTemplateComponent {
   readonly row = signal({ id: 1 });
-  readonly column = signal<TableColumnInternal<any>>(toInternalColumn([{ prop: 'id' }])[0]);
+  readonly column = computed(
+    () => toInternalColumn([{ prop: 'id', cellTemplate: this.template() }])[0]
+  );
   readonly template = viewChild('template', { read: TemplateRef<any> });
-
-  ngAfterViewInit() {
-    this.column.set({
-      ...this.column(),
-      cellTemplate: this.template()
-    });
-  }
 }
 
 describe('DataTableBodyCellComponent', () => {
@@ -50,9 +36,6 @@ describe('DataTableBodyCellComponent', () => {
   let harness: BodyCellHarness;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
-      providers: [provideZonelessChangeDetection()]
-    });
     fixture = TestBed.createComponent(DataTableBodyCellComponent);
     component = fixture.componentRef;
     component.setInput('row', ['Hello']);
@@ -104,7 +87,7 @@ describe('DataTableBodyCellComponent', () => {
     it('should emit activate event on checkbox click', async () => {
       expect(await harness.hasCheckbox()).not.toBeNull();
 
-      const activateEventSpy = spyOn(component.instance.activate, 'emit');
+      const activateEventSpy = vi.spyOn(component.instance.activate, 'emit');
 
       await harness.toggleCheckbox();
       expect(activateEventSpy).toHaveBeenCalled();
@@ -114,7 +97,7 @@ describe('DataTableBodyCellComponent', () => {
       component.setInput('disabled', true);
       expect(await harness.hasCheckbox()).toBe(true);
 
-      const activateEventSpy = spyOn(component.instance.activate, 'emit');
+      const activateEventSpy = vi.spyOn(component.instance.activate, 'emit');
 
       await harness.toggleCheckbox();
       expect(activateEventSpy).not.toHaveBeenCalled();
@@ -142,7 +125,7 @@ describe('DataTableBodyCellComponent', () => {
       const button = await harness.hasTreeToggleButton();
       expect(button).toBe(true);
 
-      const treeActionSpy = spyOn(component.instance.treeAction, 'emit');
+      const treeActionSpy = vi.spyOn(component.instance.treeAction, 'emit');
 
       await harness.clickTreeToggleButton();
       expect(treeActionSpy).toHaveBeenCalledWith({ id: 1 });

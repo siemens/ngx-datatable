@@ -101,18 +101,29 @@
           "configurations": {
             "production": {
               "tsConfig": "projects/ngx-datatable/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ngx-datatable/tsconfig.lib.json"
             }
           }
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/ngx-datatable/tsconfig.spec.json",
-            "karmaConfig": "projects/ngx-datatable/karma.conf.js",
-            "codeCoverageExclude": [
-              "projects/ngx-datatable/**/*.module.ts",
-              "projects/ngx-datatable/**/testing/**/*.ts"
-            ]
+            "browsers": ["chromium"]
+          },
+          "configurations": {
+            "ci": {
+              "browsers": ["chromiumheadless"],
+              "coverage": true,
+              "coverageReporters": ["html", "lcovonly"],
+              "coverageExclude": [
+                "projects/ngx-datatable/**/*.module.ts",
+                "projects/ngx-datatable/**/testing/**/*.ts"
+              ],
+              "watch": false
+            }
           }
         },
         "lint": {

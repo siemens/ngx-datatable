@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActivateEvent, DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -28,6 +28,7 @@ import { DataService } from '../data.service';
           >
         </div>
 
+        @let rows = this.rows();
         <ngx-datatable
           class="material selection-row"
           rowHeight="auto"
@@ -60,7 +61,7 @@ import { DataService } from '../data.service';
   `
 })
 export class SingleSelectionComponent {
-  rows: Employee[] = [];
+  readonly rows = signal<Employee[]>([]);
 
   selected: Employee[] = [];
 
@@ -71,7 +72,7 @@ export class SingleSelectionComponent {
   constructor() {
     this.dataService.load('company.json').subscribe(data => {
       this.selected = [data[2]];
-      this.rows = data;
+      this.rows.set(data);
     });
   }
 

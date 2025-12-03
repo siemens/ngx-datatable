@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, signal, ViewChild } from '@angular/core';
 import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -26,6 +26,7 @@ import { DataService } from '../data.service';
           <a href="javascript:void(0)" (click)="remove()">Remove</a>
         </small>
       </h3>
+      @let rows = this.rows();
       <ngx-datatable
         #mydatatable
         class="material"
@@ -48,7 +49,7 @@ export class LiveDataComponent {
   @ViewChild('mydatatable') mydatatable!: DatatableComponent<Employee & { updated: string }>;
 
   count = 50;
-  rows: (Employee & { updated: string })[] = [];
+  readonly rows = signal<(Employee & { updated: string })[]>([]);
   active = true;
   temp: (Employee & { updated: string })[] = [];
   cols = ['name', 'gender', 'company'] as const;
@@ -57,12 +58,14 @@ export class LiveDataComponent {
 
   constructor() {
     this.dataService.load('company.json').subscribe(data => {
-      this.rows = data.map(d => ({
-        ...d,
-        updated: Date.now().toString()
-      }));
+      this.rows.set(
+        data.map(d => ({
+          ...d,
+          updated: Date.now().toString()
+        }))
+      );
 
-      this.temp = [...this.rows];
+      this.temp = [...this.rows()];
     });
 
     this.start();
@@ -85,11 +88,11 @@ export class LiveDataComponent {
   }
 
   add() {
-    this.rows.splice(0, 0, this.temp[this.count++]);
+    this.rows.update(currentRows => [this.temp[this.count++], ...currentRows]);
   }
 
   remove() {
-    this.rows.splice(0, this.rows.length);
+    this.rows.set([]);
   }
 
   updateRandom() {
@@ -97,7 +100,7 @@ export class LiveDataComponent {
     const cellNum = this.randomNum(0, 3);
     const newRow = this.randomNum(0, 100);
     const prop = this.cols[cellNum];
-    const rows = this.rows;
+    const rows = this.rows();
 
     if (rows.length) {
       const row = rows[rowNum];
@@ -105,7 +108,7 @@ export class LiveDataComponent {
       row.updated = Date.now().toString();
     }
 
-    this.rows = [...this.rows];
+    this.rows.set([...rows]);
 
     // this.cd.markForCheck();
     // this.mydatatable.update();

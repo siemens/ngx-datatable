@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datatable';
 
 import { FullEmployee } from '../data.model';
@@ -29,7 +29,7 @@ import { DataService } from '../data.service';
         [rowHeight]="50"
         [scrollbarV]="true"
         [scrollbarH]="true"
-        [rows]="rows"
+        [rows]="rows()"
       >
         <ngx-datatable-column name="Id" [width]="80" />
         <ngx-datatable-column name="Name" [width]="300" />
@@ -42,13 +42,11 @@ import { DataService } from '../data.service';
   `
 })
 export class FullScreenComponent {
-  rows: FullEmployee[] = [];
+  readonly rows = signal<FullEmployee[]>([]);
 
   private dataService = inject(DataService);
 
   constructor() {
-    this.dataService.load('100k.json').subscribe(data => {
-      this.rows = data;
-    });
+    this.dataService.load('100k.json').subscribe(data => this.rows.set(data));
   }
 }

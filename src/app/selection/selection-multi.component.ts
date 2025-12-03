@@ -1,10 +1,5 @@
-import { Component, inject } from '@angular/core';
-import {
-  ActivateEvent,
-  DatatableComponent,
-  SelectEvent,
-  TableColumn
-} from '@siemens/ngx-datatable';
+import { Component, inject, signal } from '@angular/core';
+import { ActivateEvent, DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
@@ -38,21 +33,20 @@ import { DataService } from '../data.service';
           rowHeight="auto"
           columnMode="force"
           selectionType="multi"
-          [rows]="rows"
+          [rows]="rows()"
           [columns]="columns"
           [headerHeight]="50"
           [footerHeight]="50"
           [limit]="5"
-          [selected]="selected"
+          [(selected)]="selected"
           (activate)="onActivate($event)"
-          (select)="onSelect($event)"
         />
       </div>
 
       <div class="selected-column">
         <h4>Selections</h4>
         <ul>
-          @for (sel of selected; track sel) {
+          @for (sel of selected(); track sel) {
             <li>
               {{ sel.name }}
             </li>
@@ -65,23 +59,16 @@ import { DataService } from '../data.service';
   `
 })
 export class MultiSelectionComponent {
-  rows: Employee[] = [];
+  readonly rows = signal<Employee[]>([]);
 
-  selected: Employee[] = [];
+  readonly selected = signal<Employee[]>([]);
 
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
 
   private dataService = inject(DataService);
 
   constructor() {
-    this.dataService.load('company.json').subscribe(data => {
-      this.rows = data;
-    });
-  }
-
-  onSelect({ selected }: SelectEvent<Employee>) {
-    this.selected.splice(0, this.selected.length);
-    this.selected.push(...selected);
+    this.dataService.load('company.json').subscribe(data => this.rows.set(data));
   }
 
   onActivate(event: ActivateEvent<Employee>) {

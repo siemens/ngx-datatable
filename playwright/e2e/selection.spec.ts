@@ -41,16 +41,14 @@ test.describe('selection', () => {
 
       await selectedRow.click();
 
-      const cellsInRow = await selectedRow.locator('datatable-body-cell').all();
-
       await expect(selectedRow).toHaveClass(/active/);
-      expect(cellsInRow).toHaveLength(3);
+      await expect(selectedRow.locator('datatable-body-cell')).toHaveCount(3);
 
-      const selectedColumnLi = await page.locator('.selected-column').locator('ul > li').all();
+      const selectedColumnLi = page.locator('.selected-column').locator('ul > li');
 
-      expect(selectedColumnLi).toHaveLength(1);
+      await expect(selectedColumnLi).toHaveCount(1);
 
-      await expect(selectedColumnLi[0]).toContainText('Claudine Neal');
+      await expect(selectedColumnLi.first()).toContainText('Claudine Neal');
 
       await si.runVisualAndA11yTests('row-selection-initial');
     });
@@ -67,14 +65,14 @@ test.describe('selection', () => {
         modifiers: ['Shift']
       });
 
-      const rows = await page.locator('datatable-body-row.active').all();
+      const rows = page.locator('datatable-body-row.active');
 
-      expect(rows).toHaveLength(4);
+      await expect(rows).toHaveCount(4);
 
-      const names = [];
-      rows.map(async row => {
+      const names: string[] = [];
+      for (const row of await rows.all()) {
         names.push(await row.locator('datatable-body-cell').first().innerText());
-      });
+      }
 
       const selectedColumnLi = await page.locator('.selected-column').locator('ul > li').all();
 
@@ -97,14 +95,14 @@ test.describe('selection', () => {
         modifiers: ['ControlOrMeta']
       });
 
-      const selectedRows = await page.locator('datatable-body-row.active').all();
+      const selectedRows = page.locator('datatable-body-row.active');
 
-      expect(selectedRows).toHaveLength(2);
+      await expect(selectedRows).toHaveCount(2);
 
-      const names = [];
-      selectedRows.map(async row => {
+      const names: string[] = [];
+      for (const row of await selectedRows.all()) {
         names.push(await row.locator('datatable-body-cell').first().innerText());
-      });
+      }
 
       const selectedColumnLi = await page.locator('.selected-column').locator('ul > li').all();
 
@@ -129,29 +127,23 @@ test.describe('selection', () => {
       const disabledRow = page.getByRole('row', { name: 'Ethel Price' });
       await disabledRow.click();
 
-      let selectedRows = await page.locator('datatable-body-row.active').all();
-      expect(selectedRows).toHaveLength(0);
+      const selectedRows = page.locator('datatable-body-row.active');
+      await expect(selectedRows).toHaveCount(0);
 
-      let selectedNamesLi = await page.locator('.selected-column').locator('ul > li').all();
-      expect(selectedNamesLi).toHaveLength(1);
-      expect(await selectedNamesLi.at(0).innerText()).toBe('No Selections');
+      const selectedNamesLi = page.locator('.selected-column').locator('ul > li');
+      await expect(selectedNamesLi).toHaveCount(1);
+      await expect(selectedNamesLi.first()).toHaveText('No Selections');
 
       await page.getByRole('row', { name: 'Beryl Rice' }).click();
 
-      selectedRows = await page.locator('datatable-body-row.active').all();
-      selectedNamesLi = await page.locator('.selected-column').locator('ul > li').all();
-
-      expect(selectedRows).toHaveLength(1);
-      expect(selectedNamesLi).toHaveLength(1);
+      await expect(selectedRows).toHaveCount(1);
+      await expect(selectedNamesLi).toHaveCount(1);
 
       await disabledRow.click();
 
-      selectedRows = await page.locator('datatable-body-row.active').all();
-      selectedNamesLi = await page.locator('.selected-column').locator('ul > li').all();
-
-      expect(selectedRows).toHaveLength(0);
-      expect(selectedNamesLi).toHaveLength(1);
-      expect(await selectedNamesLi.at(0).innerText()).toBe('No Selections');
+      await expect(selectedRows).toHaveCount(0);
+      await expect(selectedNamesLi).toHaveCount(1);
+      await expect(selectedNamesLi.first()).toHaveText('No Selections');
 
       await si.runVisualAndA11yTests('disable-row-selection');
     });
@@ -177,8 +169,8 @@ test.describe('selection', () => {
         await row.check();
       }
 
-      let selectedNamesLi = await page.locator('.selected-column').locator('ul > li').all();
-      expect(selectedNamesLi).toHaveLength(4);
+      const selectedNamesLi = page.locator('.selected-column').locator('ul > li');
+      await expect(selectedNamesLi).toHaveCount(4);
 
       await si.runVisualAndA11yTests('checkbox-selection-all-checked', [
         {
@@ -194,8 +186,7 @@ test.describe('selection', () => {
       await rowsWithCheckbox[0].uncheck();
       await rowsWithCheckbox[1].uncheck();
 
-      selectedNamesLi = await page.locator('.selected-column').locator('ul > li').all();
-      expect(selectedNamesLi).toHaveLength(2);
+      await expect(selectedNamesLi).toHaveCount(2);
 
       await si.runVisualAndA11yTests('checkbox-selection-uncheck', [
         {
@@ -220,27 +211,21 @@ test.describe('selection', () => {
       await page.getByRole('row', { name: 'Beryl Rice' }).click();
       await page.getByRole('row', { name: 'Wilder Gonzales' }).click();
 
-      let selectedRows = await page.locator('datatable-body-row.active').all();
-      expect(selectedRows).toHaveLength(3);
+      const selectedRows = page.locator('datatable-body-row.active');
+      await expect(selectedRows).toHaveCount(3);
 
-      let selectedNamesLi = await page.locator('.selected-column').locator('ul > li').all();
-      expect(selectedNamesLi).toHaveLength(3);
+      const selectedNamesLi = page.locator('.selected-column').locator('ul > li');
+      await expect(selectedNamesLi).toHaveCount(3);
 
       await page.getByRole('row', { name: 'Beryl Rice' }).click();
 
-      selectedRows = await page.locator('datatable-body-row.active').all();
-      selectedNamesLi = await page.locator('.selected-column').locator('ul > li').all();
-
-      expect(selectedRows).toHaveLength(2);
-      expect(selectedNamesLi).toHaveLength(2);
+      await expect(selectedRows).toHaveCount(2);
+      await expect(selectedNamesLi).toHaveCount(2);
 
       await page.getByRole('row', { name: 'Claudine Neal' }).click();
 
-      selectedRows = await page.locator('datatable-body-row.active').all();
-      selectedNamesLi = await page.locator('.selected-column').locator('ul > li').all();
-
-      expect(selectedRows).toHaveLength(1);
-      expect(selectedNamesLi).toHaveLength(1);
+      await expect(selectedRows).toHaveCount(1);
+      await expect(selectedNamesLi).toHaveCount(1);
 
       await si.runVisualAndA11yTests('click-selection');
     });
@@ -265,15 +250,15 @@ test.describe('selection', () => {
       await page.keyboard.press('Tab');
       await page.keyboard.press('Space');
 
-      let selectedRows = await page.locator('datatable-body-row.active').all();
-      expect(selectedRows).toHaveLength(3);
+      const selectedRows = page.locator('datatable-body-row.active');
+      await expect(selectedRows).toHaveCount(3);
 
       const disabledElement = page.getByRole('row', { name: 'Beryl Rice' });
 
       await expect(disabledElement).not.toHaveClass(/active/);
 
-      let selectedNamesLi = await page.locator('.selected-column').locator('ul > li').all();
-      expect(selectedNamesLi).toHaveLength(3);
+      const selectedNamesLi = page.locator('.selected-column').locator('ul > li');
+      await expect(selectedNamesLi).toHaveCount(3);
 
       await si.runVisualAndA11yTests('navigation-using-tab-and-space', [
         {
@@ -289,11 +274,9 @@ test.describe('selection', () => {
       await page.keyboard.press('Shift+Tab');
       await page.keyboard.press('Space');
 
-      selectedRows = await page.locator('datatable-body-row.active').all();
-      expect(selectedRows).toHaveLength(2);
+      await expect(selectedRows).toHaveCount(2);
 
-      selectedNamesLi = await page.locator('.selected-column').locator('ul > li').all();
-      expect(selectedNamesLi).toHaveLength(2);
+      await expect(selectedNamesLi).toHaveCount(2);
 
       await si.runVisualAndA11yTests('backward-navigation-shift+tab+space', [
         {

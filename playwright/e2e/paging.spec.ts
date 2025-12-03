@@ -51,8 +51,7 @@ test.describe('paging', () => {
 
       await page.waitForSelector('datatable-scroller');
 
-      const pager = page.locator('datatable-pager');
-      expect(pager).not.toBeVisible();
+      await expect(page.locator('ghost-loader').first()).not.toBeVisible();
 
       await si.runVisualAndA11yTests('infinite-scroll-initial', [
         {

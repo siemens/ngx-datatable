@@ -10,8 +10,6 @@ test.describe('resize and pinning', () => {
     const cityColumn = page.getByRole('columnheader', { name: 'City' });
     const stateColumn = page.getByRole('columnheader', { name: 'State' });
 
-    const originalWidth = await nameColumn.boundingBox();
-
     await expect(nameColumn).toHaveAttribute('resizeable');
     await expect(genderColumn).toHaveAttribute('resizeable');
     await expect(cityColumn).toHaveAttribute('resizeable');
@@ -21,17 +19,24 @@ test.describe('resize and pinning', () => {
 
     // Resize name column
     const resizeHandler = nameColumn.locator('.resize-handle');
-    const originBoundingBox = await resizeHandler.boundingBox();
+    const resizeHandlerBoundBox = await resizeHandler.boundingBox();
+    const columnBoundBox = await nameColumn.boundingBox();
+    if (!resizeHandlerBoundBox || !columnBoundBox) {
+      throw new Error('Resize handle or column bounding box not found');
+    }
     const increaseWidthBy = 300;
 
-    await page.mouse.click(originBoundingBox.x, originBoundingBox.y);
+    await resizeHandler.hover({ force: true, position: { x: 0, y: 0 } });
     await page.mouse.down();
-    await page.mouse.click(originBoundingBox.x + increaseWidthBy, originBoundingBox.y);
+    await page.mouse.move(resizeHandlerBoundBox.x + increaseWidthBy, resizeHandlerBoundBox.y, {
+      steps: 2
+    });
     await page.mouse.up();
 
-    const updatedWidth = await nameColumn.boundingBox();
-
-    expect(updatedWidth.width).toBe(originalWidth.width + increaseWidthBy);
+    await expect(nameColumn).toHaveJSProperty(
+      'offsetWidth',
+      Math.round(columnBoundBox!.width + increaseWidthBy)
+    );
 
     await si.runVisualAndA11yTests('resize-name-column');
   });

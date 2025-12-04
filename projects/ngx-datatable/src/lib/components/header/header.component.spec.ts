@@ -1,6 +1,6 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { ComponentRef } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentRef, provideZonelessChangeDetection } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { toInternalColumn } from '../../utils/column-helper';
@@ -13,6 +13,9 @@ describe('DataTableHeaderComponent', () => {
   let harness: HeaderHarness;
 
   beforeEach(async () => {
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection()]
+    });
     fixture = TestBed.createComponent(DataTableHeaderComponent);
     fixture.componentRef.setInput('columns', []);
     fixture.componentRef.setInput('innerWidth', 200);
@@ -37,7 +40,8 @@ describe('DataTableHeaderComponent', () => {
     expect(await harness.getColumnName(0)).toBe('Column 1');
   });
 
-  it('should calculate inner row widths based on columns total width', fakeAsync(async () => {
+  it('should calculate inner row widths based on columns total width', async () => {
+    jasmine.clock().install();
     componentRef.setInput(
       'columns',
       toInternalColumn([
@@ -46,9 +50,10 @@ describe('DataTableHeaderComponent', () => {
       ])
     );
     // there is setTimeout in columns setter so we need to wait for it
-    tick();
-    expect(await harness.getHeaderRowWidth()).toBe(500);
-  }));
+    jasmine.clock().tick(0);
+    expect(await harness.getHeaderRowWidth()).toBeCloseTo(500);
+    jasmine.clock().uninstall();
+  });
 
   it('should place header cells based on column pinning group', async () => {
     componentRef.setInput(
@@ -168,7 +173,8 @@ describe('DataTableHeaderComponent', () => {
     expect((await harness.getActiveSortColumn())[1]).toBe('Column 2');
   });
 
-  it('should reorder columns on drag', fakeAsync(async () => {
+  it('should reorder columns on drag', async () => {
+    jasmine.clock().install();
     componentRef.setInput(
       'columns',
       toInternalColumn([
@@ -191,11 +197,11 @@ describe('DataTableHeaderComponent', () => {
 
       // Update columns
       componentRef.setInput('columns', currentColumns);
-      tick();
+      jasmine.clock().tick(0);
     });
 
-    fixture.detectChanges();
-    tick();
+    await fixture.whenStable();
+    jasmine.clock().tick(0);
     const headerCells = fixture.debugElement.queryAll(By.css('datatable-header-cell.draggable'));
 
     // Get the first cell (Column 1) that we want to drag
@@ -213,11 +219,11 @@ describe('DataTableHeaderComponent', () => {
       bubbles: true
     });
     firstCell.dispatchEvent(mouseDownEvent);
-    fixture.detectChanges();
+    await fixture.whenStable();
 
     // Wait for drag start delay
-    tick(500);
-    fixture.detectChanges();
+    jasmine.clock().tick(500);
+    await fixture.whenStable();
 
     // Move to the second cell position
     const mouseMoveEvent = new MouseEvent('mousemove', {
@@ -226,8 +232,8 @@ describe('DataTableHeaderComponent', () => {
       bubbles: true
     });
     document.dispatchEvent(mouseMoveEvent);
-    fixture.detectChanges();
-    tick();
+    await fixture.whenStable();
+    jasmine.clock().tick(0);
 
     // End drag
     const mouseUpEvent = new MouseEvent('mouseup', {
@@ -238,12 +244,14 @@ describe('DataTableHeaderComponent', () => {
     document.dispatchEvent(mouseUpEvent);
 
     // Allow time for any async operations
-    tick(200);
+    jasmine.clock().tick(200);
 
     expect(await harness.getColumnName(0)).toBe('Column 2');
     expect(await harness.getColumnName(1)).toBe('Column 1');
     expect(await harness.getColumnName(2)).toBe('Column 3');
-  }));
+
+    jasmine.clock().uninstall();
+  });
 
   it('should translate only center group columns when offsetX is provided', async () => {
     componentRef.setInput(

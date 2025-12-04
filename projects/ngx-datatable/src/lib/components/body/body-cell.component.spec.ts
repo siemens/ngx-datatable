@@ -1,6 +1,14 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { Component, ComponentRef, TemplateRef, viewChild, AfterViewInit } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {
+  Component,
+  ComponentRef,
+  provideZonelessChangeDetection,
+  TemplateRef,
+  viewChild,
+  AfterViewInit,
+  signal
+} from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TableColumnInternal } from '../../types/internal.types';
 import { toInternalColumn } from '../../utils/column-helper';
@@ -14,8 +22,8 @@ import { BodyCellHarness } from './testing/body-cell.harness';
   template: `<ng-template #template let-row="row">Custom Cell Template {{ row.id }} </ng-template>
     <datatable-body-cell
       ariaRowCheckboxMessage="checkbox message"
-      [row]="row"
-      [column]="column"
+      [row]="row()"
+      [column]="column()"
       [cssClasses]="{
         treeStatusLoading: 'icon datatable-icon-loading',
         treeStatusExpanded: 'icon datatable-icon-down',
@@ -24,15 +32,15 @@ import { BodyCellHarness } from './testing/body-cell.harness';
     /> `
 })
 class MockCellTemplateComponent implements AfterViewInit {
-  row = { id: 1 };
-  column: TableColumnInternal<any> = toInternalColumn([{ prop: 'id' }])[0];
+  readonly row = signal({ id: 1 });
+  readonly column = signal<TableColumnInternal<any>>(toInternalColumn([{ prop: 'id' }])[0]);
   readonly template = viewChild('template', { read: TemplateRef<any> });
 
   ngAfterViewInit() {
-    this.column = {
-      ...this.column,
+    this.column.set({
+      ...this.column(),
       cellTemplate: this.template()
-    };
+    });
   }
 }
 
@@ -41,7 +49,10 @@ describe('DataTableBodyCellComponent', () => {
   let component: ComponentRef<DataTableBodyCellComponent>;
   let harness: BodyCellHarness;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach(async () => {
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection()]
+    });
     fixture = TestBed.createComponent(DataTableBodyCellComponent);
     component = fixture.componentRef;
     component.setInput('row', ['Hello']);
@@ -53,7 +64,7 @@ describe('DataTableBodyCellComponent', () => {
       treeStatusCollapsed: 'icon datatable-icon-up'
     });
     harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, BodyCellHarness);
-  }));
+  });
 
   it('should get value from zero-index prop', async () => {
     const columns = toInternalColumn([{ name: 'First Column', prop: 0 }]);
@@ -143,7 +154,7 @@ describe('DataTableBodyCellComponent', () => {
     beforeEach(async () => {
       templateFixture = TestBed.createComponent(MockCellTemplateComponent);
       harness = await TestbedHarnessEnvironment.harnessForFixture(templateFixture, BodyCellHarness);
-      templateFixture.detectChanges();
+      await templateFixture.whenStable();
     });
 
     it('should render custom cell template when provided along with cell context', async () => {

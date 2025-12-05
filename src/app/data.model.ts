@@ -1,4 +1,4 @@
-import { TreeStatus } from '../../projects/ngx-datatable/src/lib/types/public.types';
+import { TreeStatus } from '@siemens/ngx-datatable';
 
 export interface Employee {
   name: string;

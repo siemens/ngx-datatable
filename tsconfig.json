@@ -1,29 +1,41 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
-    "declaration": false,
-    "experimentalDecorators": true,
-    "module": "es2022",
-    "moduleResolution": "bundler",
-    "importHelpers": true,
-    "target": "es2022",
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "noUnusedLocals": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noImplicitReturns": true,
     "paths": {
-      "@siemens/ngx-datatable": ["projects/ngx-datatable/src/public-api.ts"]
+      "@siemens/ngx-datatable": ["./projects/ngx-datatable/src/public-api.ts"]
     },
-    "useDefineForClassFields": false,
-    "strict": true
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "preserve",
+    "resolveJsonModule": true
   },
   "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
+    "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
-    "strictTemplates": true,
-    "enableIvy": true
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
   },
-  "exclude": ["testing/**/*.ts"]
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/ngx-datatable/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ngx-datatable/tsconfig.spec.json"
+    }
+  ]
 }

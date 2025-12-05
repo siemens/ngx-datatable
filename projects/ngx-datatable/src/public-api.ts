@@ -28,7 +28,7 @@ export * from './lib/types/table-column.type';
 
 export {
   providedNgxDatatableConfig,
-  NgxDatatableConfig,
-  NgxDatatableMessages,
-  NgxDatatableCssClasses
+  type NgxDatatableConfig,
+  type NgxDatatableMessages,
+  type NgxDatatableCssClasses
 } from './lib/ngx-datatable.config';

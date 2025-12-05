@@ -39,12 +39,6 @@
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
               "tsConfig": "tsconfig.app.prod.json",
               "optimization": true,
               "outputHashing": "all",
@@ -82,18 +76,6 @@
           "builder": "@angular/build:extract-i18n",
           "options": {
             "buildTarget": "ngx-datatable:build"
-          }
-        },
-        "test": {
-          "builder": "@angular/build:karma",
-          "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
-            "scripts": []
           }
         },
         "lint": {
@@ -139,7 +121,8 @@
             "lintFilePatterns": [
               "projects/ngx-datatable/**/*.ts",
               "projects/ngx-datatable/**/*.html"
-            ]
+            ],
+            "eslintConfig": "projects/ngx-datatable/eslint.config.mjs"
           }
         }
       }

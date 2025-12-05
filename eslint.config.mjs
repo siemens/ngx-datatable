@@ -14,7 +14,7 @@ export const tsConfig = typescriptEslint.config({
   files: ['**/*.ts'],
   languageOptions: {
     parserOptions: {
-      project: ['tsconfig.json'],
+      project: ['tsconfig.app.json'],
       tsconfigRootDir: __dirname
     }
   },

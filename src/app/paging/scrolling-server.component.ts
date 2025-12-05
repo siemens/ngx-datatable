@@ -2,8 +2,8 @@ import { Component, ElementRef, inject, Injectable, OnInit, signal } from '@angu
 import { DatatableComponent } from '@siemens/ngx-datatable';
 import { Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
-import data from 'src/assets/data/company.json';
 
+import data from '../../../src/assets/data/company.json';
 import { Employee } from '../data.model';
 
 const companyData = data as any[];

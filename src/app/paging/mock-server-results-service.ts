@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
-import companyData from 'src/assets/data/company.json';
 
+import companyData from '../../../src/assets/data/company.json';
 import { Employee } from '../data.model';
 import { Page } from './model/page';
 import { PagedData } from './model/paged-data';

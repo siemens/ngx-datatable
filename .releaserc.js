@@ -68,6 +68,11 @@ export default {
         message: 'chore(release): ${nextRelease.version}'
       }
     ],
-    '@semantic-release/github'
+    [
+      '@semantic-release/github',
+      {
+        successComment: false
+      }
+    ]
   ]
 };

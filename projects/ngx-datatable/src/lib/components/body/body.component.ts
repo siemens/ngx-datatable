@@ -918,17 +918,37 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   }
 
   getPrevNextRow(rowElement: HTMLElement, key: string): any {
-    const parentElement = rowElement.parentElement;
+    const isGroupedRows = this.isGroup([]);
+    const parentElement = isGroupedRows ? rowElement : rowElement.parentElement;
+    const groupWrapperElement = rowElement.parentElement;
 
     if (parentElement) {
       let focusElement: Element | null = null;
       if (key === ARROW_UP) {
         focusElement = parentElement.previousElementSibling;
+        if (focusElement?.classList.contains('datatable-group-header')) {
+          const prevGroup = groupWrapperElement?.previousElementSibling;
+          if (prevGroup) {
+            return prevGroup.children[prevGroup.children.length - 1];
+          } else {
+            return rowElement;
+          }
+        }
       } else if (key === ARROW_DOWN) {
         focusElement = parentElement.nextElementSibling;
+        if (!focusElement && isGroupedRows) {
+          const nextGroup = groupWrapperElement?.nextElementSibling;
+          if (nextGroup) {
+            return nextGroup.children[1];
+          } else {
+            return rowElement;
+          }
+        }
       }
 
-      if (focusElement?.children.length) {
+      if (isGroupedRows) {
+        return focusElement;
+      } else if (focusElement?.children.length) {
         return focusElement.children[0];
       }
     }

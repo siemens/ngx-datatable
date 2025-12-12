@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: lts/krypton
           cache: 'npm'
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
         with:
           name: dist
           path: dist

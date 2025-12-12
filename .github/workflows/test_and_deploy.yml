@@ -38,7 +38,7 @@ jobs:
         run: npm run build:prod
 
       - name: Archive build
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: dist
           path: dist
@@ -53,7 +53,7 @@ jobs:
           npm run build -- --configuration=production
 
       - name: Archive coverage results
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: success() || failure()
         with:
           name: coverage
@@ -89,7 +89,7 @@ jobs:
         run: git lfs pull
 
       - name: Download build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: dist
           path: dist
@@ -102,7 +102,7 @@ jobs:
 
       - name: Upload E2E Results
         if: success() || failure()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: e2e-results
           path: playwright/results

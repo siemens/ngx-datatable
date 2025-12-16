@@ -50,6 +50,12 @@ export type StaticTestOptions = {
   skipAutoScaleViewport?: boolean;
 };
 
+export type VisualAndA11yTestOptions = {
+  step?: string;
+  axeRulesSet?: (string | { id: string; enabled: boolean })[];
+  maxDiffPixels?: number;
+};
+
 class SiTestHelpers {
   private disableAnimationsTag: ElementHandle<Node> | undefined;
 
@@ -77,10 +83,21 @@ class SiTestHelpers {
   }
 
   public async runVisualAndA11yTests(
-    step?: string,
-    axeRulesSet: (string | { id: string; enabled: boolean })[] = [],
-    maxDiffPixels?: number
+    stepOrOptions?: string | VisualAndA11yTestOptions
   ): Promise<void> {
+    // Handle both signatures - string or object
+    let step: string | undefined;
+    let axeRulesSet: (string | { id: string; enabled: boolean })[] = [];
+    let maxDiffPixels: number | undefined;
+
+    if (typeof stepOrOptions === 'string') {
+      step = stepOrOptions;
+    } else if (stepOrOptions) {
+      step = stepOrOptions.step;
+      axeRulesSet = stepOrOptions.axeRulesSet ?? [];
+      maxDiffPixels = stepOrOptions.maxDiffPixels;
+    }
+
     const example = this.getExampleName() ?? this.testInfo.title;
     const testName = this.makeTestName(example, step);
     await test.step(

@@ -7,25 +7,31 @@ test.describe('row grouping', () => {
     await si.visitExample(example);
 
     await expect(page.getByText('Ethel Price')).toBeVisible();
-    await si.runVisualAndA11yTests('default', [
-      // interactive elements< (<a/>, <input/> etc) within table cells are failing
-      {
-        id: 'aria-required-children',
-        enabled: false
-      }
-    ]);
+    await si.runVisualAndA11yTests({
+      step: 'default',
+      axeRulesSet: [
+        // interactive elements< (<a/>, <input/> etc) within table cells are failing
+        {
+          id: 'aria-required-children',
+          enabled: false
+        }
+      ]
+    });
 
     const groupCheckbox = page.locator('.datatable-group-cell .datatable-checkbox input').first();
     groupCheckbox.check();
 
     await expect(page.getByText('4 selected')).toBeVisible();
 
-    await si.runVisualAndA11yTests('group-selected', [
-      {
-        id: 'aria-required-children',
-        enabled: false
-      }
-    ]);
+    await si.runVisualAndA11yTests({
+      step: 'group-selected',
+      axeRulesSet: [
+        {
+          id: 'aria-required-children',
+          enabled: false
+        }
+      ]
+    });
   });
 
   test(example + ' expand/collapse', async ({ si, page }) => {
@@ -35,19 +41,25 @@ test.describe('row grouping', () => {
     const groupHeader = page.getByTitle('Expand/Collapse Group').first();
     groupHeader.click();
     await expect(page.getByText('Ethel Price')).not.toBeVisible();
-    await si.runVisualAndA11yTests('group-collapsed', [
-      {
-        id: 'aria-required-children',
-        enabled: false
-      }
-    ]);
+    await si.runVisualAndA11yTests({
+      step: 'group-collapsed',
+      axeRulesSet: [
+        {
+          id: 'aria-required-children',
+          enabled: false
+        }
+      ]
+    });
     groupHeader.click();
     await expect(page.getByText('Ethel Price')).toBeVisible();
-    await si.runVisualAndA11yTests('group-expanded', [
-      {
-        id: 'aria-required-children',
-        enabled: false
-      }
-    ]);
+    await si.runVisualAndA11yTests({
+      step: 'group-expanded',
+      axeRulesSet: [
+        {
+          id: 'aria-required-children',
+          enabled: false
+        }
+      ]
+    });
   });
 });

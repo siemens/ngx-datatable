@@ -54,6 +54,7 @@ export type VisualAndA11yTestOptions = {
   step?: string;
   axeRulesSet?: (string | { id: string; enabled: boolean })[];
   maxDiffPixels?: number;
+  ariaSnapshot?: boolean;
 };
 
 class SiTestHelpers {
@@ -89,6 +90,7 @@ class SiTestHelpers {
     let step: string | undefined;
     let axeRulesSet: (string | { id: string; enabled: boolean })[] = [];
     let maxDiffPixels: number | undefined;
+    let ariaSnapshot = false;
 
     if (typeof stepOrOptions === 'string') {
       step = stepOrOptions;
@@ -96,6 +98,7 @@ class SiTestHelpers {
       step = stepOrOptions.step;
       axeRulesSet = stepOrOptions.axeRulesSet ?? [];
       maxDiffPixels = stepOrOptions.maxDiffPixels;
+      ariaSnapshot = stepOrOptions.ariaSnapshot ?? false;
     }
 
     const example = this.getExampleName() ?? this.testInfo.title;
@@ -152,6 +155,11 @@ class SiTestHelpers {
             maxDiffPixels,
             stylePath: './playwright/support/vrt-styles.css'
           });
+          if (ariaSnapshot) {
+            await expect(this.page.locator('main')).toMatchAriaSnapshot({
+              name: testName + '.yaml'
+            });
+          }
         }
       },
       { box: true }

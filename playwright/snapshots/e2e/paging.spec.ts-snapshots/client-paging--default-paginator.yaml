@@ -1,0 +1,72 @@
+- main:
+  - heading "Client-side Paging Source" [level=3]:
+    - text: ""
+    - link "Source":
+      - /url: https://github.com/siemens/ngx-datatable/blob/main/src/app/paging/paging-client.component.ts
+  - table:
+    - rowgroup:
+      - row "Name c Gender c Company c":
+        - columnheader "Name c"
+        - columnheader "Gender c"
+        - columnheader "Company c"
+    - rowgroup:
+      - row "Consuelo Dickson female Poshome":
+        - cell "Consuelo Dickson"
+        - cell "female"
+        - cell "Poshome"
+      - row "Billie Rowe female Cemention":
+        - cell "Billie Rowe"
+        - cell "female"
+        - cell "Cemention"
+      - row "Bean Donovan male Mantro":
+        - cell "Bean Donovan"
+        - cell "male"
+        - cell "Mantro"
+      - row "Lancaster Patel male Krog":
+        - cell "Lancaster Patel"
+        - cell "male"
+        - cell "Krog"
+      - row "Rosa Dyer female Netility":
+        - cell "Rosa Dyer"
+        - cell "female"
+        - cell "Netility"
+      - row "Christine Compton female Bleeko":
+        - cell "Christine Compton"
+        - cell "female"
+        - cell "Bleeko"
+      - row "Milagros Finch female Handshake":
+        - cell "Milagros Finch"
+        - cell "female"
+        - cell "Handshake"
+      - row "Ericka Alvarado female Lyrichord":
+        - cell "Ericka Alvarado"
+        - cell "female"
+        - cell "Lyrichord"
+      - row "Sylvia Sosa female Circum":
+        - cell "Sylvia Sosa"
+        - cell "female"
+        - cell "Circum"
+      - row "Humphrey Curtis male Corepan":
+        - cell "Humphrey Curtis"
+        - cell "male"
+        - cell "Corepan"
+  - text: /\d+ total/
+  - list:
+    - listitem:
+      - button "go to first page"
+    - listitem:
+      - button "go to previous page"
+    - listitem:
+      - button "page 6"
+    - listitem:
+      - button "page 7"
+    - listitem:
+      - button "page 8"
+    - listitem:
+      - button "page 9"
+    - listitem:
+      - button /page \d+/
+    - listitem:
+      - button "go to next page" [disabled]
+    - listitem:
+      - button "go to last page" [disabled]

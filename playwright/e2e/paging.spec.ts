@@ -10,7 +10,7 @@ test.describe('paging', () => {
       await si.visitExample(example);
       await pagerTest(page, 10);
 
-      await si.runVisualAndA11yTests('default-paginator');
+      await si.runVisualAndA11yTests({ step: 'default-paginator', ariaSnapshot: true });
     });
   });
 

@@ -53,39 +53,45 @@ test.describe('paging', () => {
 
       await expect(page.locator('ghost-loader').first()).not.toBeVisible();
 
-      await si.runVisualAndA11yTests('infinite-scroll-initial', [
-        {
-          id: 'label',
-          enabled: false
-        },
-        {
-          id: 'empty-table-header',
-          enabled: false
-        },
-        {
-          id: 'aria-progressbar-name',
-          enabled: false
-        },
-        {
-          id: 'aria-required-children',
-          enabled: false
-        }
-      ]);
+      await si.runVisualAndA11yTests({
+        step: 'infinite-scroll-initial',
+        axeRulesSet: [
+          {
+            id: 'label',
+            enabled: false
+          },
+          {
+            id: 'empty-table-header',
+            enabled: false
+          },
+          {
+            id: 'aria-progressbar-name',
+            enabled: false
+          },
+          {
+            id: 'aria-required-children',
+            enabled: false
+          }
+        ]
+      });
 
       await page.getByRole('row', { name: 'Sarah Massey' }).click();
 
       await page.mouse.wheel(0, 1000);
 
-      await si.runVisualAndA11yTests('infinite-scroll-after-scroll', [
-        {
-          id: 'aria-progressbar-name',
-          enabled: false
-        },
-        {
-          id: 'aria-required-children',
-          enabled: false
-        }
-      ]);
+      await si.runVisualAndA11yTests({
+        step: 'infinite-scroll-after-scroll',
+        axeRulesSet: [
+          {
+            id: 'aria-progressbar-name',
+            enabled: false
+          },
+          {
+            id: 'aria-required-children',
+            enabled: false
+          }
+        ]
+      });
     });
   });
 
@@ -109,24 +115,27 @@ test.describe('paging', () => {
 
       await page.waitForSelector('span[title="Freda Mason"]');
 
-      await si.runVisualAndA11yTests('virtual-server-side-navigate', [
-        {
-          id: 'label',
-          enabled: false
-        },
-        {
-          id: 'empty-table-header',
-          enabled: false
-        },
-        {
-          id: 'aria-progressbar-name',
-          enabled: false
-        },
-        {
-          id: 'aria-required-children',
-          enabled: false
-        }
-      ]);
+      await si.runVisualAndA11yTests({
+        step: 'virtual-server-side-navigate',
+        axeRulesSet: [
+          {
+            id: 'label',
+            enabled: false
+          },
+          {
+            id: 'empty-table-header',
+            enabled: false
+          },
+          {
+            id: 'aria-progressbar-name',
+            enabled: false
+          },
+          {
+            id: 'aria-required-children',
+            enabled: false
+          }
+        ]
+      });
 
       await page.getByRole('row', { name: 'Freda Mason' }).click();
       await page.mouse.wheel(0, 500);

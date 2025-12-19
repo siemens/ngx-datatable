@@ -42,9 +42,9 @@ export type TreeStatus = 'collapsed' | 'expanded' | 'loading' | 'disabled';
           [attr.aria-label]="treeStatus"
         >
           <span>
-            <i *ngIf="treeStatus === 'loading'" class="icon datatable-icon-collapse"></i>
-            <i *ngIf="treeStatus === 'collapsed'" class="icon datatable-icon-up"></i>
-            <i *ngIf="treeStatus === 'expanded' || treeStatus === 'disabled'" class="icon datatable-icon-down"></i>
+            <i *ngIf="treeStatus === 'loading'" [class]="cssClasses?.treeStatusLoading ?? 'icon datatable-icon-collapse'"></i>
+            <i *ngIf="treeStatus === 'collapsed'" [class]="cssClasses?.treeStatusCollapsed ?? 'icon datatable-icon-up element-right-2 flip-rtl'"></i>
+            <i *ngIf="treeStatus === 'expanded' || treeStatus === 'disabled'" [class]="cssClasses?.treeStatusExpanded ?? 'icon datatable-icon-down element-down-2 flip-rtl'"></i>
           </span>
         </button>
         <ng-template
@@ -182,6 +182,12 @@ export class DataTableBodyCellComponent implements DoCheck, OnDestroy {
   }
 
   @Input() ghostLoadingIndicator = false;
+
+  @Input() cssClasses: {
+    treeStatusLoading: string;
+    treeStatusExpanded: string;
+    treeStatusCollapsed: string;
+  };
 
   @Output() activate: EventEmitter<any> = new EventEmitter();
 

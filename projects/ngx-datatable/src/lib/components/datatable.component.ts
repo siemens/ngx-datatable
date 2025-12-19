@@ -343,7 +343,10 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
     pagerLeftArrow: 'datatable-icon-left',
     pagerRightArrow: 'datatable-icon-right',
     pagerPrevious: 'datatable-icon-prev',
-    pagerNext: 'datatable-icon-skip'
+    pagerNext: 'datatable-icon-skip',
+    treeStatusLoading: 'icon datatable-icon-collapse',
+    treeStatusExpanded: 'icon datatable-icon-down element-down-2 flip-rtl',
+    treeStatusCollapsed: 'icon datatable-icon-up element-right-2 flip-rtl'
   };
 
   /**

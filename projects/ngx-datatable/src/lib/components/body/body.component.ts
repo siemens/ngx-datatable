@@ -117,6 +117,7 @@ import { DragEventData } from '../../types/drag-events.type';
               [ghostLoadingIndicator]="ghostLoadingIndicator"
               [draggable]="rowDraggable"
               [verticalScrollVisible]="verticalScrollVisible"
+              [cssClasses]="cssClasses"
               (treeAction)="onTreeAction(group)"
               (activate)="selector.onActivate($event, indexes.first + i)"
               (drop)="drop($event, group, rowElement)"
@@ -150,6 +151,7 @@ import { DragEventData } from '../../types/drag-events.type';
               [ghostLoadingIndicator]="ghostLoadingIndicator"
               [draggable]="rowDraggable"
               [verticalScrollVisible]="verticalScrollVisible"
+              [cssClasses]="cssClasses"
               (activate)="selector.onActivate($event, i)"
               (drop)="drop($event, row, rowElement)"
               (dragover)="dragOver($event, row)"
@@ -331,6 +333,11 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   }
 
   @Input() verticalScrollVisible = false;
+  @Input() cssClasses: {
+    treeStatusLoading: string;
+    treeStatusExpanded: string;
+    treeStatusCollapsed: string;
+  };
 
   @Output() scroll: EventEmitter<any> = new EventEmitter();
   @Output() page: EventEmitter<any> = new EventEmitter();

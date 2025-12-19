@@ -49,6 +49,7 @@ import { DataTableRowWrapperComponent } from './body-row-wrapper.component';
         [disable$]="disable$"
         [treeStatus]="treeStatus"
         [ghostLoadingIndicator]="ghostLoadingIndicator"
+        [cssClasses]="cssClasses"
         (activate)="onActivate($event, ii)"
         (treeAction)="onTreeAction()"
       >
@@ -144,6 +145,12 @@ export class DataTableBodyRowComponent implements DoCheck, OnChanges {
   get columnsTotalWidths(): string {
     return this._columnGroupWidths.total;
   }
+
+  @Input() cssClasses: {
+    treeStatusLoading: string;
+    treeStatusExpanded: string;
+    treeStatusCollapsed: string;
+  };
 
   @Output() activate: EventEmitter<any> = new EventEmitter();
   @Output() treeAction: EventEmitter<any> = new EventEmitter();

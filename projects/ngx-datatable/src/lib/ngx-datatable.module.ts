@@ -124,6 +124,9 @@ export interface INgxDatatableConfig {
     pagerRightArrow: string;
     pagerPrevious: string;
     pagerNext: string;
+    treeStatusLoading?: string;
+    treeStatusExpanded?: string;
+    treeStatusCollapsed?: string;
   };
   headerHeight?: number;
   footerHeight?: number;

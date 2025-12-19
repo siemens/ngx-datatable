@@ -63,6 +63,11 @@
       [summaryHeight]="summaryHeight"
       [summaryPosition]="summaryPosition"
       [verticalScrollVisible]="verticalScrollVisible"
+      [cssClasses]="{
+        treeStatusLoading: cssClasses.treeStatusLoading,
+        treeStatusExpanded: cssClasses.treeStatusExpanded,
+        treeStatusCollapsed: cssClasses.treeStatusCollapsed
+      }"
       (page)="onBodyPage($event)"
       (activate)="activate.emit($event)"
       (rowContextmenu)="onRowContextmenu($event)"

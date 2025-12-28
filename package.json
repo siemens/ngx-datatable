@@ -65,7 +65,7 @@
     "@siemens/stylelint-config-scss": "^4.0.0",
     "@types/node": "^24.0.0",
     "@vitest/browser-playwright": "^4.0.15",
-    "@vitest/coverage-v8": "4.0.15",
+    "@vitest/coverage-v8": "4.0.16",
     "angular-eslint": "21.1.0",
     "axe-html-reporter": "2.2.11",
     "cpy-cli": "^6.0.0",
@@ -85,7 +85,7 @@
     "stylelint-use-logical-spec": "5.0.1",
     "ts-node": "^10.9.2",
     "typescript": "~5.9.3",
-    "typescript-eslint": "8.49.0",
+    "typescript-eslint": "8.50.1",
     "vitest": "^4.0.15"
   }
 }

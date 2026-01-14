@@ -50,8 +50,8 @@
   },
   "devDependencies": {
     "@angular-eslint/builder": "21.0.1",
-    "@angular/build": "21.0.5",
-    "@angular/cli": "21.0.5",
+    "@angular/build": "21.0.6",
+    "@angular/cli": "21.0.6",
     "@angular/compiler-cli": "21.0.8",
     "@angular/language-service": "21.0.8",
     "@axe-core/playwright": "4.11.0",

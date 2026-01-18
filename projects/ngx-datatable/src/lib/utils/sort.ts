@@ -105,7 +105,7 @@ export const sortRows = <TRow>(
   const cachedDirs = dirs.map(dir => {
     // When sorting on group header, override prop to 'key'
     const prop = sortOnGroupHeader?.prop === dir.prop ? 'key' : dir.prop;
-    const compareFn = cols[dir.prop];
+    const compareFn = cols[dir.prop] ?? orderByComparator;
     return {
       prop,
       dir: dir.dir,
@@ -131,8 +131,8 @@ export const sortRows = <TRow>(
       // direction enable more complex sort logic.
       const comparison =
         cachedDir.dir !== SortDirection.desc
-          ? cachedDir.compareFn(propA, propB, rowA, rowB)
-          : -cachedDir.compareFn(propA, propB, rowA, rowB);
+          ? (cachedDir.compareFn ?? orderByComparator)(propA, propB, rowA, rowB)
+          : -(cachedDir.compareFn ?? orderByComparator)(propA, propB, rowA, rowB);
 
       // Don't return 0 yet in case of needing to sort by next property
       if (comparison !== 0) {

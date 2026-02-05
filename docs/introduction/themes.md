@@ -8,8 +8,7 @@ include that in your application `themes/material.css` and add the CSS class `ma
 This is a simple way to apply the style of the demo.
 
 ```scss
-@import '~@siemens/ngx-datatable/index.css';
-@import '~@siemens/ngx-datatable/themes/material.scss';
+@use '~@siemens/ngx-datatable/themes/material.scss';
 @import '~@siemens/ngx-datatable/assets/icons.css';
 ```
 

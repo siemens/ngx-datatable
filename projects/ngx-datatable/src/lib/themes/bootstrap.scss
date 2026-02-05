@@ -11,8 +11,8 @@ $datatable-ghost-cell-strip-background-image: linear-gradient(
 $datatable-ghost-cell-strip-radius: 0 !default;
 $datatble-ghost-cell-animation-duration: 10s;
 
-@import './ghost';
-@import './rows';
+@use './ghost';
+@use './rows';
 
 .ngx-datatable.bootstrap {
   box-shadow: none;

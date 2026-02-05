@@ -9,9 +9,8 @@
   $ngx-datatable-selected-active-background: yellow;
   $ngx-datatable-selected-active-background-hover: rgba(yellow, 0.2);
 
-  @import '~@siemens/ngx-datatable/index.css';
-  @import '~@siemens/ngx-datatable/themes/material.scss';
-  @import '~@siemens/ngx-datatable/assets/icons.css';
+  @use '~@siemens/ngx-datatable/themes/material.scss';
+  @use '~@siemens/ngx-datatable/assets/icons.css';
 
 That's all.
 */
@@ -81,8 +80,8 @@ $datatable-ghost-cell-strip-background-image: linear-gradient(
 $datatable-ghost-cell-strip-radius: 0 !default;
 $datatble-ghost-cell-animation-duration: 10s;
 
-@import './ghost';
-@import './rows';
+@use './ghost';
+@use './rows';
 
 .ngx-datatable.material {
   background: $ngx-datatable-background;

@@ -112,6 +112,10 @@ export function translateTemplates(templates: DataTableColumnDirective[]): any[]
       col.summaryTemplate = temp.summaryTemplate;
     }
 
+    if (temp.treeToggleTemplate) {
+      col.treeToggleTemplate = temp.treeToggleTemplate;
+    }
+
     result.push(col);
   }
 

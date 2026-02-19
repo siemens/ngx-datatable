@@ -97,7 +97,7 @@ export const sortRows = <TRow>(
       }
       return obj;
     },
-    {} as Record<TableColumnProp, SortableTableColumnInternal['comparator']>
+    {} as Record<TableColumnProp, SortableTableColumnInternal['comparator'] | undefined>
   );
 
   // cache valueGetter and compareFn so that they
@@ -105,7 +105,8 @@ export const sortRows = <TRow>(
   const cachedDirs = dirs.map(dir => {
     // When sorting on group header, override prop to 'key'
     const prop = sortOnGroupHeader?.prop === dir.prop ? 'key' : dir.prop;
-    const compareFn = cols[dir.prop];
+    // SortDirs may contain columns that are not sortable, so compareFn would be undefined. In that case just return a comparator that returns 0.
+    const compareFn = cols[dir.prop] ?? (() => 0);
     return {
       prop,
       dir: dir.dir,

@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
@@ -7,7 +6,7 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'column-reorder-demo',
-  imports: [DatatableComponent, NgClass],
+  imports: [DatatableComponent],
   template: `
     <div>
       <h3>
@@ -37,7 +36,7 @@ import { DataService } from '../data.service';
         [targetMarkerTemplate]="targetMarkerTemplate"
       />
       <ng-template #targetMarkerTemplate let-class="class">
-        <div [ngClass]="class">
+        <div [class]="class">
           <div class="icon datatable-icon-down"></div>
           <div class="icon datatable-icon-up"></div>
         </div>

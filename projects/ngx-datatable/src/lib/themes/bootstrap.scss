@@ -1,3 +1,5 @@
+$datatable-disable-row-text-color: #83888e !default;
+
 $datatable-ghost-cell-container-background: #fff !default;
 
 $datatable-ghost-cell-strip-background: #dee2e5 !default;
@@ -18,7 +20,9 @@ $datatble-ghost-cell-animation-duration: 10s;
   $datatable-ghost-cell-strip-radius: $datatable-ghost-cell-strip-radius
 );
 
-@use './rows';
+@use './rows' with (
+  $datatable-disable-row-text-color: $datatable-disable-row-text-color
+);
 
 .ngx-datatable.bootstrap {
   box-shadow: none;

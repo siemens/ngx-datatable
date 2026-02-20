@@ -16,6 +16,8 @@ import {
 import { NgxDatatableConfig } from '../../ngx-datatable.config';
 import { CellActiveEvent, RowIndex, TableColumnInternal } from '../../types/internal.types';
 import { ActivateEvent, CellContext, Row, RowOrGroup, TreeStatus } from '../../types/public.types';
+import { TableColumn } from '../../types/table-column.type';
+import { toPublicColumn } from '../../utils/column-helper';
 import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER } from '../../utils/keys';
 
 @Component({
@@ -26,7 +28,7 @@ import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER } from '../../util
     @let row = this.row();
     <div class="datatable-body-cell-label" [style.margin-left.px]="calcLeftMargin(column, row)">
       @let displayCheck = this.displayCheck();
-      @if (column.checkboxable && (!displayCheck || displayCheck(row, column, value()))) {
+      @if (column.checkboxable && (!displayCheck || displayCheck(row, publicColumn(), value()))) {
         <label class="datatable-checkbox">
           <input
             type="checkbox"
@@ -85,7 +87,7 @@ import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER } from '../../util
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class]': 'columnCssClasses()',
-    '[style.width.px]': 'column().width',
+    '[style.width.px]': 'column().width()',
     '[style.minWidth.px]': 'column().minWidth',
     '[style.maxWidth.px]': 'column().maxWidth',
     '[style.height]': 'height()',
@@ -97,7 +99,7 @@ import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER } from '../../util
   }
 })
 export class DataTableBodyCellComponent<TRow extends Row = any> implements DoCheck {
-  readonly displayCheck = input<(row: TRow, column: TableColumnInternal, value: any) => boolean>();
+  readonly displayCheck = input<(row: TRow, column: TableColumn, value: any) => boolean>();
 
   readonly disabled = input(false, { transform: booleanAttribute });
 
@@ -125,6 +127,8 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
 
   readonly treeAction = output<TRow>();
 
+  protected readonly publicColumn = computed(() => toPublicColumn(this.column()));
+
   protected readonly columnCssClasses = computed(() => {
     let cls = 'datatable-body-cell';
     const column = this.column();
@@ -135,7 +139,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
         const res = column.cellClass({
           row: this.row,
           group: this.group(),
-          column: column,
+          column: this.publicColumn(),
           value: this.value(),
           rowHeight: this.rowHeight()
         });
@@ -182,7 +186,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
       row: this.row(),
       group: this.group(),
       value: this.value(),
-      column: this.column(),
+      column: this.publicColumn(),
       rowHeight: this.rowHeight(),
       isSelected: this.isSelected(),
       rowIndex: this.rowIndex()?.index ?? 0,
@@ -238,7 +242,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
       row: this.row(),
       group: this.group(),
       rowHeight: this.rowHeight(),
-      column: this.column(),
+      column: this.publicColumn(),
       value: this.value(),
       cellElement: this._element
     });
@@ -251,7 +255,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
       row: this.row(),
       group: this.group(),
       rowHeight: this.rowHeight(),
-      column: this.column(),
+      column: this.publicColumn(),
       value: this.value(),
       cellElement: this._element
     });
@@ -278,7 +282,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
         row: this.row(),
         group: this.group(),
         rowHeight: this.rowHeight(),
-        column: this.column(),
+        column: this.publicColumn(),
         value: this.value(),
         cellElement: this._element
       });
@@ -292,7 +296,7 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
       row: this.row(),
       group: this.group(),
       rowHeight: this.rowHeight(),
-      column: this.column(),
+      column: this.publicColumn(),
       value: this.value(),
       cellElement: this._element,
       treeStatus: 'collapsed'

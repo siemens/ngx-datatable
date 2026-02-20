@@ -39,7 +39,7 @@ describe('DataTableBodyCellComponent', () => {
     fixture = TestBed.createComponent(DataTableBodyCellComponent);
     component = fixture.componentRef;
     component.setInput('row', ['Hello']);
-    component.setInput('column', {});
+    component.setInput('column', { width: signal(0) });
     component.setInput('ariaRowCheckboxMessage', 'checkbox message');
     component.setInput('cssClasses', {
       treeStatusLoading: 'icon datatable-icon-loading',

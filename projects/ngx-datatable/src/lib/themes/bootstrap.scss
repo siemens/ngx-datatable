@@ -11,7 +11,13 @@ $datatable-ghost-cell-strip-background-image: linear-gradient(
 $datatable-ghost-cell-strip-radius: 0 !default;
 $datatble-ghost-cell-animation-duration: 10s;
 
-@use './ghost';
+@use './ghost' with (
+  $datatable-ghost-cell-container-background: $datatable-ghost-cell-container-background,
+  $datatable-ghost-cell-strip-background: $datatable-ghost-cell-strip-background,
+  $datatable-ghost-cell-strip-background-image: $datatable-ghost-cell-strip-background-image,
+  $datatable-ghost-cell-strip-radius: $datatable-ghost-cell-strip-radius
+);
+
 @use './rows';
 
 .ngx-datatable.bootstrap {

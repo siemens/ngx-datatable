@@ -1,11 +1,11 @@
-$disable-row-text-color: #83888e !default;
+$datatable-disable-row-text-color: #83888e !default;
 
 .ngx-datatable {
   .row-disabled {
-    color: $disable-row-text-color;
+    color: $datatable-disable-row-text-color;
 
     .datatable-body-cell-label {
-      color: $disable-row-text-color;
+      color: $datatable-disable-row-text-color;
     }
   }
 

@@ -9,8 +9,7 @@
   $ngx-datatable-selected-active-background: yellow;
   $ngx-datatable-selected-active-background-hover: rgba(yellow, 0.2);
 
-  @import '~@siemens/ngx-datatable/index.css';
-  @import '~@siemens/ngx-datatable/themes/material.scss';
+  @use '~@siemens/ngx-datatable/themes/material.scss';
   @import '~@siemens/ngx-datatable/assets/icons.css';
 
 That's all.
@@ -48,6 +47,7 @@ $datatable-header-border-bottom-color: rgba(0, 0, 0, 0.12) !default;
 $datatable-header-resize-handle-color: #eee !default;
 
 // colors for table body elements
+$datatable-disable-row-text-color: #83888e !default;
 $datatable-row-detail-background: #f5f5f5 !default;
 $datatable-body-cell-color: rgba(0, 0, 0, 0.87) !default;
 $datatable-group-header-background: #f5f5f5 !default;
@@ -81,8 +81,16 @@ $datatable-ghost-cell-strip-background-image: linear-gradient(
 $datatable-ghost-cell-strip-radius: 0 !default;
 $datatble-ghost-cell-animation-duration: 10s;
 
-@import './ghost';
-@import './rows';
+@use './ghost' with (
+  $datatable-ghost-cell-container-background: $datatable-ghost-cell-container-background,
+  $datatable-ghost-cell-strip-background: $datatable-ghost-cell-strip-background,
+  $datatable-ghost-cell-strip-background-image: $datatable-ghost-cell-strip-background-image,
+  $datatable-ghost-cell-strip-radius: $datatable-ghost-cell-strip-radius
+);
+
+@use './rows' with (
+  $datatable-disable-row-text-color: $datatable-disable-row-text-color
+);
 
 .ngx-datatable.material {
   background: $ngx-datatable-background;

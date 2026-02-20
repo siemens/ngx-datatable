@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -383,6 +383,117 @@ describe('DatatableComponent With Custom Templates', () => {
     expect(textContent({ row: 1, column: 2 })).toContain('35', 'Displays age');
     expect(textContent({ row: 2, column: 2 })).toContain('50', 'Displays age');
     expect(textContent({ row: 3, column: 2 })).toContain('60', 'Displays age');
+  });
+});
+
+describe('DatatableComponent with tree toggle', () => {
+  const treeRows = [
+    { id: 1, name: 'Root', parentId: null, treeStatus: 'expanded' },
+    { id: 2, name: 'Child', parentId: 1, treeStatus: 'collapsed' }
+  ];
+
+  describe('content projection via ngx-datatable-tree-toggle', () => {
+    @Component({
+      template: `
+        <ngx-datatable
+          [rows]="rows"
+          [treeFromRelation]="'parentId'"
+          [treeToRelation]="'id'"
+        >
+          <ngx-datatable-column name="Name" prop="name" [isTreeColumn]="true">
+            <ng-template ngx-datatable-tree-toggle let-tree="cellContext">
+              <button class="custom-toggle" type="button">Toggle</button>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      `,
+      changeDetection: ChangeDetectionStrategy.OnPush
+    })
+    class TreeToggleProjectedComponent {
+      rows: any[] = [];
+    }
+
+    beforeEach(waitForAsync(() => setupTest(TreeToggleProjectedComponent)));
+
+    it('should render projected tree toggle template', () => {
+      component.rows = treeRows;
+      fixture.detectChanges();
+
+      const customToggles = fixture.debugElement.queryAll(By.css('.custom-toggle'));
+      expect(customToggles.length).toBeGreaterThan(0);
+
+      const defaultButtons = fixture.debugElement.queryAll(By.css('button.datatable-tree-button'));
+      expect(defaultButtons.length).toBe(0);
+    });
+  });
+
+  describe('input binding via [treeToggleTemplate]', () => {
+    @Component({
+      template: `
+        <ng-template #customToggle let-tree="cellContext">
+          <button class="custom-toggle" type="button">Toggle</button>
+        </ng-template>
+        <ngx-datatable
+          [rows]="rows"
+          [treeFromRelation]="'parentId'"
+          [treeToRelation]="'id'"
+        >
+          <ngx-datatable-column
+            name="Name"
+            prop="name"
+            [isTreeColumn]="true"
+            [treeToggleTemplate]="customToggle"
+          >
+          </ngx-datatable-column>
+        </ngx-datatable>
+      `,
+      changeDetection: ChangeDetectionStrategy.OnPush
+    })
+    class TreeToggleInputComponent {
+      rows: any[] = [];
+    }
+
+    beforeEach(waitForAsync(() => setupTest(TreeToggleInputComponent)));
+
+    it('should render tree toggle template', () => {
+      component.rows = treeRows;
+      fixture.detectChanges();
+
+      const customToggles = fixture.debugElement.queryAll(By.css('.custom-toggle'));
+      expect(customToggles.length).toBeGreaterThan(0);
+
+      const defaultButtons = fixture.debugElement.queryAll(By.css('button.datatable-tree-button'));
+      expect(defaultButtons.length).toBe(0);
+    });
+  });
+
+  describe('default tree toggle (no custom template)', () => {
+    @Component({
+      template: `
+        <ngx-datatable
+          [rows]="rows"
+          [treeFromRelation]="'parentId'"
+          [treeToRelation]="'id'"
+        >
+          <ngx-datatable-column name="Name" prop="name" [isTreeColumn]="true">
+          </ngx-datatable-column>
+        </ngx-datatable>
+      `,
+      changeDetection: ChangeDetectionStrategy.OnPush
+    })
+    class TreeToggleDefaultComponent {
+      rows: any[] = [];
+    }
+
+    beforeEach(waitForAsync(() => setupTest(TreeToggleDefaultComponent)));
+
+    it('should render default tree toggle button', () => {
+      component.rows = treeRows;
+      fixture.detectChanges();
+
+      const defaultButtons = fixture.debugElement.queryAll(By.css('button.datatable-tree-button'));
+      expect(defaultButtons.length).toBeGreaterThan(0);
+    });
   });
 });
 

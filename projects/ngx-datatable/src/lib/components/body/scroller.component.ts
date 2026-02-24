@@ -75,11 +75,9 @@ export class ScrollerComponent implements OnInit, OnDestroy {
 
   onScrolled(event: MouseEvent): void {
     const dom: Element = event.currentTarget as Element;
-    requestAnimationFrame(() => {
-      this.scrollYPos = dom.scrollTop;
-      this.scrollXPos = dom.scrollLeft;
-      this.updateOffset();
-    });
+    this.scrollYPos = dom.scrollTop;
+    this.scrollXPos = dom.scrollLeft;
+    this.updateOffset();
   }
 
   updateOffset(): void {

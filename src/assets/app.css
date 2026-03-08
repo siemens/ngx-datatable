@@ -47,7 +47,8 @@ body {
   margin-bottom: 45px;
 }
 
-input[type='text'] {
+input[type='text'],
+input[type='number'] {
   font-size: 14px;
   display: block;
   background: transparent;

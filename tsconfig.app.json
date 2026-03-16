@@ -5,5 +5,5 @@
   },
   "files": ["src/main.ts"],
   "exclude": ["src/test.ts", "src/**/*.spec.ts"],
-  "include": ["src/**/*.d.ts"]
+  "include": ["src/**/*.ts"]
 }

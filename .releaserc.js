@@ -6,6 +6,7 @@ export default {
   branches: [
     {
       name: 'release/+([0-9])?(.{+([0-9]),x}).x',
+      range: "${name.replace(/^release\\//g, '')}",
       channel: "${name.replace(/^release\\//g, '')}"
     },
     'main',

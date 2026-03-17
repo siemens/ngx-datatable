@@ -1,3 +1,46 @@
+# [26.0.0](https://github.com/siemens/ngx-datatable/compare/25.0.0...26.0.0) (2026-03-17)
+
+
+### Features
+
+* replace scss `@import` with `@use` ([14073de](https://github.com/siemens/ngx-datatable/commit/14073de3556b560d6c1d703d072ba30afa3a7dc1))
+* update to Angular 21 ([70c50a3](https://github.com/siemens/ngx-datatable/commit/70c50a3e4f0fd1b9face10244efe0db76ba2f986))
+
+
+### Bug Fixes
+
+* always maintain proportional column sizes ([d69957c](https://github.com/siemens/ngx-datatable/commit/d69957c21e97271f15feb3c876786598a0ecfa81)), closes [#617](https://github.com/siemens/ngx-datatable/issues/617)
+* detect tree changes after `treeAction` emit ([6645fb0](https://github.com/siemens/ngx-datatable/commit/6645fb0fd7f6c6693312300f60e69605b42a2f9c))
+* do not announce non‑draggable headers as clickable ([55f6021](https://github.com/siemens/ngx-datatable/commit/55f6021c5eb788495f68f93373d0df0f81dc1d7d)), closes [#583](https://github.com/siemens/ngx-datatable/issues/583)
+* gracefully ignore non-sortable rows when sorting ([b6dfdcf](https://github.com/siemens/ngx-datatable/commit/b6dfdcf8b0b09e0fe014ae545d8df1385284476f)), closes [#578](https://github.com/siemens/ngx-datatable/issues/578) [#611](https://github.com/siemens/ngx-datatable/issues/611)
+* only use trackByProp on row level with strict type ([9bdf3f2](https://github.com/siemens/ngx-datatable/commit/9bdf3f262529dde659b50bdf54b7f76e5e1042d3))
+* sync header and body horizontal scroll via direct DOM scrollLeft ([54a4132](https://github.com/siemens/ngx-datatable/commit/54a4132ab7e14a89289a532cbc6005c168996e48))
+
+
+### BREAKING CHANGES
+
+* `DatatableComponent.trackByProp` input now enforce strict type check as key of row.
+  
+  Before:
+  
+  // Even though name is not a valid prop on rows it is allowed to be used with `trackByProp`.
+  
+  ```
+  <ngx-datatable
+   trackByProp="'name'"
+   [rows]="[{id: 1}, {id: 2}]"
+  >
+  ```
+  After:
+  Typescript would give compilation error as name is not known property in rows.
+* Renamed SCSS variables:
+  - `$disable-row-text-color` to `$datatable-disable-row-text-color`
+  - `$datatble-ghost-cell-animation-duration` to `$datatable-ghost-cell-animation-duration`
+  
+  This only affects the material and bootstrap theme.
+* Angular 21+ is required.
+  Follow the Angular update guide to update your app: <https://angular.dev/update-guide?v=19.0-20.0>;;
+
 # [25.0.0](https://github.com/siemens/ngx-datatable/compare/24.3.3...25.0.0) (2025-12-02)
 
 

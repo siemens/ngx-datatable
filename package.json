@@ -65,7 +65,7 @@
     "@siemens/stylelint-config-scss": "^4.0.0",
     "@types/node": "^24.0.0",
     "@vitest/browser-playwright": "^4.0.15",
-    "@vitest/coverage-v8": "4.1.1",
+    "@vitest/coverage-v8": "4.1.2",
     "angular-eslint": "21.3.1",
     "axe-html-reporter": "2.2.11",
     "cpy-cli": "^7.0.0",

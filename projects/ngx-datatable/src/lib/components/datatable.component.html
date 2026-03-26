@@ -78,6 +78,10 @@
       (scroll)="onBodyScroll($event)"
       (treeAction)="onTreeAction($event)"
     >
+      <ng-content
+        select="ngx-datatable-bulk-actions-row"
+        ngProjectAs="ngx-datatable-bulk-actions-row"
+      />
       <ng-content select="[loading-indicator]" ngProjectAs="[loading-indicator]">
         <datatable-progress />
       </ng-content>

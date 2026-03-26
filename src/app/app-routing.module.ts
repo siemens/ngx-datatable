@@ -218,6 +218,13 @@ export const routes: Routes = [
         c => c.MultiClickAndCheckboxSelectionComponent
       )
   },
+  {
+    path: 'bulk-actions-selection',
+    loadComponent: () =>
+      import('./selection/selection-bulk-actions.component').then(
+        c => c.BulkActionsSelectionComponent
+      )
+  },
   // Templates
   {
     path: 'inline-template',

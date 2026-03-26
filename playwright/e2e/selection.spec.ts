@@ -302,4 +302,34 @@ test.describe('selection', () => {
       });
     });
   });
+
+  test.describe('bulk actions', () => {
+    const example = 'bulk-actions-selection';
+
+    test('bulk actions row is hidden when no rows are selected', async ({ si, page }) => {
+      await si.visitExample(example);
+
+      const bulkActionsRow = page.locator('ngx-datatable-bulk-actions-row');
+      await expect(bulkActionsRow).toHaveCount(0);
+    });
+
+    test('bulk actions row appears on checkbox selection', async ({ si, page }) => {
+      await si.visitExample(example);
+
+      const checkbox = page.locator('datatable-body-row input[type=checkbox]').first();
+      await checkbox.check();
+
+      const bulkActionsRow = page.locator('ngx-datatable-bulk-actions-row');
+      await expect(bulkActionsRow).toBeVisible();
+      await expect(page.locator('.bulk-actions-count')).toContainText('1 row(s) selected');
+
+      await si.runVisualAndA11yTests({
+        step: 'bulk-actions-single-selection',
+        axeRulesSet: [
+          { id: 'label', enabled: false },
+          { id: 'empty-table-header', enabled: false }
+        ]
+      });
+    });
+  });
 });

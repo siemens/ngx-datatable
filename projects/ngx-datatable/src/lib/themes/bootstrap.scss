@@ -157,7 +157,8 @@ $datatable-ghost-cell-animation-duration: 10s;
     }
   }
   // Summary row styles
-  .datatable-summary-row {
+  .datatable-summary-row,
+  .datatable-bulk-actions-row {
     .datatable-body-row {
       .datatable-body-cell {
         font-weight: bold;

@@ -99,6 +99,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
         [class.horizontal-overflow]="innerWidth() < (columnGroupWidths?.total ?? 0)"
         (scroll)="onBodyScroll($event)"
       >
+        <ng-content select="ngx-datatable-bulk-actions-row" />
         @if (summaryRow() && summaryPosition() === 'top') {
           <datatable-summary-row
             [rowHeight]="summaryHeight()"

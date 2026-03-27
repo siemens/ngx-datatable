@@ -5,6 +5,7 @@ export class SummaryHarness extends ComponentHarness {
 
   private summaryRowCells = this.locatorForAll('datatable-body-cell');
   private summaryRow = this.locatorForOptional('datatable-body-row');
+  private checkboxes = this.locatorForAll('input[type="checkbox"]');
 
   async getSummaryRowCellText(index: number): Promise<string> {
     const cells = await this.summaryRowCells();
@@ -14,5 +15,10 @@ export class SummaryHarness extends ComponentHarness {
   async hasSummaryRow(): Promise<boolean> {
     const row = await this.summaryRow();
     return !!row;
+  }
+
+  async getCheckboxCount(): Promise<number> {
+    const checkboxes = await this.checkboxes();
+    return checkboxes.length;
   }
 }

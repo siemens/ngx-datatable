@@ -57,7 +57,7 @@ jobs:
       - run: npm ci --prefer-offline --no-audit
       - run: npm run build:lib:prod
       - run: npm run build:prod
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v4
         with:
           path: 'dist/ngx-datatable-examples'

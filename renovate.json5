@@ -1,14 +1,17 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: [
-    "config:recommended",
+    "config:best-practices",
     "group:allNonMajor",
     ":semanticCommits",
     ":semanticCommitTypeAll(chore)",
     ":prHourlyLimitNone",
-    ":prConcurrentLimitNone"
+    ":prConcurrentLimitNone",
+    ":maintainLockFilesMonthly"
   ],
   addLabels: ["dep-bump"],
+  schedule: ["before 7am on Wednesday"],
+  timezone: "Etc/UTC",
   customManagers: [
     {
       customType: "regex",
@@ -72,12 +75,6 @@
         "axe-html-reporter",
         "mcr.microsoft.com/playwright"
       ]
-    },
-    {
-      description: ["Node LTS gitlab-ci update"],
-      matchPackageNames: ["node"],
-      matchDatasources: ["docker"],
-      enabled: true
     }
   ]
 }

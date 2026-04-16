@@ -14,8 +14,8 @@ import {
   HostListener,
   inject,
   input,
-  IterableDiffer,
-  IterableDiffers,
+  KeyValueDiffer,
+  KeyValueDiffers,
   linkedSignal,
   model,
   numberAttribute,
@@ -575,7 +575,7 @@ export class DatatableComponent<TRow extends Row = any>
     return 0;
   });
   readonly rowCount = computed(() => this.calcRowCount());
-  rowDiffer: IterableDiffer<TRow | undefined> = inject(IterableDiffers).find([]).create();
+  rowDiffer: KeyValueDiffer<TRow, TRow> = inject(KeyValueDiffers).find([]).create();
   /** This counter is increased, when the rowDiffer detects a change. This will cause an update of _internalRows. */
   private readonly _rowDiffCount = signal(0);
 
@@ -685,7 +685,7 @@ export class DatatableComponent<TRow extends Row = any>
    * Lifecycle hook that is called when Angular dirty checks a directive.
    */
   ngDoCheck(): void {
-    const rowDiffers = this.rowDiffer.diff(this.rows());
+    const rowDiffers = this.rowDiffer.diff(this.rows() as any);
     if (rowDiffers || this.disableRowCheck()) {
       this._rowDiffCount.update(count => count + 1);
       if (rowDiffers) {

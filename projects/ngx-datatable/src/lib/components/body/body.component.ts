@@ -35,6 +35,7 @@ import {
   Row,
   RowOrGroup,
   ScrollEvent,
+  ScrollToRowOptions,
   SelectionType
 } from '../../types/public.types';
 import { TableColumn } from '../../types/table-column.type';
@@ -562,11 +563,11 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     return rows;
   }
 
-  scrollToIndex(index: number, behavior?: ScrollBehavior): void {
+  scrollToIndex(index: number, options?: ScrollToRowOptions): void {
     if (this.virtualization()) {
-      this.scroller.scrollTo(this.rowHeightsCache().query(index - 1), behavior);
+      this.scroller.scrollTo(this.rowHeightsCache().query(index - 1), options);
     } else {
-      this.rowWrappers()[index]?.scrollIntoView(behavior);
+      this.rowWrappers()[index]?.scrollIntoView(options);
     }
   }
 

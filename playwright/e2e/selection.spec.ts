@@ -33,7 +33,7 @@ test.describe('selection', () => {
   });
 
   test.describe('single row selection', () => {
-    const example = 'single-selection';
+    const example = 'single-row-selection';
 
     test(example, async ({ si, page }) => {
       await si.visitExample(example);
@@ -55,7 +55,7 @@ test.describe('selection', () => {
   });
 
   test.describe('multi row selection', () => {
-    const example = 'multi-selection';
+    const example = 'multi-row-selection';
 
     test(example + ' using Shift', async ({ si, page }) => {
       await si.visitExample(example);
@@ -119,7 +119,7 @@ test.describe('selection', () => {
   });
 
   test.describe('disable row selection', () => {
-    const example = 'multidisable-selection';
+    const example = 'disable-selection-callback';
 
     test(example, async ({ si, page }) => {
       await si.visitExample(example);
@@ -150,7 +150,7 @@ test.describe('selection', () => {
   });
 
   test.describe('checkbox selection', () => {
-    const example = 'chkbox-selection';
+    const example = 'checkbox-selection';
 
     test(example, async ({ si, page }) => {
       await si.visitExample(example);
@@ -208,7 +208,7 @@ test.describe('selection', () => {
   });
 
   test.describe('multi click row selection', () => {
-    const example = 'multi-click-selection';
+    const example = 'multi-click-row-selection';
 
     test(example, async ({ si, page }) => {
       await si.visitExample(example);
@@ -238,7 +238,7 @@ test.describe('selection', () => {
   });
 
   test.describe('multi click with checkbox selection', () => {
-    const example = 'multi-click-chkbox-selection';
+    const example = 'multi-click-and-checkbox-selection';
 
     test(example + ' using keyboard', async ({ si, page }) => {
       await si.visitExample(example);

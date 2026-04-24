@@ -2,7 +2,7 @@ import { expect, test } from '../support/test-helpers';
 
 test.describe('sorting', () => {
   test.describe('client side sorting', () => {
-    const example = 'client-sorting';
+    const example = 'client-side-sorting';
     test(example, async ({ si, page }) => {
       await si.visitExample(example);
 
@@ -10,7 +10,7 @@ test.describe('sorting', () => {
       const companyHeaderIcon = companyHeader.locator('span').nth(2);
       const firstRow = page.locator('datatable-body-row').first();
 
-      await si.runVisualAndA11yTests('default-sorting');
+      await si.runVisualAndA11yTests('default-sort');
 
       await companyHeaderIcon.click();
 
@@ -44,7 +44,7 @@ test.describe('sorting', () => {
   });
 
   test.describe('default sorting', () => {
-    const example = 'default-sorting';
+    const example = 'default-sort';
     test(example, async ({ si, page }) => {
       await si.visitExample(example);
 
@@ -81,7 +81,7 @@ test.describe('sorting', () => {
   });
 
   test.describe('server side sorting', () => {
-    const example = 'server-sorting';
+    const example = 'server-side-sorting';
     test(example, async ({ si, page }) => {
       await si.visitExample(example);
 
@@ -136,7 +136,7 @@ test.describe('sorting', () => {
   });
 
   test.describe('custom sorting comparator', () => {
-    const example = 'comparator-sorting';
+    const example = 'comparator';
     test(example, async ({ si, page }) => {
       await si.visitExample(example);
 

@@ -6,6 +6,7 @@ on:
       CC_TEST_REPORTER_ID:
         required: true
   pull_request:
+  merge_group:
   push:
     branches:
       - main

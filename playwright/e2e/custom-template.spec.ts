@@ -111,7 +111,7 @@ test.describe('summary row', () => {
   });
 
   test.describe('server side template summary', () => {
-    const example = 'paging-summary';
+    const example = 'server-side-paging-summary';
 
     test(example, async ({ si, page }) => {
       await si.visitExample(example);

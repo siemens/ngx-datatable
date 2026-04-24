@@ -10,7 +10,7 @@ import { DataService } from '../data.service';
   template: `
     <div>
       <h3>
-        Reorder Column
+        Column Reorder
         <small>
           <a
             href="https://github.com/siemens/ngx-datatable/blob/main/src/app/columns/column-reorder.component.ts"

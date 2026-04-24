@@ -2,7 +2,7 @@ import { test } from '../support/test-helpers';
 
 test.describe('tree', () => {
   test.describe('fullscreen tree', () => {
-    const example = 'fullscreen-tree';
+    const example = 'full-screen-tree';
     test(example, async ({ si, page }) => {
       await si.visitExample(example);
       await page.getByRole('cell', { name: 'Frank Bradford' }).getByRole('button').click();
@@ -10,17 +10,17 @@ test.describe('tree', () => {
       await page.getByRole('cell', { name: 'Kathryn Rios' }).getByRole('button').click();
       await page.getByRole('cell', { name: 'Stefanie Huff' }).getByRole('button').click();
 
-      await si.runVisualAndA11yTests('fullscreen-tree');
+      await si.runVisualAndA11yTests('full-screen-tree');
     });
   });
 
   test.describe('client tree', () => {
-    const example = 'client-tree';
+    const example = 'client-side-tree';
     test(example, async ({ si, page }) => {
       await si.visitExample(example);
       await page.getByRole('cell', { name: 'Georgina Schultz ' }).getByRole('button').click();
 
-      await si.runVisualAndA11yTests('client-tree');
+      await si.runVisualAndA11yTests('client-side-tree');
     });
   });
 });

@@ -1,7 +1,7 @@
 import { expect, test } from '../support/test-helpers';
 
 test.describe('table with filter', () => {
-  const example = 'filter';
+  const example = 'filtering';
 
   test(example, async ({ si, page }) => {
     await si.visitExample(example);

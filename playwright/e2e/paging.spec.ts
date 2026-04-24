@@ -4,7 +4,7 @@ import { expect, test } from '../support/test-helpers';
 
 test.describe('paging', () => {
   test.describe('client side', () => {
-    const example = 'client-paging';
+    const example = 'client-side-paging';
 
     test(example, async ({ si, page }) => {
       await si.visitExample(example);
@@ -15,7 +15,7 @@ test.describe('paging', () => {
   });
 
   test.describe('server side', () => {
-    const example = 'server-paging';
+    const example = 'server-side-paging';
 
     test(example, async ({ si, page }) => {
       await si.visitExample(example);
@@ -30,7 +30,7 @@ test.describe('paging', () => {
   });
 
   test.describe('paging scrolling with no virtualization', () => {
-    const example = 'paging-scrolling-novirtualization';
+    const example = 'scrolling-no-virtual';
 
     test(example, async ({ si, page }) => {
       await si.visitExample(example);
@@ -44,7 +44,7 @@ test.describe('paging', () => {
   });
 
   test.describe('server scrolling', () => {
-    const example = 'server-scrolling';
+    const example = 'scrolling-server-side';
 
     test(example, async ({ si, page }) => {
       await si.visitExample(example);
@@ -96,7 +96,7 @@ test.describe('paging', () => {
   });
 
   test.describe('virtual server side paging', () => {
-    const example = 'virtual-paging';
+    const example = 'virtual-server-side';
 
     test(example + ' paginator test', async ({ si, page }) => {
       await si.visitExample(example);

@@ -1,7 +1,7 @@
 import { expect, test } from '../support/test-helpers';
 
 test.describe('resize and pinning', () => {
-  const example = 'pinning';
+  const example = 'column-pinning';
   test(example + ' resize column', async ({ si, page }) => {
     await si.visitExample(example);
 

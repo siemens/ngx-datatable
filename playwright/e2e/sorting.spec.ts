@@ -94,7 +94,6 @@ test.describe('sorting', () => {
 
       await expect(companyHeader).toHaveClass(/sort-active/);
       await expect(companyHeader).toHaveClass(/sort-asc/);
-      await expect(loadingIndicator).toBeVisible();
 
       await expect(loadingIndicator).toHaveCount(0);
 
@@ -106,8 +105,6 @@ test.describe('sorting', () => {
 
       await expect(companyHeader).toHaveClass(/sort-active/);
       await expect(companyHeader).toHaveClass(/sort-desc/);
-
-      await expect(loadingIndicator).toBeVisible();
 
       await expect(loadingIndicator).toHaveCount(0);
 

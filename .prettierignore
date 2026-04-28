@@ -5,4 +5,5 @@ coverage
 dist
 tmp
 playwright/snapshots
+.agents
 CHANGELOG.md

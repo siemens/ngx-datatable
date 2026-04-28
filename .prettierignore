@@ -6,3 +6,6 @@ dist
 tmp
 playwright/snapshots
 CHANGELOG.md
+
+# Skills managed by skills.sh
+.agents/skills/playwright-cli

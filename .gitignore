@@ -16,6 +16,7 @@ yarn.lock
 /playwright/.cache/
 /playwright/results/
 .env
+/.playwright-cli/
 
 # Zensical docs
 /docs/api/

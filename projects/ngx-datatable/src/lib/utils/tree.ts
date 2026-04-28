@@ -52,19 +52,49 @@ export const groupRowsByParents = <TRow extends Row>(
     const treeRows = rows.filter(row => !!row).map(row => new TreeNode(row));
     const uniqIDs = new Map(treeRows.map(node => [to(node.row), node]));
 
-    const rootNodes = treeRows.reduce((root, node) => {
-      const fromValue = from(node.row);
-      const parent = uniqIDs.get(fromValue);
-      if (parent) {
-        node.row.level = parent.row.level! + 1; // TODO: should be reflected by type, that level is defined
-        node.parent = parent;
-        parent.children.push(node);
+    // Resolve each node's level once, recursing into the parent if it has
+    // not been resolved yet. Handles children appearing before parents and
+    // breaks cycles by treating the cycle entry as a root.
+    const resolved = new Set<TreeNode<TRow>>();
+    const resolveLevel = (node: TreeNode<TRow>, visited: Set<TreeNode<TRow>>): number => {
+      if (resolved.has(node)) {
+        return node.row.level!;
+      }
+      if (visited.has(node)) {
+        // Cycle on the current recursion path — propagate sentinel up.
+        return Infinity;
+      }
+      visited.add(node);
+
+      const parent = uniqIDs.get(from(node.row));
+      if (parent && parent !== node) {
+        const parentLevel = resolveLevel(parent, visited);
+        if (parentLevel !== Infinity) {
+          node.parent = parent;
+          parent.children.push(node);
+          node.row.level = parentLevel + 1;
+        } else {
+          // Ancestor cycle detected — break it by making this node a root.
+          node.row.level = 0;
+        }
       } else {
         node.row.level = 0;
-        root.push(node);
       }
-      return root;
-    }, [] as TreeNode<TRow>[]);
+
+      visited.delete(node);
+      resolved.add(node);
+      return node.row.level;
+    };
+
+    const rootNodes: TreeNode<TRow>[] = [];
+    for (const node of treeRows) {
+      if (!resolved.has(node)) {
+        resolveLevel(node, new Set());
+      }
+      if (!node.parent) {
+        rootNodes.push(node);
+      }
+    }
 
     return rootNodes.flatMap(child => child.flatten());
   } else {

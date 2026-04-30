@@ -15,4 +15,5 @@ yarn.lock
 /blob-report/
 /playwright/.cache/
 /playwright/results/
+/.playwright-cli/
 .env

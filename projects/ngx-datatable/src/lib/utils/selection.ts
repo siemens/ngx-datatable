@@ -17,6 +17,7 @@ export const selectRowsBetween = <TRow>(
   prevIndex: number
 ): TRow[] => {
   const reverse = index < prevIndex;
+  const selectedSet = new Set(selected);
 
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i];
@@ -39,8 +40,9 @@ export const selectRowsBetween = <TRow>(
     if ((reverse && lesser) || (!reverse && greater)) {
       // if in the positive range to be added to `selected`, and
       // not already in the selected array, add it
-      if (i >= range.start && i <= range.end && row) {
+      if (i >= range.start && i <= range.end && row && !selectedSet.has(row)) {
         selected.push(row);
+        selectedSet.add(row);
       }
     }
   }

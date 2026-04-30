@@ -866,8 +866,8 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
 
     // TODO: this code needs cleanup. Casting it to KeyboardEvent is not correct as it could also be other types.
     if (multi || chkbox || multiClick) {
-      if ((event as KeyboardEvent).shiftKey) {
-        selected = selectRowsBetween([], this.rows(), index, this.prevIndex!);
+      if ((event as KeyboardEvent).shiftKey && this.prevIndex !== undefined) {
+        selected = selectRowsBetween([...this.selected()], this.rows(), index, this.prevIndex);
       } else if (
         (event as KeyboardEvent).key === 'a' &&
         ((event as KeyboardEvent).ctrlKey || (event as KeyboardEvent).metaKey)

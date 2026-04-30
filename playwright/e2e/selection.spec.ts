@@ -309,8 +309,8 @@ test.describe('selection', () => {
     test('bulk actions row is hidden when no rows are selected', async ({ si, page }) => {
       await si.visitExample(example);
 
-      const bulkActionsRow = page.locator('ngx-datatable-bulk-actions-row');
-      await expect(bulkActionsRow).toHaveCount(0);
+      const summaryRow = page.locator('datatable-summary-row.sticky');
+      await expect(summaryRow).toHaveCount(0);
     });
 
     test('bulk actions row appears on checkbox selection', async ({ si, page }) => {
@@ -319,8 +319,8 @@ test.describe('selection', () => {
       const checkbox = page.locator('datatable-body-row input[type=checkbox]').first();
       await checkbox.check();
 
-      const bulkActionsRow = page.locator('ngx-datatable-bulk-actions-row');
-      await expect(bulkActionsRow).toBeVisible();
+      const summaryRow = page.locator('datatable-summary-row.sticky');
+      await expect(summaryRow).toBeVisible();
       await expect(page.locator('.bulk-actions-count')).toContainText('1 row(s) selected');
 
       await si.runVisualAndA11yTests({

@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import {
-  DataTableBulkActionsRowComponent,
   DataTableColumnDirective,
-  DatatableComponent
+  DatatableComponent,
+  DatatableSummaryRowDirective
 } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -10,7 +10,7 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'bulk-actions-demo',
-  imports: [DatatableComponent, DataTableColumnDirective, DataTableBulkActionsRowComponent],
+  imports: [DatatableComponent, DataTableColumnDirective, DatatableSummaryRowDirective],
   template: `
     <div>
       <h3>
@@ -37,7 +37,7 @@ import { DataService } from '../data.service';
         [(selected)]="selected"
       >
         @if (selected.length) {
-          <ngx-datatable-bulk-actions-row>
+          <ng-template ngx-datatable-summary-row>
             <div class="bulk-actions-bar">
               <span class="bulk-actions-count">{{ selected.length }} row(s) selected</span>
               <div class="bulk-actions-buttons">
@@ -46,7 +46,7 @@ import { DataService } from '../data.service';
                 <button type="button" (click)="onCancel()">Cancel</button>
               </div>
             </div>
-          </ngx-datatable-bulk-actions-row>
+          </ng-template>
         }
         <ngx-datatable-column
           [width]="30"

@@ -1,4 +1,5 @@
-import { Component, computed, input } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { Component, computed, input, TemplateRef } from '@angular/core';
 
 import { TableColumnInternal } from '../../../types/internal.types';
 import { DataTableBodyRowComponent } from '../body-row.component';
@@ -22,23 +23,34 @@ const noopSumFunc = (cells: any[]): void => {
 
 @Component({
   selector: 'datatable-summary-row',
-  imports: [DataTableBodyRowComponent],
+  imports: [DataTableBodyRowComponent, NgTemplateOutlet],
   template: `
-    @let summaryRow = this.summaryRow();
-    @let _internalColumns = this._internalColumns();
-    @if (summaryRow && _internalColumns.length) {
-      <datatable-body-row
-        ariaRowCheckboxMessage=""
-        [columns]="_internalColumns"
-        [rowHeight]="rowHeight()"
-        [row]="summaryRow"
-        [rowIndex]="{ index: -1 }"
-        [cssClasses]="{}"
-      />
+    @let template = this.template();
+    @if (template) {
+      <div class="datatable-body-row" role="row">
+        <div role="cell">
+          <ng-container [ngTemplateOutlet]="template" />
+        </div>
+      </div>
+    } @else {
+      @let summaryRow = this.summaryRow();
+      @let _internalColumns = this._internalColumns();
+      @if (summaryRow && _internalColumns.length) {
+        <datatable-body-row
+          ariaRowCheckboxMessage=""
+          [columns]="_internalColumns"
+          [rowHeight]="rowHeight()"
+          [row]="summaryRow"
+          [rowIndex]="{ index: -1 }"
+          [cssClasses]="{}"
+        />
+      }
     }
   `,
+  styleUrl: './summary-row.component.scss',
   host: {
-    class: 'datatable-summary-row'
+    class: 'datatable-summary-row',
+    '[class.sticky]': 'template()'
   }
 })
 export class DataTableSummaryRowComponent {
@@ -47,6 +59,7 @@ export class DataTableSummaryRowComponent {
 
   readonly rowHeight = input.required<number>();
   readonly innerWidth = input.required<number>();
+  readonly template = input<TemplateRef<void>>();
 
   protected readonly _internalColumns = computed(() => {
     return this.columns().map(col => ({

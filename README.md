@@ -8,7 +8,7 @@
 [![Try out in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz_small.svg)](https://stackblitz.com/fork/github/siemens/ngx-datatable/tree/main/projects/stackblitz)
 
 > **Note:** This project is a fork of [`swimlane/ngx-datatable`](https://github.com/swimlane/ngx-datatable)
-> which we try to maintain further with bug-fixes and new features due to the
+> which we maintain further with bug-fixes and new features due to the
 > large backlog of open pull-requests.
 
 `ngx-datatable` is an Angular component for presenting large and complex data. It has all the features you would expect from any other table but in a light package with _no external dependencies_. The table was designed to be extremely flexible and light; it doesn't make any assumptions about your data or how you: filter, sort or page it.

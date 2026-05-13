@@ -17,12 +17,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0 # We need this for commit-lint
 
       - name: Set Node Version
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: lts/krypton
 
@@ -39,7 +39,7 @@ jobs:
         run: npm run build:prod
 
       - name: Archive build
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: dist
           path: dist
@@ -57,14 +57,14 @@ jobs:
           npm run build -- --configuration=production
 
       - name: Archive coverage results
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         if: success() || failure()
         with:
           name: coverage
           path: coverage/ngx-datatable-lib
 
       - name: Publish coverage results
-        uses: qltysh/qlty-action/coverage@v2
+        uses: qltysh/qlty-action/coverage@a19242102d17e497f437d7466aa01b528537e899 # v2
         env:
           QLTY_COVERAGE_TOKEN: ${{ secrets.QLTY_COVERAGE_TOKEN }}
         with:
@@ -87,13 +87,13 @@ jobs:
           apt install git-lfs
 
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: Pull Repository with LFS
         run: git lfs pull
 
       - name: Download build
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: dist
           path: dist
@@ -106,7 +106,7 @@ jobs:
 
       - name: Upload E2E Results
         if: success() || failure()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: e2e-results
           path: playwright/results

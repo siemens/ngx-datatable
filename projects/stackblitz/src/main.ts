@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, provideZoneChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datatable';
 
@@ -30,4 +30,4 @@ export class App {
   }));
 }
 
-bootstrapApplication(App);
+bootstrapApplication(App, { providers: [provideZoneChangeDetection()] });

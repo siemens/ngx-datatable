@@ -20,6 +20,8 @@ import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
       <ngx-datatable
         class="material"
         columnMode="force"
+        style="height: 500px;"
+        [scrollbarV]="true"
         [rows]="[]"
         [columns]="columns"
         [headerHeight]="50"

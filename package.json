@@ -64,8 +64,8 @@
     "@siemens/prettier-config": "4.2.1",
     "@siemens/stylelint-config-scss": "4.2.1",
     "@types/node": "24.12.4",
-    "@vitest/browser-playwright": "4.1.6",
-    "@vitest/coverage-v8": "4.1.6",
+    "@vitest/browser-playwright": "4.1.7",
+    "@vitest/coverage-v8": "4.1.7",
     "angular-eslint": "21.4.0",
     "axe-html-reporter": "2.2.11",
     "cpy-cli": "7.0.0",
@@ -78,14 +78,14 @@
     "http-server": "14.1.1",
     "ng-packagr": "21.0.1",
     "prettier": "3.8.3",
-    "sass": "1.99.0",
+    "sass": "1.100.0",
     "semantic-release": "25.0.3",
     "stylelint": "16.26.1",
     "stylelint-scss": "7.1.1",
     "stylelint-use-logical-spec": "5.0.1",
     "ts-node": "10.9.2",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.59.3",
-    "vitest": "4.1.6"
+    "typescript-eslint": "8.59.4",
+    "vitest": "4.1.7"
   }
 }

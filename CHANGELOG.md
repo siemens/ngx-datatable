@@ -1,3 +1,20 @@
+# [26.1.0](https://github.com/siemens/ngx-datatable/compare/26.0.0...26.1.0) (2026-05-27)
+
+
+### Features
+
+* client side scrolling ([d46c8ae](https://github.com/siemens/ngx-datatable/commit/d46c8aeb5146f1b9cf9f6d3b2f477e4f9322d84f)), closes [#635](https://github.com/siemens/ngx-datatable/issues/635)
+* support skipping deep change detection for rows ([d3302c6](https://github.com/siemens/ngx-datatable/commit/d3302c6cd13bf56199c9090a6f2134fa7add9cbd))
+
+
+### Bug Fixes
+
+* compute correct level when child precedes parent in tree rows ([5b8a569](https://github.com/siemens/ngx-datatable/commit/5b8a569b30c6970013fdcbd1d64cc0e9577387db))
+* fill viewport with ghost loader rows on initial load ([1cf26f5](https://github.com/siemens/ngx-datatable/commit/1cf26f58d9b7128f830c04951a6982ec874985b8))
+* keep custom column properties ([fada629](https://github.com/siemens/ngx-datatable/commit/fada62956be52b08e5186b2601afea1d92efafcb))
+* keep prior selection when shift-clicking after ctrl-click ([d9b0c33](https://github.com/siemens/ngx-datatable/commit/d9b0c335634122301bba7e4828e9cc84b63f99e3)), closes [#582](https://github.com/siemens/ngx-datatable/issues/582)
+* wait for DOM updates before scrolling to expanded tree row ([b4389af](https://github.com/siemens/ngx-datatable/commit/b4389af13ad9f9569e1d597282f2692ecfc9a28d))
+
 # [26.0.0](https://github.com/siemens/ngx-datatable/compare/25.0.0...26.0.0) (2026-03-17)
 
 

@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals", "vitest/browser"]
   },
   "include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
 }

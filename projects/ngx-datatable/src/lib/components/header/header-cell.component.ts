@@ -142,8 +142,8 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
 
   protected readonly isCheckboxable = computed(() => this.column().headerCheckboxable);
 
-  protected readonly sortClass = computed<string[] | undefined>(() => {
-    return this.calcSortClass(this.sortDir());
+  protected readonly sortClass = computed<string | undefined>(() => {
+    return this.calcSortClass(this.sortDir())?.join(' ');
   });
   protected readonly sortDir = computed<SortDirection | undefined>(() => {
     return this.calcSortDir(this.sorts());

@@ -1,12 +1,23 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { AfterViewInit, Component, signal, TemplateRef, viewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  inputBinding,
+  outputBinding,
+  signal,
+  TemplateRef,
+  viewChild,
+  WritableSignal
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { userEvent } from '@vitest/browser/context';
 
 import {
   InnerSortEvent,
   SortableTableColumnInternal,
   TableColumnInternal
 } from '../../types/internal.types';
+import { SortPropDir } from '../../types/public.types';
 import { toInternalColumn } from '../../utils/column-helper';
 import { DataTableHeaderCellComponent } from './header-cell.component';
 import { HeaderCellHarness } from './testing/header-cell.harnes';
@@ -158,5 +169,71 @@ describe('DataTableHeaderCellComponent with template', () => {
       prevValue: undefined,
       newValue: 'asc'
     });
+  });
+});
+
+describe('DataTableHeaderCellComponent - custom sort icons', () => {
+  let fixture: ComponentFixture<DataTableHeaderCellComponent>;
+  let sorts: WritableSignal<SortPropDir[]>;
+  const column = signal({
+    name: 'test',
+    prop: 'test',
+    sortable: true,
+    resizeable: false,
+    width: signal(20)
+  });
+  const sortAscendingIcon = signal('icon up');
+  const sortDescendingIcon = signal('icon down');
+
+  beforeEach(async () => {
+    sorts = signal<SortPropDir[]>([]);
+    fixture = TestBed.createComponent(DataTableHeaderCellComponent, {
+      bindings: [
+        inputBinding('sortType', () => 'single'),
+        inputBinding('ariaHeaderCheckboxMessage', () => 'Select All'),
+        inputBinding('sortAscendingIcon', sortAscendingIcon),
+        inputBinding('sortDescendingIcon', sortDescendingIcon),
+        inputBinding('column', column),
+        inputBinding('sorts', sorts),
+        inputBinding('showResizeHandle', () => false),
+        outputBinding('sort', (event: InnerSortEvent) => {
+          sorts.set([{ prop: event.column.prop!, dir: event.newValue! }]);
+        })
+      ]
+    });
+    await fixture.whenStable();
+  });
+
+  it('should apply custom sortAscendingIcon class when toggling to ascending sort', async () => {
+    const label = fixture.nativeElement.querySelector('.datatable-header-cell-label');
+    // eslint-disable-next-line @angular-eslint/no-experimental
+    await userEvent.click(label);
+    await fixture.whenStable();
+
+    const sortBtn = fixture.nativeElement.querySelector('.sort-btn');
+
+    expect(sortBtn).toHaveClass('sort-btn');
+    expect(sortBtn).toHaveClass('sort-asc');
+    expect(sortBtn).toHaveClass('icon');
+    expect(sortBtn).toHaveClass('up');
+    expect(sortBtn).not.toHaveClass('datatable-icon-up');
+  });
+
+  it('should apply custom sortDescendingIcon class when toggling to descending sort', async () => {
+    const label = fixture.nativeElement.querySelector('.datatable-header-cell-label');
+    // eslint-disable-next-line @angular-eslint/no-experimental
+    await userEvent.click(label);
+    await fixture.whenStable();
+
+    // eslint-disable-next-line @angular-eslint/no-experimental
+    await userEvent.click(label);
+    await fixture.whenStable();
+
+    const sortButton = fixture.nativeElement.querySelector('.sort-btn');
+    expect(sortButton).toHaveClass('sort-btn');
+    expect(sortButton).toHaveClass('sort-desc');
+    expect(sortButton).toHaveClass('icon');
+    expect(sortButton).toHaveClass('down');
+    expect(sortButton).not.toHaveClass('datatable-icon-down');
   });
 });

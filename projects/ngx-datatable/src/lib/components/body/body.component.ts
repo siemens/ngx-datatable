@@ -866,7 +866,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     const chkbox = this.selectionType() === 'checkbox';
     const multi = this.selectionType() === 'multi';
     const multiClick = this.selectionType() === 'multiClick';
-    let selected: TRow[] = [];
+    let selected: TRow[];
 
     // TODO: this code needs cleanup. Casting it to KeyboardEvent is not correct as it could also be other types.
     if (multi || chkbox || multiClick) {

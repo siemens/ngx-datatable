@@ -23,7 +23,7 @@ export const selectRowsBetween = <TRow>(
     const greater = i >= prevIndex && i <= index;
     const lesser = i <= prevIndex && i >= index;
 
-    let range = { start: 0, end: 0 };
+    let range: { start: number; end: number };
     if (reverse) {
       range = {
         start: index,

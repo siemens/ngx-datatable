@@ -86,6 +86,6 @@ export class SimpleSummaryComponent {
 
   private avgAge(cells: number[]): number {
     const filteredCells = cells.filter(cell => !!cell);
-    return filteredCells.reduce((sum, cell) => (sum += cell), 0) / filteredCells.length;
+    return filteredCells.reduce((sum, cell) => sum + cell, 0) / filteredCells.length;
   }
 }

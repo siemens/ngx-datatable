@@ -123,8 +123,8 @@ export const forceFillColumnWidths = (
     .slice(startIdx + 1, allColumns.length)
     .filter(c => c.canAutoResize !== false);
 
-  let additionWidthPerColumn = 0;
-  let exceedsWindow = false;
+  let additionWidthPerColumn: number;
+  let exceedsWindow: boolean;
   let contentWidth = getContentWidth(allColumns, defaultColWidth);
   let remainingWidth = expectedWidth - contentWidth;
   const initialRemainingWidth = remainingWidth;

@@ -1,3 +1,15 @@
+# [26.2.0](https://github.com/siemens/ngx-datatable/compare/26.1.0...26.2.0) (2026-06-10)
+
+
+### Features
+
+* **summary:** add DatatableSummaryRowDirective for custom templates ([4c08d79](https://github.com/siemens/ngx-datatable/commit/4c08d7975496c7eb9fffc6c247ff19948b16cf16))
+
+
+### Bug Fixes
+
+* ensure custom sort icons are applied ([008b011](https://github.com/siemens/ngx-datatable/commit/008b011f5345ad5ec03037f7ae2d850b1474ecfd))
+
 # [26.1.0](https://github.com/siemens/ngx-datatable/compare/26.0.0...26.1.0) (2026-05-27)
 
 

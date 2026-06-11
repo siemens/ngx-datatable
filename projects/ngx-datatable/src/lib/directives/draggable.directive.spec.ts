@@ -161,13 +161,16 @@ describe('DraggableDirective', () => {
       await fixture.whenStable();
     });
 
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
     it('should start dragging after the specified delay', async () => {
       vi.useFakeTimers();
       await harness.touchStart(0);
       vi.advanceTimersByTime(100);
       await fixture.whenStable();
       expect(dragStartSpy).toHaveBeenCalled();
-      vi.useRealTimers();
     });
 
     it('should skip dragging if not pressed long enough', async () => {
@@ -177,7 +180,6 @@ describe('DraggableDirective', () => {
       await harness.mouseUp();
       expect(dragStartSpy).not.toHaveBeenCalled();
       expect(dragEndSpy).not.toHaveBeenCalled();
-      vi.useRealTimers();
     });
 
     it('should not start dragging if waiting for the delay', async () => {
@@ -186,7 +188,14 @@ describe('DraggableDirective', () => {
       vi.advanceTimersByTime(50);
       await harness.mouseMove(100);
       expect(dragMoveSpy).not.toHaveBeenCalled();
-      vi.useRealTimers();
+    });
+
+    it('should not start dragging after short touch before delay', async () => {
+      vi.useFakeTimers();
+      await harness.touchStart(0);
+      vi.advanceTimersByTime(50);
+      await harness.touchEnd();
+      expect(dragStartSpy).not.toHaveBeenCalled();
     });
   });
 });

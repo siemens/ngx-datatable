@@ -1,9 +1,8 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
+import { Component, inject, signal } from '@angular/core';
+import { DatatableComponent, FetchRowsEvent, TableColumn } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
 import { MockServerResultsService } from '../paging/mock-server-results-service';
-import { Page } from '../paging/model/page';
 
 @Component({
   selector: 'server-side-paging-summary-demo',
@@ -20,7 +19,6 @@ import { Page } from '../paging/model/page';
           </a>
         </small>
       </h3>
-      @let page = this.page();
       <ngx-datatable
         class="material"
         rowHeight="auto"
@@ -32,22 +30,19 @@ import { Page } from '../paging/model/page';
         [summaryHeight]="55"
         [footerHeight]="50"
         [externalPaging]="true"
-        [count]="page.totalElements"
-        [offset]="page.pageNumber"
-        [limit]="page.size"
-        (page)="setPage($event.offset)"
+        [count]="totalElements()"
+        [rowsOffset]="rowsOffset()"
+        [limit]="pageSize()"
+        (fetchRows)="onFetchRows($event)"
       />
     </div>
   `,
   providers: [MockServerResultsService]
 })
-export class ServerSidePagingSummaryComponent implements OnInit {
-  readonly page = signal<Page>({
-    pageNumber: 0,
-    size: 20,
-    totalPages: 0,
-    totalElements: 0
-  });
+export class ServerSidePagingSummaryComponent {
+  readonly totalElements = signal(0);
+  readonly rowsOffset = signal(0);
+  readonly pageSize = signal(20);
   readonly rows = signal<Employee[]>([]);
 
   columns: TableColumn[] = [
@@ -59,19 +54,15 @@ export class ServerSidePagingSummaryComponent implements OnInit {
 
   private serverResultsService = inject(MockServerResultsService);
 
-  ngOnInit() {
-    this.setPage(0);
-  }
-
   /**
-   * Populate the table with new data based on the page number
-   * @param page The page to select
+   * Populate the table with new data based on row indexes
+   * @param event The fetchRows event containing start and end indexes
    */
-  setPage(page: number) {
-    this.page.update(currentPage => ({ ...currentPage, pageNumber: page }));
-    this.serverResultsService.getResults(this.page()).subscribe(pagedData => {
-      this.page.set(pagedData.page);
-      this.rows.set(pagedData.data);
+  onFetchRows(event: FetchRowsEvent) {
+    this.rowsOffset.set(event.startIndex);
+    this.serverResultsService.getResults(event.startIndex, event.endIndex).subscribe(result => {
+      this.totalElements.set(result.totalElements);
+      this.rows.set(result.data);
     });
   }
 

@@ -1,3 +1,12 @@
+## [26.2.1](https://github.com/siemens/ngx-datatable/compare/26.2.0...26.2.1) (2026-06-19)
+
+
+### Bug Fixes
+
+* **e2e:** bump @playwright/test to 1.61.0 to match CI docker image ([e7ea3e0](https://github.com/siemens/ngx-datatable/commit/e7ea3e06d9ee48a2e22918e35c1829a8a1035608))
+* **e2e:** remove caret from @playwright/test version in package-lock.json ([5cd5d18](https://github.com/siemens/ngx-datatable/commit/5cd5d18ca1fa0fa8158bf0d72fd91cf45f847501))
+* **header:** allow sorting on mobile devices with reorderable enabled ([c1e1b22](https://github.com/siemens/ngx-datatable/commit/c1e1b22d114a089de5d20579cac284eabf206bad)), closes [#692](https://github.com/siemens/ngx-datatable/issues/692)
+
 # [26.2.0](https://github.com/siemens/ngx-datatable/compare/26.1.0...26.2.0) (2026-06-10)
 
 

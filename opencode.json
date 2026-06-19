@@ -1,0 +1,25 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "siemens": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "code.siemens.com",
+      "options": {
+        "baseURL": "https://api.siemens.com/llm/v1",
+        "apiKey": "{env:SIEMENS_API_KEY}"
+      },
+      "models": {
+        "deepseek-v4-flash": {
+          "limit": {
+            "context": 1048576,
+            "output": 1048576
+          },
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          }
+        }
+      }
+    }
+  }
+}

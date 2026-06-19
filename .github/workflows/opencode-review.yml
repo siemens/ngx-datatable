@@ -1,0 +1,29 @@
+name: OpenCode Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  review:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: read
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          persist-credentials: false
+
+      - uses: anomalyco/opencode/github@5d0f86606ac30690f79f0a6a9f41a1f49fe95d0b
+        env:
+          SIEMENS_API_KEY: ${{ secrets.SIEMENS_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          model: siemens/deepseek-v4-flash
+          use_github_token: true
+          prompt: |
+            Review this pull request.
+            Provide feedback as line-specific comments on the relevant code lines (using the review comment API).
+            Do NOT make any commits or changes. Only review and comment on specific lines.

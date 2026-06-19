@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ActivateEvent, DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
@@ -6,7 +7,7 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'multi-row-selection-demo',
-  imports: [DatatableComponent],
+  imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -33,7 +34,7 @@ import { DataService } from '../data.service';
           rowHeight="auto"
           columnMode="force"
           selectionType="multi"
-          [rows]="rows()"
+          [rows]="rows | async"
           [columns]="columns"
           [headerHeight]="50"
           [footerHeight]="50"
@@ -59,17 +60,11 @@ import { DataService } from '../data.service';
   `
 })
 export class MultiRowSelectionComponent {
-  readonly rows = signal<Employee[]>([]);
+  readonly rows = inject(DataService).load('company.json');
 
   readonly selected = signal<Employee[]>([]);
 
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('company.json').subscribe(data => this.rows.set(data));
-  }
 
   onActivate(event: ActivateEvent<Employee>) {
     // eslint-disable-next-line no-console

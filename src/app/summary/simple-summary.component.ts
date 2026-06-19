@@ -1,12 +1,13 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
+import { map } from 'rxjs';
 
-import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'simple-summary-demo',
-  imports: [DatatableComponent],
+  imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -46,14 +47,16 @@ import { DataService } from '../data.service';
         [columns]="columns"
         [headerHeight]="50"
         [summaryHeight]="55"
-        [rows]="rows"
+        [rows]="rows | async"
       />
     </div>
   `,
   styleUrl: './simple-summary.component.scss'
 })
 export class SimpleSummaryComponent {
-  rows: Employee[] = [];
+  protected readonly rows = inject(DataService)
+    .load('company.json')
+    .pipe(map(data => data.slice(0, 5)));
 
   columns: TableColumn[] = [
     { prop: 'name' },
@@ -63,14 +66,6 @@ export class SimpleSummaryComponent {
 
   enableSummary = true;
   summaryPosition = 'top';
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('company.json').subscribe(data => {
-      this.rows = data.splice(0, 5);
-    });
-  }
 
   onPositionSelectChange($event: Event) {
     const target = $event.target as HTMLSelectElement;

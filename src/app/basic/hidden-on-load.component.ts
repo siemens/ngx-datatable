@@ -1,12 +1,12 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datatable';
 
-import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'hidden-on-load-demo',
-  imports: [DatatableComponent, DataTableColumnDirective],
+  imports: [DatatableComponent, DataTableColumnDirective, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -22,6 +22,7 @@ import { DataService } from '../data.service';
       </h3>
 
       <div style="width:75%;margin:0 auto">
+        @let rows = this.rows | async;
         <div>
           <button type="button" (click)="tab1 = true; tab2 = false; tab3 = false">Nothing</button>
           <button type="button" (click)="tab2 = true; tab1 = false; tab3 = false">Hidden</button>
@@ -72,17 +73,9 @@ import { DataService } from '../data.service';
   `
 })
 export class HiddenOnLoadComponent {
-  rows: FullEmployee[] = [];
+  protected readonly rows = inject(DataService).load('100k.json');
 
   tab1 = true;
   tab2 = false;
   tab3 = false;
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('100k.json').subscribe(data => {
-      this.rows = data;
-    });
-  }
 }

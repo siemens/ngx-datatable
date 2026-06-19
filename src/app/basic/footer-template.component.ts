@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import {
   DatatableComponent,
@@ -6,8 +7,8 @@ import {
   TableColumn,
   DatatablePagerComponent
 } from '@siemens/ngx-datatable';
+import { map } from 'rxjs';
 
-import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
@@ -16,7 +17,8 @@ import { DataService } from '../data.service';
     DatatableComponent,
     DatatableFooterDirective,
     DataTableFooterTemplateDirective,
-    DatatablePagerComponent
+    DatatablePagerComponent,
+    AsyncPipe
   ],
   template: `
     <div>
@@ -35,7 +37,7 @@ import { DataService } from '../data.service';
         class="material"
         rowHeight="auto"
         columnMode="force"
-        [rows]="rows"
+        [rows]="rows | async"
         [columns]="columns"
         [footerHeight]="100"
         [headerHeight]="50"
@@ -65,15 +67,9 @@ import { DataService } from '../data.service';
   `
 })
 export class FooterTemplateComponent {
-  rows: Employee[] = [];
+  protected readonly rows = inject(DataService)
+    .load('company.json')
+    .pipe(map(data => data.slice(0, 5)));
 
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company' }];
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('company.json').subscribe(data => {
-      this.rows = data.splice(0, 5);
-    });
-  }
 }

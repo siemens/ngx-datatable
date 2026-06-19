@@ -1,16 +1,16 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DatatableComponent
 } from '@siemens/ngx-datatable';
 
-import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'default-sort-demo',
-  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective],
+  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -27,7 +27,7 @@ import { DataService } from '../data.service';
       <ngx-datatable
         class="material"
         columnMode="force"
-        [rows]="rows"
+        [rows]="rows | async"
         [headerHeight]="50"
         [footerHeight]="50"
         [rowHeight]="50"
@@ -52,14 +52,6 @@ import { DataService } from '../data.service';
     </div>
   `
 })
-export class DefaultSortComponent implements OnInit {
-  rows: Employee[] = [];
-
-  private dataService = inject(DataService);
-
-  ngOnInit() {
-    this.dataService.load('company.json').subscribe(data => {
-      this.rows = data;
-    });
-  }
+export class DefaultSortComponent {
+  protected readonly rows = inject(DataService).load('company.json');
 }

@@ -1,16 +1,17 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DatatableComponent
 } from '@siemens/ngx-datatable';
+import { map } from 'rxjs';
 
-import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'force-column-demo',
-  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective],
+  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -30,7 +31,7 @@ import { DataService } from '../data.service';
         columnMode="force"
         [headerHeight]="50"
         [footerHeight]="50"
-        [rows]="rows"
+        [rows]="rows | async"
       >
         <ngx-datatable-column name="Name" [width]="100">
           <ng-template let-value="value" ngx-datatable-cell-template>
@@ -52,13 +53,7 @@ import { DataService } from '../data.service';
   `
 })
 export class ForceColumnComponent {
-  rows: Employee[] = [];
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('company.json').subscribe(data => {
-      this.rows = data.splice(0, 5);
-    });
-  }
+  protected readonly rows = inject(DataService)
+    .load('company.json')
+    .pipe(map(data => data.slice(0, 5)));
 }

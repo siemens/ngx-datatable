@@ -1,12 +1,12 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
-import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'fixed-row-height-demo',
-  imports: [DatatableComponent],
+  imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -23,7 +23,7 @@ import { DataService } from '../data.service';
       <ngx-datatable
         class="material striped"
         columnMode="force"
-        [rows]="rows"
+        [rows]="rows | async"
         [columns]="columns"
         [headerHeight]="50"
         [footerHeight]="50"
@@ -33,14 +33,6 @@ import { DataService } from '../data.service';
   `
 })
 export class FixedRowHeightComponent {
-  rows: Employee[] = [];
+  protected readonly rows = inject(DataService).load('company.json');
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('company.json').subscribe(data => {
-      this.rows = data;
-    });
-  }
 }

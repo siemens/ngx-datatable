@@ -1,12 +1,13 @@
-import { Component, inject, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
+import { map } from 'rxjs';
 
-import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'template-ref-demo',
-  imports: [DatatableComponent],
+  imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -20,12 +21,11 @@ import { DataService } from '../data.service';
           </a>
         </small>
       </h3>
-      @let rows = this.rows();
       <ngx-datatable
         class="material"
         rowHeight="auto"
         columnMode="force"
-        [rows]="rows"
+        [rows]="rows | async"
         [columns]="columns"
         [headerHeight]="50"
         [footerHeight]="50"
@@ -50,14 +50,10 @@ export class TemplateRefComponent implements OnInit {
   @ViewChild('editTmpl', { static: true }) editTmpl!: TemplateRef<any>;
   @ViewChild('hdrTpl', { static: true }) hdrTpl!: TemplateRef<any>;
 
-  readonly rows = signal<Employee[]>([]);
+  readonly rows = inject(DataService)
+    .load('company.json')
+    .pipe(map(data => data.slice(0, 5)));
   columns: TableColumn[] = [];
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('company.json').subscribe(data => this.rows.set(data.splice(0, 5)));
-  }
 
   ngOnInit() {
     this.columns = [

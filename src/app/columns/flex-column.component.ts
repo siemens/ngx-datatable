@@ -1,16 +1,17 @@
-import { Component, inject, signal } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DatatableComponent
 } from '@siemens/ngx-datatable';
+import { map } from 'rxjs';
 
-import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'flex-column-demo',
-  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective],
+  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -24,14 +25,13 @@ import { DataService } from '../data.service';
           </a>
         </small>
       </h3>
-      @let rows = this.rows();
       <ngx-datatable
         class="material"
         rowHeight="auto"
         columnMode="flex"
         [headerHeight]="50"
         [footerHeight]="50"
-        [rows]="rows"
+        [rows]="rows | async"
       >
         <ngx-datatable-column name="Name" [flexGrow]="3">
           <ng-template let-value="value" ngx-datatable-cell-template>
@@ -53,11 +53,7 @@ import { DataService } from '../data.service';
   `
 })
 export class FlexColumnComponent {
-  readonly rows = signal<Employee[]>([]);
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('company.json').subscribe(data => this.rows.set(data.splice(0, 5)));
-  }
+  protected readonly rows = inject(DataService)
+    .load('company.json')
+    .pipe(map(data => data.slice(0, 5)));
 }

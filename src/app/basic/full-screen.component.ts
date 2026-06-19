@@ -1,12 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datatable';
 
-import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'full-screen-demo',
-  imports: [DatatableComponent, DataTableColumnDirective],
+  imports: [DatatableComponent, DataTableColumnDirective, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -29,7 +29,7 @@ import { DataService } from '../data.service';
         [rowHeight]="50"
         [scrollbarV]="true"
         [scrollbarH]="true"
-        [rows]="rows()"
+        [rows]="rows | async"
       >
         <ngx-datatable-column name="Id" [width]="80" />
         <ngx-datatable-column name="Name" [width]="300" />
@@ -42,11 +42,5 @@ import { DataService } from '../data.service';
   `
 })
 export class FullScreenComponent {
-  readonly rows = signal<FullEmployee[]>([]);
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('100k.json').subscribe(data => this.rows.set(data));
-  }
+  protected readonly rows = inject(DataService).load('100k.json');
 }

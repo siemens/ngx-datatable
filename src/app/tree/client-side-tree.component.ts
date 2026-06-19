@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import {
   DataTableColumnCellDirective,
@@ -5,12 +6,11 @@ import {
   DatatableComponent
 } from '@siemens/ngx-datatable';
 
-import { TreeEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'client-side-tree-demo',
-  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective],
+  imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -32,7 +32,7 @@ import { DataService } from '../data.service';
         treeToRelation="name"
         [headerHeight]="50"
         [footerHeight]="50"
-        [rows]="rows"
+        [rows]="rows | async"
         (treeAction)="onTreeAction($event)"
       >
         <ngx-datatable-column name="Name" [flexGrow]="3" [isTreeColumn]="true">
@@ -56,13 +56,7 @@ import { DataService } from '../data.service';
   styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
 })
 export class ClientSideTreeComponent {
-  rows: TreeEmployee[] = [];
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('company_tree.json').subscribe(data => (this.rows = data));
-  }
+  protected readonly rows = inject(DataService).load('company_tree.json');
 
   onTreeAction(event: any) {
     const row = event.row;

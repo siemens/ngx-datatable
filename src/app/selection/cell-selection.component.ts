@@ -1,4 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import {
   ActivateEvent,
   DatatableComponent,
@@ -11,7 +12,7 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'cell-selection-demo',
-  imports: [DatatableComponent],
+  imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -25,12 +26,11 @@ import { DataService } from '../data.service';
           </a>
         </small>
       </h3>
-      @let rows = this.rows();
       <ngx-datatable
         class="material selection-cell"
         columnMode="force"
         selectionType="cell"
-        [rows]="rows"
+        [rows]="rows | async"
         [columns]="columns"
         [headerHeight]="50"
         [footerHeight]="50"
@@ -43,17 +43,9 @@ import { DataService } from '../data.service';
   `
 })
 export class CellSelectionComponent {
-  readonly rows = signal<Employee[]>([]);
+  readonly rows = inject(DataService).load('company.json');
   selected: Employee[] = [];
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('company.json').subscribe(data => {
-      this.rows.set(data);
-    });
-  }
 
   onSelect(event: SelectEvent<Employee>) {
     // eslint-disable-next-line no-console

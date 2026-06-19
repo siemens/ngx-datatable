@@ -1,4 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import {
   ActivateEvent,
   DatatableComponent,
@@ -11,7 +12,7 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'multi-click-row-selection-demo',
-  imports: [DatatableComponent],
+  imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -30,13 +31,12 @@ import { DataService } from '../data.service';
           <p>This demonstrates multi selection table, where any click event causes a selection.</p>
         </div>
 
-        @let rows = this.rows();
         <ngx-datatable
           class="material selection-row"
           rowHeight="auto"
           columnMode="force"
           selectionType="multiClick"
-          [rows]="rows"
+          [rows]="rows | async"
           [columns]="columns"
           [headerHeight]="50"
           [footerHeight]="50"
@@ -63,17 +63,11 @@ import { DataService } from '../data.service';
   `
 })
 export class MultiClickRowSelectionComponent {
-  readonly rows = signal<Employee[]>([]);
+  readonly rows = inject(DataService).load('company.json');
 
   selected: Employee[] = [];
 
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('company.json').subscribe(data => this.rows.set(data));
-  }
 
   onSelect({ selected }: SelectEvent<Employee>) {
     this.selected.splice(0, this.selected.length);

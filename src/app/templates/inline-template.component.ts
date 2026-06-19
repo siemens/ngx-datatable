@@ -1,12 +1,13 @@
-import { Component, inject, signal } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DataTableColumnHeaderDirective,
   DatatableComponent
 } from '@siemens/ngx-datatable';
+import { map } from 'rxjs';
 
-import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
@@ -15,7 +16,8 @@ import { DataService } from '../data.service';
     DatatableComponent,
     DataTableColumnDirective,
     DataTableColumnHeaderDirective,
-    DataTableColumnCellDirective
+    DataTableColumnCellDirective,
+    AsyncPipe
   ],
   template: `
     <div>
@@ -30,12 +32,11 @@ import { DataService } from '../data.service';
           </a>
         </small>
       </h3>
-      @let rows = this.rows();
       <ngx-datatable
         class="material"
         rowHeight="auto"
         columnMode="force"
-        [rows]="rows"
+        [rows]="rows | async"
         [headerHeight]="50"
         [footerHeight]="50"
       >
@@ -68,12 +69,8 @@ import { DataService } from '../data.service';
   `
 })
 export class InlineTemplateComponent {
-  readonly rows = signal<Employee[]>([]);
+  protected readonly rows = inject(DataService)
+    .load('company.json')
+    .pipe(map(data => data.slice(0, 5)));
   joke = 'knock knock';
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('company.json').subscribe(data => this.rows.set(data.splice(0, 5)));
-  }
 }

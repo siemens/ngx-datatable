@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ContextMenuEvent, DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
@@ -6,7 +7,7 @@ import { DataService } from '../data.service';
 
 @Component({
   selector: 'context-menu-demo',
-  imports: [DatatableComponent],
+  imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -46,7 +47,7 @@ import { DataService } from '../data.service';
         class="material"
         rowHeight="auto"
         columnMode="force"
-        [rows]="rows"
+        [rows]="rows | async"
         [columns]="columns"
         [headerHeight]="50"
         [footerHeight]="50"
@@ -56,21 +57,13 @@ import { DataService } from '../data.service';
   `
 })
 export class ContextMenuComponent {
-  rows: Employee[] = [];
+  protected readonly rows = inject(DataService).load('company.json');
 
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company' }];
 
   rawEvent: any;
   contextmenuRow: any;
   contextmenuColumn: any;
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('company.json').subscribe(data => {
-      this.rows = data;
-    });
-  }
 
   onTableContextMenu(contextMenuEvent: ContextMenuEvent<Employee>) {
     this.rawEvent = contextMenuEvent.event;

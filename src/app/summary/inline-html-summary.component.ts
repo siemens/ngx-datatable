@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -27,7 +27,7 @@ import { DataService } from '../data.service';
         [summaryPosition]="summaryPosition"
         [summaryHeight]="100"
         [headerHeight]="50"
-        [rows]="rows"
+        [rows]="rows()"
       >
         <ngx-datatable-column prop="name" [summaryTemplate]="nameSummaryCell" />
         <ngx-datatable-column name="Gender" [summaryFunc]="summaryForGender" />
@@ -35,7 +35,7 @@ import { DataService } from '../data.service';
       </ngx-datatable>
       <ng-template #nameSummaryCell>
         <div class="name-container">
-          @for (name of getNames(); track name) {
+          @for (name of names(); track name) {
             <div class="chip">
               <span class="chip-content">{{ name }}</span>
             </div>
@@ -46,7 +46,13 @@ import { DataService } from '../data.service';
   `
 })
 export class InlineHtmlSummaryComponent {
-  rows: Employee[] = [];
+  readonly rows = signal<Employee[]>([]);
+
+  readonly names = computed(() =>
+    this.rows()
+      .map(row => row.name)
+      .map(fullName => fullName.split(' ')[1])
+  );
 
   enableSummary = true;
   summaryPosition = 'top';
@@ -55,12 +61,8 @@ export class InlineHtmlSummaryComponent {
 
   constructor() {
     this.dataService.load('company.json').subscribe(data => {
-      this.rows = data.splice(0, 5);
+      this.rows.set(data.splice(0, 5));
     });
-  }
-
-  getNames(): string[] {
-    return this.rows.map(row => row.name).map(fullName => fullName.split(' ')[1]);
   }
 
   summaryForGender(cells: string[]) {

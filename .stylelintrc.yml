@@ -1,10 +1,21 @@
-plugins:
-  - stylelint-use-logical-spec
 rules:
   color-named: never
   color-no-hex: null
-  liberty/use-logical-spec:
-    - always
+  property-layout-mappings:
+    - flow-relative
+    - ignoreProperties:
+        - overflow-x
+        - overflow-y
+  unit-layout-mappings:
+    - flow-relative
+  value-keyword-layout-mappings:
+    - flow-relative
+    - ignoreProperties:
+        - caption-side
+languageOptions:
+  directionality:
+    block: top-to-bottom
+    inline: left-to-right
 extends:
   - '@siemens/stylelint-config-scss/stylelintrc.yml'
 ignoreFiles:

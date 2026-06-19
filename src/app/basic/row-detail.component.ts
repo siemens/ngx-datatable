@@ -1,4 +1,5 @@
-import { Component, inject, signal, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
@@ -19,7 +20,8 @@ import { DataService } from '../data.service';
     DatatableRowDetailDirective,
     DatatableRowDetailTemplateDirective,
     DataTableColumnDirective,
-    DataTableColumnCellDirective
+    DataTableColumnCellDirective,
+    AsyncPipe
   ],
   template: `
     <div>
@@ -39,7 +41,6 @@ import { DataService } from '../data.service';
           <a href="javascript:void(0)" (click)="table.rowDetail!.collapseAllRows()">Collapse All</a>
         </small>
       </h3>
-      @let rows = this.rows();
       <ngx-datatable
         #myTable
         class="material expandable"
@@ -48,7 +49,7 @@ import { DataService } from '../data.service';
         [footerHeight]="50"
         [rowHeight]="50"
         [scrollbarV]="true"
-        [rows]="rows"
+        [rows]="rows | async"
         (page)="onPage($event)"
       >
         <!-- Row Detail Template -->
@@ -110,15 +111,9 @@ import { DataService } from '../data.service';
 export class RowDetailComponent {
   @ViewChild('myTable') table!: DatatableComponent<FullEmployee>;
 
-  readonly rows = signal<FullEmployee[]>([]);
+  readonly rows = inject(DataService).load('100k.json');
   expanded: any = {};
   timeout: any;
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('100k.json').subscribe(data => this.rows.set(data));
-  }
 
   onPage(event: PageEvent) {
     clearTimeout(this.timeout);

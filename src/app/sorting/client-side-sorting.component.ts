@@ -1,12 +1,12 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
-import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'client-side-sorting-demo',
-  imports: [DatatableComponent],
+  imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -24,7 +24,7 @@ import { DataService } from '../data.service';
         class="material"
         columnMode="force"
         sortType="multi"
-        [rows]="rows"
+        [rows]="rows | async"
         [columns]="columns"
         [headerHeight]="50"
         [footerHeight]="50"
@@ -35,15 +35,7 @@ import { DataService } from '../data.service';
   `
 })
 export class ClientSideSortingComponent {
-  rows: Employee[] = [];
+  protected readonly rows = inject(DataService).load('company.json');
 
   columns: TableColumn[] = [{ name: 'Company' }, { name: 'Name' }, { name: 'Gender' }];
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('company.json').subscribe(data => {
-      this.rows = data;
-    });
-  }
 }

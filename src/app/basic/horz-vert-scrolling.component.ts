@@ -1,12 +1,12 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datatable';
 
-import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'horz-vert-scrolling-demo',
-  imports: [DatatableComponent, DataTableColumnDirective],
+  imports: [DatatableComponent, DataTableColumnDirective, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -23,7 +23,7 @@ import { DataService } from '../data.service';
       <ngx-datatable
         class="material"
         columnMode="force"
-        [rows]="rows"
+        [rows]="rows | async"
         [headerHeight]="50"
         [footerHeight]="0"
         [rowHeight]="50"
@@ -40,13 +40,5 @@ import { DataService } from '../data.service';
   `
 })
 export class HorzVertScrollingComponent {
-  rows: FullEmployee[] = [];
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('100k.json').subscribe(data => {
-      this.rows = data;
-    });
-  }
+  protected readonly rows = inject(DataService).load('100k.json');
 }

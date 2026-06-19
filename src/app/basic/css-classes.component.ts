@@ -1,12 +1,14 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { DataTableColumnDirective, DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
+import { map } from 'rxjs';
 
 import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'css-classes-demo',
-  imports: [DatatableComponent, DataTableColumnDirective],
+  imports: [DatatableComponent, DataTableColumnDirective, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -23,7 +25,7 @@ import { DataService } from '../data.service';
       <ngx-datatable
         class="material"
         columnMode="force"
-        [rows]="rows"
+        [rows]="rows | async"
         [headerHeight]="50"
         [rowHeight]="50"
         [rowClass]="getRowClass"
@@ -37,16 +39,10 @@ import { DataService } from '../data.service';
   `
 })
 export class CssClassesComponent {
-  rows: FullEmployee[] = [];
+  protected readonly rows = inject(DataService)
+    .load('100k.json')
+    .pipe(map(data => data.slice(0, 50)));
   expanded = {};
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('100k.json').subscribe(data => {
-      this.rows = data.splice(0, 50);
-    });
-  }
 
   getRowClass(row: FullEmployee) {
     return {

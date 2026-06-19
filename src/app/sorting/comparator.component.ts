@@ -1,12 +1,13 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
+import { map } from 'rxjs';
 
-import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'comparator-demo',
-  imports: [DatatableComponent],
+  imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -24,7 +25,7 @@ import { DataService } from '../data.service';
         class="material"
         rowHeight="auto"
         columnMode="force"
-        [rows]="rows"
+        [rows]="rows | async"
         [columns]="columns"
         [headerHeight]="50"
         [footerHeight]="50"
@@ -33,21 +34,15 @@ import { DataService } from '../data.service';
   `
 })
 export class ComparatorComponent {
-  rows: Employee[] = [];
+  protected readonly rows = inject(DataService)
+    .load('company.json')
+    .pipe(map(data => data.slice(0, 20)));
 
   columns: TableColumn[] = [
     { name: 'Company', comparator: this.companyComparator.bind(this) },
     { name: 'Name', sortable: false },
     { name: 'Gender', sortable: false }
   ];
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('company.json').subscribe(data => {
-      this.rows = data.splice(0, 20);
-    });
-  }
 
   companyComparator(propA: string, propB: string) {
     // Just a simple sort function comparisoins

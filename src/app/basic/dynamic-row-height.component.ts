@@ -1,12 +1,14 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datatable';
+import { map } from 'rxjs';
 
 import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'dynamic-row-height-demo',
-  imports: [DatatableComponent, DataTableColumnDirective],
+  imports: [DatatableComponent, DataTableColumnDirective, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -23,7 +25,7 @@ import { DataService } from '../data.service';
       <ngx-datatable
         class="material"
         columnMode="force"
-        [rows]="rows"
+        [rows]="rows | async"
         [headerHeight]="50"
         [footerHeight]="50"
         [rowHeight]="getRowHeight"
@@ -37,19 +39,15 @@ import { DataService } from '../data.service';
   `
 })
 export class DynamicRowHeightComponent {
-  rows: (FullEmployee & { height: number })[] = [];
+  protected readonly rows = inject(DataService)
+    .load('100k.json')
+    .pipe(
+      map(data =>
+        data.slice(0, 100).map(d => ({ ...d, height: Math.floor(Math.random() * 80) + 50 }))
+      )
+    );
   expanded = {};
   timeout: any;
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('100k.json').subscribe(data => {
-      this.rows = data
-        .splice(0, 100)
-        .map(d => ({ ...d, height: Math.floor(Math.random() * 80) + 50 }));
-    });
-  }
 
   getRowHeight(row: FullEmployee & { height: number }) {
     if (!row) {

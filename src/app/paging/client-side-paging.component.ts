@@ -1,12 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { DatatableComponent } from '@siemens/ngx-datatable';
 
-import { Employee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'client-side-paging-demo',
-  imports: [DatatableComponent],
+  imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
       <h3>
@@ -20,12 +20,11 @@ import { DataService } from '../data.service';
           </a>
         </small>
       </h3>
-      @let rows = this.rows();
       <ngx-datatable
         class="material"
         rowHeight="auto"
         columnMode="force"
-        [rows]="rows"
+        [rows]="rows | async"
         [columns]="[{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }]"
         [headerHeight]="50"
         [footerHeight]="50"
@@ -35,11 +34,5 @@ import { DataService } from '../data.service';
   `
 })
 export class ClientSidePagingComponent {
-  readonly rows = signal<Employee[]>([]);
-
-  private dataService = inject(DataService);
-
-  constructor() {
-    this.dataService.load('company.json').subscribe(data => this.rows.set(data));
-  }
+  protected readonly rows = inject(DataService).load('company.json');
 }

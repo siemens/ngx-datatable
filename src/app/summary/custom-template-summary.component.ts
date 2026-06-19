@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
 import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -27,11 +27,11 @@ import { DataService } from '../data.service';
         [columns]="columns"
         [headerHeight]="50"
         [summaryHeight]="55"
-        [rows]="rows"
+        [rows]="rows()"
       />
       <ng-template #nameSummaryCell let-row="row" let-value="value">
         <div class="name-container">
-          @for (name of getNames(); track name) {
+          @for (name of names(); track name) {
             <div class="chip">
               <span class="chip-content">{{ name }}</span>
             </div>
@@ -43,7 +43,13 @@ import { DataService } from '../data.service';
   styleUrl: './custom-template-summary.component.scss'
 })
 export class CustomTemplateSummaryComponent implements OnInit {
-  rows: Employee[] = [];
+  readonly rows = signal<Employee[]>([]);
+
+  readonly names = computed(() =>
+    this.rows()
+      .map(row => row.name)
+      .map(fullName => fullName.split(' ')[1])
+  );
 
   @ViewChild('nameSummaryCell') nameSummaryCell!: TemplateRef<any>;
 
@@ -53,7 +59,7 @@ export class CustomTemplateSummaryComponent implements OnInit {
 
   constructor() {
     this.dataService.load('company.json').subscribe(data => {
-      this.rows = data.splice(0, 5);
+      this.rows.set(data.splice(0, 5));
     });
   }
 
@@ -67,10 +73,6 @@ export class CustomTemplateSummaryComponent implements OnInit {
       { name: 'Gender', summaryFunc: cells => this.summaryForGender(cells) },
       { prop: 'age', summaryFunc: cells => this.avgAge(cells) }
     ];
-  }
-
-  getNames(): string[] {
-    return this.rows.map(row => row.name).map(fullName => fullName.split(' ')[1]);
   }
 
   private summaryForGender(cells: string[]) {

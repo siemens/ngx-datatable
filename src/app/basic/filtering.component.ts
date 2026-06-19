@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, signal, ViewChild } from '@angular/core';
 import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -35,13 +35,13 @@ import { DataService } from '../data.service';
         [headerHeight]="50"
         [footerHeight]="50"
         [limit]="10"
-        [rows]="rows"
+        [rows]="rows()"
       />
     </div>
   `
 })
 export class FilteringComponent {
-  rows: Employee[] = [];
+  readonly rows = signal<Employee[]>([]);
 
   temp: Employee[] = [];
 
@@ -56,7 +56,7 @@ export class FilteringComponent {
       this.temp = [...data];
 
       // push our inital complete list
-      this.rows = data;
+      this.rows.set(data);
     });
   }
 
@@ -64,9 +64,11 @@ export class FilteringComponent {
     const val = (event.target as HTMLInputElement).value.toLowerCase();
 
     // filter our data and update the rows
-    this.rows = this.temp.filter(d => {
-      return d.name.toLowerCase().includes(val) || !val;
-    });
+    this.rows.set(
+      this.temp.filter(d => {
+        return d.name.toLowerCase().includes(val) || !val;
+      })
+    );
     // Whenever the filter changes, always go back to the first page
     this.table.offset.set(0);
   }

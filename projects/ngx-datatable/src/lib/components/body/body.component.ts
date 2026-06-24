@@ -21,7 +21,7 @@ import {
   TrackByFunction,
   untracked,
   viewChildren,
-  ViewChild
+  viewChild
 } from '@angular/core';
 
 import { NgxDatatableConfig } from '../../ngx-datatable.config';
@@ -325,7 +325,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   }>();
   readonly treeAction = output<{ row: TRow }>();
 
-  @ViewChild(ScrollerComponent) scroller!: ScrollerComponent;
+  private readonly scroller = viewChild(ScrollerComponent);
   private readonly rowWrappers = viewChildren(DataTableRowWrapperComponent);
 
   /**
@@ -483,7 +483,8 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
    */
   updateOffsetY(offset?: number): void {
     // scroller is missing on empty table
-    if (!this.scroller) {
+    const scroller = this.scroller();
+    if (!scroller) {
       return;
     }
 
@@ -496,7 +497,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       offset = 0;
     }
 
-    this.scroller.setOffset(offset ?? 0);
+    scroller.setOffset(offset ?? 0);
   }
 
   /**
@@ -572,12 +573,17 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
 
   scrollToIndex(index: number, options?: ScrollToRowOptions): void {
     if (this.virtualization()) {
+      const scroller = this.scroller();
+      if (!scroller) {
+        return;
+      }
+
       const cache = this.rowHeightsCache();
       const rowTop = cache.query(index - 1);
       const rowBottom = cache.query(index);
       const rowHeight = rowBottom - rowTop;
-      const viewportHeight = this.scroller.parentElement?.clientHeight ?? 0;
-      const currentScrollTop = this.scroller.parentElement?.scrollTop ?? 0;
+      const viewportHeight = scroller.parentElement?.clientHeight ?? 0;
+      const currentScrollTop = scroller.parentElement?.scrollTop ?? 0;
       const block = options?.block ?? 'start';
 
       let top: number;
@@ -603,7 +609,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
           break;
       }
 
-      this.scroller.scrollTo(Math.max(0, top), options);
+      scroller.scrollTo(Math.max(0, top), options);
     } else {
       this.rowWrappers()[index]?.scrollIntoView(options);
     }

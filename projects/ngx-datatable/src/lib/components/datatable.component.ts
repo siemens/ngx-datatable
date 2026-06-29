@@ -43,6 +43,7 @@ import {
   ColumnResizeEvent,
   ContextMenuEvent,
   DragEventData,
+  FetchRowsEvent,
   Group,
   PageEvent,
   PagerPageEvent,
@@ -241,7 +242,16 @@ export class DatatableComponent<TRow extends Row = any>
    * The current offset ( page - 1 ) shown.
    * Default value: `0`
    */
-  readonly offset = model<number>(0);
+    readonly offset = model<number>(0);
+
+  /**
+   * Row-based offset for external paging.
+   * When provided, overrides `offset` (page-based) by converting rows to page number.
+   * Represents the starting row index (0-based) of the first visible row.
+   *
+   * Default value: `null`
+   */
+   readonly rowsOffset = input<number | null>(null);
 
   /**
    * Show the linear loading bar.
@@ -494,8 +504,23 @@ export class DatatableComponent<TRow extends Row = any>
 
   /**
    * The table was paged either triggered by the pager or the body scroll.
+   *
+   * @deprecated Use `fetchRows` instead.
+   * Application code must be adjusted to fetch rows based on the requested index
+   * instead of fetching a specific page.
+   *
+   * The `page` events nature using the page as a foundation has severe restrictions:
+   * - The table cannot fetch additional buffer rows to enable smoother virtual scrolling
+   * - The page currently includes half visible rows to avoid blanks, which breaks paging with pagination
+   *   since half visible rows never become fully visible. See #146
    */
   readonly page = output<PageEvent>();
+
+  /**
+   * Emitted when the table needs new rows for external paging/sorting.
+   * Provides row indexes that should be fetched.
+   */
+  readonly fetchRows = output<FetchRowsEvent>();
 
   /**
    * Columns were re-ordered.
@@ -691,12 +716,12 @@ export class DatatableComponent<TRow extends Row = any>
    * Computed signal that returns the corrected offset value.
    * It ensures the offset is within valid bounds based on rowCount and pageSize.
    */
-  readonly correctedOffset = computed(() => {
-    const offset = this.offset();
-    const rowCount = this.rowCount();
-    const pageSize = this.pageSize();
-    return Math.max(Math.min(offset, Math.ceil(rowCount / pageSize) - 1), 0);
-  });
+    readonly correctedOffset = computed(() => {
+      const offset = this.offset();
+      const rowCount = this.rowCount();
+      const pageSize = this.pageSize();
+      return Math.max(Math.min(offset, Math.ceil(rowCount / pageSize) - 1), 0);
+    });
 
   _subscriptions: Subscription[] = [];
   _defaultColumnWidth = this.configuration?.defaultColumnWidth ?? 150;
@@ -709,7 +734,7 @@ export class DatatableComponent<TRow extends Row = any>
   protected verticalScrollVisible = false;
   private readonly dimensions = signal<Pick<DOMRect, 'width' | 'height'>>({ height: 0, width: 0 });
 
-  constructor() {
+   constructor() {
     // TODO: This should be a computed signal.
     // Effect to handle recalculate when limit or count changes
     effect(() => {
@@ -721,6 +746,16 @@ export class DatatableComponent<TRow extends Row = any>
     });
 
     effect(() => this.recalculateColumns());
+
+    // Sync rowsOffset (row index) to offset (page number)
+    // This ensures pager displays correctly when rowsOffset is used
+    effect(() => {
+      const rowsOffset = this.rowsOffset();
+      if (rowsOffset != null && rowsOffset >= 0) {
+        const pageSize = this.pageSize();
+        untracked(() => this.offset.set(Math.floor(rowsOffset / pageSize)));
+      }
+    });
   }
 
   /*
@@ -755,13 +790,22 @@ export class DatatableComponent<TRow extends Row = any>
     requestAnimationFrame(() => {
       this.recalculate();
 
-      // emit page for virtual server-side kickoff
+      // Emit page for virtual server-side kickoff
       if (this.externalPaging() && this.scrollbarV()) {
         this.page.emit({
           count: this.count(),
           pageSize: this.pageSize(),
           limit: this.limit(),
           offset: 0,
+          sorts: this.sorts()
+        });
+      }
+
+      // Emit fetchRows for external paging kickoff
+      if (this.externalPaging()) {
+        this.fetchRows.emit({
+          startIndex: 0,
+          endIndex: this.pageSize(),
           sorts: this.sorts()
         });
       }
@@ -903,11 +947,19 @@ export class DatatableComponent<TRow extends Row = any>
     this.offset.set(offset);
 
     if (!isNaN(this.correctedOffset())) {
+      const pageSize = this.pageSize();
+      const correctedOffset = this.correctedOffset();
       this.page.emit({
         count: this.count(),
-        pageSize: this.pageSize(),
+        pageSize,
         limit: this.limit(),
-        offset: this.correctedOffset(),
+        offset: correctedOffset,
+        sorts: this.sorts()
+      });
+      const startIndex = correctedOffset * pageSize;
+      this.fetchRows.emit({
+        startIndex,
+        endIndex: startIndex + pageSize,
         sorts: this.sorts()
       });
     }
@@ -928,11 +980,19 @@ export class DatatableComponent<TRow extends Row = any>
     this.offset.set(event.page - 1);
     this._bodyComponent().updateOffsetY(this.correctedOffset());
 
+    const pageSize = this.pageSize();
+    const correctedOffset = this.correctedOffset();
     this.page.emit({
       count: this.count(),
-      pageSize: this.pageSize(),
+      pageSize,
       limit: this.limit(),
-      offset: this.correctedOffset(),
+      offset: correctedOffset,
+      sorts: this.sorts()
+    });
+    const startIndex = correctedOffset * pageSize;
+    this.fetchRows.emit({
+      startIndex,
+      endIndex: startIndex + pageSize,
       sorts: this.sorts()
     });
 
@@ -1083,11 +1143,17 @@ export class DatatableComponent<TRow extends Row = any>
     this.offset.set(0);
     this._bodyComponent().updateOffsetY(this.correctedOffset());
     // Emit the page object with updated offset value
+    const pageSize = this.pageSize();
     this.page.emit({
       count: this.count(),
-      pageSize: this.pageSize(),
+      pageSize,
       limit: this.limit(),
       offset: this.correctedOffset(),
+      sorts: this.sorts()
+    });
+    this.fetchRows.emit({
+      startIndex: 0,
+      endIndex: pageSize,
       sorts: this.sorts()
     });
     this.sort.emit(event);

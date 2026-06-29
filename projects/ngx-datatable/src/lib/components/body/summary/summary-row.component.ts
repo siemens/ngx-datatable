@@ -63,6 +63,7 @@ export class DataTableSummaryRowComponent {
   protected readonly _internalColumns = computed(() => {
     return this.columns().map(col => ({
       ...col,
+      checkboxable: false,
       cellTemplate: col.summaryTemplate
     }));
   });

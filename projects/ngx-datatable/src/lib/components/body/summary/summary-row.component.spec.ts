@@ -30,7 +30,6 @@ describe('DataTableSummaryRowComponent', () => {
     fixture.componentRef.setInput('columns', columns);
     fixture.componentRef.setInput('rows', rows);
     fixture.componentRef.setInput('rowHeight', 30);
-    fixture.componentRef.setInput('innerWidth', 100);
 
     harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, SummaryHarness);
     componentRef = fixture.componentRef;
@@ -159,13 +158,7 @@ describe('DataTableSummaryRowComponent', () => {
 @Component({
   imports: [DataTableSummaryRowComponent],
   template: `
-    <datatable-summary-row
-      [rows]="rows"
-      [columns]="columns"
-      [rowHeight]="30"
-      [innerWidth]="100"
-      [template]="tpl()"
-    />
+    <datatable-summary-row [rows]="rows" [columns]="columns" [rowHeight]="30" [template]="tpl()" />
     <ng-template #summaryTpl>
       <span class="custom-content">Custom summary content</span>
     </ng-template>

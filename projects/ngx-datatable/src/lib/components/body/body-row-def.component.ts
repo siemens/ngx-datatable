@@ -2,13 +2,16 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   Directive,
+  effect,
+  ElementRef,
   inject,
   InjectionToken,
   Injector,
   OnInit,
   TemplateRef,
   ViewContainerRef,
-  input
+  input,
+  booleanAttribute
 } from '@angular/core';
 
 import { RowOrGroup } from '../../types/public.types';
@@ -26,14 +29,47 @@ import { RowOrGroup } from '../../types/public.types';
       [ngTemplateOutlet]="rowDef.rowDefInternal().rowTemplate"
       [ngTemplateOutletContext]="rowContext"
     />
-  }`
+  }`,
+  styleUrl: './body-row-def.component.scss'
 })
 export class DatatableRowDefComponent {
+  private host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   rowDef = inject(ROW_DEF_TOKEN);
   rowContext = {
     ...this.rowDef.rowDefInternal(),
     disabled: this.rowDef.rowDefInternalDisabled()
   };
+
+  /**
+   * When `true`, clones of this row get the measured column widths stamped onto them.
+   * The clone is detached from the table grid, it has no parent tracks to inherit.
+   */
+  readonly preserveColumnWidthsOnClone = input(false, { transform: booleanAttribute });
+
+  constructor() {
+    effect(onCleanup => {
+      if (!this.preserveColumnWidthsOnClone()) {
+        return;
+      }
+      const originalCloneNode = this.host.cloneNode;
+      this.host.cloneNode = (deep?: boolean) => {
+        const clone = originalCloneNode.call(this.host, deep) as HTMLElement;
+        const gridTemplateColumns = this.measureGridTemplateColumns();
+        if (gridTemplateColumns) {
+          clone.style.gridTemplateColumns = gridTemplateColumns;
+        }
+        return clone;
+      };
+      onCleanup(() => (this.host.cloneNode = originalCloneNode));
+    });
+  }
+
+  private measureGridTemplateColumns(): string {
+    const cells = this.host.querySelectorAll<HTMLElement>('datatable-body-cell');
+    return Array.from(cells)
+      .map(cell => `${cell.getBoundingClientRect().width}px`)
+      .join(' ');
+  }
 }
 
 @Directive({

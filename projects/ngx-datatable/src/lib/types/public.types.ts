@@ -264,13 +264,7 @@ export interface ScrollToRowOptions {
 }
 
 export type DragEventType =
-  | 'drag'
-  | 'dragend'
-  | 'dragenter'
-  | 'dragleave'
-  | 'dragover'
-  | 'dragstart'
-  | 'drop';
+  'drag' | 'dragend' | 'dragenter' | 'dragleave' | 'dragover' | 'dragstart' | 'drop';
 
 export interface DragEventData {
   event: DragEvent;

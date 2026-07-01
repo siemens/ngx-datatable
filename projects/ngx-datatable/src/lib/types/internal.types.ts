@@ -100,8 +100,7 @@ export interface SortableTableColumnInternal<
 }
 
 export type TableColumnInternal<TRow extends Row = any> =
-  | StandardTableColumnInternal<TRow>
-  | SortableTableColumnInternal<TRow>;
+  StandardTableColumnInternal<TRow> | SortableTableColumnInternal<TRow>;
 
 export interface TableColumnGroup {
   left: TableColumnInternal[];

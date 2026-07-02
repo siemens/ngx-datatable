@@ -16,3 +16,9 @@ yarn.lock
 /playwright/.cache/
 /playwright/results/
 .env
+
+# Zensical docs
+/.venv/
+/site/
+/.zensical/
+__pycache__/

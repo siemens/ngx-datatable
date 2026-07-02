@@ -7,5 +7,4 @@ teams to leverage threat intelligence, speed up incident response and automate s
 
 ### Contributors
 
-{% GitHubContributors %}
-{% endGitHubContributors %}
+See the full list of [contributors on GitHub](https://github.com/siemens/ngx-datatable/graphs/contributors).

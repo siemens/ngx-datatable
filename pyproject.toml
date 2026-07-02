@@ -1,0 +1,15 @@
+[project]
+name = "ngx-datatable-docs"
+version = "0.0.0"
+description = "Documentation tooling (Zensical) for ngx-datatable."
+authors = [
+    { name = "Siemens AG", email = "info@siemens.com" },
+]
+requires-python = ">=3.11"
+dependencies = [
+    "zensical>=0.0.46",
+]
+
+[tool.uv]
+# This is a tooling-only project (no Python package to build).
+package = false

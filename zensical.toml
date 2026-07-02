@@ -1,0 +1,60 @@
+[project]
+site_name = "@siemens/ngx-datatable"
+site_description = "A feature-rich yet lightweight data-table crafted for Angular."
+site_author = "Siemens AG"
+copyright = "&copy; 2026 Siemens AG"
+site_url = "https://siemens.github.io/ngx-datatable/"
+docs_dir = "docs"
+site_dir = "site"
+
+nav = [
+    { "Introduction" = [
+        "index.md",
+        { "Features" = "introduction/features.md" },
+        { "Architecture" = "introduction/architecture.md" },
+        { "Installing" = "introduction/installing.md" },
+        { "Theming" = "introduction/themes.md" },
+        { "Getting Started" = "introduction/getting-started.md" },
+        { "Change Detection" = "introduction/cd.md" },
+    ] },
+    { "API" = [
+        { "Table" = [
+            { "Inputs" = "api/table/inputs.md" },
+            { "Outputs" = "api/table/outputs.md" },
+            { "Methods" = "api/table/methods.md" },
+            { "Internals" = "api/table/internals.md" },
+        ] },
+        { "Column" = [
+            { "Inputs" = "api/column/inputs.md" },
+            { "Modes" = "api/column/modes.md" },
+            { "Internals" = "api/column/internals.md" },
+        ] },
+        { "Row Detail" = [
+            { "Inputs" = "api/detail/inputs.md" },
+            { "Outputs" = "api/detail/outputs.md" },
+        ] },
+        { "Row" = [
+            { "Custom row wrapper" = "api/row/row-def.md" },
+        ] },
+    ] },
+    { "Demos" = [
+        { "Online" = "https://siemens.github.io/ngx-datatable/examples/" },
+        { "Source Code" = "https://github.com/siemens/ngx-datatable/tree/main/src/app" },
+    ] },
+    { "Contributing" = [
+        { "Building" = "contributing/building.md" },
+        { "Guidelines" = "contributing/guidelines.md" },
+        { "Community" = "contributing/community.md" },
+        { "Credits" = "contributing/credits.md" },
+    ] },
+    { "Changelog" = "changelog.md" },
+]
+
+[project.theme]
+variant = "modern"
+features = [
+    "navigation.indexes",
+]
+
+[project.repository]
+url = "https://github.com/siemens/ngx-datatable"

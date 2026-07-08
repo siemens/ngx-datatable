@@ -1,9 +1,8 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { DatatableComponent } from '@siemens/ngx-datatable';
+import { Component, inject, signal } from '@angular/core';
+import { DatatableComponent, FetchRowsEvent } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
 import { MockServerResultsService } from './mock-server-results-service';
-import { Page } from './model/page';
 
 @Component({
   selector: 'server-side-paging-demo',
@@ -21,7 +20,6 @@ import { Page } from './model/page';
           </a>
         </small>
       </h3>
-      @let page = this.page();
       <ngx-datatable
         class="material"
         rowHeight="auto"
@@ -31,41 +29,34 @@ import { Page } from './model/page';
         [headerHeight]="50"
         [footerHeight]="50"
         [externalPaging]="true"
-        [count]="page.totalElements"
-        [offset]="page.pageNumber"
-        [limit]="page.size"
+        [count]="totalElements()"
+        [rowsOffset]="rowsOffset()"
+        [limit]="pageSize()"
         [loadingIndicator]="loading()"
-        (page)="setPage($event.offset)"
+        (fetchRows)="onFetchRows($event)"
       />
     </div>
   `,
   providers: [MockServerResultsService]
 })
-export class ServerSidePagingComponent implements OnInit {
-  readonly page = signal<Page>({
-    pageNumber: 0,
-    size: 20,
-    totalElements: 0,
-    totalPages: 0
-  });
+export class ServerSidePagingComponent {
+  readonly totalElements = signal(0);
+  readonly rowsOffset = signal(0);
+  readonly pageSize = signal(20);
   readonly rows = signal<Employee[]>([]);
   readonly loading = signal(false);
   private serverResultsService = inject(MockServerResultsService);
 
-  ngOnInit() {
-    this.setPage(0);
-  }
-
   /**
-   * Populate the table with new data based on the page number
-   * @param page The page to select
+   * Populate the table with new data based on row indexes
+   * @param event The fetchRows event containing start and end indexes
    */
-  setPage(page: number) {
-    this.page.update(currentPage => ({ ...currentPage, pageNumber: page }));
+  onFetchRows(event: FetchRowsEvent) {
     this.loading.set(true);
-    this.serverResultsService.getResults(this.page()).subscribe(pagedData => {
-      this.page.set(pagedData.page);
-      this.rows.set(pagedData.data);
+    this.rowsOffset.set(event.startIndex);
+    this.serverResultsService.getResults(event.startIndex, event.endIndex).subscribe(result => {
+      this.totalElements.set(result.totalElements);
+      this.rows.set(result.data);
       this.loading.set(false);
     });
   }

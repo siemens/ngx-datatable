@@ -1,9 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
-import { DatatableComponent, PageEvent } from '@siemens/ngx-datatable';
+import { DatatableComponent, FetchRowsEvent } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
 import { MockServerResultsService } from './mock-server-results-service';
-import { Page } from './model/page';
 
 @Component({
   selector: 'virtual-server-side-demo',
@@ -42,8 +41,8 @@ import { Page } from './model/page';
         [externalPaging]="true"
         [externalSorting]="true"
         [count]="totalElements"
-        [offset]="pageNumber"
-        (page)="setPage($event)"
+        [rowsOffset]="rowsOffset()"
+        (fetchRows)="onFetchRows($event)"
       >
         <div loading-indicator class="custom-loading-indicator">loading...</div>
       </ngx-datatable>
@@ -54,69 +53,46 @@ import { Page } from './model/page';
 })
 export class VirtualServerSideComponent {
   readonly totalElements = signal(0);
-  pageNumber = 0;
+  readonly rowsOffset = signal(0);
   readonly rows = signal<Employee[] | undefined>(undefined);
-  cache: Record<string, boolean> = {};
-  cachePageSize = 0;
+  cache: Set<string> = new Set();
+  cachedChunkSize = 0;
 
   readonly isLoading = signal(0);
 
   private serverResultsService = inject(MockServerResultsService);
 
-  setPage(pageInfo: PageEvent) {
-    // Current page number is determined by last call to setPage
-    // This is the page the UI is currently displaying
-    // The current page is based on the UI pagesize and scroll position
-    // Pagesize can change depending on browser size
-    this.pageNumber = pageInfo.offset;
+  onFetchRows(event: FetchRowsEvent) {
+    this.rowsOffset.set(event.startIndex);
 
-    // Calculate row offset in the UI using pageInfo
-    // This is the scroll position in rows
-    const rowOffset = pageInfo.offset * pageInfo.pageSize;
+    const chunkSize = event.endIndex - event.startIndex;
+    const cacheKey = `${event.startIndex}-${event.endIndex}`;
 
-    const page: Page = {
-      pageNumber: Math.floor(rowOffset / pageInfo.pageSize),
-      size: pageInfo.pageSize,
-      totalElements: 0,
-      totalPages: 0
-    };
-
-    // We keep a index of server loaded pages so we don't load same data twice
-    // This is based on the server page not the UI
-    if (this.cachePageSize !== page.size) {
-      this.cachePageSize = page.size;
-      this.cache = {};
+    // We keep an index of fetched chunks so we don't load same data twice
+    if (this.cachedChunkSize !== chunkSize) {
+      this.cachedChunkSize = chunkSize;
+      this.cache.clear();
     }
-    if (this.cache[page.pageNumber]) {
+    if (this.cache.has(cacheKey)) {
       return;
     }
-    this.cache[page.pageNumber] = true;
+    this.cache.add(cacheKey);
 
-    // Counter of pending API calls
     this.isLoading.update(v => v + 1);
 
-    this.serverResultsService.getResults(page).subscribe(pagedData => {
-      // Update total count
-      this.totalElements.set(pagedData.page.totalElements);
+    this.serverResultsService.getResults(event.startIndex, event.endIndex).subscribe(result => {
+      this.totalElements.set(result.totalElements);
 
-      // Create array to store data if missing
-      // The array should have the correct number of with "holes" for missing data
       const currentRows = this.rows() ?? new Array<Employee>(this.totalElements() || 0);
 
-      // Calc starting row offset
-      // This is the position to insert the new data
-      const start = pagedData.page.pageNumber * pagedData.page.size;
-
-      // Copy existing data
       const rows = [...currentRows];
 
-      // Insert new rows into correct position
-      rows.splice(start, pagedData.page.size, ...pagedData.data);
+      for (let i = 0; i < result.data.length; i++) {
+        rows[event.startIndex + i] = result.data[i];
+      }
 
-      // Set rows to our new rows for display
       this.rows.set(rows);
 
-      // Decrement the counter of pending API calls
       this.isLoading.update(v => v - 1);
     });
   }

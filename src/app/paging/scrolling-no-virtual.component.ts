@@ -1,9 +1,8 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { DatatableComponent } from '@siemens/ngx-datatable';
+import { Component, inject, signal } from '@angular/core';
+import { DatatableComponent, FetchRowsEvent } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
 import { MockServerResultsService } from './mock-server-results-service';
-import { Page } from './model/page';
 
 @Component({
   selector: 'scrolling-no-virtual-demo',
@@ -21,57 +20,46 @@ import { Page } from './model/page';
           </a>
         </small>
       </h3>
-      @let rows = this.rows();
-      @let page = this.page();
-      @let isLoading = this.isLoading();
       <ngx-datatable
         class="material"
         rowHeight="auto"
         columnMode="force"
-        [rows]="rows"
+        [rows]="rows()"
         [columns]="[{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }]"
         [headerHeight]="50"
         [footerHeight]="50"
         [scrollbarV]="true"
         [virtualization]="false"
         [externalPaging]="true"
-        [count]="page.totalElements"
-        [offset]="page.pageNumber"
-        [limit]="page.size"
-        [ghostLoadingIndicator]="isLoading > 0"
-        (page)="setPage($event.offset)"
+        [count]="totalElements()"
+        [rowsOffset]="rowsOffset()"
+        [limit]="pageSize()"
+        [ghostLoadingIndicator]="isLoading() > 0"
+        (fetchRows)="onFetchRows($event)"
       />
     </div>
   `,
   providers: [MockServerResultsService]
 })
-export class ScrollingNoVirtualComponent implements OnInit {
-  readonly page = signal<Page>({
-    pageNumber: 0,
-    size: 20,
-    totalElements: 0,
-    totalPages: 0
-  });
+export class ScrollingNoVirtualComponent {
+  readonly totalElements = signal(0);
+  readonly rowsOffset = signal(0);
+  readonly pageSize = signal(20);
   readonly rows = signal<Employee[]>([]);
-
   readonly isLoading = signal(0);
   private serverResultsService = inject(MockServerResultsService);
 
-  ngOnInit() {
-    this.setPage(0);
-  }
-
   /**
-   * Populate the table with new data based on the page number
-   * @param page The page to select
+   * Populate the table with new data based on row indexes
+   * @param event The fetchRows event containing start and end indexes
    */
-  setPage(page: number) {
-    this.page.update(currentPage => ({ ...currentPage, pageNumber: page }));
+  onFetchRows(event: FetchRowsEvent) {
     this.isLoading.update(v => v + 1);
-    this.serverResultsService.getResults(this.page()).subscribe(pagedData => {
+    this.rowsOffset.set(event.startIndex);
+    this.serverResultsService.getResults(event.startIndex, event.endIndex).subscribe(result => {
       this.isLoading.update(v => v - 1);
-      this.page.set(pagedData.page);
-      this.rows.set(pagedData.data);
+      this.totalElements.set(result.totalElements);
+      this.rows.set(result.data);
     });
   }
 }

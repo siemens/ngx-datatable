@@ -184,6 +184,12 @@ export interface PagerPageEvent {
   page: number;
 }
 
+export interface FetchRowsEvent {
+  startIndex: number;
+  endIndex: number;
+  sorts: SortPropDir[];
+}
+
 export interface ColumnResizeEvent {
   column: TableColumn;
   prevValue: number;

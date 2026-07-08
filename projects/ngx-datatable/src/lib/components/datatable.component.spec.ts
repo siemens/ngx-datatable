@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { ColumnMode, SortPropDir } from '../types/public.types';
+import { ColumnMode, FetchRowsEvent, SortEvent, SortPropDir } from '../types/public.types';
 import { TableColumn } from '../types/table-column.type';
 import { DataTableBodyCellComponent } from './body/body-cell.component';
 import { DataTableBodyRowComponent } from './body/body-row.component';
@@ -353,6 +353,32 @@ describe('DatatableComponent', () => {
     expect(datatableComponent.offset()).toBe(0);
   });
 
+  it('should emit fetchRows when sorting by a column', async () => {
+    const initialRows = [{ id: 1 }, { id: 2 }, { id: 3 }];
+    const columns = [{ prop: 'id' }];
+
+    component.rows.set(initialRows);
+    component.columns.set(columns);
+    await fixture.whenStable();
+
+    const datatable: DatatableComponent = fixture.debugElement.query(
+      By.directive(DatatableComponent)
+    ).componentInstance;
+
+    const fetchRowsSpy = vi.spyOn(datatable.fetchRows, 'emit');
+
+    sortBy({ column: 1 }, fixture);
+    await fixture.whenStable();
+
+    const lastEmit = fetchRowsSpy.mock.calls.at(-1)?.[0] as FetchRowsEvent;
+
+    expect(lastEmit).toEqual({
+      startIndex: 0,
+      endIndex: 3,
+      sorts: [{ prop: 'id', dir: 'asc' }]
+    });
+  });
+
   it('should support array data', async () => {
     const initialRows = [['Hello', 123]];
 
@@ -641,6 +667,124 @@ describe('DatatableComponent With Custom Templates', () => {
     expect(textContent({ row: 1, column: 2 }, fixture)).toContain('35');
     expect(textContent({ row: 2, column: 2 }, fixture)).toContain('50');
     expect(textContent({ row: 3, column: 2 }, fixture)).toContain('60');
+  });
+});
+
+describe('DatatableComponent With External Paging', () => {
+  @Component({
+    imports: [DatatableComponent],
+    template: `
+      <ngx-datatable
+        [columns]="columns()"
+        [rows]="rows()"
+        [externalPaging]="externalPaging()"
+        [scrollbarV]="scrollbarV()"
+        [virtualization]="virtualization()"
+        [limit]="limit()"
+        [count]="count()"
+        (fetchRows)="onFetchRows($event)"
+      />
+    `,
+    host: {
+      '[style.inline-size.px]': 'size()',
+      '[style.block-size.px]': 'height()'
+    }
+  })
+  class TestFixtureWithExternalPagingComponent {
+    readonly columns = signal<TableColumn[]>([{ prop: 'name' }]);
+    readonly rows = signal<Record<string, any>[]>([]);
+    readonly externalPaging = signal(true);
+    readonly scrollbarV = signal(true);
+    readonly virtualization = signal(true);
+    readonly limit = signal<number | undefined>(10);
+    readonly count = signal(100);
+    readonly size = signal(400);
+    readonly height = signal(600);
+
+    lastFetchRowsEvent?: FetchRowsEvent;
+
+    onFetchRows(event: FetchRowsEvent) {
+      this.lastFetchRowsEvent = event;
+    }
+  }
+
+  let fixture: ComponentFixture<TestFixtureWithExternalPagingComponent>;
+  let component: TestFixtureWithExternalPagingComponent;
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TestFixtureWithExternalPagingComponent);
+    component = fixture.componentInstance;
+  });
+
+  it('should emit fetchRows on initialization with external paging and scrollbarV', async () => {
+    component.rows.set(Array.from({ length: 100 }, (_, i) => ({ name: `Row ${i}` })));
+    component.virtualization.set(false);
+
+    vi.useFakeTimers();
+    fixture.detectChanges();
+    await vi.runAllTimersAsync();
+    vi.useRealTimers();
+
+    expect(component.lastFetchRowsEvent).toEqual({
+      startIndex: 0,
+      endIndex: 10,
+      sorts: []
+    });
+  });
+
+  it('should emit fetchRows with correct row indexes based on offset', async () => {
+    component.rows.set(Array.from({ length: 30 }, (_, i) => ({ id: i })));
+    component.columns.set([{ prop: 'id' }]);
+    component.limit.set(10);
+    component.virtualization.set(false);
+
+    vi.useFakeTimers();
+    fixture.detectChanges();
+    await vi.runAllTimersAsync();
+    vi.useRealTimers();
+
+    const datatable = fixture.debugElement.query(By.directive(DatatableComponent))
+      .componentInstance as DatatableComponent;
+    const fetchRowsSpy = vi.spyOn(datatable.fetchRows, 'emit');
+
+    datatable.onFooterPage({ page: 3 });
+    await fixture.whenStable();
+
+    expect(fetchRowsSpy.mock.calls.at(-1)?.[0]).toEqual({
+      startIndex: 20,
+      endIndex: 30,
+      sorts: []
+    });
+  });
+
+  it('should emit fetchRows with row count when no limit is set', async () => {
+    component.rows.set(Array.from({ length: 15 }, (_, i) => ({ id: i })));
+    component.columns.set([{ prop: 'id' }]);
+    component.limit.set(undefined);
+    component.virtualization.set(false);
+
+    vi.useFakeTimers();
+    fixture.detectChanges();
+    await vi.runAllTimersAsync();
+    vi.useRealTimers();
+
+    const datatable = fixture.debugElement.query(By.directive(DatatableComponent))
+      .componentInstance as DatatableComponent;
+    const fetchRowsSpy = vi.spyOn(datatable.fetchRows, 'emit');
+
+    datatable.onColumnSort({
+      column: { prop: 'id' },
+      prevValue: undefined,
+      newValue: 'desc',
+      sorts: [{ prop: 'id', dir: 'desc' }]
+    });
+    await fixture.whenStable();
+
+    expect(fetchRowsSpy.mock.calls.at(-1)?.[0]).toEqual({
+      startIndex: 0,
+      endIndex: 15,
+      sorts: [{ prop: 'id', dir: 'desc' }]
+    });
   });
 });
 

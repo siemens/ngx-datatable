@@ -5,10 +5,10 @@
       - /url: https://github.com/siemens/ngx-datatable/blob/main/src/app/paging/client-side-paging.component.ts
   - table:
     - rowgroup:
-      - row "Name c Gender c Company c":
-        - columnheader "Name c"
-        - columnheader "Gender c"
-        - columnheader "Company c"
+      - row "Name Gender Company":
+        - columnheader "Name"
+        - columnheader "Gender"
+        - columnheader "Company"
     - rowgroup:
       - row "Consuelo Dickson female Poshome":
         - cell "Consuelo Dickson"

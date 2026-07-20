@@ -2,7 +2,7 @@
   "name": "ngx-datatable",
   "version": "26.2.1",
   "engines": {
-    "npm": "11"
+    "npm": "12"
   },
   "commitlint": {
     "extends": [

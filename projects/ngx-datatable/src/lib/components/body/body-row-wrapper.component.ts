@@ -1,7 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
   booleanAttribute,
-  ChangeDetectionStrategy,
   Component,
   computed,
   DoCheck,
@@ -30,7 +29,6 @@ import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive'
     }
   `,
   styleUrl: './body-row-wrapper.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'datatable-row-wrapper'
   }

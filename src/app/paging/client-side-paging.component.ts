@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DatatableComponent } from '@siemens/ngx-datatable';
 
 import { DataService } from '../data.service';
@@ -31,7 +31,8 @@ import { DataService } from '../data.service';
         [limit]="10"
       />
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ClientSidePagingComponent {
   protected readonly rows = inject(DataService).load('company.json');

@@ -1,5 +1,12 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 import { map } from 'rxjs';
 
@@ -44,7 +51,8 @@ import { DataService } from '../data.service';
         }
       </ng-template>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class TemplateRefComponent implements OnInit {
   @ViewChild('editTmpl', { static: true }) editTmpl!: TemplateRef<any>;

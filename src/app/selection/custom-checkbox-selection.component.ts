@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import {
   ActivateEvent,
   DataTableColumnCellDirective,
@@ -97,7 +97,8 @@ import { DataService } from '../data.service';
         </ul>
       </div>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class CustomCheckboxSelectionComponent {
   readonly rows = signal<Employee[]>([]);

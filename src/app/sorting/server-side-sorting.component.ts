@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { DatatableComponent, SortPropDir, TableColumn } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -33,7 +33,8 @@ import { DataService } from '../data.service';
         (sortsChange)="onSort($event)"
       />
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ServerSideSortingComponent {
   readonly loading = signal(false);

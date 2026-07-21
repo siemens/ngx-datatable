@@ -8,7 +8,8 @@ import {
   OnInit,
   TemplateRef,
   ViewContainerRef,
-  input
+  input,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 import { RowOrGroup } from '../../types/public.types';
@@ -26,7 +27,8 @@ import { RowOrGroup } from '../../types/public.types';
       [ngTemplateOutlet]="rowDef.rowDefInternal().rowTemplate"
       [ngTemplateOutletContext]="rowContext"
     />
-  }`
+  }`,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class DatatableRowDefComponent {
   rowDef = inject(ROW_DEF_TOKEN);

@@ -1,4 +1,12 @@
-import { Component, ElementRef, inject, Injectable, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  inject,
+  Injectable,
+  OnInit,
+  signal
+} from '@angular/core';
 import { DatatableComponent } from '@siemens/ngx-datatable';
 import { Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
@@ -58,7 +66,8 @@ export class MockServerResultsService {
     </div>
   `,
   styleUrl: './scrolling-server-side.component.css',
-  providers: [MockServerResultsService]
+  providers: [MockServerResultsService],
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ScrollingServerSideComponent implements OnInit {
   readonly headerHeight = 50;

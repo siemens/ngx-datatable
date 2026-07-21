@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
@@ -90,7 +90,8 @@ import { DataService } from '../data.service';
         </ngx-datatable>
       </div>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class DisabledComponent {
   readonly rows = signal<(FullEmployee & { isDisabled?: boolean })[]>([]);

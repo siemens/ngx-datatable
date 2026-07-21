@@ -1,4 +1,4 @@
-import { Component, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   DataTableColumnCellDirective,
@@ -74,7 +74,8 @@ import { DataService } from '../data.service';
         <ngx-datatable-column name="Row Height" prop="height" [width]="80" />
       </ngx-datatable>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class TenKRowsComponent {
   readonly rows = signal<(FullEmployee & { height: number })[]>([]);

@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datatable';
 
 import { DataService } from '../data.service';
@@ -70,7 +70,8 @@ import { DataService } from '../data.service';
         }
       </div>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class HiddenOnLoadComponent {
   protected readonly rows = inject(DataService).load('100k.json');

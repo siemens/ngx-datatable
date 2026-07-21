@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import {
   DataTableColumnCellTreeToggle,
   DataTableColumnDirective,
@@ -75,7 +75,8 @@ import { DataService } from '../data.service';
       </ngx-datatable>
     </div>
   `,
-  styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
+  styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }'],
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class FullScreenTreeComponent {
   readonly rows = signal<(FullEmployee & { treeStatus: TreeStatus; parentId?: string })[]>([]);

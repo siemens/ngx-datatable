@@ -1,6 +1,5 @@
 import {
   booleanAttribute,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -59,7 +58,6 @@ import { DataTableBodyCellComponent } from './body-cell.component';
     }
   `,
   styleUrl: './body-row.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'datatable-body-row',
     role: 'row',

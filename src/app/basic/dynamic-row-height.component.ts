@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datatable';
 import { map } from 'rxjs';
 
@@ -36,7 +36,8 @@ import { DataService } from '../data.service';
         <ngx-datatable-column name="Row Height" prop="height" />
       </ngx-datatable>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class DynamicRowHeightComponent {
   protected readonly rows = inject(DataService)

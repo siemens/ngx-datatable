@@ -1,4 +1,13 @@
-import { Component, computed, inject, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -40,7 +49,8 @@ import { DataService } from '../data.service';
       </ng-template>
     </div>
   `,
-  styleUrl: './custom-template-summary.component.scss'
+  styleUrl: './custom-template-summary.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class CustomTemplateSummaryComponent implements OnInit {
   readonly rows = signal<Employee[]>([]);

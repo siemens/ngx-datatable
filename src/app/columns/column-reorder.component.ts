@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -56,7 +56,8 @@ import { DataService } from '../data.service';
     .dragFromLeft .icon {
       left: -13px;
     }
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ColumnReorderComponent {
   readonly rows = signal<Employee[]>([]);

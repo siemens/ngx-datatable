@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output, Signal } from '@angular/core';
+import { Component, computed, input, output, Signal } from '@angular/core';
 
 import { FooterContext, PagerPageEvent } from '../../types/public.types';
 import { DatatableFooterDirective } from './footer.directive';
@@ -34,7 +34,6 @@ import { DatatablePagerComponent } from './pager.component';
     </div>
   `,
   styleUrl: './footer.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'datatable-footer'
   }

@@ -1,7 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
   booleanAttribute,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -248,7 +247,6 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
     }
   `,
   styleUrl: './body.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'datatable-body'
   }

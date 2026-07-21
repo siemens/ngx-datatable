@@ -1,4 +1,4 @@
-import { Component, inject, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, ViewChild } from '@angular/core';
 import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -43,7 +43,8 @@ import { DataService } from '../data.service';
         <ngx-datatable-column name="Company" />
       </ngx-datatable>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class LiveDataComponent {
   @ViewChild('mydatatable') mydatatable!: DatatableComponent<Employee & { updated: string }>;

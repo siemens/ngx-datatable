@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { DatatableComponent, PageEvent } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -50,7 +50,8 @@ import { Page } from './model/page';
     </div>
   `,
   styleUrl: './virtual-server-side.component.scss',
-  providers: [MockServerResultsService]
+  providers: [MockServerResultsService],
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class VirtualServerSideComponent {
   readonly totalElements = signal(0);

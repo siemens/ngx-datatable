@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
 import { DataService } from '../data.service';
@@ -30,7 +30,8 @@ import { DataService } from '../data.service';
         [rowHeight]="50"
       />
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class FixedRowHeightComponent {
   protected readonly rows = inject(DataService).load('company.json');

@@ -11,6 +11,7 @@ import {
   TemplateRef,
   ViewContainerRef,
   input,
+  ChangeDetectionStrategy,
   booleanAttribute
 } from '@angular/core';
 
@@ -30,7 +31,7 @@ import { RowOrGroup } from '../../types/public.types';
       [ngTemplateOutletContext]="rowContext"
     />
   }`,
-  styleUrl: './body-row-def.component.scss'
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class DatatableRowDefComponent {
   private host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;

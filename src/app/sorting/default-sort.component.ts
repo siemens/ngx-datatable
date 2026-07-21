@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
@@ -50,7 +50,8 @@ import { DataService } from '../data.service';
         <ngx-datatable-column name="Gender" />
       </ngx-datatable>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class DefaultSortComponent {
   protected readonly rows = inject(DataService).load('company.json');

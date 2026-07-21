@@ -1,4 +1,4 @@
-import { Component, provideZoneChangeDetection } from '@angular/core';
+import { ChangeDetectionStrategy, Component, provideZoneChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datatable';
 
@@ -20,7 +20,8 @@ import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datat
       <ngx-datatable-column name="field1" />
       <ngx-datatable-column name="field2" />
     </ngx-datatable>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class App {
   mockData = new Array(100).fill(0).map((_, i) => ({

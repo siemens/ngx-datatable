@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   DatatableComponent,
   DatatableFooterDirective,
@@ -64,7 +64,8 @@ import { DataService } from '../data.service';
         </ngx-datatable-footer>
       </ngx-datatable>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class FooterTemplateComponent {
   protected readonly rows = inject(DataService)

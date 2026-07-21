@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 import { map } from 'rxjs';
 
@@ -31,7 +31,8 @@ import { DataService } from '../data.service';
         [footerHeight]="50"
       />
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ComparatorComponent {
   protected readonly rows = inject(DataService)

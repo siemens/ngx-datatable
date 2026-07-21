@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import {
   ActivateEvent,
   DataTableColumnDirective,
@@ -77,7 +77,8 @@ import { DataService } from '../data.service';
         </ul>
       </div>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class CheckboxSelectionComponent {
   private dataService = inject(DataService);

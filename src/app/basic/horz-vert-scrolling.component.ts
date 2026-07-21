@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datatable';
 
 import { DataService } from '../data.service';
@@ -37,7 +37,8 @@ import { DataService } from '../data.service';
         <ngx-datatable-column name="State" prop="address.state" [width]="300" />
       </ngx-datatable>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class HorzVertScrollingComponent {
   protected readonly rows = inject(DataService).load('100k.json');

@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ContextMenuEvent, DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -54,7 +54,8 @@ import { DataService } from '../data.service';
         (tableContextmenu)="onTableContextMenu($event)"
       />
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ContextMenuComponent {
   protected readonly rows = inject(DataService).load('company.json');

@@ -1,5 +1,5 @@
 import { HashLocationStrategy, Location, LocationStrategy } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 import packageInfo from '../../projects/ngx-datatable/package.json';
@@ -14,7 +14,8 @@ import packageInfo from '../../projects/ngx-datatable/package.json';
       provide: LocationStrategy,
       useClass: HashLocationStrategy
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class AppComponent {
   version = packageInfo.version;

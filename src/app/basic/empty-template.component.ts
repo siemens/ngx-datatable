@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
 @Component({
@@ -30,7 +30,8 @@ import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
         >
       </ngx-datatable>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class EmptyTemplateComponent {
   columns: TableColumn[] = [

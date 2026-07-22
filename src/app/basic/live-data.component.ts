@@ -46,6 +46,7 @@ import { DataService } from '../data.service';
   `
 })
 export class LiveDataComponent {
+  private dataService = inject(DataService);
   @ViewChild('mydatatable') mydatatable!: DatatableComponent<Employee & { updated: string }>;
 
   count = 50;
@@ -53,8 +54,6 @@ export class LiveDataComponent {
   active = true;
   temp: (Employee & { updated: string })[] = [];
   cols = ['name', 'gender', 'company'] as const;
-
-  private dataService = inject(DataService);
 
   constructor() {
     this.dataService.load('company.json').subscribe(data => {

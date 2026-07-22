@@ -83,10 +83,9 @@ import { DataService } from '../data.service';
   `
 })
 export class InlineEditingComponent {
+  private dataService = inject(DataService);
   editing: Record<string, boolean> = {};
   rows: Employee[] = [];
-
-  private dataService = inject(DataService);
 
   constructor() {
     this.dataService.load('company.json').subscribe(data => {

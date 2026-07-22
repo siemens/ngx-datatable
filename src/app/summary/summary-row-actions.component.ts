@@ -78,10 +78,9 @@ import { DataService } from '../data.service';
   `
 })
 export class SummaryRowActionsComponent {
+  private dataService = inject(DataService);
   protected readonly rows = signal<Employee[]>([]);
   protected readonly selected = signal<Employee[]>([]);
-
-  private dataService = inject(DataService);
 
   constructor() {
     this.dataService.load('company.json').subscribe(data => this.rows.set(data));

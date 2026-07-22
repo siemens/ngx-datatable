@@ -36,6 +36,7 @@ import { DataService } from '../data.service';
   `
 })
 export class ServerSideSortingComponent {
+  private dataService = inject(DataService);
   readonly loading = signal(false);
 
   readonly rows = signal<Employee[]>([]);
@@ -45,8 +46,6 @@ export class ServerSideSortingComponent {
     { name: 'Name', sortable: true },
     { name: 'Gender', sortable: true }
   ];
-
-  private dataService = inject(DataService);
 
   constructor() {
     this.dataService.load('company.json').subscribe(data => this.rows.set(data.splice(0, 20)));

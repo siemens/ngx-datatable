@@ -74,6 +74,10 @@ import { DataTableBodyCellComponent } from './body-cell.component';
 })
 export class DataTableBodyRowComponent<TRow extends Row = any> implements DoCheck {
   private cd = inject(ChangeDetectorRef);
+  _element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private _rowDiffer: KeyValueDiffer<keyof RowOrGroup<TRow>, any> = inject(KeyValueDiffers)
+    .find({})
+    .create();
 
   readonly columns = input.required<TableColumnInternal[]>();
   readonly expanded = input<boolean>();
@@ -100,7 +104,6 @@ export class DataTableBodyRowComponent<TRow extends Row = any> implements DoChec
   readonly activate = output<ActivateEvent<TRow>>();
   readonly treeAction = output<void>();
 
-  _element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   readonly _columnGroupWidths = computed(() => {
     const colsByPin = columnsByPin(this.columns());
     return columnGroupWidths(colsByPin, this.columns());
@@ -108,10 +111,6 @@ export class DataTableBodyRowComponent<TRow extends Row = any> implements DoChec
   readonly _columnsByPin = computed(() => {
     return columnsByPinArr(this.columns());
   });
-
-  private _rowDiffer: KeyValueDiffer<keyof RowOrGroup<TRow>, any> = inject(KeyValueDiffers)
-    .find({})
-    .create();
 
   ngDoCheck(): void {
     if (!this.checkRowPropertyChanges()) {

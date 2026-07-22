@@ -97,6 +97,8 @@ import { nextSortDir } from '../../utils/sort';
   }
 })
 export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
+  private element = inject(ElementRef).nativeElement;
+
   readonly sortType = input.required<SortType>();
   readonly sortAscendingIcon = input<string>();
   readonly sortDescendingIcon = input<string>();
@@ -172,7 +174,6 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
   });
 
   private initialWidth?: number;
-  private element = inject(ElementRef).nativeElement;
   private subscription?: Subscription;
 
   @HostListener('contextmenu', ['$event'])

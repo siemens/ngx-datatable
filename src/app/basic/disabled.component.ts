@@ -93,9 +93,8 @@ import { DataService } from '../data.service';
   `
 })
 export class DisabledComponent {
-  readonly rows = signal<(FullEmployee & { isDisabled?: boolean })[]>([]);
-
   private dataService = inject(DataService);
+  readonly rows = signal<(FullEmployee & { isDisabled?: boolean })[]>([]);
 
   constructor() {
     this.dataService.load('100k.json').subscribe(data => this.rows.set(data));

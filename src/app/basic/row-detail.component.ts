@@ -109,9 +109,9 @@ import { DataService } from '../data.service';
   encapsulation: ViewEncapsulation.None
 })
 export class RowDetailComponent {
-  @ViewChild('myTable') table!: DatatableComponent<FullEmployee>;
-
   readonly rows = inject(DataService).load('100k.json');
+
+  @ViewChild('myTable') table!: DatatableComponent<FullEmployee>;
   expanded: any = {};
   timeout: any;
 

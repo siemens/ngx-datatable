@@ -61,13 +61,12 @@ import { DataService } from '../data.service';
   `
 })
 export class SingleRowSelectionComponent {
+  private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
 
   selected: Employee[] = [];
 
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
-
-  private dataService = inject(DataService);
 
   constructor() {
     this.dataService.load('company.json').subscribe(data => {

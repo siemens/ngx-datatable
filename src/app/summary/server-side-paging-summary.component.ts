@@ -42,6 +42,7 @@ import { Page } from '../paging/model/page';
   providers: [MockServerResultsService]
 })
 export class ServerSidePagingSummaryComponent implements OnInit {
+  private serverResultsService = inject(MockServerResultsService);
   readonly page = signal<Page>({
     pageNumber: 0,
     size: 20,
@@ -56,8 +57,6 @@ export class ServerSidePagingSummaryComponent implements OnInit {
     { name: 'Gender', summaryFunc: () => this.getGenderSummary() },
     { name: 'Company', summaryFunc: () => null }
   ];
-
-  private serverResultsService = inject(MockServerResultsService);
 
   ngOnInit() {
     this.setPage(0);

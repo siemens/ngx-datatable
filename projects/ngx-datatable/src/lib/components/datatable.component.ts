@@ -126,6 +126,8 @@ export class DatatableComponent<TRow extends Row = any>
     inject(NGX_DATATABLE_CONFIG, { optional: true }) ??
     // This is the old injection token for backward compatibility.
     inject<NgxDatatableConfig>('configuration' as any, { optional: true });
+  element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  rowDiffer: IterableDiffer<TRow | undefined> = inject(IterableDiffers).find([]).create();
 
   /**
    * Template for the target marker of drag target columns.
@@ -598,7 +600,6 @@ export class DatatableComponent<TRow extends Row = any>
     return !!(selected && this.rows()?.length !== 0 && allRowsSelected);
   });
 
-  element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   readonly _innerWidth = computed(() => this.dimensions().width);
   readonly pageSize = computed(() => this.calcPageSize());
   private readonly viewportRowCount = computed(() => {
@@ -621,7 +622,6 @@ export class DatatableComponent<TRow extends Row = any>
     return 0;
   });
   readonly rowCount = computed(() => this.calcRowCount());
-  rowDiffer: IterableDiffer<TRow | undefined> = inject(IterableDiffers).find([]).create();
   /** This counter is increased, when the rowDiffer detects a change. This will cause an update of _internalRows. */
   private readonly _rowDiffCount = signal(0);
 

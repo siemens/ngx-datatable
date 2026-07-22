@@ -4,8 +4,7 @@ import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DataTableColumnHeaderDirective,
-  DatatableComponent,
-  SelectEvent
+  DatatableComponent
 } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -51,7 +50,7 @@ import { DataService } from '../data.service';
           [limit]="5"
           [selected]="selected"
           (activate)="onActivate($event)"
-          (select)="onSelect($event)"
+          (selectedChange)="onSelect($event)"
         >
           <ngx-datatable-column
             [width]="40"
@@ -108,7 +107,7 @@ export class CustomCheckboxSelectionComponent {
     this.dataService.load('company.json').subscribe(data => this.rows.set(data));
   }
 
-  onSelect({ selected }: SelectEvent<Employee>) {
+  onSelect(selected: Employee[]) {
     this.selected.splice(0, this.selected.length);
     this.selected.push(...selected);
   }

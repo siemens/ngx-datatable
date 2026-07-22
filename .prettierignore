@@ -6,3 +6,4 @@ dist
 tmp
 playwright/snapshots
 CHANGELOG.md
+.agents/

@@ -1,11 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import {
-  ActivateEvent,
-  DatatableComponent,
-  SelectEvent,
-  TableColumn
-} from '@siemens/ngx-datatable';
+import { ActivateEvent, DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
@@ -36,7 +31,7 @@ import { DataService } from '../data.service';
         [footerHeight]="50"
         [rowHeight]="50"
         [selected]="selected"
-        (select)="onSelect($event)"
+        (selectedChange)="onSelect($event)"
         (activate)="onActivate($event)"
       />
     </div>
@@ -47,7 +42,7 @@ export class CellSelectionComponent {
   selected: Employee[] = [];
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
 
-  onSelect(event: SelectEvent<Employee>) {
+  onSelect(event: Employee[]) {
     // eslint-disable-next-line no-console
     console.log('Event: select', event, this.selected);
   }

@@ -1,11 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import {
-  ActivateEvent,
-  DatatableComponent,
-  SelectEvent,
-  TableColumn
-} from '@siemens/ngx-datatable';
+import { ActivateEvent, DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
 import { DataService } from '../data.service';
@@ -43,7 +38,7 @@ import { DataService } from '../data.service';
           [limit]="5"
           [selected]="selected"
           (activate)="onActivate($event)"
-          (select)="onSelect($event)"
+          (selectedChange)="onSelect($event)"
         />
       </div>
 
@@ -69,7 +64,7 @@ export class MultiClickRowSelectionComponent {
 
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
 
-  onSelect({ selected }: SelectEvent<Employee>) {
+  onSelect(selected: Employee[]) {
     this.selected.splice(0, this.selected.length);
     this.selected.push(...selected);
   }

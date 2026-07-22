@@ -1,10 +1,10 @@
-import { inject, Injectable, DOCUMENT } from '@angular/core';
+import { inject, Service, DOCUMENT } from '@angular/core';
 
 /**
  * Gets the width of the scrollbar.  Nesc for windows
  * http://stackoverflow.com/a/13382873/888165
  */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ScrollbarHelper {
   private document = inject(DOCUMENT);
 

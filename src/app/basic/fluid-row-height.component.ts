@@ -36,6 +36,7 @@ import { DataService } from '../data.service';
   `
 })
 export class FluidRowHeightComponent {
+  private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
   readonly loadingIndicator = signal(true);
   reorderable = true;
@@ -45,8 +46,6 @@ export class FluidRowHeightComponent {
     { name: 'Gender' },
     { name: 'Company', sortable: false }
   ];
-
-  private dataService = inject(DataService);
 
   constructor() {
     this.dataService.load('company.json').subscribe(data => {

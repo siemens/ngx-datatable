@@ -35,6 +35,9 @@ interface OrderPosition {
 })
 export class OrderableDirective implements AfterContentInit, OnDestroy {
   private document = inject(DOCUMENT);
+  readonly differ: KeyValueDiffer<string, DatatableDraggableDirective> = inject(KeyValueDiffers)
+    .find({})
+    .create();
 
   readonly reorder = output<ReorderEventInternal>();
   readonly targetChanged = output<TargetChangedEvent>();
@@ -50,9 +53,6 @@ export class OrderableDirective implements AfterContentInit, OnDestroy {
   readonly subscriptions = new Map<string, OutputRefSubscription[]>();
 
   positions?: Record<string, OrderPosition>;
-  readonly differ: KeyValueDiffer<string, DatatableDraggableDirective> = inject(KeyValueDiffers)
-    .find({})
-    .create();
   lastDraggingIndex?: number;
 
   constructor() {

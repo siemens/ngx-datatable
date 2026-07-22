@@ -53,6 +53,7 @@ import { Page } from './model/page';
   providers: [MockServerResultsService]
 })
 export class VirtualServerSideComponent {
+  private serverResultsService = inject(MockServerResultsService);
   readonly totalElements = signal(0);
   pageNumber = 0;
   readonly rows = signal<Employee[] | undefined>(undefined);
@@ -60,8 +61,6 @@ export class VirtualServerSideComponent {
   cachePageSize = 0;
 
   readonly isLoading = signal(0);
-
-  private serverResultsService = inject(MockServerResultsService);
 
   setPage(pageInfo: PageEvent) {
     // Current page number is determined by last call to setPage

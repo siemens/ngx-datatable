@@ -98,6 +98,8 @@ import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER } from '../../util
   }
 })
 export class DataTableBodyCellComponent<TRow extends Row = any> implements DoCheck {
+  private _element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+
   readonly displayCheck = input<(row: TRow, column: TableColumn, value: any) => boolean>();
 
   readonly disabled = input(false, { transform: booleanAttribute });
@@ -170,7 +172,6 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
   });
 
   protected readonly isFocused = signal(false);
-  private _element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
   ngDoCheck(): void {
     const value = this.getComputedValue();

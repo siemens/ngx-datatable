@@ -43,6 +43,7 @@ import { DataService } from '../data.service';
   styleUrl: './custom-template-summary.component.scss'
 })
 export class CustomTemplateSummaryComponent implements OnInit {
+  private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
 
   readonly names = computed(() =>
@@ -54,8 +55,6 @@ export class CustomTemplateSummaryComponent implements OnInit {
   @ViewChild('nameSummaryCell') nameSummaryCell!: TemplateRef<any>;
 
   columns: TableColumn[] = [];
-
-  private dataService = inject(DataService);
 
   constructor() {
     this.dataService.load('company.json').subscribe(data => {

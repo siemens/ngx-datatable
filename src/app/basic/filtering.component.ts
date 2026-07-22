@@ -41,14 +41,13 @@ import { DataService } from '../data.service';
   `
 })
 export class FilteringComponent {
+  private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
 
   temp: Employee[] = [];
 
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
   @ViewChild(DatatableComponent) table!: DatatableComponent<Employee>;
-
-  private dataService = inject(DataService);
 
   constructor() {
     this.dataService.load('company.json').subscribe(data => {

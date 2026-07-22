@@ -61,15 +61,14 @@ export class MockServerResultsService {
   providers: [MockServerResultsService]
 })
 export class ScrollingServerSideComponent implements OnInit {
+  private serverResultsService = inject(MockServerResultsService);
+  private el = inject(ElementRef);
   readonly headerHeight = 50;
   readonly rowHeight = 50;
   readonly pageLimit = 10;
 
   readonly rows = signal<Employee[]>([]);
   readonly isLoading = signal<boolean | undefined>(undefined);
-
-  private serverResultsService = inject(MockServerResultsService);
-  private el = inject(ElementRef);
 
   ngOnInit() {
     this.onScroll(0);

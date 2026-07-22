@@ -35,11 +35,10 @@ import { DataService } from '../data.service';
   `
 })
 export class RxjsComponent {
+  private dataService = inject(DataService);
   rows: Observable<Employee[]>;
 
   columns: TableColumn[] = [{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }];
-
-  private dataService = inject(DataService);
 
   constructor() {
     this.rows = this.dataService.load('company.json');

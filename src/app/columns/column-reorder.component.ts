@@ -59,6 +59,7 @@ import { DataService } from '../data.service';
   `
 })
 export class ColumnReorderComponent {
+  private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
   readonly loadingIndicator = signal(true);
   reorderable = true;
@@ -69,8 +70,6 @@ export class ColumnReorderComponent {
     { name: 'Gender' },
     { name: 'Company', sortable: false }
   ];
-
-  private dataService = inject(DataService);
 
   constructor() {
     this.dataService.load('company.json').subscribe(data => {

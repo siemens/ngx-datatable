@@ -77,13 +77,13 @@ import { DataService } from '../data.service';
   `
 })
 export class TenKRowsComponent {
+  private dataService = inject(DataService);
   readonly rows = signal<(FullEmployee & { height: number })[]>([]);
   readonly scrollTarget = signal(0);
   readonly scrollBlock = signal<ScrollLogicalPosition>('start');
   expanded = {};
   timeout: any;
 
-  private dataService = inject(DataService);
   private readonly datatable = viewChild.required(DatatableComponent);
 
   constructor() {

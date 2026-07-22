@@ -36,6 +36,9 @@ import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive'
   }
 })
 export class DataTableRowWrapperComponent<TRow extends Row = any> implements DoCheck {
+  private rowDiffer = inject(KeyValueDiffers).find({}).create<keyof RowOrGroup<TRow>, any>();
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
   readonly rowDetail = input<DatatableRowDetailDirective>();
   readonly detailRowHeightFn = input.required<(row?: TRow, index?: number) => number>();
   readonly row = input.required<TRow>();
@@ -64,9 +67,6 @@ export class DataTableRowWrapperComponent<TRow extends Row = any> implements DoC
 
   // This counter will be incremented every time the row object is mutated.
   readonly rowDiffedCount = signal(0);
-
-  private rowDiffer = inject(KeyValueDiffers).find({}).create<keyof RowOrGroup<TRow>, any>();
-  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   ngDoCheck(): void {
     if (!this.checkRowPropertyChanges()) {

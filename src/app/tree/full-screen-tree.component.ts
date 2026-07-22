@@ -78,10 +78,9 @@ import { DataService } from '../data.service';
   styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
 })
 export class FullScreenTreeComponent {
+  private dataService = inject(DataService);
   readonly rows = signal<(FullEmployee & { treeStatus: TreeStatus; parentId?: string })[]>([]);
   lastIndex = 15;
-  private dataService = inject(DataService);
-
   constructor() {
     this.dataService.load('100k.json').subscribe(data => {
       data = data.slice(1, this.lastIndex);

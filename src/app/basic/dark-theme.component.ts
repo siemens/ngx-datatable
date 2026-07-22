@@ -39,6 +39,7 @@ import { DataService } from '../data.service';
   `
 })
 export class DarkThemeComponent {
+  private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
   readonly loadingIndicator = signal(true);
   reorderable = true;
@@ -48,8 +49,6 @@ export class DarkThemeComponent {
     { name: 'Gender', summaryFunc: cells => this.summaryForGender(cells) },
     { name: 'Company', summaryFunc: () => null }
   ];
-
-  private dataService = inject(DataService);
 
   constructor() {
     this.dataService.load('company.json').subscribe(data => {

@@ -56,6 +56,7 @@ import { DataService } from '../data.service';
   `
 })
 export class DragDropComponent {
+  private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
   readonly loadingIndicator = signal<boolean>(true);
   reorderable = true;
@@ -65,8 +66,6 @@ export class DragDropComponent {
     { name: 'Gender', sortable: false },
     { name: 'Company', sortable: false }
   ];
-
-  private dataService = inject(DataService);
 
   constructor() {
     this.dataService.load('company.json').subscribe(data => {

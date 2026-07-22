@@ -47,12 +47,12 @@ import { DataService } from '../data.service';
   `
 })
 export class TemplateRefComponent implements OnInit {
-  @ViewChild('editTmpl', { static: true }) editTmpl!: TemplateRef<any>;
-  @ViewChild('hdrTpl', { static: true }) hdrTpl!: TemplateRef<any>;
-
   readonly rows = inject(DataService)
     .load('company.json')
     .pipe(map(data => data.slice(0, 5)));
+
+  @ViewChild('editTmpl', { static: true }) editTmpl!: TemplateRef<any>;
+  @ViewChild('hdrTpl', { static: true }) hdrTpl!: TemplateRef<any>;
   columns: TableColumn[] = [];
 
   ngOnInit() {

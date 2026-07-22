@@ -46,6 +46,7 @@ import { DataService } from '../data.service';
   `
 })
 export class InlineHtmlSummaryComponent {
+  private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
 
   readonly names = computed(() =>
@@ -56,8 +57,6 @@ export class InlineHtmlSummaryComponent {
 
   enableSummary = true;
   summaryPosition = 'top';
-
-  private dataService = inject(DataService);
 
   constructor() {
     this.dataService.load('company.json').subscribe(data => {

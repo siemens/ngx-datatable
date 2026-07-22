@@ -46,6 +46,7 @@ import { Page } from './model/page';
   providers: [MockServerResultsService]
 })
 export class ScrollingNoVirtualComponent implements OnInit {
+  private serverResultsService = inject(MockServerResultsService);
   readonly page = signal<Page>({
     pageNumber: 0,
     size: 20,
@@ -55,8 +56,6 @@ export class ScrollingNoVirtualComponent implements OnInit {
   readonly rows = signal<Employee[]>([]);
 
   readonly isLoading = signal(0);
-  private serverResultsService = inject(MockServerResultsService);
-
   ngOnInit() {
     this.setPage(0);
   }

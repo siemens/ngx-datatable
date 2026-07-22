@@ -157,12 +157,11 @@ import { DataService } from '../data.service';
   `
 })
 export class RowGroupingComponent {
+  private dataService = inject(DataService);
   @ViewChild('myTable') table!: DatatableComponent<GroupedEmployee>;
 
   editing: Record<string, boolean> = {};
   readonly rows = signal<GroupedEmployee[]>([]);
-
-  private dataService = inject(DataService);
 
   constructor() {
     this.dataService.load('forRowGrouping.json').subscribe(data => {

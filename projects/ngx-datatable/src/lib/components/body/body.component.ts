@@ -255,6 +255,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
 })
 export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, OnChanges {
   cd = inject(ChangeDetectorRef);
+  destroyRef = inject(DestroyRef);
 
   readonly rowDefTemplate = input<TemplateRef<any>>();
   readonly scrollbarV = input(false, { transform: booleanAttribute });
@@ -351,7 +352,6 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   readonly offsetY = signal(0);
   readonly indexes = computed(() => this.computeIndexes());
   rowTrackingFn: TrackByFunction<RowOrGroup<TRow> | undefined>;
-  destroyRef = inject(DestroyRef);
   readonly rowExpansions = signal<TRow[]>([]);
   readonly groupExpansions = signal<Group<TRow>[]>([]);
 

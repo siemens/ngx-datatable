@@ -55,6 +55,20 @@ describe('DataTableSummaryRowComponent', () => {
     });
   });
 
+  describe('Checkbox', () => {
+    it('should not render checkbox in summary row even if a column is checkboxable', async () => {
+      const checkboxableColumns = toInternalColumn([
+        { prop: 'col1', checkboxable: true },
+        { prop: 'col2' }
+      ]);
+      componentRef.setInput('columns', checkboxableColumns);
+      componentRef.setInput('rows', rows);
+
+      expect(await harness.hasSummaryRow()).toBe(true);
+      expect(await harness.getCheckboxCount()).toBe(0);
+    });
+  });
+
   describe('Computing', () => {
     beforeEach(() => {
       componentRef.setInput('columns', columns);

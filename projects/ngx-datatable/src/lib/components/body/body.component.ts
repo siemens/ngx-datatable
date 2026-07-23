@@ -102,6 +102,8 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
             [rows]="rows"
             [columns]="columns"
             [template]="summaryRowTemplate()"
+            [animate.enter]="summaryRowAnimateEnter()"
+            [animate.leave]="summaryRowAnimateLeave()"
           />
         }
         <ng-template
@@ -233,6 +235,8 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
           [rows]="rows"
           [columns]="columns"
           [template]="summaryRowTemplate()"
+          [animate.enter]="summaryRowAnimateEnter()"
+          [animate.leave]="summaryRowAnimateLeave()"
         />
       }
     }
@@ -283,6 +287,8 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   readonly summaryPosition = input.required<string>();
   readonly summaryHeight = input.required<number>();
   readonly summaryRowTemplate = input<TemplateRef<void>>();
+  readonly summaryRowAnimateEnter = input<string>();
+  readonly summaryRowAnimateLeave = input<string>();
   readonly rowDraggable = input<boolean>();
   readonly rowDragEvents = input.required<OutputEmitterRef<DragEventData>>();
   readonly disableRowCheck = input<(row: TRow) => boolean | undefined>();

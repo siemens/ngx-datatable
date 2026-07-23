@@ -407,6 +407,18 @@ export class DatatableComponent<TRow extends Row = any>
   readonly summaryPosition = input('top');
 
   /**
+   * CSS class to apply when the summary row enters (appears).
+   * Use this to customize the enter animation.
+   */
+  readonly summaryRowAnimateEnter = input<string>();
+
+  /**
+   * CSS class to apply when the summary row leaves (disappears).
+   * Use this to customize the leave animation.
+   */
+  readonly summaryRowAnimateLeave = input<string>();
+
+  /**
    * A function you can use to check whether you want
    * to disable a row. Example:
    *

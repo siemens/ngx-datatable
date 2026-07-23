@@ -19,21 +19,7 @@ nav = [
         { "Change Detection" = "introduction/cd.md" },
     ] },
     { "API" = [
-        { "Table" = [
-            { "Inputs" = "api/table/inputs.md" },
-            { "Outputs" = "api/table/outputs.md" },
-            { "Methods" = "api/table/methods.md" },
-        ] },
-        { "Column" = [
-            { "Inputs" = "api/column/inputs.md" },
-        ] },
-        { "Row Detail" = [
-            { "Inputs" = "api/detail/inputs.md" },
-            { "Outputs" = "api/detail/outputs.md" },
-        ] },
-        { "Row" = [
-            { "Custom row wrapper" = "api/row/row-def.md" },
-        ] },
+        "api/index.md",
     ] },
     { "Demos" = [
         { "Online" = "https://siemens.github.io/ngx-datatable/examples/" },

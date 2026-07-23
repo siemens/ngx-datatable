@@ -57,6 +57,7 @@ jobs:
           cache: 'npm'
       - run: npm ci --prefer-offline --no-audit
       - run: npm run build:lib:prod
+      - run: npm run docs:api
       - run: npm run build:prod
       # Build the Zensical documentation site (output: ./site).
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0

@@ -18,7 +18,9 @@ yarn.lock
 .env
 
 # Zensical docs
+/docs/api/
 /.venv/
 /site/
 /.zensical/
+/temp/
 __pycache__/

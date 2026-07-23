@@ -13,6 +13,7 @@ export class DatatableRowDetailDirective<TRow extends Row = any> {
    */
   readonly rowHeight = input<number | ((row?: TRow, index?: number) => number)>(0);
 
+  /** Template used to render the detail row. */
   readonly _templateInput = input<TemplateRef<RowDetailContext<TRow>>>(undefined, {
     alias: 'template'
   });

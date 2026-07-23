@@ -19,6 +19,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "build:lib:prod": "ng build ngx-datatable-lib --configuration production",
+    "docs:api": "api-extractor run --local && node --import ts-node/esm tools/generate-api-docs.mts",
     "copy-files": "cpy \"{LICENSE,README.md}\" dist/ngx-datatable/ && cpy \"src/assets/**/*\" \"dist/ngx-datatable/assets\"",
     "build:css": "sass --no-source-map dist/ngx-datatable/themes",
     "test": "npm run lint:commit && npm run lint:scss && npm run lint && npm run test:unit",
@@ -35,6 +36,11 @@
     "package": "npm run build:lib:prod && npm run copy-files && npm run build:css"
   },
   "private": true,
+  "overrides": {
+    "@microsoft/api-extractor": {
+      "typescript": "6.0.3"
+    }
+  },
   "dependencies": {
     "@angular/cdk": "22.0.5",
     "@angular/common": "22.0.7",
@@ -54,6 +60,7 @@
     "@angular/compiler-cli": "22.0.7",
     "@angular/language-service": "22.0.7",
     "@axe-core/playwright": "4.11.3",
+    "@microsoft/api-extractor": "7.58.12",
     "@playwright/test": "1.61.0",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
@@ -63,6 +70,7 @@
     "@siemens/prettier-config": "4.4.2",
     "@siemens/stylelint-config-scss": "4.4.2",
     "@types/node": "24.13.3",
+    "@types/parsimmon": "1.10.9",
     "@vitest/browser-playwright": "4.1.10",
     "@vitest/coverage-v8": "4.1.10",
     "angular-eslint": "22.1.0",
@@ -76,6 +84,7 @@
     "eslint-plugin-tsdoc": "0.5.2",
     "http-server": "14.1.1",
     "ng-packagr": "22.0.1",
+    "parsimmon": "1.18.1",
     "prettier": "3.9.5",
     "sass": "1.101.0",
     "semantic-release": "25.0.8",

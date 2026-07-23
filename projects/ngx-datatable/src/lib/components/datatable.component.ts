@@ -197,8 +197,18 @@ export class DatatableComponent<TRow extends Row = any>
   );
 
   /**
-   * Type of column width distribution formula.
-   * Example: flex, force, standard
+   * Controls how column widths are distributed.
+   *
+   * <table>
+   *   <thead><tr><th>Value</th><th>Description</th><th>Default</th></tr></thead>
+   *   <tbody>
+   *     <tr><td><code>standard</code></td><td>Uses the widths defined by each column.</td><td>Yes</td></tr>
+   *     <tr><td><code>flex</code></td><td>Distributes available width according to each column's <code>flexGrow</code> value. Avoid this mode with horizontal scrolling.</td><td></td></tr>
+   *     <tr><td><code>force</code></td><td>Proportionally fills the grid while respecting each column's minimum, maximum, and manually resized width.</td><td></td></tr>
+   *   </tbody>
+   * </table>
+   *
+   * `force` is generally the best choice when columns do not need fixed widths.
    */
   readonly columnMode = input<ColumnMode | keyof typeof ColumnMode>('standard');
 

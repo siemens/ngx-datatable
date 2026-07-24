@@ -1,3 +1,79 @@
+# [27.0.0](https://github.com/siemens/ngx-datatable/compare/26.2.1...27.0.0) (2026-07-24)
+
+
+### Features
+
+* `datatable-row-ref` can optionally replicate column widths on clone ([387759d](https://github.com/siemens/ngx-datatable/commit/387759d2171247ced6ee17c79cd237389fdb8bfa))
+* update to Angular 22 ([e009477](https://github.com/siemens/ngx-datatable/commit/e00947717f6eeefa831653b5316ec407b9352fba))
+
+
+### Bug Fixes
+
+* **header:** add missing `aria-sort` ([af960f7](https://github.com/siemens/ngx-datatable/commit/af960f792dd273d09b6ae51df3ba2b21208ea2e8))
+
+
+### BREAKING CHANGES
+
+* Angular 22+ is required.
+  Follow the Angular update guide to update your app: <https://angular.dev/update-guide?v=29.0-21.0>
+* The DatatableComponent `(select)` output has been removed.
+  
+  Use `(selectedChange)` with the selected array, or two-way `[(selected)]` binding instead.
+  
+  Before:
+  ```html
+  <ngx-datatable [selected]="mySelection" (select)="onSelect($event)"></ngx-datatable>
+  ```
+  
+  After:
+  ```html
+  <ngx-datatable [selected]="mySelection" (selectedChange)="onSelect({selected: $event})"></ngx-datatable>
+  <!-- or -->
+  <ngx-datatable [(selected)]="mySelection"></ngx-datatable>
+  ```
+* The DatatableComponent `(sort)` output has been removed. Use `(sortsChange)` or two-way `[(sorts)]` binding instead.
+  For server-side paging, subscribe to `(page)` and read `PageEvent.sorts`; page emits for both page and sort changes.
+  
+  Before:
+  ```html
+  <ngx-datatable [sorts]="mySorts" (sort)="onSort($event)"></ngx-datatable>
+  ```
+  
+  After:
+  ```html
+  <ngx-datatable [sorts]="mySorts" (sortsChange)="onSort({sorts: $event})"></ngx-datatable>
+  <!-- or -->
+  <ngx-datatable [(sorts)]="mySorts"></ngx-datatable>
+  ```
+* All content of the header and body now reside in one single CSS grid.
+  
+  This can affect drag/drop interactions build around `datatable-row-def` using `@angular/cdk`
+  or other solutions that depend on `cloneNode` to create drag previews.
+  
+  Enable `preserveColumnWidthsOnClone` on `datatable-row-def` to automatically copy the current
+  column sizes into the cloned row, making independent of the table CSS grid.
+* Columns are held at their configured `width` and no longer
+  grow to fit cell content: overflowing content is clipped rather than widening
+  the column (and pushing later columns) as it did before. Give columns that
+  need more room an explicit `width`/`minWidth` (e.g. narrow checkbox columns).
+* The class `horizontal-overflow` is now applied on the `ngx-datatable` element.
+  It was previously applied seperately within the header and boy.
+  
+  The class indicates that a horizontal scrollbar is visible.
+* The header is now a sticky element inside the single css-grid
+  scroll container, so body rows scroll underneath it. A non-transparent
+  `background-color` is therefore required on the `datatable-header`; otherwise the
+  scrolling content shows through and overflows the header. The bundled `material`
+  and `bootstrap` themes now set this automatically, but custom themes must add a
+  `background-color` to `.datatable-header`.
+
+### DEPRECATIONS
+
+* `DatatableComponent.recalculate`, `recalculateDims` and
+  `onWindowResize` are now no-ops and should no longer be called. The table
+  re-measures itself automatically whenever its size changes, so manual
+  triggering is no longer needed.
+
 ## [26.2.1](https://github.com/siemens/ngx-datatable/compare/26.2.0...26.2.1) (2026-06-19)
 
 

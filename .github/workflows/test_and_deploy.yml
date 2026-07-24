@@ -38,6 +38,18 @@ jobs:
       - name: Build
         run: npm run build:prod
 
+      - name: Set up documentation tooling
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+
+      - name: Build documentation
+        run: uv sync --frozen && uv run zensical build && cp -r dist/ngx-datatable-examples site/examples
+
+      - name: Archive documentation
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: documentation
+          path: site
+
       - name: Archive build
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:

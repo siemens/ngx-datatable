@@ -13,17 +13,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent, DataTableColumnDirective, DatatableSummaryRowDirective],
   template: `
     <div>
-      <h3>
-        Summary Row Actions
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/summary/summary-row-actions.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       @let rows = this.rows();
       <ngx-datatable
         class="material selection-row"

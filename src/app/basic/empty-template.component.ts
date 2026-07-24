@@ -6,17 +6,6 @@ import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
   imports: [DatatableComponent],
   template: `
     <div>
-      <h3>
-        Empty Template
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/empty-template.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <ngx-datatable
         class="material"
         columnMode="force"

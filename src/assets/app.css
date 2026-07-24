@@ -77,6 +77,15 @@ a {
   text-decoration: none;
 }
 
+.example-action {
+  padding: 0;
+  border: 0;
+  color: #4c4c68;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
 .expander-btn {
   margin-top: 8px;
   display: block;
@@ -128,6 +137,10 @@ h3 small {
   text-align: center;
   margin: 10px 0 0 0;
   padding: 0;
+}
+
+.selected-column-actions {
+  margin: 10px;
 }
 
 ul,

@@ -9,16 +9,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent, DataTableColumnDirective],
   template: `
     <div>
-      <h3>
-        Inline HTML Summary
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/summary/inline-html-summary.component.ts"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <ngx-datatable
         class="material"
         rowHeight="auto"

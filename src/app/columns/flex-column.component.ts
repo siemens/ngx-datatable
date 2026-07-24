@@ -14,17 +14,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective, AsyncPipe],
   template: `
     <div>
-      <h3>
-        Flex Column
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/columns/flex-column.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <ngx-datatable
         class="material"
         rowHeight="auto"

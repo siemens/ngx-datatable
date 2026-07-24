@@ -9,17 +9,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent, DataTableColumnDirective, AsyncPipe],
   template: `
     <div>
-      <h3>
-        Horz/Vert Scrolling
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/horz-vert-scrolling.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <ngx-datatable
         class="material"
         columnMode="force"

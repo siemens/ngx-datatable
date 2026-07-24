@@ -9,23 +9,12 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent, DataTableColumnDirective],
   template: `
     <div>
-      <h3>
-        Live Data
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/live-data.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-        <small>
-          <a href="javascript:void(0)" (click)="start()">Start</a> |
-          <a href="javascript:void(0)" (click)="stop()">Stop</a> |
-          <a href="javascript:void(0)" (click)="add()">Add</a> |
-          <a href="javascript:void(0)" (click)="remove()">Remove</a>
-        </small>
-      </h3>
+      <small>
+        <button type="button" class="example-action" (click)="start()">Start</button> |
+        <button type="button" class="example-action" (click)="stop()">Stop</button> |
+        <button type="button" class="example-action" (click)="add()">Add</button> |
+        <button type="button" class="example-action" (click)="remove()">Remove</button>
+      </small>
       @let rows = this.rows();
       <ngx-datatable
         #mydatatable

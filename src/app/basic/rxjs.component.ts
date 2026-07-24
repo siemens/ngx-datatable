@@ -11,17 +11,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
-      <h3>
-        RxJS
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/rxjs.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <ngx-datatable
         class="material striped"
         columnMode="force"

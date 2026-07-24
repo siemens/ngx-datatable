@@ -9,17 +9,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent],
   template: `
     <div>
-      <h3>
-        Filtering
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/filtering.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <input
         type="text"
         style="padding:8px;margin:15px auto;width:30%;"

@@ -13,17 +13,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective, AsyncPipe],
   template: `
     <div>
-      <h3>
-        Default Sort
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/sorting/default-sort.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <ngx-datatable
         class="material"
         columnMode="force"

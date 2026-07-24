@@ -20,18 +20,6 @@ import { DataService } from '../data.service';
   ],
   template: `
     <div>
-      <h3>
-        10k Rows
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/10k-rows.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
-
       <form class="info" (ngSubmit)="scroll()">
         <label for="target-index">Target Index</label>
         <input

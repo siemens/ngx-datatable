@@ -241,6 +241,9 @@
   </nav>
 
   <main>
+    @if (title()) {
+      <example-title [title]="title()" [sourcePath]="sourcePath()" />
+    }
     <router-outlet #outlet="outlet" (activate)="routeActivate(outlet)" />
   </main>
 </div>

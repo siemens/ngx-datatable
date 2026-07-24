@@ -10,16 +10,6 @@ import { Page } from '../paging/model/page';
   imports: [DatatableComponent],
   template: `
     <div>
-      <h3>
-        Server-side Paging Summary
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/summary/server-side-paging-summary.component.ts"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       @let page = this.page();
       <ngx-datatable
         class="material"

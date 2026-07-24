@@ -10,17 +10,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
-      <h3>
-        Context Menu
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/context-menu.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <div class="info">
         <p>
           <strong>Note:</strong> ngx-datatable does not provide a context menu feature. This

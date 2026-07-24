@@ -9,17 +9,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
-      <h3>
-        Client-side Paging
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/paging/client-side-paging.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <ngx-datatable
         class="material"
         rowHeight="auto"

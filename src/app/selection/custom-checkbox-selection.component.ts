@@ -20,22 +20,11 @@ import { DataService } from '../data.service';
   ],
   template: `
     <div>
-      <h3>
-        Custom Checkbox Selection
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/selection/custom-checkbox-selection.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-        <small>
-          <a href="javascript:void(0)" (click)="add()">Add</a> |
-          <a href="javascript:void(0)" (click)="update()">Update</a> |
-          <a href="javascript:void(0)" (click)="remove()">Remove</a>
-        </small>
-      </h3>
+      <small>
+        <button type="button" class="example-action" (click)="add()">Add</button> |
+        <button type="button" class="example-action" (click)="update()">Update</button> |
+        <button type="button" class="example-action" (click)="remove()">Remove</button>
+      </small>
       <div style="float:left;width:75%">
         @let rows = this.rows();
         <ngx-datatable

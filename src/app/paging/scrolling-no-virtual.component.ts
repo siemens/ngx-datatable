@@ -10,17 +10,6 @@ import { Page } from './model/page';
   imports: [DatatableComponent],
   template: `
     <div>
-      <h3>
-        Scrolling no virtual
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/paging/scrolling-no-virtual.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       @let rows = this.rows();
       @let page = this.page();
       @let isLoading = this.isLoading();

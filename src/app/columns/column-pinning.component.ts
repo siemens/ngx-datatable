@@ -9,17 +9,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent, DataTableColumnDirective, AsyncPipe],
   template: `
     <div>
-      <h3>
-        Column Pinning
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/columns/column-pinning.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <ngx-datatable
         class="material"
         columnMode="force"

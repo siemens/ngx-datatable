@@ -9,17 +9,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent],
   template: `
     <div>
-      <h3>
-        Fluid Row Height
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/fluid-row-height.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <ngx-datatable
         class="material"
         rowHeight="auto"

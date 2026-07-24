@@ -9,16 +9,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent],
   template: `
     <div>
-      <h3>
-        Custom Template Summary
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/summary/custom-template-summary.component.ts"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <ngx-datatable
         class="material"
         columnMode="force"

@@ -13,17 +13,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective, AsyncPipe],
   template: `
     <div>
-      <h3>
-        Client Side Tree
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/tree/client-side-tree.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <ngx-datatable
         class="material"
         rowHeight="auto"

@@ -25,22 +25,15 @@ import { DataService } from '../data.service';
   ],
   template: `
     <div>
-      <h3>
-        Row Detail
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/row-detail.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-        <small>
-          <a href="javascript:void(0)" (click)="table.rowDetail!.expandAllRows()">Expand All</a>
-          |
-          <a href="javascript:void(0)" (click)="table.rowDetail!.collapseAllRows()">Collapse All</a>
-        </small>
-      </h3>
+      <small>
+        <button type="button" class="example-action" (click)="table.rowDetail!.expandAllRows()">
+          Expand All
+        </button>
+        |
+        <button type="button" class="example-action" (click)="table.rowDetail!.collapseAllRows()">
+          Collapse All
+        </button>
+      </small>
       <ngx-datatable
         #myTable
         class="material expandable"

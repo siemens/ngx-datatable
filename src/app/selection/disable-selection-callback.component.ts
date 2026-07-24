@@ -10,17 +10,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
-      <h3>
-        Disable Selection Callback
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/selection/disable-selection-callback.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <div style="float:left;width:75%">
         <ngx-datatable
           class="material selection-row"

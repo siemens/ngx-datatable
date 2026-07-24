@@ -10,17 +10,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
-      <h3>
-        Comparator
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/sorting/comparator.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <ngx-datatable
         class="material"
         rowHeight="auto"

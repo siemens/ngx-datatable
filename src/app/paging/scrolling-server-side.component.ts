@@ -30,17 +30,6 @@ export class MockServerResultsService {
   imports: [DatatableComponent],
   template: `
     <div>
-      <h3>
-        Scrolling server-side
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/paging/scrolling-server-side.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       @let rows = this.rows();
       @let isLoading = this.isLoading();
       <ngx-datatable

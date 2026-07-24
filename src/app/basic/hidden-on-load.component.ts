@@ -9,18 +9,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent, DataTableColumnDirective, AsyncPipe],
   template: `
     <div>
-      <h3>
-        Hidden On Load
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/hidden-on-load.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
-
       <div style="width:75%;margin:0 auto">
         @let rows = this.rows | async;
         <div>

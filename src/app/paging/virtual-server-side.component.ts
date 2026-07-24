@@ -10,17 +10,6 @@ import { Page } from './model/page';
   imports: [DatatableComponent],
   template: `
     <div>
-      <h3>
-        Virtual server-side
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/paging/virtual-server-side.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       @let isLoading = this.isLoading();
       @let totalElements = this.totalElements();
       @let rows = this.rows();

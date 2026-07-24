@@ -9,17 +9,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent],
   template: `
     <div>
-      <h3>
-        Single Row Selection
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/selection/single-row-selection.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <div style="float:left;width:75%">
         <div class="info">
           <p

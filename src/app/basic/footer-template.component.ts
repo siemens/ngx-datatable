@@ -22,17 +22,6 @@ import { DataService } from '../data.service';
   ],
   template: `
     <div>
-      <h3>
-        Footer Template
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/footer-template.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <ngx-datatable
         class="material"
         rowHeight="auto"

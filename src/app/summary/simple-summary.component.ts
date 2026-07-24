@@ -10,16 +10,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
-      <h3>
-        Simple Summary
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/summary/simple-summary.component.ts"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <div class="controls">
         <div>
           <input

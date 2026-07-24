@@ -8,17 +8,6 @@ import { Employee } from '../data.model';
   imports: [DatatableComponent, DataTableColumnDirective],
   template: `
     <div>
-      <h3>
-        Column Toggling
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/columns/column-toggling.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <div style="float:left;width:75%">
         <ngx-datatable
           class="material"

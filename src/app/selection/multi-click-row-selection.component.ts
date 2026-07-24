@@ -10,17 +10,6 @@ import { DataService } from '../data.service';
   imports: [DatatableComponent, AsyncPipe],
   template: `
     <div>
-      <h3>
-        Multi Click Row Selection
-        <small>
-          <a
-            href="https://github.com/siemens/ngx-datatable/blob/main/src/app/selection/multi-click-row-selection.component.ts"
-            target="_blank"
-          >
-            Source
-          </a>
-        </small>
-      </h3>
       <div style="float:left;width:75%">
         <div class="info">
           <p>This demonstrates multi selection table, where any click event causes a selection.</p>

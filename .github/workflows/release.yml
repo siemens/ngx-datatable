@@ -48,6 +48,7 @@ jobs:
       # we need to build the artifacts again to have the correct version number in the docs.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          ref: ${{ github.ref_name }} # Includes the commit created by semantic-release.
           fetch-depth: 0
           token: ${{ secrets.ELEMENT_BOT_GITHUB_TOKEN }}
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7

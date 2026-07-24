@@ -38,6 +38,9 @@ jobs:
       - name: Build
         run: npm run build:prod
 
+      - name: Generate API documentation
+        run: npm run docs:api
+
       - name: Set up documentation tooling
         uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
 

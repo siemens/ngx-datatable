@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -33,7 +33,8 @@ import { DataService } from '../data.service';
         </div>
       </ng-template>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class InlineHtmlSummaryComponent {
   private dataService = inject(DataService);

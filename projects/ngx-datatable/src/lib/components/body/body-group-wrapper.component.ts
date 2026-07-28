@@ -1,12 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-  booleanAttribute,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  output
-} from '@angular/core';
+import { booleanAttribute, Component, computed, input, output } from '@angular/core';
 
 import { Group, GroupContext, Row } from '../../types/public.types';
 import { DatatableGroupHeaderDirective } from './body-group-header.directive';
@@ -45,7 +38,6 @@ import { DatatableGroupHeaderDirective } from './body-group-header.directive';
     }
   `,
   styleUrl: './body-group-wrapper.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'datatable-group-wrapper'
   }

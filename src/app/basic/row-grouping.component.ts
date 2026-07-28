@@ -1,4 +1,4 @@
-import { Component, inject, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, ViewChild } from '@angular/core';
 import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
@@ -143,7 +143,8 @@ import { DataService } from '../data.service';
         </ngx-datatable-column>
       </ngx-datatable>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class RowGroupingComponent {
   private dataService = inject(DataService);

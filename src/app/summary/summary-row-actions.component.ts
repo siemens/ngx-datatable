@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import {
   DataTableColumnDirective,
   DatatableComponent,
@@ -64,7 +64,8 @@ import { DataService } from '../data.service';
       display: flex;
       gap: 8px;
     }
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class SummaryRowActionsComponent {
   private dataService = inject(DataService);

@@ -1,5 +1,5 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import {
   DatatableComponent,
   DatatableRowDefComponent,
@@ -42,7 +42,8 @@ import { DataService } from '../data.service';
         </ng-template>
       </ngx-datatable>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class DragDropComponent {
   private dataService = inject(DataService);

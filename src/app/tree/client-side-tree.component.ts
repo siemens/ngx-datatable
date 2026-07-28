@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
@@ -42,7 +42,8 @@ import { DataService } from '../data.service';
       </ngx-datatable>
     </div>
   `,
-  styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
+  styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }'],
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ClientSideTreeComponent {
   protected readonly rows = inject(DataService).load('company_tree.json');

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'datatable-progress',
@@ -8,7 +8,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         <div class="bar"></div>
       </div>
     </div>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  `
 })
 export class ProgressBarComponent {}

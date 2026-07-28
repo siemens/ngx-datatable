@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DataTableColumnDirective, DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -39,7 +39,8 @@ import { Employee } from '../data.model';
         </ul>
       </div>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ColumnTogglingComponent {
   rows: Employee[] = [

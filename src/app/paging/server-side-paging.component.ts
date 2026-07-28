@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { DatatableComponent } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -28,7 +28,8 @@ import { Page } from './model/page';
       />
     </div>
   `,
-  providers: [MockServerResultsService]
+  providers: [MockServerResultsService],
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ServerSidePagingComponent implements OnInit {
   private serverResultsService = inject(MockServerResultsService);

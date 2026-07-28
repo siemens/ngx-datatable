@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   inject,
   OnDestroy,
@@ -21,7 +20,6 @@ export interface ScrollEventInternal {
 @Component({
   selector: 'datatable-scroller',
   template: ` <ng-content /> `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'datatable-scroll',
     '[style.height.px]': 'scrollHeight()'

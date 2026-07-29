@@ -59,7 +59,7 @@ jobs:
       - run: npm run build:lib:prod
       - run: npm run build:prod
       # Build the Zensical documentation site (output: ./site).
-      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
       - run: uv sync --frozen
       - run: uv run zensical build
       # Place the examples under "/examples" within the documentation site.

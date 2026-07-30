@@ -29,7 +29,12 @@ import {
 import { Subscription } from 'rxjs';
 
 import { ScrollContainerDirective } from '../directives/scroll-container.directive';
-import { NGX_DATATABLE_CONFIG, NgxDatatableConfig } from '../ngx-datatable.config';
+import {
+  NGX_DATATABLE_CONFIG,
+  NgxDatatableConfig,
+  NgxDatatableCssClasses,
+  NgxDatatableMessages
+} from '../ngx-datatable.config';
 import { ScrollbarHelper } from '../services/scrollbar-helper.service';
 import {
   ColumnResizeEventInternal,
@@ -300,7 +305,7 @@ export class DatatableComponent<TRow extends Row = any>
   /**
    * Css class overrides
    */
-  readonly cssClasses = input<Partial<Required<NgxDatatableConfig>['cssClasses']>>(
+  readonly cssClasses = input<Partial<NgxDatatableCssClasses>>(
     this.configuration?.cssClasses ?? {}
   );
 
@@ -324,9 +329,7 @@ export class DatatableComponent<TRow extends Row = any>
    * }
    * ```
    */
-  readonly messages = input<Partial<Required<NgxDatatableConfig>['messages']>>(
-    this.configuration?.messages ?? {}
-  );
+  readonly messages = input<Partial<NgxDatatableMessages>>(this.configuration?.messages ?? {});
 
   /**
    * A function which is called with the row and should return either:

@@ -194,16 +194,17 @@ export class DatatableComponent<TRow extends Row = any>
   readonly scrollbarH = input(false, { transform: booleanAttribute });
 
   /**
-   * The row height; which is necessary
-   * to calculate the height for the lazy rendering.
+   * Height of each row. When virtual scrolling is disabled, use `'auto'` for
+   * fluid heights. With virtual scrolling enabled, provide a number or a
+   * function that calculates each row's height.
    */
   readonly rowHeight = input<number | 'auto' | ((row: TRow) => number)>(
     this.configuration?.rowHeight ?? 30
   );
 
   /**
-   * Type of column width distribution formula.
-   * Example: flex, force, standard
+   * Column width distribution mode. `standard` uses configured widths, `flex`
+   * uses the flex-grow algorithm, and `force` distributes space proportionally.
    */
   readonly columnMode = input<ColumnMode | keyof typeof ColumnMode>('standard');
 
@@ -292,7 +293,8 @@ export class DatatableComponent<TRow extends Row = any>
   readonly swapColumns = input(true, { transform: booleanAttribute });
 
   /**
-   * The type of sorting
+   * Sorting mode. In `single` mode, sorting a new column replaces existing
+   * sorts; in `multi` mode, it adds an additional column sort.
    */
   readonly sortType = input<SortType>('single');
 
@@ -303,7 +305,7 @@ export class DatatableComponent<TRow extends Row = any>
   readonly sorts = model<SortPropDir[]>([]);
 
   /**
-   * Css class overrides
+   * CSS class overrides for sort and pager icons.
    */
   readonly cssClasses = input<Partial<NgxDatatableCssClasses>>(
     this.configuration?.cssClasses ?? {}

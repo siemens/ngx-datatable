@@ -14,84 +14,81 @@ export type TableColumnProp = string | number;
  */
 export interface TableColumn<TRow extends Row = any> {
   /**
-   * Determines if column is checkbox
+   * Whether the column displays a selection checkbox. Only applies when selection mode is `checkbox`.
    */
   checkboxable?: boolean;
 
   /**
-   * Determines if the column is frozen to the left
+   * Whether the column is frozen to the left. Default value: `false`.
    */
   frozenLeft?: boolean;
 
   /**
-   * Determines if the column is frozen to the right
+   * Whether the column is frozen to the right. Default value: `false`.
    */
   frozenRight?: boolean;
 
   /**
-   * The grow factor relative to other columns. Same as the flex-grow
-   * API from http =//www.w3.org/TR/css3-flexbox/. Basically;
-   * take any available extra width and distribute it proportionally
-   * according to all columns' flexGrow values.
+   * Grow factor relative to other columns. Available extra width is distributed
+   * proportionally according to all columns' `flexGrow` values. Default value: `0`.
    */
   flexGrow?: number;
 
   /**
-   * Min width of the column
+   * Minimum column width in pixels.
    */
   minWidth?: number;
 
   /**
-   * Max width of the column
+   * Maximum column width in pixels.
    */
   maxWidth?: number;
 
   /**
-   * The default width of the column, in pixels
+   * Default column width in pixels. Default value: `150`.
    */
   width?: number;
 
   /**
-   * Can the column be resized
+   * Whether the user can manually resize the column. Default value: `true`.
    */
   resizeable?: boolean;
 
   /**
-   * Custom sort comparator
+   * Custom client-side sort comparator. It receives cell values and their
+   * respective rows; a standard two-argument comparison function is also supported.
    */
   comparator?: (valueA: any, valueB: any, rowA: TRow, rowB: TRow) => number;
 
   /**
-   * Custom pipe transforms
+   * Custom pipe used to transform cell values.
    */
   pipe?: PipeTransform;
 
   /**
-   * Can the column be sorted
+   * Whether row values can be sorted by this column. Default value: `true`.
    */
   sortable?: boolean;
 
   /**
-   * Can the column be re-arranged by dragging
+   * Whether the column can be dragged to reorder it. Default value: `true`.
    */
   draggable?: boolean;
 
   /**
-   * Whether the column can automatically resize to fill space in the table.
+   * Whether the column can automatically resize to fill extra space. Default value: `true`.
    */
   canAutoResize?: boolean;
 
   /**
-   * Column name or label
+   * Column label. When omitted, the property value is used and decamelized.
    */
   name?: string;
 
   /**
-   * Property to bind to the row. Example:
+   * Property used to bind row values. It can be a nested property path or a numeric index.
    *
-   * `someField` or `some.field.nested`, 0 (numeric)
-   *
-   * If left blank, will use the name as camel case conversion
+   * When omitted, the name is converted to camel case.
    */
   prop?: TableColumnProp;
 
@@ -104,7 +101,7 @@ export interface TableColumn<TRow extends Row = any> {
   bindAsUnsafeHtml?: boolean;
 
   /**
-   * Cell template ref
+   * Template used to render body cells.
    */
   cellTemplate?: TemplateRef<CellContext<TRow>>;
 
@@ -114,7 +111,7 @@ export interface TableColumn<TRow extends Row = any> {
   ghostCellTemplate?: TemplateRef<any>;
 
   /**
-   * Header template ref
+   * Template used to render header cells.
    */
   headerTemplate?: TemplateRef<HeaderCellContext>;
 
@@ -124,7 +121,7 @@ export interface TableColumn<TRow extends Row = any> {
   treeToggleTemplate?: any;
 
   /**
-   * CSS Classes for the cell
+   * CSS classes to apply to the body cell.
    */
   cellClass?:
     | string
@@ -137,12 +134,12 @@ export interface TableColumn<TRow extends Row = any> {
       }) => string | Record<string, boolean>);
 
   /**
-   * CSS classes for the header
+   * CSS classes to apply to the header cell.
    */
   headerClass?: string | ((data: { column: TableColumn }) => string | Record<string, boolean>);
 
   /**
-   * Header checkbox enabled
+   * Whether the header displays a selection checkbox. Only applies when selection mode is `checkbox`.
    */
   headerCheckboxable?: boolean;
 

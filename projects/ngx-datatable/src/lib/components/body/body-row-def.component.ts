@@ -17,9 +17,18 @@ import {
 import { RowOrGroup } from '../../types/public.types';
 
 /**
- * This component is passed as ng-template and rendered by BodyComponent.
- * BodyComponent uses rowDefInternal to first inject actual row template.
- * This component will render that actual row template.
+ * Renders the datatable's normal row inside a custom row wrapper declared with
+ * {@link DatatableRowDefDirective}. Use this as the root content of the
+ * `ng-template` and apply row-level directives or classes to it.
+ *
+ * @example
+ * ```html
+ * <ngx-datatable>
+ *   <ng-template rowDef>
+ *     <datatable-row-def appCustomRowDirective class="custom-row" />
+ *   </ng-template>
+ * </ngx-datatable>
+ * ```
  */
 @Component({
   selector: 'datatable-row-def',
@@ -72,6 +81,22 @@ export class DatatableRowDefComponent {
   }
 }
 
+/**
+ * Marks an `ng-template` as the custom wrapper for each rendered table row.
+ *
+ * The template must contain a {@link DatatableRowDefComponent}, which renders
+ * the table's regular row inside the wrapper. Apply row-level directives or
+ * classes to that component.
+ *
+ * @example
+ * ```html
+ * <ngx-datatable>
+ *   <ng-template rowDef>
+ *     <datatable-row-def appCustomRowDirective class="custom-row" />
+ *   </ng-template>
+ * </ngx-datatable>
+ * ```
+ */
 @Directive({
   selector: '[rowDef]'
 })

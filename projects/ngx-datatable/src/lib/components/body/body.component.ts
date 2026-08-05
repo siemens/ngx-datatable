@@ -238,6 +238,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
     }
     @if (!rows?.length && !loadingIndicator() && !ghostLoadingIndicator()) {
       <datatable-scroller
+        class="datatable-empty-scroller"
         [scrollbarV]="scrollbarV"
         [scrollbarH]="scrollbarH()"
         [scrollHeight]="scrollHeight()"

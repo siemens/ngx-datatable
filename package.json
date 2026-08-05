@@ -61,7 +61,7 @@
     "@angular/language-service": "22.0.8",
     "@axe-core/playwright": "4.12.1",
     "@microsoft/api-extractor": "7.58.12",
-    "@playwright/test": "1.62.0",
+    "@playwright/test": "1.62.1",
     "@semantic-release/changelog": "7.0.0",
     "@semantic-release/git": "11.0.1",
     "@siemens/commitlint-config": "4.4.2",

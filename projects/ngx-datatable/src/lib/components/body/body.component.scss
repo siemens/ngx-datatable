@@ -20,6 +20,10 @@ datatable-scroller,
   }
 }
 
+.datatable-empty-scroller {
+  display: block;
+}
+
 .custom-loading-indicator-wrapper,
 ghost-loader {
   grid-column: 1 / -1;

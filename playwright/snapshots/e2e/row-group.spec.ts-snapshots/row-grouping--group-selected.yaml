@@ -1,0 +1,175 @@
+- main:
+  - heading "Row Grouping Source" [level=3]:
+    - text: ""
+    - link "Source":
+      - /url: https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/row-grouping.component.ts
+  - table:
+    - rowgroup:
+      - row "Select all rows Exp. Pay. Source Name Gender Age Comment":
+        - columnheader "Select all rows Exp. Pay.":
+          - checkbox "Select all rows"
+          - text: ""
+        - columnheader "Source"
+        - columnheader "Name"
+        - columnheader "Gender"
+        - columnheader "Age"
+        - columnheader "Comment"
+    - rowgroup:
+      - 'row /Select row group fAge: \d+/':
+        - 'cell /Select row group fAge: \d+/':
+          - checkbox "Select row group" [checked]
+          - 'link /fAge: \d+/':
+            - /url: javascript:void(0)
+      - row /Select row ex pay10 ex pay20 ex pay30 Funder Ethel Price female \d+ test1/:
+        - cell "Select row ex pay10 ex pay20 ex pay30":
+          - checkbox "Select row" [checked]
+          - checkbox "ex pay10" [checked]
+          - checkbox "ex pay20"
+          - checkbox "ex pay30"
+        - cell "Funder"
+        - cell "Ethel Price"
+        - cell "female"
+        - cell /\d+/
+        - cell "test1":
+          - textbox "comment": test1
+      - row /Select row ex pay10 ex pay20 ex pay30 Calculated Wilder Gonzales male \d+ test2/:
+        - cell "Select row ex pay10 ex pay20 ex pay30":
+          - checkbox "Select row" [checked]
+          - checkbox "ex pay10"
+          - checkbox "ex pay20" [checked]
+          - checkbox "ex pay30"
+        - cell "Calculated"
+        - cell "Wilder Gonzales"
+        - cell "male"
+        - cell /\d+/
+        - cell "test2":
+          - textbox "comment": test2
+      - row /Select row ex pay10 ex pay20 ex pay30 Manual Georgina Schultz female \d+ test3/:
+        - cell "Select row ex pay10 ex pay20 ex pay30":
+          - checkbox "Select row" [checked]
+          - checkbox "ex pay10"
+          - checkbox "ex pay20"
+          - checkbox "ex pay30" [checked]
+        - cell "Manual"
+        - cell "Georgina Schultz"
+        - cell "female"
+        - cell /\d+/
+        - cell "test3":
+          - textbox "comment": test3
+      - row /Select row ex pay10 ex pay20 ex pay30 Manual Carroll Buchanan male \d+ test4/:
+        - cell "Select row ex pay10 ex pay20 ex pay30":
+          - checkbox "Select row" [checked]
+          - checkbox "ex pay10"
+          - checkbox "ex pay20"
+          - checkbox "ex pay30"
+        - cell "Manual"
+        - cell "Carroll Buchanan"
+        - cell "male"
+        - cell /\d+/
+        - cell "test4":
+          - textbox "comment": test4
+      - 'row /Select row group fAge: \d+/':
+        - 'cell /Select row group fAge: \d+/':
+          - checkbox "Select row group"
+          - 'link /fAge: \d+/':
+            - /url: javascript:void(0)
+      - row /Select row ex pay11 ex pay21 ex pay31 Funder Claudine Neal female \d+/:
+        - cell "Select row ex pay11 ex pay21 ex pay31":
+          - checkbox "Select row"
+          - checkbox "ex pay11"
+          - checkbox "ex pay21"
+          - checkbox "ex pay31"
+        - cell "Funder"
+        - cell "Claudine Neal"
+        - cell "female"
+        - cell /\d+/
+        - cell:
+          - textbox "comment"
+      - row /Select row ex pay11 ex pay21 ex pay31 Calculated Valarie Atkinson female \d+/:
+        - cell "Select row ex pay11 ex pay21 ex pay31":
+          - checkbox "Select row"
+          - checkbox "ex pay11"
+          - checkbox "ex pay21"
+          - checkbox "ex pay31"
+        - cell "Calculated"
+        - cell "Valarie Atkinson"
+        - cell "female"
+        - cell /\d+/
+        - cell:
+          - textbox "comment"
+      - 'row /Select row group fAge: \d+/':
+        - 'cell /Select row group fAge: \d+/':
+          - checkbox "Select row group"
+          - 'link /fAge: \d+/':
+            - /url: javascript:void(0)
+      - row /Select row ex pay12 ex pay22 ex pay32 Beryl Rice female \d+/:
+        - cell "Select row ex pay12 ex pay22 ex pay32":
+          - checkbox "Select row"
+          - checkbox "ex pay12"
+          - checkbox "ex pay22"
+          - checkbox "ex pay32"
+        - cell
+        - cell "Beryl Rice"
+        - cell "female"
+        - cell /\d+/
+        - cell:
+          - textbox "comment"
+      - row /Select row ex pay12 ex pay22 ex pay32 Schroeder Mathews male \d+/:
+        - cell "Select row ex pay12 ex pay22 ex pay32":
+          - checkbox "Select row"
+          - checkbox "ex pay12"
+          - checkbox "ex pay22"
+          - checkbox "ex pay32"
+        - cell
+        - cell "Schroeder Mathews"
+        - cell "male"
+        - cell /\d+/
+        - cell:
+          - textbox "comment"
+      - 'row /Select row group fAge: \d+/':
+        - 'cell /Select row group fAge: \d+/':
+          - checkbox "Select row group"
+          - 'link /fAge: \d+/':
+            - /url: javascript:void(0)
+      - row /Select row ex pay13 ex pay23 ex pay33 Lynda Mendoza female \d+/:
+        - cell "Select row ex pay13 ex pay23 ex pay33":
+          - checkbox "Select row"
+          - checkbox "ex pay13"
+          - checkbox "ex pay23"
+          - checkbox "ex pay33"
+        - cell
+        - cell "Lynda Mendoza"
+        - cell "female"
+        - cell /\d+/
+        - cell:
+          - textbox "comment"
+      - row /Select row ex pay13 ex pay23 ex pay33 Sarah Massey female \d+/:
+        - cell "Select row ex pay13 ex pay23 ex pay33":
+          - checkbox "Select row"
+          - checkbox "ex pay13"
+          - checkbox "ex pay23"
+          - checkbox "ex pay33"
+        - cell
+        - cell "Sarah Massey"
+        - cell "female"
+        - cell /\d+/
+        - cell:
+          - textbox "comment"
+  - text: /4 selected \/ \d+ total/
+  - list:
+    - listitem:
+      - button "go to first page" [disabled]
+    - listitem:
+      - button "go to previous page" [disabled]
+    - listitem:
+      - button "page 1"
+    - listitem:
+      - button "page 2"
+    - listitem:
+      - button "page 3"
+    - listitem:
+      - button "page 4"
+    - listitem:
+      - button "go to next page"
+    - listitem:
+      - button "go to last page": q

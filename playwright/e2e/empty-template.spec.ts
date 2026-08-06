@@ -7,17 +7,6 @@ test.describe('empty template', () => {
     await expect(page.getByText('My custom empty component')).toBeVisible();
     await expect(page.getByText('uses two lines.')).toBeVisible();
 
-    await si.runVisualAndA11yTests({
-      axeRulesSet: [
-        {
-          id: 'aria-required-children',
-          enabled: false
-        },
-        {
-          id: 'aria-required-parent',
-          enabled: false
-        }
-      ]
-    });
+    await si.runVisualAndA11yTests({ ariaSnapshot: true });
   });
 });

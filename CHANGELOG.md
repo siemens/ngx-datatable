@@ -1,3 +1,10 @@
+## [27.0.1](https://github.com/siemens/ngx-datatable/compare/27.0.0...27.0.1) (2026-08-06)
+
+
+### Bug Fixes
+
+* support full-height empty content ([a6ef5b7](https://github.com/siemens/ngx-datatable/commit/a6ef5b7476bc98115c156d07390c1cf7b8273ea8)), closes [#691](https://github.com/siemens/ngx-datatable/issues/691)
+
 # [27.0.0](https://github.com/siemens/ngx-datatable/compare/26.2.1...27.0.0) (2026-07-24)
 
 

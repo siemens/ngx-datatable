@@ -1,0 +1,15 @@
+- main:
+  - heading "Empty Template Source" [level=3]:
+    - text: ""
+    - link "Source":
+      - /url: https://github.com/siemens/ngx-datatable/blob/main/src/app/basic/empty-template.component.ts
+  - table:
+    - rowgroup:
+      - row "Name Gender Company":
+        - columnheader "Name"
+        - columnheader "Gender"
+        - columnheader "Company"
+    - rowgroup:
+      - row "My custom empty component uses two lines.":
+        - cell "My custom empty component uses two lines."
+  - text: 0 total

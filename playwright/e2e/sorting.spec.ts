@@ -125,10 +125,6 @@ test.describe('sorting', () => {
           {
             id: 'aria-progressbar-name',
             enabled: false
-          },
-          {
-            id: 'aria-required-children',
-            enabled: false
           }
         ]
       });

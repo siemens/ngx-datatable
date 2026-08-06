@@ -86,13 +86,7 @@
         <datatable-progress />
       </ng-content>
       <ng-content select="[empty-content]" ngProjectAs="[empty-content]">
-        <div role="row" class="datatable-empty-row">
-          <div
-            role="cell"
-            class="empty-row"
-            [innerHTML]="messages().emptyMessage ?? 'No data to display'"
-          ></div>
-        </div>
+        <div class="empty-row" [innerHTML]="messages().emptyMessage ?? 'No data to display'"></div>
       </ng-content>
     </datatable-body>
   </div>

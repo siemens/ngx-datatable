@@ -158,7 +158,13 @@ describe('DataTableSummaryRowComponent', () => {
 @Component({
   imports: [DataTableSummaryRowComponent],
   template: `
-    <datatable-summary-row [rows]="rows" [columns]="columns" [rowHeight]="30" [template]="tpl()" />
+    <datatable-summary-row
+      [rows]="rows"
+      [columns]="columns"
+      [allColumnsColspan]="allColumnsColspan"
+      [rowHeight]="30"
+      [template]="tpl()"
+    />
     <ng-template #summaryTpl>
       <span class="custom-content">Custom summary content</span>
     </ng-template>
@@ -167,6 +173,7 @@ describe('DataTableSummaryRowComponent', () => {
 class TestHostComponent {
   rows = [{ col1: 10 }];
   columns: TableColumnInternal[] = toInternalColumn([{ prop: 'col1' }]);
+  readonly allColumnsColspan = Math.max(1, this.columns.length);
   readonly tpl = viewChild<TemplateRef<void>>('summaryTpl');
 }
 

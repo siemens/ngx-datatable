@@ -28,7 +28,7 @@ const noopSumFunc = (cells: any[]): void => {
     @let template = this.template();
     @if (template) {
       <div class="datatable-body-row" role="row" [style.height.px]="rowHeight()">
-        <div class="datatable-body-cell" role="cell">
+        <div class="datatable-body-cell" role="cell" [attr.aria-colspan]="allColumnsColspan()">
           <ng-container [ngTemplateOutlet]="template" />
         </div>
       </div>
@@ -55,6 +55,7 @@ const noopSumFunc = (cells: any[]): void => {
 export class DataTableSummaryRowComponent {
   readonly rows = input.required<any[]>();
   readonly columns = input.required<TableColumnInternal[]>();
+  readonly allColumnsColspan = input.required<number>();
 
   readonly rowHeight = input.required<number>();
   readonly template = input<TemplateRef<void>>();

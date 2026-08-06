@@ -67,10 +67,6 @@ test.describe('paging', () => {
           {
             id: 'aria-progressbar-name',
             enabled: false
-          },
-          {
-            id: 'aria-required-children',
-            enabled: false
           }
         ]
       });
@@ -84,10 +80,6 @@ test.describe('paging', () => {
         axeRulesSet: [
           {
             id: 'aria-progressbar-name',
-            enabled: false
-          },
-          {
-            id: 'aria-required-children',
             enabled: false
           }
         ]
@@ -128,10 +120,6 @@ test.describe('paging', () => {
           },
           {
             id: 'aria-progressbar-name',
-            enabled: false
-          },
-          {
-            id: 'aria-required-children',
             enabled: false
           }
         ]

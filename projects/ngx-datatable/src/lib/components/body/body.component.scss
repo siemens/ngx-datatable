@@ -24,6 +24,11 @@ datatable-scroller,
   display: block;
 }
 
+.datatable-empty-row,
+.datatable-empty-cell {
+  block-size: 100%;
+}
+
 .custom-loading-indicator-wrapper,
 ghost-loader {
   grid-column: 1 / -1;

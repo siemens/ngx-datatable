@@ -16,51 +16,19 @@ test.describe('summary row', () => {
       await enableSummaryRow.click();
       await expect(summaryRow).toHaveCount(0);
 
-      await si.runVisualAndA11yTests({
-        step: 'no-summary-row',
-        axeRulesSet: [
-          {
-            id: 'aria-required-children',
-            enabled: false
-          }
-        ]
-      });
+      await si.runVisualAndA11yTests('no-summary-row');
 
       enableSummaryRow.click();
       await expect(summaryRow).toHaveCount(1);
 
-      await si.runVisualAndA11yTests({
-        step: 'show-summary-row',
-        axeRulesSet: [
-          {
-            id: 'aria-required-children',
-            enabled: false
-          },
-          {
-            id: 'aria-required-parent',
-            enabled: false
-          }
-        ]
-      });
+      await si.runVisualAndA11yTests('show-summary-row');
 
       const scrollerElement = await page.locator('datatable-scroller').boundingBox();
       let summaryElementBox = await summaryRow.boundingBox();
 
       expect(scrollerElement.y).toBe(summaryElementBox.y);
 
-      await si.runVisualAndA11yTests({
-        step: 'summary-row-at-top',
-        axeRulesSet: [
-          {
-            id: 'aria-required-children',
-            enabled: false
-          },
-          {
-            id: 'aria-required-parent',
-            enabled: false
-          }
-        ]
-      });
+      await si.runVisualAndA11yTests('summary-row-at-top');
 
       await page.getByLabel('Position').selectOption('bottom');
 
@@ -69,15 +37,7 @@ test.describe('summary row', () => {
 
       expect(summaryElementBox.y).toBe(lastElement.y + lastElement.height);
 
-      await si.runVisualAndA11yTests({
-        step: 'summary-row-at-bottom',
-        axeRulesSet: [
-          {
-            id: 'aria-required-children',
-            enabled: false
-          }
-        ]
-      });
+      await si.runVisualAndA11yTests('summary-row-at-bottom');
 
       await testSummaryRowData(page);
     });
@@ -94,19 +54,7 @@ test.describe('summary row', () => {
 
       await testSummaryRowData(page);
 
-      await si.runVisualAndA11yTests({
-        step: 'custom-template-default',
-        axeRulesSet: [
-          {
-            id: 'aria-required-children',
-            enabled: false
-          },
-          {
-            id: 'aria-required-parent',
-            enabled: false
-          }
-        ]
-      });
+      await si.runVisualAndA11yTests('custom-template-default');
     });
   });
 
@@ -140,19 +88,7 @@ test.describe('summary row', () => {
       await expect(genderColumn).toContainText(`${maleCells.length} males`);
       await expect(nameColumn).toContainText(`${maleCells.length + femaleCells.length} total`);
 
-      await si.runVisualAndA11yTests({
-        step: 'custom-template',
-        axeRulesSet: [
-          {
-            id: 'aria-required-children',
-            enabled: false
-          },
-          {
-            id: 'aria-required-parent',
-            enabled: false
-          }
-        ]
-      });
+      await si.runVisualAndA11yTests('custom-template');
     });
   });
 
@@ -189,14 +125,6 @@ test.describe('summary row', () => {
       await si.runVisualAndA11yTests({
         step: 'custom-template-lastname-only',
         axeRulesSet: [
-          {
-            id: 'aria-required-children',
-            enabled: false
-          },
-          {
-            id: 'aria-required-parent',
-            enabled: false
-          },
           {
             id: 'scrollable-region-focusable',
             enabled: false

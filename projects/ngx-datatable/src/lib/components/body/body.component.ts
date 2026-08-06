@@ -101,6 +101,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
             [rowHeight]="summaryHeight()"
             [rows]="rows"
             [columns]="columns"
+            [allColumnsColspan]="allColumnsColspan()"
             [template]="summaryRowTemplate()"
           />
         }
@@ -206,6 +207,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
                   [rowIndex]="indexes().first + i"
                   [selected]="selected()"
                   [ariaGroupHeaderCheckboxMessage]="ariaGroupHeaderCheckboxMessage()"
+                  [allColumnsColspan]="allColumnsColspan()"
                   (groupSelectedChange)="groupSelectedChange($event, group)"
                 >
                   @for (row of group.value; track rowTrackingFn($index, row)) {
@@ -232,6 +234,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
           [rowHeight]="summaryHeight()"
           [rows]="rows"
           [columns]="columns"
+          [allColumnsColspan]="allColumnsColspan()"
           [template]="summaryRowTemplate()"
         />
       }
@@ -244,7 +247,11 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
         [scrollHeight]="scrollHeight()"
         (scroll)="onBodyScroll($event)"
       >
-        <ng-content select="[empty-content]" />
+        <div role="row" class="datatable-empty-row">
+          <div role="cell" class="datatable-empty-cell" [attr.aria-colspan]="allColumnsColspan()">
+            <ng-content select="[empty-content]" />
+          </div>
+        </div>
       </datatable-scroller>
     }
   `,
@@ -323,6 +330,8 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   get selectEnabled(): boolean {
     return !!this.selectionType();
   }
+
+  protected readonly allColumnsColspan = computed(() => Math.max(1, this.columns().length));
 
   /**
    * Property that would calculate the height of scroll bar

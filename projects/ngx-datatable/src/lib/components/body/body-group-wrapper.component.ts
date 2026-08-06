@@ -17,8 +17,8 @@ import { DatatableGroupHeaderDirective } from './body-group-header.directive';
   template: `
     @let groupHeader = this.groupHeader();
     @if (groupHeader && groupHeader.template()) {
-      <div class="datatable-group-header" [style.height.px]="groupHeaderRowHeight()">
-        <div class="datatable-group-cell">
+      <div role="row" class="datatable-group-header" [style.height.px]="groupHeaderRowHeight()">
+        <div role="cell" class="datatable-group-cell" [attr.aria-colspan]="allColumnsColspan()">
           @if (groupHeader.checkboxable()) {
             <div>
               <label class="datatable-checkbox">
@@ -47,7 +47,8 @@ import { DatatableGroupHeaderDirective } from './body-group-header.directive';
   styleUrl: './body-group-wrapper.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'datatable-group-wrapper'
+    class: 'datatable-group-wrapper',
+    role: 'presentation'
   }
 })
 export class DataTableGroupWrapperComponent<TRow extends Row = any> {
@@ -55,6 +56,7 @@ export class DataTableGroupWrapperComponent<TRow extends Row = any> {
   readonly groupHeaderRowHeight = input.required<number>();
   readonly group = input.required<Group<TRow>>();
   readonly groupedRows = input<Group<TRow>[]>();
+  readonly allColumnsColspan = input.required<number>();
   readonly selected = input.required<TRow[]>();
   readonly disabled = input<boolean>();
   readonly rowIndex = input.required<number>();

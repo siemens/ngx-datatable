@@ -53,10 +53,13 @@ import { DataService } from '../data.service';
               <a
                 href="javascript:void(0)"
                 title="Expand/Collapse Group"
-                [class.datatable-icon-right]="!expanded"
-                [class.datatable-icon-down]="expanded"
                 (click)="toggleExpandGroup(group)"
               >
+                <span
+                  aria-hidden="true"
+                  [class.datatable-icon-right]="!expanded"
+                  [class.datatable-icon-down]="expanded"
+                ></span>
                 <b>Age: {{ group ? group.value[0].age : '' }}</b>
               </a>
             </div>

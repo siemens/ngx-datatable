@@ -15,10 +15,10 @@
         - columnheader "Age"
         - columnheader "Comment"
     - rowgroup:
-      - 'row /Select row group fAge: \d+/':
-        - 'cell /Select row group fAge: \d+/':
+      - 'row /Select row group Age: \d+/':
+        - 'cell /Select row group Age: \d+/':
           - checkbox "Select row group" [checked]
-          - 'link /fAge: \d+/':
+          - 'link /Age: \d+/':
             - /url: javascript:void(0)
       - row /Select row ex pay10 ex pay20 ex pay30 Funder Ethel Price female \d+ test1/:
         - cell "Select row ex pay10 ex pay20 ex pay30":
@@ -68,10 +68,10 @@
         - cell /\d+/
         - cell "test4":
           - textbox "comment": test4
-      - 'row /Select row group fAge: \d+/':
-        - 'cell /Select row group fAge: \d+/':
+      - 'row /Select row group Age: \d+/':
+        - 'cell /Select row group Age: \d+/':
           - checkbox "Select row group"
-          - 'link /fAge: \d+/':
+          - 'link /Age: \d+/':
             - /url: javascript:void(0)
       - row /Select row ex pay11 ex pay21 ex pay31 Funder Claudine Neal female \d+/:
         - cell "Select row ex pay11 ex pay21 ex pay31":
@@ -97,10 +97,10 @@
         - cell /\d+/
         - cell:
           - textbox "comment"
-      - 'row /Select row group fAge: \d+/':
-        - 'cell /Select row group fAge: \d+/':
+      - 'row /Select row group Age: \d+/':
+        - 'cell /Select row group Age: \d+/':
           - checkbox "Select row group"
-          - 'link /fAge: \d+/':
+          - 'link /Age: \d+/':
             - /url: javascript:void(0)
       - row /Select row ex pay12 ex pay22 ex pay32 Beryl Rice female \d+/:
         - cell "Select row ex pay12 ex pay22 ex pay32":
@@ -126,10 +126,10 @@
         - cell /\d+/
         - cell:
           - textbox "comment"
-      - 'row /Select row group fAge: \d+/':
-        - 'cell /Select row group fAge: \d+/':
+      - 'row /Select row group Age: \d+/':
+        - 'cell /Select row group Age: \d+/':
           - checkbox "Select row group"
-          - 'link /fAge: \d+/':
+          - 'link /Age: \d+/':
             - /url: javascript:void(0)
       - row /Select row ex pay13 ex pay23 ex pay33 Lynda Mendoza female \d+/:
         - cell "Select row ex pay13 ex pay23 ex pay33":

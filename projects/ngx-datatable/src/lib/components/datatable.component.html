@@ -83,7 +83,7 @@
       (treeAction)="onTreeAction($event)"
     >
       <ng-content select="[loading-indicator]" ngProjectAs="[loading-indicator]">
-        <datatable-progress />
+        <datatable-progress [ariaLoadingMessage]="messages().ariaLoadingMessage ?? 'Loading'" />
       </ng-content>
       <ng-content select="[empty-content]" ngProjectAs="[empty-content]">
         <div class="empty-row" [innerHTML]="messages().emptyMessage ?? 'No data to display'"></div>

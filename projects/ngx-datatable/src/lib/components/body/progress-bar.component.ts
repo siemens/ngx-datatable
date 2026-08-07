@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'datatable-progress',
   template: `
-    <div class="progress-linear" role="progressbar">
+    <div class="progress-linear" role="progressbar" [attr.aria-label]="ariaLoadingMessage()">
       <div class="container">
         <div class="bar"></div>
       </div>
@@ -11,4 +11,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProgressBarComponent {}
+export class ProgressBarComponent {
+  readonly ariaLoadingMessage = input.required<string>();
+}

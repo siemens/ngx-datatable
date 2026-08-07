@@ -119,15 +119,7 @@ test.describe('sorting', () => {
       await expect(companyHeader).toHaveClass(/sort-active/);
       await expect(companyHeader).toHaveClass(/sort-asc/);
 
-      await si.runVisualAndA11yTests({
-        step: 'sorting-asc-again',
-        axeRulesSet: [
-          {
-            id: 'aria-progressbar-name',
-            enabled: false
-          }
-        ]
-      });
+      await si.runVisualAndA11yTests('sorting-asc-again');
     });
   });
 

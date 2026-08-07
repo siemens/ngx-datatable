@@ -327,7 +327,8 @@ export class DatatableComponent<TRow extends Row = any>
    *   ariaLastPageMessage: 'go to last page',
    *   ariaRowCheckboxMessage: 'Select row',
    *   ariaHeaderCheckboxMessage: 'Select all rows',
-   *   ariaGroupHeaderCheckboxMessage: 'Select row group'
+   *   ariaGroupHeaderCheckboxMessage: 'Select row group',
+   *   ariaLoadingMessage: 'Loading'
    * }
    * ```
    */

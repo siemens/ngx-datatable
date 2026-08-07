@@ -27,6 +27,8 @@ export interface NgxDatatableMessages {
   ariaHeaderCheckboxMessage: string;
   /** Group header checkbox aria label */
   ariaGroupHeaderCheckboxMessage: string;
+  /** Loading indicator aria label */
+  ariaLoadingMessage: string;
 }
 
 /** CSS classes for icons that override the default table icons. */

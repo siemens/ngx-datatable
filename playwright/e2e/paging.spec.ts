@@ -63,10 +63,6 @@ test.describe('paging', () => {
           {
             id: 'empty-table-header',
             enabled: false
-          },
-          {
-            id: 'aria-progressbar-name',
-            enabled: false
           }
         ]
       });
@@ -75,15 +71,7 @@ test.describe('paging', () => {
 
       await page.mouse.wheel(0, 1000);
 
-      await si.runVisualAndA11yTests({
-        step: 'infinite-scroll-after-scroll',
-        axeRulesSet: [
-          {
-            id: 'aria-progressbar-name',
-            enabled: false
-          }
-        ]
-      });
+      await si.runVisualAndA11yTests('infinite-scroll-after-scroll');
     });
   });
 
@@ -116,10 +104,6 @@ test.describe('paging', () => {
           },
           {
             id: 'empty-table-header',
-            enabled: false
-          },
-          {
-            id: 'aria-progressbar-name',
             enabled: false
           }
         ]

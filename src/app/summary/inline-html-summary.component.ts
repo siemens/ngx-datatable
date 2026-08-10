@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datatable';
 
 import { Employee } from '../data.model';
@@ -24,13 +24,7 @@ import { DataService } from '../data.service';
         <ngx-datatable-column prop="age" [summaryFunc]="avgAge" />
       </ngx-datatable>
       <ng-template #nameSummaryCell>
-        <div class="name-container">
-          @for (name of names(); track name) {
-            <div class="chip">
-              <span class="chip-content">{{ name }}</span>
-            </div>
-          }
-        </div>
+        <span>{{ rows().length }} total</span>
       </ng-template>
     </div>
   `
@@ -38,12 +32,6 @@ import { DataService } from '../data.service';
 export class InlineHtmlSummaryComponent {
   private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
-
-  readonly names = computed(() =>
-    this.rows()
-      .map(row => row.name)
-      .map(fullName => fullName.split(' ')[1])
-  );
 
   enableSummary = true;
   summaryPosition = 'top';

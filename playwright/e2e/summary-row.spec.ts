@@ -20,12 +20,6 @@ test.describe('summary-row', () => {
     await expect(summaryRow).toBeVisible();
     await expect(page.locator('.summary-row-actions-count')).toContainText('1 row(s) selected');
 
-    await si.runVisualAndA11yTests({
-      step: 'summary-row-actions',
-      axeRulesSet: [
-        { id: 'label', enabled: false },
-        { id: 'empty-table-header', enabled: false }
-      ]
-    });
+    await si.runVisualAndA11yTests('summary-row-actions');
   });
 });

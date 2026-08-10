@@ -50,6 +50,7 @@ import { DataService } from '../data.service';
               ngx-datatable-cell-template
             >
               <select
+                [attr.aria-label]="'Gender for ' + row.name"
                 [style.height]="'auto'"
                 [value]="value"
                 [disabled]="disabled"
@@ -70,7 +71,11 @@ import { DataService } from '../data.service';
               ngx-datatable-cell-template
             >
               <div disable-row [disabled]="disabled">
-                <input [value]="value" (blur)="updateValue($event, 'age', rowIndex)" />
+                <input
+                  [attr.aria-label]="'Age for ' + row.name"
+                  [value]="value"
+                  (blur)="updateValue($event, 'age', rowIndex)"
+                />
                 <br />
                 <button type="button" (click)="disableRow(rowIndex)">Disable row</button>
               </div>

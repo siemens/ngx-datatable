@@ -53,19 +53,7 @@ test.describe('paging', () => {
 
       await expect(page.locator('ghost-loader').first()).not.toBeVisible();
 
-      await si.runVisualAndA11yTests({
-        step: 'infinite-scroll-initial',
-        axeRulesSet: [
-          {
-            id: 'label',
-            enabled: false
-          },
-          {
-            id: 'empty-table-header',
-            enabled: false
-          }
-        ]
-      });
+      await si.runVisualAndA11yTests('infinite-scroll-initial');
 
       await page.getByRole('row', { name: 'Sarah Massey' }).click();
 
@@ -95,19 +83,7 @@ test.describe('paging', () => {
 
       await page.waitForSelector('span[title="Freda Mason"]');
 
-      await si.runVisualAndA11yTests({
-        step: 'virtual-server-side-navigate',
-        axeRulesSet: [
-          {
-            id: 'label',
-            enabled: false
-          },
-          {
-            id: 'empty-table-header',
-            enabled: false
-          }
-        ]
-      });
+      await si.runVisualAndA11yTests('virtual-server-side-navigate');
 
       await page.getByRole('row', { name: 'Freda Mason' }).click();
       await page.mouse.wheel(0, 500);

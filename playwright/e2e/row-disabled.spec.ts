@@ -7,10 +7,6 @@ test('disabled rows', async ({ si, page }) => {
     .getByRole('button', { name: 'Disable row' })
     .click();
   await si.runVisualAndA11yTests({
-    axeRulesSet: [
-      { id: 'color-contrast', enabled: false },
-      { id: 'label', enabled: false },
-      { id: 'select-name', enabled: false }
-    ]
+    axeRulesSet: [{ id: 'color-contrast', enabled: false }]
   });
 });

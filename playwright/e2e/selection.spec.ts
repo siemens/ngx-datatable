@@ -172,38 +172,14 @@ test.describe('selection', () => {
       const selectedNamesLi = page.locator('.selected-column').locator('ul > li');
       await expect(selectedNamesLi).toHaveCount(4);
 
-      await si.runVisualAndA11yTests({
-        step: 'checkbox-selection-all-checked',
-        axeRulesSet: [
-          {
-            id: 'label',
-            enabled: false
-          },
-          {
-            id: 'empty-table-header',
-            enabled: false
-          }
-        ]
-      });
+      await si.runVisualAndA11yTests('checkbox-selection-all-checked');
 
       await rowsWithCheckbox[0].uncheck();
       await rowsWithCheckbox[1].uncheck();
 
       await expect(selectedNamesLi).toHaveCount(2);
 
-      await si.runVisualAndA11yTests({
-        step: 'checkbox-selection-uncheck',
-        axeRulesSet: [
-          {
-            id: 'label',
-            enabled: false
-          },
-          {
-            id: 'empty-table-header',
-            enabled: false
-          }
-        ]
-      });
+      await si.runVisualAndA11yTests('checkbox-selection-uncheck');
     });
   });
 
@@ -266,19 +242,7 @@ test.describe('selection', () => {
       const selectedNamesLi = page.locator('.selected-column').locator('ul > li');
       await expect(selectedNamesLi).toHaveCount(3);
 
-      await si.runVisualAndA11yTests({
-        step: 'navigation-using-tab-and-space',
-        axeRulesSet: [
-          {
-            id: 'label',
-            enabled: false
-          },
-          {
-            id: 'empty-table-header',
-            enabled: false
-          }
-        ]
-      });
+      await si.runVisualAndA11yTests('navigation-using-tab-and-space');
 
       await page.keyboard.press('Shift+Tab');
       await page.keyboard.press('Space');
@@ -287,19 +251,7 @@ test.describe('selection', () => {
 
       await expect(selectedNamesLi).toHaveCount(2);
 
-      await si.runVisualAndA11yTests({
-        step: 'backward-navigation-shift+tab+space',
-        axeRulesSet: [
-          {
-            id: 'label',
-            enabled: false
-          },
-          {
-            id: 'empty-table-header',
-            enabled: false
-          }
-        ]
-      });
+      await si.runVisualAndA11yTests('backward-navigation-shift+tab+space');
     });
   });
 });

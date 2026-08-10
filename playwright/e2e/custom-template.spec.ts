@@ -103,34 +103,10 @@ test.describe('summary row', () => {
 
       await testSummaryRowData(page);
 
-      const rows = await page.locator('datatable-row-wrapper').locator('datatable-body-row').all();
-
       const nameColumn = summaryRow.locator('datatable-body-cell').first().locator('span');
+      await expect(nameColumn).toHaveText('5 total');
 
-      expect(rows).toHaveLength(5);
-
-      const names: string[] = [];
-
-      for (const row of rows) {
-        const fullName = await row.locator('datatable-body-cell').first().innerText();
-        names.push(fullName.split(' ')[1]);
-      }
-
-      expect(names).toHaveLength(rows.length);
-
-      for (let name of names) {
-        await expect(nameColumn.getByText(name, { exact: true })).toHaveCount(1);
-      }
-
-      await si.runVisualAndA11yTests({
-        step: 'custom-template-lastname-only',
-        axeRulesSet: [
-          {
-            id: 'scrollable-region-focusable',
-            enabled: false
-          }
-        ]
-      });
+      await si.runVisualAndA11yTests('custom-template-total-count');
     });
   });
 });

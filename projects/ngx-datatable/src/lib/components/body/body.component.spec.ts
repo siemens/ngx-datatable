@@ -1,7 +1,8 @@
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, signal, WritableSignal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
+import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
 import { ScrollContainerDirective } from '../../directives/scroll-container.directive';
 import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 import { toInternalColumn } from '../../utils/column-helper';
@@ -27,13 +28,16 @@ const scrollContainerStub: Partial<ScrollContainerDirective> = {
 describe('DataTableBodyComponent', () => {
   let fixture: ComponentFixture<DataTableBodyComponent>;
   let component: DataTableBodyComponent;
+  let rowHeight: WritableSignal<any>;
 
   // provide our implementations or mocks to the dependency injector
   beforeEach(async () => {
+    rowHeight = signal('auto');
     TestBed.configureTestingModule({
       providers: [
         ScrollbarHelper,
         { provide: DATATABLE_COMPONENT_TOKEN, useValue: {} },
+        provideDatatableConfigurationMock({ rowHeight }),
         { provide: ScrollContainerDirective, useValue: scrollContainerStub }
       ]
     });
@@ -42,10 +46,6 @@ describe('DataTableBodyComponent', () => {
     fixture.componentRef.setInput('rowIdentity', (row: any) => row);
     fixture.componentRef.setInput('summaryPosition', 'top');
     fixture.componentRef.setInput('summaryHeight', 50);
-    fixture.componentRef.setInput('ariaGroupHeaderCheckboxMessage', 'Select all rows');
-    fixture.componentRef.setInput('ariaRowCheckboxMessage', 'Select row');
-    fixture.componentRef.setInput('cssClasses', {});
-    fixture.componentRef.setInput('rowHeight', 'auto');
     fixture.componentRef.setInput('offsetX', 0);
     component = fixture.componentInstance;
   });
@@ -126,7 +126,7 @@ describe('DataTableBodyComponent', () => {
       fixture.componentRef.setInput('externalPaging', true);
       fixture.componentRef.setInput('scrollbarV', true);
       fixture.componentRef.setInput('virtualization', true);
-      fixture.componentRef.setInput('rowHeight', 50);
+      rowHeight.set(50);
       fixture.componentRef.setInput('ghostLoadingIndicator', true);
       fixture.componentRef.setInput('bodyHeight', 200);
       fixture.componentRef.setInput('pageSize', 5);

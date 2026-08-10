@@ -14,17 +14,12 @@
         [scrollbarH]="scrollbarH()"
         [dealsWithGroup]="_internalGroupedRows() !== undefined"
         [columns]="_internalColumns()"
-        [headerHeight]="headerHeight()"
         [reorderable]="reorderable()"
         [targetMarkerTemplate]="targetMarkerTemplate()"
-        [sortAscendingIcon]="cssClasses().sortAscending"
-        [sortDescendingIcon]="cssClasses().sortDescending"
-        [sortUnsetIcon]="cssClasses().sortUnset"
         [allRowsSelected]="allRowsSelected()"
         [selectionType]="selectionType()"
         [verticalScrollVisible]="verticalScrollVisible"
         [enableClearingSortState]="enableClearingSortState()"
-        [ariaHeaderCheckboxMessage]="messages().ariaHeaderCheckboxMessage ?? 'Select all rows'"
         (sort)="onColumnSort($event)"
         (resize)="onColumnResize($event)"
         (resizing)="onColumnResizing($event)"
@@ -45,7 +40,6 @@
       [loadingIndicator]="loadingIndicator()"
       [ghostLoadingIndicator]="ghostLoadingIndicator()"
       [externalPaging]="externalPaging()"
-      [rowHeight]="rowHeight()"
       [rowCount]="rowCount()"
       [offset]="correctedOffset()"
       [trackByProp]="trackByProp()"
@@ -65,16 +59,11 @@
       [summaryPosition]="summaryPosition()"
       [summaryRowTemplate]="summaryRowDirective()?.template"
       [verticalScrollVisible]="verticalScrollVisible"
-      [ariaRowCheckboxMessage]="messages().ariaRowCheckboxMessage ?? 'Select row'"
-      [ariaGroupHeaderCheckboxMessage]="
-        messages().ariaGroupHeaderCheckboxMessage ?? 'Select row group'
-      "
       [disableRowCheck]="disableRowCheck()"
       [checkRowPropertyChanges]="checkRowPropertyChanges()"
       [rowDraggable]="rowDraggable()"
       [rowDragEvents]="rowDragEvents"
       [rowDefTemplate]="_rowDefTemplate()"
-      [cssClasses]="cssClasses()"
       [(selected)]="selected"
       (page)="onBodyPage($event)"
       (activate)="activate.emit($event)"
@@ -83,10 +72,10 @@
       (treeAction)="onTreeAction($event)"
     >
       <ng-content select="[loading-indicator]" ngProjectAs="[loading-indicator]">
-        <datatable-progress [ariaLoadingMessage]="messages().ariaLoadingMessage ?? 'Loading'" />
+        <datatable-progress />
       </ng-content>
       <ng-content select="[empty-content]" ngProjectAs="[empty-content]">
-        <div class="empty-row" [innerHTML]="messages().emptyMessage ?? 'No data to display'"></div>
+        <div class="empty-row" [innerHTML]="configuration().messages.emptyMessage"></div>
       </ng-content>
     </datatable-body>
   </div>
@@ -96,15 +85,13 @@
       [groupCount]="_internalGroupedRows() !== undefined ? rowCount() : undefined"
       [pageSize]="pageSize()"
       [offset]="correctedOffset()"
-      [footerHeight]="footerHeight()"
       [footerTemplate]="_footer()"
-      [totalMessage]="messages().totalMessage ?? 'total'"
-      [pagerLeftArrowIcon]="cssClasses().pagerLeftArrow"
-      [pagerRightArrowIcon]="cssClasses().pagerRightArrow"
-      [pagerPreviousIcon]="cssClasses().pagerPrevious"
+      [pagerLeftArrowIcon]="configuration().cssClasses.pagerLeftArrow"
+      [pagerRightArrowIcon]="configuration().cssClasses.pagerRightArrow"
+      [pagerPreviousIcon]="configuration().cssClasses.pagerPrevious"
       [selectedCount]="selected().length"
-      [selectedMessage]="!!selectionType() && (messages().selectedMessage ?? 'selected')"
-      [pagerNextIcon]="cssClasses().pagerNext"
+      [selectedMessage]="!!selectionType()"
+      [pagerNextIcon]="configuration().cssClasses.pagerNext"
       (page)="onFooterPage($event)"
     />
   }

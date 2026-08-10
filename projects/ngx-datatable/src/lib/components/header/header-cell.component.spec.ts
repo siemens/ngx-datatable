@@ -2,6 +2,7 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import {
   AfterViewInit,
   Component,
+  computed,
   inputBinding,
   outputBinding,
   signal,
@@ -12,6 +13,7 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { userEvent } from '@vitest/browser/context';
 
+import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
 import {
   InnerSortEvent,
   SortableTableColumnInternal,
@@ -28,8 +30,10 @@ describe('DataTableHeaderCellComponent', () => {
   let harness: HeaderCellHarness;
 
   beforeEach(async () => {
+    TestBed.configureTestingModule({
+      providers: [provideDatatableConfigurationMock()]
+    });
     fixture = TestBed.createComponent(DataTableHeaderCellComponent);
-    fixture.componentRef.setInput('ariaHeaderCheckboxMessage', 'Select All');
     fixture.componentRef.setInput('sortType', 'single');
     component = fixture.componentInstance;
     fixture.componentRef.setInput('column', {
@@ -40,7 +44,6 @@ describe('DataTableHeaderCellComponent', () => {
       width: signal(0)
     });
     fixture.componentRef.setInput('sortType', 'single');
-    fixture.componentRef.setInput('ariaHeaderCheckboxMessage', 'Select all rows');
     fixture.componentInstance.sort.subscribe(sort => {
       fixture.componentRef.setInput('sorts', [
         {
@@ -114,12 +117,7 @@ describe('DataTableHeaderCellComponent', () => {
 @Component({
   imports: [DataTableHeaderCellComponent],
   template: `
-    <datatable-header-cell
-      sortType="single"
-      ariaHeaderCheckboxMessage="checked"
-      [column]="column()"
-      (sort)="sort($event)"
-    />
+    <datatable-header-cell sortType="single" [column]="column()" (sort)="sort($event)" />
     <ng-template #headerCellTemplate let-sort="sortFn" let-column="column">
       <span class="custom-header">Custom Header for {{ column.name }}</span>
       <button class="custom-sort-button" type="button" (click)="sort($event)">
@@ -152,6 +150,9 @@ describe('DataTableHeaderCellComponent with template', () => {
   let harness: HeaderCellHarness;
 
   beforeEach(async () => {
+    TestBed.configureTestingModule({
+      providers: [provideDatatableConfigurationMock()]
+    });
     fixture = TestBed.createComponent(TestHeaderCellComponent);
     harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, HeaderCellHarness);
   });
@@ -187,12 +188,19 @@ describe('DataTableHeaderCellComponent - custom sort icons', () => {
 
   beforeEach(async () => {
     sorts = signal<SortPropDir[]>([]);
+    TestBed.configureTestingModule({
+      providers: [
+        provideDatatableConfigurationMock({
+          cssClasses: computed(() => ({
+            sortAscending: sortAscendingIcon(),
+            sortDescending: sortDescendingIcon()
+          }))
+        })
+      ]
+    });
     fixture = TestBed.createComponent(DataTableHeaderCellComponent, {
       bindings: [
         inputBinding('sortType', () => 'single'),
-        inputBinding('ariaHeaderCheckboxMessage', () => 'Select All'),
-        inputBinding('sortAscendingIcon', sortAscendingIcon),
-        inputBinding('sortDescendingIcon', sortDescendingIcon),
         inputBinding('column', column),
         inputBinding('sorts', sorts),
         inputBinding('showResizeHandle', () => false),

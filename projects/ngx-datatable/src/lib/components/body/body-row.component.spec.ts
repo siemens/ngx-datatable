@@ -2,6 +2,7 @@ import { Component, computed, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
+import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
 import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 import { RowIndex } from '../../types/internal.types';
 import { columnsByPinArr, gridColumnTemplate } from '../../utils/column';
@@ -14,8 +15,6 @@ describe('DataTableBodyRowComponent', () => {
     template: `
       <div style="display: grid" [style.grid-template-columns]="gridTemplate()">
         <datatable-body-row
-          ariaRowCheckboxMessage=""
-          [cssClasses]="{}"
           [rowHeight]="40"
           [rowIndex]="rowIndex()"
           [row]="row()"
@@ -36,7 +35,7 @@ describe('DataTableBodyRowComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [ScrollbarHelper]
+      providers: [ScrollbarHelper, provideDatatableConfigurationMock()]
     });
     fixture = TestBed.createComponent(TestHostComponent);
     component = fixture.componentInstance;

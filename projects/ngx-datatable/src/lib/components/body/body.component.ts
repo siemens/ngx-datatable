@@ -24,7 +24,6 @@ import {
   viewChild
 } from '@angular/core';
 
-import { NgxDatatableConfig } from '../../ngx-datatable.config';
 import { TableColumnInternal } from '../../types/internal.types';
 import {
   ActivateEvent,
@@ -42,6 +41,7 @@ import { TableColumn } from '../../types/table-column.type';
 import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER } from '../../utils/keys';
 import { RowHeightCache } from '../../utils/row-height-cache';
 import { selectRows, selectRowsBetween } from '../../utils/selection';
+import { DatatableConfiguration } from '../datatable-configuration';
 import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive';
 import { DatatableGroupHeaderDirective } from './body-group-header.directive';
 import { DataTableGroupWrapperComponent } from './body-group-wrapper.component';
@@ -84,7 +84,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
         class="ghost-overlay"
         [columns]="columns"
         [pageSize]="pageSize()"
-        [rowHeight]="rowHeight()"
+        [rowHeight]="configuration().rowHeight"
         [ghostBodyHeight]="bodyHeight"
       />
     }
@@ -126,7 +126,6 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
             [disabled]="disabled"
             [expanded]="getRowExpanded(row)"
             [rowIndex]="indexes().first + index"
-            [ariaGroupHeaderCheckboxMessage]="ariaGroupHeaderCheckboxMessage()"
             [checkRowPropertyChanges]="checkRowPropertyChanges()"
             (rowContextmenu)="rowContextmenu.emit($event)"
           >
@@ -144,8 +143,6 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
               [displayCheck]="displayCheck()"
               [treeStatus]="row?.treeStatus"
               [draggable]="rowDraggable()"
-              [ariaRowCheckboxMessage]="ariaRowCheckboxMessage()"
-              [cssClasses]="cssClasses()"
               [checkRowPropertyChanges]="checkRowPropertyChanges()"
               (treeAction)="onTreeAction(row)"
               (activate)="onActivate($event, index)"
@@ -162,7 +159,11 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
         <div class="datatable-row-render-wrapper" [style.transform]="renderOffset()">
           @for (group of rowsToRender(); track rowTrackingFn(i, group); let i = $index) {
             @if (!group && ghostLoadingIndicator()) {
-              <ghost-loader [columns]="columns" [pageSize]="1" [rowHeight]="rowHeight()" />
+              <ghost-loader
+                [columns]="columns"
+                [pageSize]="1"
+                [rowHeight]="configuration().rowHeight"
+              />
             } @else if (group) {
               @let disableRowCheck = this.disableRowCheck();
               @let disabled = isRow(group) && disableRowCheck && disableRowCheck(group);
@@ -206,7 +207,6 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
                   [expanded]="getGroupExpanded(group)"
                   [rowIndex]="indexes().first + i"
                   [selected]="selected()"
-                  [ariaGroupHeaderCheckboxMessage]="ariaGroupHeaderCheckboxMessage()"
                   [allColumnsColspan]="allColumnsColspan()"
                   (groupSelectedChange)="groupSelectedChange($event, group)"
                 >
@@ -264,6 +264,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
 export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, OnChanges {
   cd = inject(ChangeDetectorRef);
   destroyRef = inject(DestroyRef);
+  protected readonly configuration = inject(DatatableConfiguration).configuration;
 
   readonly rowDefTemplate = input<TemplateRef<any>>();
   readonly scrollbarV = input(false, { transform: booleanAttribute });
@@ -271,7 +272,6 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   readonly loadingIndicator = input<boolean>();
   readonly ghostLoadingIndicator = input<boolean>();
   readonly externalPaging = input<boolean>();
-  readonly rowHeight = input.required<number | 'auto' | ((row?: any) => number)>();
   readonly offsetX = model.required<number>();
   readonly selectionType = input<SelectionType>();
   readonly selected = model<TRow[]>([]);
@@ -294,7 +294,6 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   readonly rowDraggable = input<boolean>();
   readonly rowDragEvents = input.required<OutputEmitterRef<DragEventData>>();
   readonly disableRowCheck = input<(row: TRow) => boolean | undefined>();
-  readonly ariaGroupHeaderCheckboxMessage = input.required<string>();
   readonly checkRowPropertyChanges = input(true, { transform: booleanAttribute });
 
   readonly pageSize = input.required<number>();
@@ -309,8 +308,6 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
 
   readonly bodyHeight = input<string | number>();
   readonly verticalScrollVisible = input(false);
-  readonly ariaRowCheckboxMessage = input.required<string>();
-  readonly cssClasses = input.required<Partial<Required<NgxDatatableConfig>['cssClasses']>>();
 
   readonly scroll = output<ScrollEvent>();
   readonly page = output<number>();
@@ -607,7 +604,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
    */
   getRowHeight(row: RowOrGroup<TRow>): number {
     // if its a function return it
-    const rowHeight = this.rowHeight();
+    const rowHeight = this.configuration().rowHeight;
     if (typeof rowHeight === 'function') {
       return rowHeight(row);
     }
@@ -621,7 +618,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       return 0;
     }
     const rowHeightValue = groupHeader?.rowHeight();
-    const rowHeight = rowHeightValue === 0 ? this.rowHeight() : rowHeightValue;
+    const rowHeight = rowHeightValue === 0 ? this.configuration().rowHeight : rowHeightValue;
     return typeof rowHeight === 'function' ? rowHeight(row, index) : (rowHeight as number);
   };
 
@@ -682,7 +679,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     if (this.rows().length) {
       cache.initCache({
         rows: this.rows() as TRow[], // TODO: RowHeightCache does not support grouping
-        rowHeight: this.rowHeight(),
+        rowHeight: this.configuration().rowHeight,
         detailRowHeight: this.detailRowHeightFn(),
         externalVirtual: this.scrollbarV() && this.externalPaging(),
         indexOffset: this.externalPaging() ? this.offset() * this.pageSize() : 0,

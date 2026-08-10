@@ -1,7 +1,16 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output, Signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  output,
+  Signal
+} from '@angular/core';
 
 import { FooterContext, PagerPageEvent } from '../../types/public.types';
+import { DatatableConfiguration } from '../datatable-configuration';
 import { DatatableFooterDirective } from './footer.directive';
 import { DatatablePagerComponent } from './pager.component';
 
@@ -12,7 +21,7 @@ import { DatatablePagerComponent } from './pager.component';
     <div
       class="datatable-footer-inner"
       [class.selected-count]="selectedMessage()"
-      [style.height.px]="footerHeight()"
+      [style.height.px]="configuration().footerHeight"
     >
       @let footerTemplate = this.footerTemplate()?.template();
       @if (footerTemplate) {
@@ -23,9 +32,12 @@ import { DatatablePagerComponent } from './pager.component';
       } @else {
         <div class="page-count">
           @if (selectedMessage()) {
-            <span> {{ selectedCount().toLocaleString() }} {{ selectedMessage() }} / </span>
+            <span>
+              {{ selectedCount().toLocaleString() }}
+              {{ configuration().messages.selectedMessage }} /
+            </span>
           }
-          {{ rowCount().toLocaleString() }} {{ totalMessage() }}
+          {{ rowCount().toLocaleString() }} {{ configuration().messages.totalMessage }}
         </div>
         @if (isVisible()) {
           <ngx-datatable-pager />
@@ -40,7 +52,7 @@ import { DatatablePagerComponent } from './pager.component';
   }
 })
 export class DataTableFooterComponent {
-  readonly footerHeight = input.required<number>();
+  protected readonly configuration = inject(DatatableConfiguration).configuration;
   readonly rowCount = input.required<number>();
   readonly groupCount = input.required<number | undefined>();
   readonly pageSize = input.required<number>();
@@ -49,11 +61,10 @@ export class DataTableFooterComponent {
   readonly pagerRightArrowIcon = input<string | undefined>();
   readonly pagerPreviousIcon = input<string | undefined>();
   readonly pagerNextIcon = input<string | undefined>();
-  readonly totalMessage = input.required<string>();
   readonly footerTemplate = input<DatatableFooterDirective | undefined>();
 
   readonly selectedCount = input(0);
-  readonly selectedMessage = input<string | boolean | undefined>(undefined);
+  readonly selectedMessage = input(false);
 
   readonly page = output<PagerPageEvent>();
 

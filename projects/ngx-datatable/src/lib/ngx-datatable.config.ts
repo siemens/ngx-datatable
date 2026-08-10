@@ -48,24 +48,27 @@ export interface NgxDatatableCssClasses {
 /**
  * Interface definition for ngx-datatable global configuration
  */
-// TODO those properties should all be required in the interface. Should be changed with signal migration.
 export interface NgxDatatableConfig {
-  messages?: NgxDatatableMessages;
-  cssClasses?: NgxDatatableCssClasses;
-  headerHeight?: number;
-  footerHeight?: number;
-  rowHeight?: number;
-  defaultColumnWidth?: number;
+  messages: NgxDatatableMessages;
+  cssClasses: NgxDatatableCssClasses;
+  headerHeight: number | 'auto';
+  footerHeight: number;
+  rowHeight: number | 'auto' | ((row: any) => number);
+  defaultColumnWidth: number;
 }
 
-export const NGX_DATATABLE_CONFIG = new InjectionToken<NgxDatatableConfig>('ngx-datatable.config');
+export const NGX_DATATABLE_CONFIG = new InjectionToken<AllPartial<NgxDatatableConfig>>(
+  'ngx-datatable.config'
+);
 
 /**
  * This makes all properties recursively optional.
  *
  * @internal
  */
-export type AllPartial<T> = { [K in keyof T]?: AllPartial<T[K]> };
+export type AllPartial<T> = T extends (...args: any[]) => any
+  ? T
+  : { [K in keyof T]?: AllPartial<T[K]> };
 
 /**
  * Interface definition for INgxDatatableConfig global configuration.

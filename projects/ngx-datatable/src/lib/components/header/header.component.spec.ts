@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { vi } from 'vitest';
 
+import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
 import { columnsByPinArr, gridColumnTemplate } from '../../utils/column';
 import { toInternalColumn } from '../../utils/column-helper';
 import { DataTableHeaderComponent } from './header.component';
@@ -22,12 +23,13 @@ describe('DataTableHeaderComponent', () => {
   };
 
   beforeEach(async () => {
+    TestBed.configureTestingModule({
+      providers: [provideDatatableConfigurationMock()]
+    });
     fixture = TestBed.createComponent(DataTableHeaderComponent);
     fixture.componentRef.setInput('columns', []);
     fixture.componentRef.setInput('sorts', []);
     fixture.componentRef.setInput('sortType', 'single');
-    fixture.componentRef.setInput('headerHeight', 50);
-    fixture.componentRef.setInput('ariaHeaderCheckboxMessage', 'Select all rows');
 
     harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, HeaderHarness);
     componentRef = fixture.componentRef;

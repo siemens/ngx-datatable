@@ -2,6 +2,7 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Component, ComponentRef, computed, signal, TemplateRef, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
 import { toInternalColumn } from '../../utils/column-helper';
 import { numericIndexGetter } from '../../utils/column-prop-getters';
 import { DataTableBodyCellComponent } from './body-cell.component';
@@ -11,16 +12,7 @@ import { BodyCellHarness } from './testing/body-cell.harness';
   selector: 'mock-cell-template',
   imports: [DataTableBodyCellComponent],
   template: `<ng-template #template let-row="row">Custom Cell Template {{ row.id }} </ng-template>
-    <datatable-body-cell
-      ariaRowCheckboxMessage="checkbox message"
-      [row]="row()"
-      [column]="column()"
-      [cssClasses]="{
-        treeStatusLoading: 'icon datatable-icon-loading',
-        treeStatusExpanded: 'icon datatable-icon-down',
-        treeStatusCollapsed: 'icon datatable-icon-up'
-      }"
-    /> `
+    <datatable-body-cell [row]="row()" [column]="column()" /> `
 })
 class MockCellTemplateComponent {
   readonly row = signal({ id: 1 });
@@ -36,16 +28,13 @@ describe('DataTableBodyCellComponent', () => {
   let harness: BodyCellHarness;
 
   beforeEach(async () => {
+    TestBed.configureTestingModule({
+      providers: [provideDatatableConfigurationMock()]
+    });
     fixture = TestBed.createComponent(DataTableBodyCellComponent);
     component = fixture.componentRef;
     component.setInput('row', ['Hello']);
     component.setInput('column', { width: signal(0) });
-    component.setInput('ariaRowCheckboxMessage', 'checkbox message');
-    component.setInput('cssClasses', {
-      treeStatusLoading: 'icon datatable-icon-loading',
-      treeStatusExpanded: 'icon datatable-icon-down',
-      treeStatusCollapsed: 'icon datatable-icon-up'
-    });
     harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, BodyCellHarness);
   });
 

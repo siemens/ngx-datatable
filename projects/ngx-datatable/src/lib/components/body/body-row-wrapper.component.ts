@@ -51,7 +51,6 @@ export class DataTableRowWrapperComponent<TRow extends Row = any> implements DoC
   readonly rowIndex = input.required<number>();
 
   readonly expanded = input(false, { transform: booleanAttribute });
-  readonly ariaGroupHeaderCheckboxMessage = input.required<string>();
   readonly checkRowPropertyChanges = input(true, { transform: booleanAttribute });
 
   readonly detailsRowHeight = computed(() => this.detailRowHeightFn()(this.row(), this.rowIndex()));

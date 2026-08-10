@@ -1,7 +1,8 @@
-import { Component, DebugElement, signal, TemplateRef, viewChild } from '@angular/core';
+import { Component, DebugElement, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
+import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
 import { DATATABLE_COMPONENT_TOKEN } from '../../utils/table-token';
 import { DataTableFooterTemplateDirective } from './footer-template.directive';
 import { DataTableFooterComponent } from './footer.component';
@@ -10,9 +11,11 @@ import { DatatableFooterDirective } from './footer.directive';
 let fixture: ComponentFixture<TestFixtureComponent>;
 let component: TestFixtureComponent;
 let page: Page;
+const footerHeight = signal(0);
 
 describe('DataTableFooterComponent', () => {
   beforeEach(async () => {
+    footerHeight.set(0);
     fixture = TestBed.createComponent(TestFixtureComponent);
     component = fixture.componentInstance;
     page = new Page();
@@ -21,14 +24,14 @@ describe('DataTableFooterComponent', () => {
 
   describe('div.datatable-footer-inner', () => {
     it(`should have a height`, async () => {
-      component.footerHeight.set(123);
+      footerHeight.set(123);
       await page.detectChangesAndRunQueries();
 
       expect(page.datatableFooterInner.nativeElement.style.height).toEqual('123px');
     });
 
     it('should have `.selected-count` class when selectedMessage is set', async () => {
-      component.selectedMessage.set('selected');
+      component.selectedMessage.set(true);
       component.selectedCount.set(1);
       await page.detectChangesAndRunQueries();
 
@@ -38,7 +41,7 @@ describe('DataTableFooterComponent', () => {
     });
 
     it('should not have `.selected-count` class if selectedMessage is not set', async () => {
-      component.selectedMessage.set(undefined);
+      component.selectedMessage.set(false);
       await page.detectChangesAndRunQueries();
 
       expect(page.datatableFooterInner.nativeElement.classList.contains('selected-count')).toBe(
@@ -57,10 +60,9 @@ describe('DataTableFooterComponent', () => {
 
     it('should display the selected count and total if selectedMessage set', async () => {
       component.footerTemplate.set(undefined);
-      component.selectedMessage.set('selected');
+      component.selectedMessage.set(true);
       component.selectedCount.set(7);
       component.rowCount.set(10);
-      component.totalMessage.set('total');
       await page.detectChangesAndRunQueries();
 
       expect(page.pageCount.nativeElement.innerText).toEqual('7 selected / 10 total');
@@ -68,9 +70,8 @@ describe('DataTableFooterComponent', () => {
 
     it('should display only the total if selectedMessage is not set', async () => {
       component.footerTemplate.set(undefined);
-      component.selectedMessage.set(undefined);
+      component.selectedMessage.set(false);
       component.rowCount.set(100);
-      component.totalMessage.set('total');
       await page.detectChangesAndRunQueries();
 
       expect(page.pageCount.nativeElement.innerText).toEqual('100 total');
@@ -145,9 +146,7 @@ describe('DataTableFooterComponent', () => {
       [groupCount]="undefined"
       [pageSize]="pageSize()"
       [offset]="offset()"
-      [footerHeight]="footerHeight()"
       [footerTemplate]="footerTemplate()"
-      [totalMessage]="totalMessage()"
       [pagerLeftArrowIcon]="pagerLeftArrowIcon()"
       [pagerRightArrowIcon]="pagerRightArrowIcon()"
       [pagerPreviousIcon]="pagerPreviousIcon()"
@@ -177,7 +176,10 @@ describe('DataTableFooterComponent', () => {
       </ng-template>
     </ngx-datatable-footer>
   `,
-  providers: [{ provide: DATATABLE_COMPONENT_TOKEN, useExisting: TestFixtureComponent }]
+  providers: [
+    { provide: DATATABLE_COMPONENT_TOKEN, useExisting: TestFixtureComponent },
+    provideDatatableConfigurationMock({ footerHeight })
+  ]
 })
 class TestFixtureComponent {
   readonly footerHeight = signal(0);
@@ -188,10 +190,9 @@ class TestFixtureComponent {
   readonly pagerRightArrowIcon = signal('');
   readonly pagerPreviousIcon = signal('');
   readonly pagerNextIcon = signal('');
-  readonly totalMessage = signal('');
   readonly footerTemplate = signal<DatatableFooterDirective | undefined>(undefined);
   readonly selectedCount = signal(0);
-  readonly selectedMessage = signal<string | undefined>(undefined);
+  readonly selectedMessage = signal(false);
   readonly messages = signal({});
 
   /**

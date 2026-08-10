@@ -13,7 +13,7 @@ export class BodyCellHarness extends ComponentHarness {
   }
 
   private async getCheckbox(): Promise<TestElement | null> {
-    const checkbox = await this.locatorForOptional('[aria-label="checkbox message"]')();
+    const checkbox = await this.locatorForOptional('input[type="checkbox"]')();
     return checkbox;
   }
 

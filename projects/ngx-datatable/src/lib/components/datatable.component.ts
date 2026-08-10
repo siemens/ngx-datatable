@@ -30,6 +30,7 @@ import { Subscription } from 'rxjs';
 
 import { ScrollContainerDirective } from '../directives/scroll-container.directive';
 import {
+  AllPartial,
   NGX_DATATABLE_CONFIG,
   NgxDatatableConfig,
   NgxDatatableCssClasses,
@@ -80,6 +81,7 @@ import { DataTableBodyComponent } from './body/body.component';
 import { ProgressBarComponent } from './body/progress-bar.component';
 import { DatatableSummaryRowDirective } from './body/summary/summary-row.directive';
 import { DataTableColumnDirective } from './columns/column.directive';
+import { DatatableConfiguration } from './datatable-configuration';
 import { DataTableFooterComponent } from './footer/footer.component';
 import { DatatableFooterDirective } from './footer/footer.directive';
 import { DataTableHeaderComponent } from './header/header.component';
@@ -100,6 +102,10 @@ import { DatatableRowDetailDirective } from './row-detail/row-detail.directive';
     {
       provide: DATATABLE_COMPONENT_TOKEN,
       useExisting: DatatableComponent
+    },
+    {
+      provide: DatatableConfiguration,
+      useFactory: () => inject(DatatableComponent).datatableConfiguration
     }
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -124,12 +130,15 @@ export class DatatableComponent<TRow extends Row = any>
 {
   private scrollbarHelper = inject(ScrollbarHelper);
   private cd = inject(ChangeDetectorRef);
-  private configuration =
-    inject(NGX_DATATABLE_CONFIG, { optional: true }) ??
-    // This is the old injection token for backward compatibility.
-    inject<NgxDatatableConfig>('configuration' as any, { optional: true });
   element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   rowDiffer: IterableDiffer<TRow | undefined> = inject(IterableDiffers).find([]).create();
+  private readonly globalConfiguration: AllPartial<NgxDatatableConfig> =
+    inject(NGX_DATATABLE_CONFIG, { optional: true }) ??
+    // This is the old injection token for backward compatibility.
+    inject<AllPartial<NgxDatatableConfig>>('configuration' as any, { optional: true }) ??
+    {};
+  readonly datatableConfiguration = new DatatableConfiguration(this, this.globalConfiguration);
+  protected readonly configuration = this.datatableConfiguration.configuration;
 
   /**
    * Template for the target marker of drag target columns.
@@ -199,7 +208,7 @@ export class DatatableComponent<TRow extends Row = any>
    * function that calculates each row's height.
    */
   readonly rowHeight = input<number | 'auto' | ((row: TRow) => number)>(
-    this.configuration?.rowHeight ?? 30
+    this.globalConfiguration.rowHeight ?? 30
   );
 
   /**
@@ -212,13 +221,13 @@ export class DatatableComponent<TRow extends Row = any>
    * The minimum header height in pixels.
    * Pass a falsey for no header
    */
-  readonly headerHeight = input<number | 'auto'>(this.configuration?.headerHeight ?? 30);
+  readonly headerHeight = input<number | 'auto'>(this.globalConfiguration.headerHeight ?? 30);
 
   /**
    * The minimum footer height in pixels.
    * Pass falsey for no footer
    */
-  readonly footerHeight = input(this.configuration?.footerHeight ?? 0, {
+  readonly footerHeight = input(this.globalConfiguration.footerHeight ?? 0, {
     transform: numberAttribute
   });
 
@@ -307,9 +316,7 @@ export class DatatableComponent<TRow extends Row = any>
   /**
    * CSS class overrides for sort and pager icons.
    */
-  readonly cssClasses = input<Partial<NgxDatatableCssClasses>>(
-    this.configuration?.cssClasses ?? {}
-  );
+  readonly cssClasses = input<Partial<NgxDatatableCssClasses>>({});
 
   /**
    * Message overrides for localization
@@ -332,7 +339,7 @@ export class DatatableComponent<TRow extends Row = any>
    * }
    * ```
    */
-  readonly messages = input<Partial<NgxDatatableMessages>>(this.configuration?.messages ?? {});
+  readonly messages = input<Partial<NgxDatatableMessages>>({});
 
   /**
    * A function which is called with the row and should return either:
@@ -683,7 +690,7 @@ export class DatatableComponent<TRow extends Row = any>
   });
 
   _subscriptions: Subscription[] = [];
-  _defaultColumnWidth = this.configuration?.defaultColumnWidth ?? 150;
+  _defaultColumnWidth = this.globalConfiguration.defaultColumnWidth ?? 150;
   /**
    * To have this available for all components.
    * The Footer itself is not available in the injection context in templates,

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 
 import { Page } from '../../types/internal.types';
 import { DATATABLE_COMPONENT_TOKEN } from '../../utils/table-token';
-import { DatatableComponent } from '../datatable.component';
+import { DatatableConfiguration } from '../datatable-configuration';
 
 /**
  * Use this component to construct custom table footer with standard pagination.
@@ -32,10 +32,10 @@ import { DatatableComponent } from '../datatable.component';
           type="button"
           class="page-button"
           [disabled]="!canPrevious()"
-          [attr.aria-label]="messages.ariaFirstPageMessage ?? 'go to first page'"
+          [attr.aria-label]="configuration().messages.ariaFirstPageMessage"
           (click)="selectPage(1)"
         >
-          <i [class]="pagerPreviousIcon() ?? 'datatable-icon-prev'"></i>
+          <i [class]="pagerPreviousIcon()"></i>
         </button>
       </li>
       <li>
@@ -43,10 +43,10 @@ import { DatatableComponent } from '../datatable.component';
           type="button"
           class="page-button"
           [disabled]="!canPrevious()"
-          [attr.aria-label]="messages.ariaPreviousPageMessage ?? 'go to previous page'"
+          [attr.aria-label]="configuration().messages.ariaPreviousPageMessage"
           (click)="prevPage()"
         >
-          <i [class]="pagerLeftArrowIcon() ?? 'datatable-icon-left'"></i>
+          <i [class]="pagerLeftArrowIcon()"></i>
         </button>
       </li>
       @for (pg of pages(); track pg.number) {
@@ -55,7 +55,7 @@ import { DatatableComponent } from '../datatable.component';
             type="button"
             class="page-button"
             [class.active]="pg.number === page()"
-            [attr.aria-label]="(messages.ariaPageNMessage ?? 'page') + ' ' + pg.number"
+            [attr.aria-label]="configuration().messages.ariaPageNMessage + ' ' + pg.number"
             (click)="selectPage(pg.number)"
           >
             {{ pg.text }}
@@ -67,10 +67,10 @@ import { DatatableComponent } from '../datatable.component';
           type="button"
           class="page-button"
           [disabled]="!canNext()"
-          [attr.aria-label]="messages.ariaNextPageMessage ?? 'go to next page'"
+          [attr.aria-label]="configuration().messages.ariaNextPageMessage"
           (click)="nextPage()"
         >
-          <i [class]="pagerRightArrowIcon() ?? 'datatable-icon-right'"></i>
+          <i [class]="pagerRightArrowIcon()"></i>
         </button>
       </li>
       <li>
@@ -78,10 +78,10 @@ import { DatatableComponent } from '../datatable.component';
           type="button"
           class="page-button"
           [disabled]="!canNext()"
-          [attr.aria-label]="messages.ariaLastPageMessage ?? 'go to last page'"
+          [attr.aria-label]="configuration().messages.ariaLastPageMessage"
           (click)="selectPage(totalPages())"
         >
-          <i [class]="pagerNextIcon() ?? 'datatable-icon-skip'"></i>
+          <i [class]="pagerNextIcon()"></i>
         </button>
       </li>
     </ul>
@@ -98,9 +98,7 @@ export class DatatablePagerComponent {
   // Ideally we can one day fetch those attributes from a global state, but for now this is fine.
   private datatable = inject(DATATABLE_COMPONENT_TOKEN);
 
-  protected get messages(): ReturnType<DatatableComponent['messages']> {
-    return this.datatable?.messages() ?? {};
-  }
+  protected readonly configuration = inject(DatatableConfiguration).configuration;
 
   protected readonly page = computed(() => this.datatable._footerComponent()!.curPage());
   protected readonly pageSize = computed(() => this.datatable._footerComponent()!.pageSize());

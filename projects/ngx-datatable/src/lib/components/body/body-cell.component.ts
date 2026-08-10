@@ -13,12 +13,12 @@ import {
   signal
 } from '@angular/core';
 
-import { NgxDatatableConfig } from '../../ngx-datatable.config';
 import { CellActiveEvent, RowIndex, TableColumnInternal } from '../../types/internal.types';
 import { ActivateEvent, CellContext, Row, RowOrGroup, TreeStatus } from '../../types/public.types';
 import { TableColumn } from '../../types/table-column.type';
 import { toPublicColumn } from '../../utils/column-helper';
 import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER } from '../../utils/keys';
+import { DatatableConfiguration } from '../datatable-configuration';
 
 @Component({
   selector: 'datatable-body-cell',
@@ -32,7 +32,7 @@ import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER } from '../../util
         <label class="datatable-checkbox">
           <input
             type="checkbox"
-            [attr.aria-label]="ariaRowCheckboxMessage()"
+            [attr.aria-label]="configuration().messages.ariaRowCheckboxMessage"
             [disabled]="disabled()"
             [checked]="isSelected()"
             (click)="onCheckboxChange($event)"
@@ -51,13 +51,13 @@ import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER } from '../../util
           >
             <span>
               @if (treeStatus === 'loading') {
-                <i [class]="cssClasses().treeStatusLoading ?? 'icon datatable-icon-collapse'"></i>
+                <i [class]="configuration().cssClasses.treeStatusLoading"></i>
               }
               @if (treeStatus === 'collapsed') {
-                <i [class]="cssClasses().treeStatusCollapsed ?? 'icon datatable-icon-up'"></i>
+                <i [class]="configuration().cssClasses.treeStatusCollapsed"></i>
               }
               @if (treeStatus === 'expanded' || treeStatus === 'disabled') {
-                <i [class]="cssClasses().treeStatusExpanded ?? 'icon datatable-icon-down'"></i>
+                <i [class]="configuration().cssClasses.treeStatusExpanded"></i>
               }
             </span>
           </button>
@@ -99,6 +99,7 @@ import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER } from '../../util
 })
 export class DataTableBodyCellComponent<TRow extends Row = any> implements DoCheck {
   private _element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  protected readonly configuration = inject(DatatableConfiguration).configuration;
 
   readonly displayCheck = input<(row: TRow, column: TableColumn, value: any) => boolean>();
 
@@ -117,10 +118,6 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
   readonly row = input.required<TRow>();
 
   readonly treeStatus = input<TreeStatus | undefined>('collapsed');
-
-  readonly ariaRowCheckboxMessage = input.required<string>();
-
-  readonly cssClasses = input.required<Partial<Required<NgxDatatableConfig>['cssClasses']>>();
 
   readonly expanded = input(false, { transform: booleanAttribute });
 

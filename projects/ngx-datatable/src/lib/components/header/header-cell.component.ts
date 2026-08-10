@@ -33,6 +33,7 @@ import {
 } from '../../types/public.types';
 import { toPublicColumn } from '../../utils/column-helper';
 import { nextSortDir } from '../../utils/sort';
+import { DatatableConfiguration } from '../datatable-configuration';
 
 @Component({
   selector: 'datatable-header-cell',
@@ -49,7 +50,7 @@ import { nextSortDir } from '../../utils/sort';
         <label class="datatable-checkbox">
           <input
             type="checkbox"
-            [attr.aria-label]="ariaHeaderCheckboxMessage()"
+            [attr.aria-label]="configuration().messages.ariaHeaderCheckboxMessage"
             [checked]="allRowsSelected()"
             (change)="select.emit()"
           />
@@ -98,18 +99,15 @@ import { nextSortDir } from '../../utils/sort';
 })
 export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
   private element = inject(ElementRef).nativeElement;
+  protected readonly configuration = inject(DatatableConfiguration).configuration;
 
   readonly sortType = input.required<SortType>();
-  readonly sortAscendingIcon = input<string>();
-  readonly sortDescendingIcon = input<string>();
-  readonly sortUnsetIcon = input<string>();
 
   readonly isTarget = input<boolean>();
   readonly showResizeHandle = input<boolean | undefined>(true);
   readonly targetMarkerTemplate = input<TemplateRef<any>>();
   readonly targetMarkerContext = input<any>();
   readonly enableClearingSortState = input(false);
-  readonly ariaHeaderCheckboxMessage = input.required<string>();
   readonly allRowsSelected = input(false, { transform: booleanAttribute });
   readonly selectionType = input<SelectionType>();
   readonly column = input.required<TableColumnInternal>();
@@ -239,11 +237,11 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
 
     switch (sortDir) {
       case 'asc':
-        return `${base} sort-asc ${this.sortAscendingIcon() ?? 'datatable-icon-up'}`;
+        return `${base} sort-asc ${this.configuration().cssClasses.sortAscending}`;
       case 'desc':
-        return `${base} sort-desc ${this.sortDescendingIcon() ?? 'datatable-icon-down'}`;
+        return `${base} sort-desc ${this.configuration().cssClasses.sortDescending}`;
       default:
-        return `${base} ${this.sortUnsetIcon() ?? 'datatable-icon-sort-unset'}`;
+        return `${base} ${this.configuration().cssClasses.sortUnset}`;
     }
   }
 

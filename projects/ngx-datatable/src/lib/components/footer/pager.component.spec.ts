@@ -10,6 +10,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DatatableComponent } from '@siemens/ngx-datatable';
 
+import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
 import { DATATABLE_COMPONENT_TOKEN } from '../../utils/table-token';
 import { DatatablePagerComponent } from './pager.component';
 import { PagerHarness } from './testing/pager.harness';
@@ -51,6 +52,7 @@ describe('DataTablePagerComponent', () => {
       set: {
         changeDetection: ChangeDetectionStrategy.Default,
         providers: [
+          provideDatatableConfigurationMock({ messages }),
           {
             provide: DATATABLE_COMPONENT_TOKEN,
             useValue: { _footerComponent: signal(footer), messages }

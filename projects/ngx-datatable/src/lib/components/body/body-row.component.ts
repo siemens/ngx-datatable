@@ -14,7 +14,6 @@ import {
   output
 } from '@angular/core';
 
-import { NgxDatatableConfig } from '../../ngx-datatable.config';
 import { CellActiveEvent, RowIndex, TableColumnInternal } from '../../types/internal.types';
 import { ActivateEvent, Row, RowOrGroup, TreeStatus } from '../../types/public.types';
 import { TableColumn } from '../../types/table-column.type';
@@ -48,8 +47,6 @@ import { DataTableBodyCellComponent } from './body-cell.component';
               [displayCheck]="displayCheck()"
               [disabled]="disabled()"
               [treeStatus]="treeStatus()"
-              [ariaRowCheckboxMessage]="ariaRowCheckboxMessage()"
-              [cssClasses]="cssClasses()"
               (activate)="onActivate($event, ii)"
               (treeAction)="onTreeAction()"
             />
@@ -88,10 +85,8 @@ export class DataTableBodyRowComponent<TRow extends Row = any> implements DoChec
   readonly rowIndex = input.required<RowIndex>();
   readonly displayCheck = input<(row: TRow, column: TableColumn, value?: any) => boolean>();
   readonly treeStatus = input<TreeStatus | undefined>('collapsed');
-  readonly ariaRowCheckboxMessage = input.required<string>();
 
   readonly disabled = input<boolean>();
-  readonly cssClasses = input.required<Partial<Required<NgxDatatableConfig>['cssClasses']>>();
   readonly checkRowPropertyChanges = input(true, { transform: booleanAttribute });
 
   protected readonly cssClass = computed(() => {

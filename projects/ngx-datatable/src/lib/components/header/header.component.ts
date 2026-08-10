@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   output,
   TemplateRef
@@ -27,6 +28,7 @@ import {
 } from '../../types/public.types';
 import { columnsByPinArr } from '../../utils/column';
 import { toPublicColumn } from '../../utils/column-helper';
+import { DatatableConfiguration } from '../datatable-configuration';
 import { DataTableHeaderCellComponent } from './header-cell.component';
 
 @Component({
@@ -61,12 +63,8 @@ import { DataTableHeaderCellComponent } from './header-cell.component';
                 [sortType]="sortType()"
                 [sorts]="sorts()"
                 [selectionType]="selectionType()"
-                [sortAscendingIcon]="sortAscendingIcon()"
-                [sortDescendingIcon]="sortDescendingIcon()"
-                [sortUnsetIcon]="sortUnsetIcon()"
                 [allRowsSelected]="allRowsSelected()"
                 [enableClearingSortState]="enableClearingSortState()"
-                [ariaHeaderCheckboxMessage]="ariaHeaderCheckboxMessage()"
                 (resize)="onColumnResized($event)"
                 (resizing)="onColumnResizing($event)"
                 (sort)="onSort($event)"
@@ -83,15 +81,13 @@ import { DataTableHeaderCellComponent } from './header-cell.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'datatable-header',
-    '[style.height.px]': 'headerHeight()'
+    '[style.height.px]': 'configuration().headerHeight'
   }
 })
 export class DataTableHeaderComponent {
+  protected readonly configuration = inject(DatatableConfiguration).configuration;
   readonly lastColumnId = computed(() => this.columns().at(-1)?.$$id);
 
-  readonly sortAscendingIcon = input<string>();
-  readonly sortDescendingIcon = input<string>();
-  readonly sortUnsetIcon = input<string>();
   readonly scrollbarH = input<boolean>();
   readonly dealsWithGroup = input<boolean>();
   readonly targetMarkerTemplate = input<TemplateRef<unknown>>();
@@ -102,9 +98,7 @@ export class DataTableHeaderComponent {
   readonly selectionType = input<SelectionType>();
   readonly reorderable = input<boolean>();
   readonly verticalScrollVisible = input(false);
-  readonly ariaHeaderCheckboxMessage = input.required<string>();
 
-  readonly headerHeight = input.required<'auto' | number>();
   readonly columns = input.required<TableColumnInternal[]>();
 
   readonly sort = output<SortEvent>();

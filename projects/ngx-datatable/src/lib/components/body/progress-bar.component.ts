@@ -1,9 +1,15 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+
+import { DatatableConfiguration } from '../datatable-configuration';
 
 @Component({
   selector: 'datatable-progress',
   template: `
-    <div class="progress-linear" role="progressbar" [attr.aria-label]="ariaLoadingMessage()">
+    <div
+      class="progress-linear"
+      role="progressbar"
+      [attr.aria-label]="configuration().messages.ariaLoadingMessage"
+    >
       <div class="container">
         <div class="bar"></div>
       </div>
@@ -12,5 +18,5 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProgressBarComponent {
-  readonly ariaLoadingMessage = input.required<string>();
+  protected readonly configuration = inject(DatatableConfiguration).configuration;
 }

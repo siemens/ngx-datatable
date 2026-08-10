@@ -4,11 +4,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   output
 } from '@angular/core';
 
 import { Group, GroupContext, Row } from '../../types/public.types';
+import { DatatableConfiguration } from '../datatable-configuration';
 import { DatatableGroupHeaderDirective } from './body-group-header.directive';
 
 @Component({
@@ -25,7 +27,7 @@ import { DatatableGroupHeaderDirective } from './body-group-header.directive';
                 <input
                   #select
                   type="checkbox"
-                  [attr.aria-label]="ariaGroupHeaderCheckboxMessage()"
+                  [attr.aria-label]="configuration().messages.ariaGroupHeaderCheckboxMessage"
                   [checked]="checked()"
                   [indeterminate]="indeterminate()"
                   (change)="onCheckboxChange(select.checked)"
@@ -52,6 +54,7 @@ import { DatatableGroupHeaderDirective } from './body-group-header.directive';
   }
 })
 export class DataTableGroupWrapperComponent<TRow extends Row = any> {
+  protected readonly configuration = inject(DatatableConfiguration).configuration;
   readonly groupHeader = input.required<DatatableGroupHeaderDirective | undefined>();
   readonly groupHeaderRowHeight = input.required<number>();
   readonly group = input.required<Group<TRow>>();
@@ -61,7 +64,6 @@ export class DataTableGroupWrapperComponent<TRow extends Row = any> {
   readonly disabled = input<boolean>();
   readonly rowIndex = input.required<number>();
   readonly expanded = input(false, { transform: booleanAttribute });
-  readonly ariaGroupHeaderCheckboxMessage = input.required<string>();
   readonly groupSelectedChange = output<boolean>();
 
   readonly context = computed<GroupContext<TRow>>(() => {

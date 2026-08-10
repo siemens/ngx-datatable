@@ -2,6 +2,7 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Component, ComponentRef, TemplateRef, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { provideDatatableConfigurationMock } from '../../../../testing/datatable-configuration.mock';
 import { TableColumnInternal } from '../../../types/internal.types';
 import { toInternalColumn } from '../../../utils/column-helper';
 import { DataTableSummaryRowComponent } from './summary-row.component';
@@ -24,6 +25,9 @@ describe('DataTableSummaryRowComponent', () => {
   });
 
   beforeEach(async () => {
+    TestBed.configureTestingModule({
+      providers: [provideDatatableConfigurationMock()]
+    });
     fixture = TestBed.createComponent(DataTableSummaryRowComponent);
 
     // Set required inputs before creating harness and detecting changes

@@ -101,5 +101,9 @@ else
     test \
     $UPDATE_ARGS \
     "$@" \
-  || yarn playwright show-report playwright/results/preview
+  || {
+    status=$?
+    [ -t 1 ] && npx playwright show-report playwright/results/preview
+    exit "$status"
+  }
 fi

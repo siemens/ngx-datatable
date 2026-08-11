@@ -8,21 +8,22 @@ import { DataService } from '../data.service';
   selector: 'fluid-row-height-demo',
   imports: [DatatableComponent],
   template: `
-    <div>
-      <ngx-datatable
-        class="material"
-        rowHeight="auto"
-        columnMode="force"
-        [rowDraggable]="true"
-        [rows]="rows()"
-        [loadingIndicator]="loadingIndicator()"
-        [columns]="columns"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [reorderable]="reorderable"
-      />
-    </div>
-  `
+    <ngx-datatable
+      class="material"
+      rowHeight="auto"
+      columnMode="force"
+      [rowDraggable]="true"
+      [rows]="rows()"
+      [loadingIndicator]="loadingIndicator()"
+      [columns]="columns"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [reorderable]="reorderable"
+      [scrollbarV]="true"
+      [virtualization]="false"
+    />
+  `,
+  host: { class: 'datatable-example' }
 })
 export class FluidRowHeightComponent {
   private dataService = inject(DataService);

@@ -19,6 +19,7 @@ yarn.lock
 
 # Zensical docs
 /docs/api/
+/docs/assets/ngx-datatable-examples/
 /.venv/
 /site/
 /.zensical/

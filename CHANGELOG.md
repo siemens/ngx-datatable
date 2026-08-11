@@ -1,3 +1,11 @@
+## [27.0.2](https://github.com/siemens/ngx-datatable/compare/27.0.1...27.0.2) (2026-08-11)
+
+
+### Bug Fixes
+
+* add loading indicator aria label ([4b53146](https://github.com/siemens/ngx-datatable/commit/4b53146ae68d277b2a19a7466175dbd4225207bc))
+* add proper ARIA roles to datatable table structure ([efd4b36](https://github.com/siemens/ngx-datatable/commit/efd4b3626895ad1e2896dce9f41d829685895be8))
+
 ## [27.0.1](https://github.com/siemens/ngx-datatable/compare/27.0.0...27.0.1) (2026-08-06)
 
 

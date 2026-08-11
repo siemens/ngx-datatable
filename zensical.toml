@@ -6,6 +6,11 @@ copyright = "&copy; 2026 Siemens AG"
 site_url = "https://siemens.github.io/ngx-datatable/"
 docs_dir = "docs"
 site_dir = "site"
+extra_javascript = [{ path = "assets/ngx-datatable-examples/main.js", type = "module" }]
+extra_css = [
+    "assets/ngx-datatable-examples/styles.css",
+    "assets/stylesheets/examples.css",
+]
 
 nav = [
     { "Introduction" = [
@@ -42,3 +47,17 @@ features = [
 
 [project.repository]
 url = "https://github.com/siemens/ngx-datatable"
+
+[project.markdown_extensions.md_in_html]
+
+[project.markdown_extensions.zensical.extensions.macros]
+module_name = "docs_extensions.datatable_example"
+
+[project.markdown_extensions.pymdownx.blocks.details]
+
+[project.markdown_extensions.pymdownx.highlight]
+anchor_linenums = true
+line_spans = "__span"
+pygments_lang_class = true
+
+[project.markdown_extensions.pymdownx.superfences]

@@ -3,3 +3,13 @@
 @use '../projects/ngx-datatable/src/lib/themes/material';
 @use '../projects/ngx-datatable/src/lib/themes/dark';
 @use '../projects/ngx-datatable/src/lib/themes/bootstrap';
+
+.datatable-example-card .datatable-example {
+  display: flex;
+  block-size: 100%;
+
+  ngx-datatable {
+    flex: 1;
+    box-shadow: none !important;
+  }
+}

@@ -57,6 +57,19 @@
                   "maximumError": "16kb"
                 }
               ]
+            },
+            "web-components": {
+              "browser": "src/main.web-components.ts",
+              "outputPath": {
+                "base": "docs/assets/ngx-datatable-examples",
+                "browser": ""
+              },
+              "index": false,
+              "optimization": true,
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "styles": ["src/styles.scss"]
             }
           },
           "defaultConfiguration": ""

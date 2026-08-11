@@ -38,6 +38,9 @@ jobs:
       - name: Build
         run: npm run build:prod
 
+      - name: Build web component examples
+        run: npm run build:web-components
+
       - name: Generate API documentation
         run: npm run docs:api
 

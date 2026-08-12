@@ -80,7 +80,7 @@
     "cpy-cli": "7.0.0",
     "eslint": "10.8.0",
     "eslint-plugin-headers": "1.3.4",
-    "eslint-plugin-jsdoc": "63.3.3",
+    "eslint-plugin-jsdoc": "64.0.1",
     "eslint-plugin-perfectionist": "5.10.0",
     "eslint-plugin-prefer-arrow": "1.2.3",
     "eslint-plugin-tsdoc": "0.5.2",

@@ -177,6 +177,10 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
     }
   }
 
+  focus(): void {
+    this._element.focus();
+  }
+
   private getComputedValue(): any {
     let value = '';
     const column = this.column();

@@ -11,7 +11,8 @@ import {
   input,
   KeyValueDiffer,
   KeyValueDiffers,
-  output
+  output,
+  viewChildren
 } from '@angular/core';
 
 import { CellActiveEvent, RowIndex, TableColumnInternal } from '../../types/internal.types';
@@ -106,6 +107,7 @@ export class DataTableBodyRowComponent<TRow extends Row = any> implements DoChec
   readonly _columnsByPin = computed(() => {
     return columnsByPinArr(this.columns());
   });
+  private readonly cells = viewChildren(DataTableBodyCellComponent);
 
   ngDoCheck(): void {
     if (!this.checkRowPropertyChanges()) {
@@ -118,6 +120,14 @@ export class DataTableBodyRowComponent<TRow extends Row = any> implements DoChec
 
   onActivate(event: CellActiveEvent<TRow>, index: number): void {
     this.activate.emit({ ...event, rowElement: this._element, cellIndex: index });
+  }
+
+  focus(): void {
+    this._element.focus();
+  }
+
+  focusCell(index: number): void {
+    this.cells()[index]?.focus();
   }
 
   @HostListener('keydown', ['$event'])

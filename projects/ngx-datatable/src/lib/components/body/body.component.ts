@@ -145,7 +145,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
               [draggable]="rowDraggable()"
               [checkRowPropertyChanges]="checkRowPropertyChanges()"
               (treeAction)="onTreeAction(row)"
-              (activate)="onActivate($event, index)"
+              (activate)="onActivate($event, index, indexInGroup)"
               (drop)="drop($event, row, rowElement)"
               (dragover)="dragOver($event, row)"
               (dragenter)="dragEnter($event, row, rowElement)"
@@ -320,6 +320,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
 
   private readonly scroller = viewChild(ScrollerComponent);
   private readonly rowWrappers = viewChildren(DataTableRowWrapperComponent);
+  private readonly rowComponents = viewChildren(DataTableBodyRowComponent);
 
   /**
    * Returns if selection is enabled.
@@ -901,7 +902,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     this.prevIndex = index;
   }
 
-  onActivate(modelObject: ActivateEvent<TRow>, index: number): void {
+  onActivate(modelObject: ActivateEvent<TRow>, index: number, indexInGroup?: number): void {
     const { type, event, row } = modelObject;
     const chkbox = this.selectionType() === 'checkbox';
     const select =
@@ -918,7 +919,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       ) {
         this.selectRow(event, 0, row); // The row property is ignored in this case. So we can pass anything.
       } else {
-        this.onKeyboardFocus(modelObject);
+        this.onKeyboardFocus(modelObject, index, indexInGroup);
       }
     }
     this.activate.emit(modelObject);
@@ -934,7 +935,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     this.selected.set(Array.from(selectedSet));
   }
 
-  onKeyboardFocus(modelObject: ActivateEvent<TRow>): void {
+  onKeyboardFocus(modelObject: ActivateEvent<TRow>, index: number, indexInGroup?: number): void {
     const { key } = modelObject.event as KeyboardEvent;
     const shouldFocus =
       key === ARROW_UP || key === ARROW_DOWN || key === ARROW_RIGHT || key === ARROW_LEFT;
@@ -948,67 +949,60 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
           return;
         }
       }
-      if (!modelObject.cellElement || !isCellSelection) {
-        this.focusRow(modelObject.rowElement, key);
+      if (!isCellSelection) {
+        this.focusRow(index, key, indexInGroup);
       } else if (isCellSelection && modelObject.cellIndex !== undefined) {
-        this.focusCell(modelObject.cellElement, modelObject.rowElement, key, modelObject.cellIndex);
+        this.focusCell(index, key, modelObject.cellIndex, indexInGroup);
       }
     }
   }
 
-  focusRow(rowElement: HTMLElement, key: string): void {
-    const nextRowElement = this.getPrevNextRow(rowElement, key);
-    if (nextRowElement) {
-      nextRowElement.focus();
+  focusRow(index: number, key: string, indexInGroup?: number): void {
+    const nextRow = this.getPrevNextRow(index, key, indexInGroup);
+    if (nextRow) {
+      nextRow.focus();
     }
   }
 
-  getPrevNextRow(rowElement: HTMLElement, key: string): any {
-    const parentElement = rowElement.parentElement;
-
-    if (parentElement) {
-      let focusElement: Element | null = null;
-      if (key === ARROW_UP) {
-        focusElement = parentElement.previousElementSibling;
-      } else if (key === ARROW_DOWN) {
-        focusElement = parentElement.nextElementSibling;
-      }
-
-      if (focusElement?.children.length) {
-        return focusElement.children[0];
-      }
-    }
-  }
-
-  focusCell(
-    cellElement: HTMLElement,
-    rowElement: HTMLElement,
+  getPrevNextRow(
+    index: number,
     key: string,
-    cellIndex: number
-  ): void {
-    let nextCellElement: Element | null = null;
+    indexInGroup?: number
+  ): DataTableBodyRowComponent | undefined {
+    // It is safe to assume, the currentRow always exists since this is called by a keypress an event on that row.
+    const currentRow = this.getRow(index, indexInGroup)!;
+    const currentRowIndex = this.rowComponents().indexOf(currentRow);
+
+    if (key === ARROW_UP) {
+      return this.rowComponents()[currentRowIndex - 1];
+    }
+    if (key === ARROW_DOWN) {
+      return this.rowComponents()[currentRowIndex + 1];
+    }
+
+    return undefined;
+  }
+
+  focusCell(index: number, key: string, cellIndex: number, indexInGroup?: number): void {
+    let nextRow = this.getRow(index, indexInGroup);
+    let nextCellIndex = cellIndex;
 
     if (key === ARROW_LEFT) {
-      nextCellElement = cellElement.previousElementSibling;
+      nextCellIndex--;
     } else if (key === ARROW_RIGHT) {
-      nextCellElement = cellElement.nextElementSibling;
+      nextCellIndex++;
     } else if (key === ARROW_UP || key === ARROW_DOWN) {
-      const nextRowElement = this.getPrevNextRow(rowElement, key);
-      if (nextRowElement) {
-        const children = nextRowElement.getElementsByClassName('datatable-body-cell');
-        if (children.length) {
-          nextCellElement = children[cellIndex];
-        }
-      }
+      nextRow = this.getPrevNextRow(index, key, indexInGroup);
     }
 
-    if (
-      nextCellElement &&
-      'focus' in nextCellElement &&
-      typeof nextCellElement.focus === 'function'
-    ) {
-      nextCellElement.focus();
-    }
+    nextRow?.focusCell(nextCellIndex);
+  }
+
+  private getRow(index: number, indexInGroup?: number): DataTableBodyRowComponent | undefined {
+    return this.rowComponents().find(row => {
+      const rowIndex = row.rowIndex();
+      return rowIndex.index === index && rowIndex.indexInGroup === indexInGroup;
+    });
   }
 
   getRowSelected(row: TRow): boolean {

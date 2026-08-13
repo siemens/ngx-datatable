@@ -18,12 +18,6 @@ export interface ColumnGroupWidth {
   total: number;
 }
 
-export interface TargetChangedEvent {
-  newIndex?: number;
-  prevIndex: number;
-  initialIndex: number;
-}
-
 export interface ColumnResizeEventInternal {
   column: TableColumnInternal;
   prevValue: number;
@@ -76,8 +70,6 @@ export interface BaseTableColumnInternal<TRow extends Row = any> extends Omit<
   $$originalColumn: TableColumn<TRow>;
 
   dragging?: boolean;
-  isTarget?: boolean;
-  targetMarkerContext?: any;
 
   // Those properties are never null on the internal type:
   name: string;

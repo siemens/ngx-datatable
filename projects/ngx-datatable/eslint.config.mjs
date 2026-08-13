@@ -19,5 +19,11 @@ export default defineConfig(
       }
     }
   },
+  {
+    files: ['**/*.spec.ts'],
+    rules: {
+      '@angular-eslint/no-experimental': 'off'
+    }
+  },
   ...templateConfig
 );

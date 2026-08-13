@@ -20,6 +20,8 @@ export interface DragEvent {
   initialY: number;
   currentX: number;
   currentY: number;
+  element: HTMLElement;
+  model?: TableColumnInternal;
 }
 
 @Directive({
@@ -38,13 +40,15 @@ export class DatatableDraggableDirective implements OnDestroy {
   readonly dragStartDelay = input(0, { transform: numberAttribute });
   readonly enabled = input(true, { transform: booleanAttribute, alias: 'datatableDraggable' });
   readonly dragMove = output<DragEvent>();
-  readonly dragEnd = output<void>();
-  readonly dragStart = output<void>();
+  readonly dragEnd = output<DragEvent>();
+  readonly dragStart = output<DragEvent>();
 
   private timeoutId?: number;
   private touchId?: number;
   private readonly startX = signal<number | undefined>(undefined);
   private readonly startY = signal<number | undefined>(undefined);
+  private currentX?: number;
+  private currentY?: number;
   protected readonly isLongPressing = computed(
     () => this.dragStartDelay() !== 0 && this.isDragging()
   );
@@ -130,20 +134,20 @@ export class DatatableDraggableDirective implements OnDestroy {
   private starting(clientX: number, clientY: number): void {
     this.startX.set(clientX);
     this.startY.set(clientY);
-    this.dragStart.emit();
+    this.currentX = clientX;
+    this.currentY = clientY;
+    this.dragStart.emit(this.dragEvent());
   }
 
   private moving(clientX: number, clientY: number): void {
-    this.dragMove.emit({
-      initialX: this.startX()!,
-      initialY: this.startY()!,
-      currentX: clientX,
-      currentY: clientY
-    });
+    this.currentX = clientX;
+    this.currentY = clientY;
+    this.dragMove.emit(this.dragEvent());
   }
 
   private ending = (): void => {
     const dragged = this.isDragging();
+    const dragEvent = dragged ? this.dragEvent() : undefined;
     this.document.removeEventListener('mousemove', this.mousemove);
     this.document.removeEventListener('touchmove', this.touchmove);
     this.document.removeEventListener('mouseup', this.ending);
@@ -156,9 +160,20 @@ export class DatatableDraggableDirective implements OnDestroy {
     // In that case, we don't want to emit dragEnd.
     if (dragged) {
       this.setDragging(false);
-      this.dragEnd.emit();
+      this.dragEnd.emit(dragEvent!);
     }
   };
+
+  private dragEvent(): DragEvent {
+    return {
+      initialX: this.startX()!,
+      initialY: this.startY()!,
+      currentX: this.currentX!,
+      currentY: this.currentY!,
+      element: this.element,
+      model: this.dragModel()
+    };
+  }
 
   private setDragging(dragging: boolean): void {
     const model = this.dragModel();

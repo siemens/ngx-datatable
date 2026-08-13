@@ -2,21 +2,26 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DOCUMENT,
+  ElementRef,
   inject,
   input,
   output,
-  TemplateRef
+  signal,
+  TemplateRef,
+  viewChildren
 } from '@angular/core';
 
-import { DatatableDraggableDirective } from '../../directives/datatable-draggable.directive';
-import { OrderableDirective } from '../../directives/orderable.directive';
+import {
+  DatatableDraggableDirective,
+  DragEvent
+} from '../../directives/datatable-draggable.directive';
 import {
   ColumnResizeEventInternal,
   InnerSortEvent,
   ReorderEventInternal,
   SortableTableColumnInternal,
-  TableColumnInternal,
-  TargetChangedEvent
+  TableColumnInternal
 } from '../../types/internal.types';
 import {
   Row,
@@ -33,16 +38,10 @@ import { DataTableHeaderCellComponent } from './header-cell.component';
 
 @Component({
   selector: 'datatable-header',
-  imports: [OrderableDirective, DataTableHeaderCellComponent, DatatableDraggableDirective],
+  imports: [DataTableHeaderCellComponent, DatatableDraggableDirective],
   template: `
-    <div
-      role="row"
-      orderable
-      class="datatable-header-inner"
-      (reorder)="onColumnReordered($event)"
-      (targetChanged)="onTargetChanged($event)"
-    >
-      @for (colGroup of _columnsByPin(); track colGroup.type) {
+    <div role="row" class="datatable-header-inner">
+      @for (colGroup of columnGroups(); track colGroup.type) {
         @if (colGroup.columns.length) {
           <div
             class="datatable-row-group"
@@ -55,9 +54,9 @@ import { DataTableHeaderCellComponent } from './header-cell.component';
                 dragStartDelay="500"
                 [datatableDraggable]="reorderable() && column.draggable"
                 [dragModel]="column"
-                [isTarget]="column.isTarget"
+                [isTarget]="targetColumn() === column"
                 [targetMarkerTemplate]="targetMarkerTemplate()"
-                [targetMarkerContext]="column.targetMarkerContext"
+                [targetMarkerContext]="targetMarkerContext()"
                 [column]="column"
                 [showResizeHandle]="lastColumnId() !== column.$$id && column.resizeable"
                 [sortType]="sortType()"
@@ -65,6 +64,9 @@ import { DataTableHeaderCellComponent } from './header-cell.component';
                 [selectionType]="selectionType()"
                 [allRowsSelected]="allRowsSelected()"
                 [enableClearingSortState]="enableClearingSortState()"
+                (dragStart)="onDragStart($event)"
+                (dragMove)="onDragMove($event)"
+                (dragEnd)="onDragEnd($event)"
                 (resize)="onColumnResized($event)"
                 (resizing)="onColumnResizing($event)"
                 (sort)="onSort($event)"
@@ -85,7 +87,10 @@ import { DataTableHeaderCellComponent } from './header-cell.component';
   }
 })
 export class DataTableHeaderComponent {
+  private readonly document = inject(DOCUMENT);
   protected readonly configuration = inject(DatatableConfiguration).configuration;
+  private readonly headerCells = viewChildren(DataTableHeaderCellComponent, { read: ElementRef });
+
   readonly lastColumnId = computed(() => this.columns().at(-1)?.$$id);
 
   readonly scrollbarH = input<boolean>();
@@ -111,9 +116,17 @@ export class DataTableHeaderComponent {
     column: TableColumnInternal;
   }>();
 
-  readonly _columnsByPin = computed(() => {
+  readonly columnGroups = computed(() => {
     return columnsByPinArr(this.columns());
   });
+  private readonly renderedColumns = computed(() =>
+    this.columnGroups().flatMap(group => group.columns)
+  );
+
+  private dragInitialIndex?: number;
+  private dragTargetIndex?: number;
+  readonly targetColumn = signal<TableColumnInternal | undefined>(undefined);
+  readonly targetMarkerContext = signal<{ class: string } | undefined>(undefined);
 
   onColumnResized({ width, column }: { width: number; column: TableColumnInternal }): void {
     this.resize.emit(this.makeResizeEvent(width, column));
@@ -139,44 +152,59 @@ export class DataTableHeaderComponent {
     };
   }
 
-  onColumnReordered(event: ReorderEventInternal): void {
-    const column = this.getColumn(event.newValue);
-    column.isTarget = false;
-    column.targetMarkerContext = undefined;
-    this.reorder.emit(event);
+  onDragStart({ model }: DragEvent): void {
+    this.dragInitialIndex = model ? this.renderedColumns().indexOf(model) : undefined;
   }
 
-  onTargetChanged({ prevIndex, newIndex, initialIndex }: TargetChangedEvent): void {
-    if (prevIndex || prevIndex === 0) {
-      const oldColumn = this.getColumn(prevIndex);
-      oldColumn.isTarget = false;
-      oldColumn.targetMarkerContext = undefined;
-    }
-    if (newIndex || newIndex === 0) {
-      const newColumn = this.getColumn(newIndex);
-      newColumn.isTarget = true;
-
-      if (initialIndex !== newIndex) {
-        newColumn.targetMarkerContext = {
-          class: 'targetMarker '.concat(initialIndex > newIndex ? 'dragFromRight' : 'dragFromLeft')
-        };
+  onDragMove(event: DragEvent): void {
+    const targetIndex = this.getDragTargetIndex(event);
+    if (targetIndex !== this.dragTargetIndex) {
+      if (this.dragTargetIndex !== undefined) {
+        this.targetColumn.set(undefined);
+        this.targetMarkerContext.set(undefined);
       }
+
+      if (targetIndex !== undefined && this.dragInitialIndex !== undefined) {
+        this.targetColumn.set(this.renderedColumns()[targetIndex]);
+        if (this.dragInitialIndex !== targetIndex) {
+          this.targetMarkerContext.set({
+            class: `targetMarker ${this.dragInitialIndex > targetIndex ? 'dragFromRight' : 'dragFromLeft'}`
+          });
+        }
+      }
+      this.dragTargetIndex = targetIndex;
     }
+
+    event.element.style.transform = `translateX(${event.currentX - event.initialX}px)`;
   }
 
-  getColumn(index: number): any {
-    const _columnsByPin = this._columnsByPin();
-    const leftColumnCount = _columnsByPin[0].columns.length;
-    if (index < leftColumnCount) {
-      return _columnsByPin[0].columns[index];
+  onDragEnd(event: DragEvent): void {
+    event.element.style.transform = '';
+
+    const targetIndex = this.getDragTargetIndex(event);
+    if (this.dragTargetIndex !== undefined) {
+      this.targetColumn.set(undefined);
+      this.targetMarkerContext.set(undefined);
     }
 
-    const centerColumnCount = _columnsByPin[1].columns.length;
-    if (index < leftColumnCount + centerColumnCount) {
-      return _columnsByPin[1].columns[index - leftColumnCount];
+    if (event.model && this.dragInitialIndex !== undefined && targetIndex !== undefined) {
+      this.reorder.emit({
+        prevValue: this.dragInitialIndex,
+        newValue: targetIndex,
+        column: event.model
+      });
     }
 
-    return _columnsByPin[2].columns[index - leftColumnCount - centerColumnCount];
+    this.dragInitialIndex = undefined;
+    this.dragTargetIndex = undefined;
+  }
+
+  private getDragTargetIndex({ currentX, currentY, element }: DragEvent): number | undefined {
+    const elementsAtPoint = this.document.elementsFromPoint(currentX, currentY);
+    const index = this.headerCells().findIndex(
+      cell => cell.nativeElement !== element && elementsAtPoint.includes(cell.nativeElement)
+    );
+    return index === -1 ? undefined : index;
   }
 
   onSort({ column, prevValue, newValue }: InnerSortEvent): void {

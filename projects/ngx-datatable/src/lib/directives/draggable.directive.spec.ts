@@ -15,7 +15,7 @@ import { DraggableHarness } from './testing/draggable.harness';
       [datatableDraggable]="enabled()"
       [dragStartDelay]="dragStartDelay()"
       (dragStart)="dragStart()"
-      (dragEnd)="dragEnd()"
+      (dragEnd)="dragEnd($event)"
       (dragMove)="dragMove($event)"
     ></div>
   `
@@ -26,7 +26,7 @@ class TestFixtureComponent {
 
   dragStart(): void {}
 
-  dragEnd(): void {}
+  dragEnd(event: DragEvent): void {}
 
   dragMove(event: DragEvent): void {}
 }
@@ -36,7 +36,7 @@ describe('DraggableDirective', () => {
   let component: TestFixtureComponent;
   let harness: DraggableHarness;
   let dragStartSpy: Mock<() => void>;
-  let dragEndSpy: Mock<() => void>;
+  let dragEndSpy: Mock<(event: DragEvent) => void>;
   let dragMoveSpy: Mock<(event: DragEvent) => void>;
 
   beforeEach(async () => {
@@ -67,6 +67,19 @@ describe('DraggableDirective', () => {
     expect(dragEndSpy).toHaveBeenCalled();
     await harness.mouseMove(200);
     expect(dragMoveSpy).toHaveBeenCalledTimes(2);
+    vi.useRealTimers();
+  });
+
+  it('should provide the initial position when dragging ends without moving', async () => {
+    vi.useFakeTimers();
+    await harness.mouseDown(25);
+    vi.advanceTimersByTime(0);
+    await fixture.whenStable();
+    await harness.mouseUp();
+
+    expect(dragEndSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ currentX: 25, initialX: 25 })
+    );
     vi.useRealTimers();
   });
 

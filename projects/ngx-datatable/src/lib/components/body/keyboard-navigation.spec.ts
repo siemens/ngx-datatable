@@ -14,6 +14,8 @@ import { DatatableComponent } from '../datatable.component';
       [rows]="rows()"
       [selectionType]="selectionType()"
       [disableRowCheck]="disableRowCheck()"
+      [groupRowsBy]="groupRowsBy()"
+      [groupExpansionDefault]="groupExpansionDefault()"
       [selected]="selected()"
       (selectedChange)="selected.set($event)"
     />
@@ -34,6 +36,8 @@ class KeyboardNavigationTestComponent {
   ]);
   readonly selected = signal<Record<string, string>[]>([]);
   readonly selectionType = signal<SelectionType>('single');
+  readonly groupRowsBy = signal<string | undefined>(undefined);
+  readonly groupExpansionDefault = signal(false);
   readonly disableRowCheck = signal<((row: Record<string, string>) => boolean) | undefined>(
     undefined
   );
@@ -99,6 +103,30 @@ describe('keyboard navigation', () => {
     await userEvent.keyboard('{ArrowDown}');
     await fixture.whenStable();
     expect(graceRow.classList).toContain('row-disabled');
+    expect(document.activeElement).toBe(graceRow);
+  });
+
+  it('moves row focus between grouped rows in rendered order', async () => {
+    fixture.componentInstance.rows.set([
+      { name: 'Ada', city: 'London' },
+      { name: 'Grace', city: 'London' },
+      { name: 'Linus', city: 'Helsinki' },
+      { name: 'Margaret', city: 'Helsinki' }
+    ]);
+    fixture.componentInstance.groupRowsBy.set('city');
+    fixture.componentInstance.groupExpansionDefault.set(true);
+    await fixture.whenStable();
+
+    const graceRow = page.getByRole('row', { name: 'Grace London' }).element();
+    const linusRow = page.getByRole('row', { name: 'Linus Helsinki' }).element();
+    graceRow.focus();
+
+    await userEvent.keyboard('{ArrowDown}');
+    await fixture.whenStable();
+    expect(document.activeElement).toBe(linusRow);
+
+    await userEvent.keyboard('{ArrowUp}');
+    await fixture.whenStable();
     expect(document.activeElement).toBe(graceRow);
   });
 

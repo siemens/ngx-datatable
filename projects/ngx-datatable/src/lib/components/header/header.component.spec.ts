@@ -260,4 +260,36 @@ describe('DataTableHeaderComponent', () => {
     expect(await harness.getColumnName(1)).toBe('Column 1');
     expect(await harness.getColumnName(2)).toBe('Column 3');
   });
+
+  it('should not reorder a column when the pointer is not moved', async () => {
+    const columns = toInternalColumn([
+      { prop: 'col1', name: 'Column 1', width: 100, draggable: true },
+      { prop: 'col2', name: 'Column 2', width: 200, draggable: true }
+    ]);
+    componentRef.setInput('columns', columns);
+    componentRef.setInput('reorderable', true);
+    await fixture.whenStable();
+
+    const firstCell = fixture.nativeElement.querySelector('datatable-header-cell') as HTMLElement;
+    const reorderSpy = vi.fn();
+    componentRef.instance.reorder.subscribe(reorderSpy);
+    const elementsFromPointSpy = vi
+      .spyOn(document, 'elementsFromPoint')
+      .mockReturnValue([firstCell]);
+
+    const dragEvent = {
+      initialX: 50,
+      initialY: 0,
+      currentX: 50,
+      currentY: 0,
+      element: firstCell,
+      model: columns[0]
+    };
+    componentRef.instance.onDragStart(dragEvent);
+    componentRef.instance.onDragEnd(dragEvent);
+
+    expect(reorderSpy).not.toHaveBeenCalled();
+    expect(firstCell.style.transform).toBe('');
+    elementsFromPointSpy.mockRestore();
+  });
 });

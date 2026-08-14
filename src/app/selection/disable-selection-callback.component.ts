@@ -9,37 +9,35 @@ import { DataService } from '../data.service';
   selector: 'disable-selection-callback-demo',
   imports: [DatatableComponent, AsyncPipe],
   template: `
-    <div>
-      <div style="float:left;width:75%">
-        <ngx-datatable
-          class="material selection-row"
-          rowHeight="auto"
-          columnMode="force"
-          selectionType="multi"
-          [rows]="rows | async"
-          [columns]="columns"
-          [headerHeight]="50"
-          [footerHeight]="50"
-          [limit]="5"
-          [selectCheck]="checkSelectable"
-          [selected]="selected"
-          (activate)="onActivate($event)"
-          (selectedChange)="onSelect($event)"
-        />
-      </div>
+    <div style="float:left;width:75%">
+      <ngx-datatable
+        class="material selection-row"
+        rowHeight="auto"
+        columnMode="force"
+        selectionType="multi"
+        [rows]="rows | async"
+        [columns]="columns"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [limit]="5"
+        [selectCheck]="checkSelectable"
+        [selected]="selected"
+        (activate)="onActivate($event)"
+        (selectedChange)="onSelect($event)"
+      />
+    </div>
 
-      <div class="selected-column">
-        <h4>Selections</h4>
-        <ul>
-          @for (sel of selected; track sel) {
-            <li>
-              {{ sel.name }}
-            </li>
-          } @empty {
-            <li>No Selections</li>
-          }
-        </ul>
-      </div>
+    <div class="selected-column">
+      <h4>Selections</h4>
+      <ul>
+        @for (sel of selected; track sel) {
+          <li>
+            {{ sel.name }}
+          </li>
+        } @empty {
+          <li>No Selections</li>
+        }
+      </ul>
     </div>
   `
 })

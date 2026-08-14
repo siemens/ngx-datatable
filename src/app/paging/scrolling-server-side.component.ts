@@ -29,22 +29,20 @@ export class MockServerResultsService {
   selector: 'scrolling-server-side-demo',
   imports: [DatatableComponent],
   template: `
-    <div>
-      @let rows = this.rows();
-      @let isLoading = this.isLoading();
-      <ngx-datatable
-        class="material server-scrolling-demo"
-        columnMode="force"
-        [rows]="rows"
-        [columns]="[{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }]"
-        [headerHeight]="headerHeight"
-        [rowHeight]="rowHeight"
-        [loadingIndicator]="isLoading"
-        [ghostLoadingIndicator]="isLoading"
-        [scrollbarV]="true"
-        (scroll)="onScroll($event.offsetY)"
-      />
-    </div>
+    @let rows = this.rows();
+    @let isLoading = this.isLoading();
+    <ngx-datatable
+      class="material server-scrolling-demo"
+      columnMode="force"
+      [rows]="rows"
+      [columns]="[{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }]"
+      [headerHeight]="headerHeight"
+      [rowHeight]="rowHeight"
+      [loadingIndicator]="isLoading"
+      [ghostLoadingIndicator]="isLoading"
+      [scrollbarV]="true"
+      (scroll)="onScroll($event.offsetY)"
+    />
   `,
   styleUrl: './scrolling-server-side.component.css',
   providers: [MockServerResultsService]

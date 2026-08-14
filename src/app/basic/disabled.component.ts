@@ -18,72 +18,68 @@ import { DataService } from '../data.service';
     DisableRowDirective
   ],
   template: `
-    <div>
-      <div>
-        <ngx-datatable
-          class="material"
-          columnMode="force"
-          [rows]="rows()"
-          [headerHeight]="50"
-          [footerHeight]="0"
-          [rowHeight]="80"
-          [scrollbarV]="true"
-          [disableRowCheck]="isRowDisabled"
+    <ngx-datatable
+      class="material"
+      columnMode="force"
+      [rows]="rows()"
+      [headerHeight]="50"
+      [footerHeight]="0"
+      [rowHeight]="80"
+      [scrollbarV]="true"
+      [disableRowCheck]="isRowDisabled"
+    >
+      <ngx-datatable-column name="Name">
+        <ng-template
+          let-value="value"
+          let-rowIndex="rowIndex"
+          let-row="row"
+          let-disabled="disabled"
+          ngx-datatable-cell-template
         >
-          <ngx-datatable-column name="Name">
-            <ng-template
-              let-value="value"
-              let-rowIndex="rowIndex"
-              let-row="row"
-              let-disabled="disabled"
-              ngx-datatable-cell-template
-            >
-              {{ value }}
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Gender">
-            <ng-template
-              let-value="value"
-              let-rowIndex="rowIndex"
-              let-row="row"
-              let-disabled="disabled"
-              ngx-datatable-cell-template
-            >
-              <select
-                [attr.aria-label]="'Gender for ' + row.name"
-                [style.height]="'auto'"
-                [value]="value"
-                [disabled]="disabled"
-                [style.margin]="0"
-                (change)="updateValue($event, 'gender', rowIndex)"
-              >
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Age">
-            <ng-template
-              let-row="row"
-              let-disabled="disabled"
-              let-rowIndex="rowIndex"
-              let-value="value"
-              ngx-datatable-cell-template
-            >
-              <div disable-row [disabled]="disabled">
-                <input
-                  [attr.aria-label]="'Age for ' + row.name"
-                  [value]="value"
-                  (blur)="updateValue($event, 'age', rowIndex)"
-                />
-                <br />
-                <button type="button" (click)="disableRow(rowIndex)">Disable row</button>
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-        </ngx-datatable>
-      </div>
-    </div>
+          {{ value }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Gender">
+        <ng-template
+          let-value="value"
+          let-rowIndex="rowIndex"
+          let-row="row"
+          let-disabled="disabled"
+          ngx-datatable-cell-template
+        >
+          <select
+            [attr.aria-label]="'Gender for ' + row.name"
+            [style.height]="'auto'"
+            [value]="value"
+            [disabled]="disabled"
+            [style.margin]="0"
+            (change)="updateValue($event, 'gender', rowIndex)"
+          >
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Age">
+        <ng-template
+          let-row="row"
+          let-disabled="disabled"
+          let-rowIndex="rowIndex"
+          let-value="value"
+          ngx-datatable-cell-template
+        >
+          <div disable-row [disabled]="disabled">
+            <input
+              [attr.aria-label]="'Age for ' + row.name"
+              [value]="value"
+              (blur)="updateValue($event, 'age', rowIndex)"
+            />
+            <br />
+            <button type="button" (click)="disableRow(rowIndex)">Disable row</button>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
   `
 })
 export class DisabledComponent {

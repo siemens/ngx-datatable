@@ -8,25 +8,23 @@ import { DataService } from '../data.service';
   selector: 'inline-html-summary-demo',
   imports: [DatatableComponent, DataTableColumnDirective],
   template: `
-    <div>
-      <ngx-datatable
-        class="material"
-        rowHeight="auto"
-        columnMode="force"
-        [summaryRow]="enableSummary"
-        [summaryPosition]="summaryPosition"
-        [summaryHeight]="100"
-        [headerHeight]="50"
-        [rows]="rows()"
-      >
-        <ngx-datatable-column prop="name" [summaryTemplate]="nameSummaryCell" />
-        <ngx-datatable-column name="Gender" [summaryFunc]="summaryForGender" />
-        <ngx-datatable-column prop="age" [summaryFunc]="avgAge" />
-      </ngx-datatable>
-      <ng-template #nameSummaryCell>
-        <span>{{ rows().length }} total</span>
-      </ng-template>
-    </div>
+    <ngx-datatable
+      class="material"
+      rowHeight="auto"
+      columnMode="force"
+      [summaryRow]="enableSummary"
+      [summaryPosition]="summaryPosition"
+      [summaryHeight]="100"
+      [headerHeight]="50"
+      [rows]="rows()"
+    >
+      <ngx-datatable-column prop="name" [summaryTemplate]="nameSummaryCell" />
+      <ngx-datatable-column name="Gender" [summaryFunc]="summaryForGender" />
+      <ngx-datatable-column prop="age" [summaryFunc]="avgAge" />
+    </ngx-datatable>
+    <ng-template #nameSummaryCell>
+      <span>{{ rows().length }} total</span>
+    </ng-template>
   `
 })
 export class InlineHtmlSummaryComponent {

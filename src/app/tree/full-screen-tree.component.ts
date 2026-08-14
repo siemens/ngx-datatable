@@ -13,56 +13,49 @@ import { DataService } from '../data.service';
   selector: 'full-screen-tree-demo',
   imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellTreeToggle],
   template: `
-    <div>
-      @let rows = this.rows();
-      <ngx-datatable
-        class="material fullscreen"
-        style="top: 52px"
-        columnMode="force"
-        treeFromRelation="parentId"
-        treeToRelation="id"
-        [headerHeight]="50"
-        [footerHeight]="0"
-        [rowHeight]="50"
-        [scrollbarV]="true"
-        [scrollbarH]="true"
-        [rows]="rows"
-        (treeAction)="onTreeAction($event)"
-      >
-        <ngx-datatable-column name="Id" [width]="80" />
-        <ngx-datatable-column
-          name="Name"
-          [isTreeColumn]="true"
-          [width]="300"
-          [treeLevelIndent]="20"
-        >
-          <ng-template let-tree="cellContext" ngx-datatable-tree-toggle>
-            <button
-              type="button"
-              [disabled]="tree.treeStatus === 'disabled'"
-              (click)="tree.onTreeAction()"
-            >
-              @if (tree.treeStatus === 'loading') {
-                <span> ... </span>
-              }
-              @if (tree.treeStatus === 'collapsed') {
-                <span> ↑ </span>
-              }
-              @if (tree.treeStatus === 'expanded') {
-                <span> ↓ </span>
-              }
-              @if (tree.treeStatus === 'disabled') {
-                <span> ⃠ </span>
-              }
-            </button>
-          </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="Gender" />
-        <ngx-datatable-column name="Age" />
-        <ngx-datatable-column name="City" prop="address.city" [width]="300" />
-        <ngx-datatable-column name="State" prop="address.state" [width]="300" />
-      </ngx-datatable>
-    </div>
+    @let rows = this.rows();
+    <ngx-datatable
+      class="material fullscreen"
+      style="top: 52px"
+      columnMode="force"
+      treeFromRelation="parentId"
+      treeToRelation="id"
+      [headerHeight]="50"
+      [footerHeight]="0"
+      [rowHeight]="50"
+      [scrollbarV]="true"
+      [scrollbarH]="true"
+      [rows]="rows"
+      (treeAction)="onTreeAction($event)"
+    >
+      <ngx-datatable-column name="Id" [width]="80" />
+      <ngx-datatable-column name="Name" [isTreeColumn]="true" [width]="300" [treeLevelIndent]="20">
+        <ng-template let-tree="cellContext" ngx-datatable-tree-toggle>
+          <button
+            type="button"
+            [disabled]="tree.treeStatus === 'disabled'"
+            (click)="tree.onTreeAction()"
+          >
+            @if (tree.treeStatus === 'loading') {
+              <span> ... </span>
+            }
+            @if (tree.treeStatus === 'collapsed') {
+              <span> ↑ </span>
+            }
+            @if (tree.treeStatus === 'expanded') {
+              <span> ↓ </span>
+            }
+            @if (tree.treeStatus === 'disabled') {
+              <span> ⃠ </span>
+            }
+          </button>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Gender" />
+      <ngx-datatable-column name="Age" />
+      <ngx-datatable-column name="City" prop="address.city" [width]="300" />
+      <ngx-datatable-column name="State" prop="address.state" [width]="300" />
+    </ngx-datatable>
   `,
   styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
 })

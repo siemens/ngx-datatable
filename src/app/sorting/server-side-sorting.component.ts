@@ -8,20 +8,18 @@ import { DataService } from '../data.service';
   selector: 'server-side-sorting-demo',
   imports: [DatatableComponent],
   template: `
-    <div>
-      <ngx-datatable
-        class="material"
-        rowHeight="auto"
-        columnMode="force"
-        [rows]="rows()"
-        [columns]="columns"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [externalSorting]="true"
-        [loadingIndicator]="loading()"
-        (sortsChange)="onSort($event)"
-      />
-    </div>
+    <ngx-datatable
+      class="material"
+      rowHeight="auto"
+      columnMode="force"
+      [rows]="rows()"
+      [columns]="columns"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [externalSorting]="true"
+      [loadingIndicator]="loading()"
+      (sortsChange)="onSort($event)"
+    />
   `
 })
 export class ServerSideSortingComponent {

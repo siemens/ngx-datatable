@@ -8,18 +8,16 @@ import { DataService } from '../data.service';
   selector: 'client-side-paging-demo',
   imports: [DatatableComponent, AsyncPipe],
   template: `
-    <div>
-      <ngx-datatable
-        class="material"
-        rowHeight="auto"
-        columnMode="force"
-        [rows]="rows | async"
-        [columns]="[{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }]"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [limit]="10"
-      />
-    </div>
+    <ngx-datatable
+      class="material"
+      rowHeight="auto"
+      columnMode="force"
+      [rows]="rows | async"
+      [columns]="[{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }]"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [limit]="10"
+    />
   `
 })
 export class ClientSidePagingComponent {

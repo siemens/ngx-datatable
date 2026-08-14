@@ -8,19 +8,17 @@ import { DataService } from '../data.service';
   selector: 'client-side-sorting-demo',
   imports: [DatatableComponent, AsyncPipe],
   template: `
-    <div>
-      <ngx-datatable
-        class="material"
-        columnMode="force"
-        sortType="multi"
-        [rows]="rows | async"
-        [columns]="columns"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [rowHeight]="50"
-        [scrollbarV]="true"
-      />
-    </div>
+    <ngx-datatable
+      class="material"
+      columnMode="force"
+      sortType="multi"
+      [rows]="rows | async"
+      [columns]="columns"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="50"
+      [scrollbarV]="true"
+    />
   `
 })
 export class ClientSideSortingComponent {

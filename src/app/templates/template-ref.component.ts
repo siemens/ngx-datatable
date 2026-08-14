@@ -9,30 +9,28 @@ import { DataService } from '../data.service';
   selector: 'template-ref-demo',
   imports: [DatatableComponent, AsyncPipe],
   template: `
-    <div>
-      <ngx-datatable
-        class="material"
-        rowHeight="auto"
-        columnMode="force"
-        [rows]="rows | async"
-        [columns]="columns"
-        [headerHeight]="50"
-        [footerHeight]="50"
-      />
+    <ngx-datatable
+      class="material"
+      rowHeight="auto"
+      columnMode="force"
+      [rows]="rows | async"
+      [columns]="columns"
+      [headerHeight]="50"
+      [footerHeight]="50"
+    />
 
-      <ng-template #hdrTpl let-column="column">
-        <strong>Fancy</strong>: {{ column.name }} !!
-      </ng-template>
+    <ng-template #hdrTpl let-column="column">
+      <strong>Fancy</strong>: {{ column.name }} !!
+    </ng-template>
 
-      <ng-template #editTmpl let-row="row" let-value="value">
-        @if (value === 'male') {
-          <img width="150" src="https://media.giphy.com/media/I8nepxWwlEuqI/giphy.gif" alt="" />
-        }
-        @if (value === 'female') {
-          <img width="150" src="https://media.giphy.com/media/sxSVG3XHf7yww/giphy.gif" alt="" />
-        }
-      </ng-template>
-    </div>
+    <ng-template #editTmpl let-row="row" let-value="value">
+      @if (value === 'male') {
+        <img width="150" src="https://media.giphy.com/media/I8nepxWwlEuqI/giphy.gif" alt="" />
+      }
+      @if (value === 'female') {
+        <img width="150" src="https://media.giphy.com/media/sxSVG3XHf7yww/giphy.gif" alt="" />
+      }
+    </ng-template>
   `
 })
 export class TemplateRefComponent implements OnInit {

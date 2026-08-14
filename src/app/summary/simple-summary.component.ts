@@ -9,37 +9,35 @@ import { DataService } from '../data.service';
   selector: 'simple-summary-demo',
   imports: [DatatableComponent, AsyncPipe],
   template: `
-    <div>
-      <div class="controls">
-        <div>
-          <input
-            id="enable-summary"
-            type="checkbox"
-            [checked]="enableSummary"
-            (change)="enableSummary = !enableSummary"
-          />
-          <label for="enable-summary">Enable Summary Row</label>
-        </div>
-        <div>
-          <label for="position-select">Position</label>
-          <select id="position-select" (change)="onPositionSelectChange($event)">
-            <option value="top">Top</option>
-            <option value="bottom">Bottom</option>
-          </select>
-        </div>
+    <div class="controls">
+      <div>
+        <input
+          id="enable-summary"
+          type="checkbox"
+          [checked]="enableSummary"
+          (change)="enableSummary = !enableSummary"
+        />
+        <label for="enable-summary">Enable Summary Row</label>
       </div>
-      <ngx-datatable
-        class="material"
-        rowHeight="auto"
-        columnMode="force"
-        [summaryRow]="enableSummary"
-        [summaryPosition]="summaryPosition"
-        [columns]="columns"
-        [headerHeight]="50"
-        [summaryHeight]="55"
-        [rows]="rows | async"
-      />
+      <div>
+        <label for="position-select">Position</label>
+        <select id="position-select" (change)="onPositionSelectChange($event)">
+          <option value="top">Top</option>
+          <option value="bottom">Bottom</option>
+        </select>
+      </div>
     </div>
+    <ngx-datatable
+      class="material"
+      rowHeight="auto"
+      columnMode="force"
+      [summaryRow]="enableSummary"
+      [summaryPosition]="summaryPosition"
+      [columns]="columns"
+      [headerHeight]="50"
+      [summaryHeight]="55"
+      [rows]="rows | async"
+    />
   `,
   styleUrl: './simple-summary.component.scss'
 })

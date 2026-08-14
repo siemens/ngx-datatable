@@ -9,28 +9,26 @@ import { Page } from './model/page';
   selector: 'scrolling-no-virtual-demo',
   imports: [DatatableComponent],
   template: `
-    <div>
-      @let rows = this.rows();
-      @let page = this.page();
-      @let isLoading = this.isLoading();
-      <ngx-datatable
-        class="material"
-        rowHeight="auto"
-        columnMode="force"
-        [rows]="rows"
-        [columns]="[{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }]"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [scrollbarV]="true"
-        [virtualization]="false"
-        [externalPaging]="true"
-        [count]="page.totalElements"
-        [offset]="page.pageNumber"
-        [limit]="page.size"
-        [ghostLoadingIndicator]="isLoading > 0"
-        (page)="setPage($event.offset)"
-      />
-    </div>
+    @let rows = this.rows();
+    @let page = this.page();
+    @let isLoading = this.isLoading();
+    <ngx-datatable
+      class="material"
+      rowHeight="auto"
+      columnMode="force"
+      [rows]="rows"
+      [columns]="[{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }]"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [scrollbarV]="true"
+      [virtualization]="false"
+      [externalPaging]="true"
+      [count]="page.totalElements"
+      [offset]="page.pageNumber"
+      [limit]="page.size"
+      [ghostLoadingIndicator]="isLoading > 0"
+      (page)="setPage($event.offset)"
+    />
   `,
   providers: [MockServerResultsService]
 })

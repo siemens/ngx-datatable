@@ -19,49 +19,47 @@ import { DataService } from '../data.service';
     FormsModule
   ],
   template: `
-    <div>
-      <form class="info" (ngSubmit)="scroll()">
-        <label for="target-index">Target Index</label>
-        <input
-          type="number"
-          id="target-index"
-          [ngModelOptions]="{ standalone: true }"
-          [(ngModel)]="scrollTarget"
-        />
-        <label for="target-block">Block</label>
-        <select id="target-block" [ngModelOptions]="{ standalone: true }" [(ngModel)]="scrollBlock">
-          <option value="start">start</option>
-          <option value="center">center</option>
-          <option value="end">end</option>
-          <option value="nearest">nearest</option>
-        </select>
-        <button type="submit">Scroll</button>
-      </form>
+    <form class="info" (ngSubmit)="scroll()">
+      <label for="target-index">Target Index</label>
+      <input
+        type="number"
+        id="target-index"
+        [ngModelOptions]="{ standalone: true }"
+        [(ngModel)]="scrollTarget"
+      />
+      <label for="target-block">Block</label>
+      <select id="target-block" [ngModelOptions]="{ standalone: true }" [(ngModel)]="scrollBlock">
+        <option value="start">start</option>
+        <option value="center">center</option>
+        <option value="end">end</option>
+        <option value="nearest">nearest</option>
+      </select>
+      <button type="submit">Scroll</button>
+    </form>
 
-      @let rows = this.rows();
-      <ngx-datatable
-        class="material"
-        columnMode="force"
-        [rows]="rows"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [rowHeight]="getRowHeight"
-        [scrollbarV]="true"
-        (page)="onPage($event)"
-      >
-        <ngx-datatable-column name="Name" [width]="300">
-          <ng-template let-value="value" ngx-datatable-cell-template>
-            <strong>{{ value }}</strong>
-          </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="Gender" [width]="300">
-          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-            <i [innerHTML]="row['name']"></i> and <i>{{ value }}</i>
-          </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="Row Height" prop="height" [width]="80" />
-      </ngx-datatable>
-    </div>
+    @let rows = this.rows();
+    <ngx-datatable
+      class="material"
+      columnMode="force"
+      [rows]="rows"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="getRowHeight"
+      [scrollbarV]="true"
+      (page)="onPage($event)"
+    >
+      <ngx-datatable-column name="Name" [width]="300">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <strong>{{ value }}</strong>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Gender" [width]="300">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <i [innerHTML]="row['name']"></i> and <i>{{ value }}</i>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Row Height" prop="height" [width]="80" />
+    </ngx-datatable>
   `
 })
 export class TenKRowsComponent {

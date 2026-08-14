@@ -10,17 +10,15 @@ import { DataService } from '../data.service';
   selector: 'rxjs-demo',
   imports: [DatatableComponent, AsyncPipe],
   template: `
-    <div>
-      <ngx-datatable
-        class="material striped"
-        columnMode="force"
-        [rows]="rows | async"
-        [columns]="columns"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [rowHeight]="50"
-      />
-    </div>
+    <ngx-datatable
+      class="material striped"
+      columnMode="force"
+      [rows]="rows | async"
+      [columns]="columns"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="50"
+    />
   `
 })
 export class RxjsComponent {

@@ -9,40 +9,38 @@ import { DataService } from '../data.service';
   selector: 'context-menu-demo',
   imports: [DatatableComponent, AsyncPipe],
   template: `
-    <div>
-      <div class="info">
+    <div class="info">
+      <p>
+        <strong>Note:</strong> ngx-datatable does not provide a context menu feature. This
+        demonstrates how you would access the <code>contextmenu</code> event to display your own
+        custom context menu.
+      </p>
+      @if (rawEvent) {
         <p>
-          <strong>Note:</strong> ngx-datatable does not provide a context menu feature. This
-          demonstrates how you would access the <code>contextmenu</code> event to display your own
-          custom context menu.
+          <strong>Mouse position:</strong>
+          <code>(x: {{ rawEvent?.x }}, y: {{ rawEvent?.y }})</code>
         </p>
-        @if (rawEvent) {
-          <p>
-            <strong>Mouse position:</strong>
-            <code>(x: {{ rawEvent?.x }}, y: {{ rawEvent?.y }})</code>
-          </p>
-        }
-        @if (contextmenuRow) {
-          <p><strong>Row:</strong> {{ contextmenuRow?.name }}</p>
-        }
-        @if (contextmenuColumn) {
-          <p>
-            <strong>Header:</strong> name: {{ contextmenuColumn?.name }} prop:
-            {{ contextmenuColumn?.prop }}
-          </p>
-        }
-      </div>
-      <ngx-datatable
-        class="material"
-        rowHeight="auto"
-        columnMode="force"
-        [rows]="rows | async"
-        [columns]="columns"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        (tableContextmenu)="onTableContextMenu($event)"
-      />
+      }
+      @if (contextmenuRow) {
+        <p><strong>Row:</strong> {{ contextmenuRow?.name }}</p>
+      }
+      @if (contextmenuColumn) {
+        <p>
+          <strong>Header:</strong> name: {{ contextmenuColumn?.name }} prop:
+          {{ contextmenuColumn?.prop }}
+        </p>
+      }
     </div>
+    <ngx-datatable
+      class="material"
+      rowHeight="auto"
+      columnMode="force"
+      [rows]="rows | async"
+      [columns]="columns"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      (tableContextmenu)="onTableContextMenu($event)"
+    />
   `
 })
 export class ContextMenuComponent {

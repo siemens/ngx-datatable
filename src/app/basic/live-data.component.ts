@@ -8,30 +8,28 @@ import { DataService } from '../data.service';
   selector: 'live-data-demo',
   imports: [DatatableComponent, DataTableColumnDirective],
   template: `
-    <div>
-      <small>
-        <button type="button" class="example-action" (click)="start()">Start</button> |
-        <button type="button" class="example-action" (click)="stop()">Stop</button> |
-        <button type="button" class="example-action" (click)="add()">Add</button> |
-        <button type="button" class="example-action" (click)="remove()">Remove</button>
-      </small>
-      @let rows = this.rows();
-      <ngx-datatable
-        #mydatatable
-        class="material"
-        rowHeight="auto"
-        columnMode="force"
-        trackByProp="updated"
-        [headerHeight]="50"
-        [limit]="5"
-        [footerHeight]="50"
-        [rows]="rows"
-      >
-        <ngx-datatable-column name="Name" />
-        <ngx-datatable-column name="Gender" />
-        <ngx-datatable-column name="Company" />
-      </ngx-datatable>
-    </div>
+    <small>
+      <button type="button" class="example-action" (click)="start()">Start</button> |
+      <button type="button" class="example-action" (click)="stop()">Stop</button> |
+      <button type="button" class="example-action" (click)="add()">Add</button> |
+      <button type="button" class="example-action" (click)="remove()">Remove</button>
+    </small>
+    @let rows = this.rows();
+    <ngx-datatable
+      #mydatatable
+      class="material"
+      rowHeight="auto"
+      columnMode="force"
+      trackByProp="updated"
+      [headerHeight]="50"
+      [limit]="5"
+      [footerHeight]="50"
+      [rows]="rows"
+    >
+      <ngx-datatable-column name="Name" />
+      <ngx-datatable-column name="Gender" />
+      <ngx-datatable-column name="Company" />
+    </ngx-datatable>
   `
 })
 export class LiveDataComponent {

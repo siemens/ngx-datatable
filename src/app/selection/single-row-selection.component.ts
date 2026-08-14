@@ -8,44 +8,42 @@ import { DataService } from '../data.service';
   selector: 'single-row-selection-demo',
   imports: [DatatableComponent],
   template: `
-    <div>
-      <div style="float:left;width:75%">
-        <div class="info">
-          <p
-            >This demonstrates a simple single selection table with the 3rd row selected by
-            default.</p
-          >
-        </div>
-
-        @let rows = this.rows();
-        <ngx-datatable
-          class="material selection-row"
-          rowHeight="auto"
-          columnMode="force"
-          selectionType="single"
-          [rows]="rows"
-          [columns]="columns"
-          [headerHeight]="50"
-          [footerHeight]="50"
-          [limit]="5"
-          [(selected)]="selected"
-          (activate)="onActivate($event)"
-          (selectedChange)="onSelect($event)"
-        />
+    <div style="float:left;width:75%">
+      <div class="info">
+        <p
+          >This demonstrates a simple single selection table with the 3rd row selected by
+          default.</p
+        >
       </div>
 
-      <div class="selected-column">
-        <h4>Selections</h4>
-        <ul>
-          @for (sel of selected; track sel) {
-            <li>
-              {{ sel.name }}
-            </li>
-          } @empty {
-            <li>No Selections</li>
-          }
-        </ul>
-      </div>
+      @let rows = this.rows();
+      <ngx-datatable
+        class="material selection-row"
+        rowHeight="auto"
+        columnMode="force"
+        selectionType="single"
+        [rows]="rows"
+        [columns]="columns"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [limit]="5"
+        [(selected)]="selected"
+        (activate)="onActivate($event)"
+        (selectedChange)="onSelect($event)"
+      />
+    </div>
+
+    <div class="selected-column">
+      <h4>Selections</h4>
+      <ul>
+        @for (sel of selected; track sel) {
+          <li>
+            {{ sel.name }}
+          </li>
+        } @empty {
+          <li>No Selections</li>
+        }
+      </ul>
     </div>
   `
 })

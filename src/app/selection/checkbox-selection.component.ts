@@ -12,59 +12,57 @@ import { DataService } from '../data.service';
   selector: 'checkbox-selection-demo',
   imports: [DatatableComponent, DataTableColumnDirective],
   template: `
-    <div>
-      <div style="float:left;width:75%">
-        @let rows = this.rows();
-        <ngx-datatable
-          style="width: 90%"
-          class="material selection-row"
-          rowHeight="auto"
-          columnMode="force"
-          selectionType="checkbox"
-          [rows]="rows"
-          [headerHeight]="50"
-          [footerHeight]="50"
-          [limit]="5"
-          [selected]="selected"
-          [selectAllRowsOnPage]="false"
-          [displayCheck]="displayCheck"
-          (activate)="onActivate($event)"
-          (selectedChange)="onSelect($event)"
-        >
-          <ngx-datatable-column
-            [width]="40"
-            [sortable]="false"
-            [canAutoResize]="false"
-            [draggable]="false"
-            [resizeable]="false"
-            [headerCheckboxable]="true"
-            [checkboxable]="true"
-          />
-          <ngx-datatable-column name="Name" />
-          <ngx-datatable-column name="Gender" />
-          <ngx-datatable-column name="Company" />
-        </ngx-datatable>
-      </div>
+    <div style="float:left;width:75%">
+      @let rows = this.rows();
+      <ngx-datatable
+        style="width: 90%"
+        class="material selection-row"
+        rowHeight="auto"
+        columnMode="force"
+        selectionType="checkbox"
+        [rows]="rows"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [limit]="5"
+        [selected]="selected"
+        [selectAllRowsOnPage]="false"
+        [displayCheck]="displayCheck"
+        (activate)="onActivate($event)"
+        (selectedChange)="onSelect($event)"
+      >
+        <ngx-datatable-column
+          [width]="40"
+          [sortable]="false"
+          [canAutoResize]="false"
+          [draggable]="false"
+          [resizeable]="false"
+          [headerCheckboxable]="true"
+          [checkboxable]="true"
+        />
+        <ngx-datatable-column name="Name" />
+        <ngx-datatable-column name="Gender" />
+        <ngx-datatable-column name="Company" />
+      </ngx-datatable>
+    </div>
 
-      <div class="selected-column">
-        <h4>
-          Selections <small>({{ selected.length }})</small>
-        </h4>
-        <div class="selected-column-actions">
-          <button type="button" class="example-action" (click)="add()">Add</button> |
-          <button type="button" class="example-action" (click)="update()">Update</button> |
-          <button type="button" class="example-action" (click)="remove()">Remove</button>
-        </div>
-        <ul>
-          @for (sel of selected; track sel) {
-            <li>
-              {{ sel.name }}
-            </li>
-          } @empty {
-            <li>No Selections</li>
-          }
-        </ul>
+    <div class="selected-column">
+      <h4>
+        Selections <small>({{ selected.length }})</small>
+      </h4>
+      <div class="selected-column-actions">
+        <button type="button" class="example-action" (click)="add()">Add</button> |
+        <button type="button" class="example-action" (click)="update()">Update</button> |
+        <button type="button" class="example-action" (click)="remove()">Remove</button>
       </div>
+      <ul>
+        @for (sel of selected; track sel) {
+          <li>
+            {{ sel.name }}
+          </li>
+        } @empty {
+          <li>No Selections</li>
+        }
+      </ul>
     </div>
   `
 })

@@ -9,25 +9,23 @@ import { Page } from '../paging/model/page';
   selector: 'server-side-paging-summary-demo',
   imports: [DatatableComponent],
   template: `
-    <div>
-      @let page = this.page();
-      <ngx-datatable
-        class="material"
-        rowHeight="auto"
-        columnMode="force"
-        [rows]="rows()"
-        [columns]="columns"
-        [headerHeight]="50"
-        [summaryRow]="true"
-        [summaryHeight]="55"
-        [footerHeight]="50"
-        [externalPaging]="true"
-        [count]="page.totalElements"
-        [offset]="page.pageNumber"
-        [limit]="page.size"
-        (page)="setPage($event.offset)"
-      />
-    </div>
+    @let page = this.page();
+    <ngx-datatable
+      class="material"
+      rowHeight="auto"
+      columnMode="force"
+      [rows]="rows()"
+      [columns]="columns"
+      [headerHeight]="50"
+      [summaryRow]="true"
+      [summaryHeight]="55"
+      [footerHeight]="50"
+      [externalPaging]="true"
+      [count]="page.totalElements"
+      [offset]="page.pageNumber"
+      [limit]="page.size"
+      (page)="setPage($event.offset)"
+    />
   `,
   providers: [MockServerResultsService]
 })

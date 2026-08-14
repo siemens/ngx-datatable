@@ -8,25 +8,23 @@ import { DataService } from '../data.service';
   selector: 'filtering-demo',
   imports: [DatatableComponent],
   template: `
-    <div>
-      <input
-        type="text"
-        style="padding:8px;margin:15px auto;width:30%;"
-        placeholder="Type to filter the name column..."
-        (keyup)="updateFilter($event)"
-      />
-      <ngx-datatable
-        #table
-        class="material"
-        rowHeight="auto"
-        columnMode="force"
-        [columns]="columns"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [limit]="10"
-        [rows]="rows()"
-      />
-    </div>
+    <input
+      type="text"
+      style="padding:8px;margin:15px auto;width:30%;"
+      placeholder="Type to filter the name column..."
+      (keyup)="updateFilter($event)"
+    />
+    <ngx-datatable
+      #table
+      class="material"
+      rowHeight="auto"
+      columnMode="force"
+      [columns]="columns"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [limit]="10"
+      [rows]="rows()"
+    />
   `
 })
 export class FilteringComponent {

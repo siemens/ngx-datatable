@@ -19,29 +19,27 @@ import { DataService } from '../data.service';
     CdkDrag
   ],
   template: `
-    <div>
-      <ngx-datatable
-        class="material"
-        rowHeight="auto"
-        cdkDropList
-        columnMode="force"
-        [rows]="rows()"
-        [loadingIndicator]="loadingIndicator()"
-        [columns]="columns"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [reorderable]="reorderable"
-        (cdkDropListDropped)="drop($event)"
-      >
-        <ng-template rowDef>
-          <datatable-row-def
-            cdkDrag
-            cdkDragPreviewContainer="parent"
-            [preserveColumnWidthsOnClone]="true"
-          />
-        </ng-template>
-      </ngx-datatable>
-    </div>
+    <ngx-datatable
+      class="material"
+      rowHeight="auto"
+      cdkDropList
+      columnMode="force"
+      [rows]="rows()"
+      [loadingIndicator]="loadingIndicator()"
+      [columns]="columns"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [reorderable]="reorderable"
+      (cdkDropListDropped)="drop($event)"
+    >
+      <ng-template rowDef>
+        <datatable-row-def
+          cdkDrag
+          cdkDragPreviewContainer="parent"
+          [preserveColumnWidthsOnClone]="true"
+        />
+      </ng-template>
+    </ngx-datatable>
   `
 })
 export class DragDropComponent {

@@ -12,35 +12,33 @@ import { DataService } from '../data.service';
   selector: 'client-side-tree-demo',
   imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective, AsyncPipe],
   template: `
-    <div>
-      <ngx-datatable
-        class="material"
-        rowHeight="auto"
-        columnMode="flex"
-        treeFromRelation="manager"
-        treeToRelation="name"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [rows]="rows | async"
-        (treeAction)="onTreeAction($event)"
-      >
-        <ngx-datatable-column name="Name" [flexGrow]="3" [isTreeColumn]="true">
-          <ng-template let-value="value" ngx-datatable-cell-template>
-            {{ value }}
-          </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="Gender" [flexGrow]="1">
-          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-            {{ value }}
-          </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="Age" [flexGrow]="1">
-          <ng-template let-value="value" ngx-datatable-cell-template>
-            {{ value }}
-          </ng-template>
-        </ngx-datatable-column>
-      </ngx-datatable>
-    </div>
+    <ngx-datatable
+      class="material"
+      rowHeight="auto"
+      columnMode="flex"
+      treeFromRelation="manager"
+      treeToRelation="name"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rows]="rows | async"
+      (treeAction)="onTreeAction($event)"
+    >
+      <ngx-datatable-column name="Name" [flexGrow]="3" [isTreeColumn]="true">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Gender" [flexGrow]="1">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          {{ value }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Age" [flexGrow]="1">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value }}
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
   `,
   styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
 })

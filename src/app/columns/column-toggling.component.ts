@@ -7,37 +7,35 @@ import { Employee } from '../data.model';
   selector: 'column-toggling-demo',
   imports: [DatatableComponent, DataTableColumnDirective],
   template: `
-    <div>
-      <div style="float:left;width:75%">
-        <ngx-datatable
-          class="material"
-          rowHeight="auto"
-          columnMode="force"
-          [rows]="rows"
-          [headerHeight]="50"
-          [footerHeight]="50"
-        >
-          @for (col of columns; track col) {
-            <ngx-datatable-column [name]="col.name" />
-          }
-        </ngx-datatable>
-      </div>
-      <div class="selected-column">
-        <h4>Available Columns</h4>
-        <ul>
-          @for (col of allColumns; track col) {
-            <li>
-              <input
-                type="checkbox"
-                [id]="col.name"
-                [checked]="isChecked(col)"
-                (click)="toggle(col)"
-              />
-              <label [attr.for]="col.name">{{ col.name }}</label>
-            </li>
-          }
-        </ul>
-      </div>
+    <div style="float:left;width:75%">
+      <ngx-datatable
+        class="material"
+        rowHeight="auto"
+        columnMode="force"
+        [rows]="rows"
+        [headerHeight]="50"
+        [footerHeight]="50"
+      >
+        @for (col of columns; track col) {
+          <ngx-datatable-column [name]="col.name" />
+        }
+      </ngx-datatable>
+    </div>
+    <div class="selected-column">
+      <h4>Available Columns</h4>
+      <ul>
+        @for (col of allColumns; track col) {
+          <li>
+            <input
+              type="checkbox"
+              [id]="col.name"
+              [checked]="isChecked(col)"
+              (click)="toggle(col)"
+            />
+            <label [attr.for]="col.name">{{ col.name }}</label>
+          </li>
+        }
+      </ul>
     </div>
   `
 })

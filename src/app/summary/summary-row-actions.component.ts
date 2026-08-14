@@ -12,46 +12,44 @@ import { DataService } from '../data.service';
   selector: 'summary-row-actions-demo',
   imports: [DatatableComponent, DataTableColumnDirective, DatatableSummaryRowDirective],
   template: `
-    <div>
-      @let rows = this.rows();
-      <ngx-datatable
-        class="material selection-row"
-        rowHeight="auto"
-        summaryHeight="auto"
-        columnMode="force"
-        selectionType="checkbox"
-        [rows]="rows"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [limit]="10"
-        [(selected)]="selected"
-      >
-        @if (selected().length) {
-          <ng-template ngx-datatable-summary-row>
-            <div class="summary-row-actions-bar">
-              <span class="summary-row-actions-count">{{ selected().length }} row(s) selected</span>
-              <div class="summary-row-actions-buttons">
-                <button type="button" (click)="onExport()">Export</button>
-                <button type="button" (click)="onDelete()">Delete</button>
-                <button type="button" (click)="onCancel()">Cancel</button>
-              </div>
+    @let rows = this.rows();
+    <ngx-datatable
+      class="material selection-row"
+      rowHeight="auto"
+      summaryHeight="auto"
+      columnMode="force"
+      selectionType="checkbox"
+      [rows]="rows"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [limit]="10"
+      [(selected)]="selected"
+    >
+      @if (selected().length) {
+        <ng-template ngx-datatable-summary-row>
+          <div class="summary-row-actions-bar">
+            <span class="summary-row-actions-count">{{ selected().length }} row(s) selected</span>
+            <div class="summary-row-actions-buttons">
+              <button type="button" (click)="onExport()">Export</button>
+              <button type="button" (click)="onDelete()">Delete</button>
+              <button type="button" (click)="onCancel()">Cancel</button>
             </div>
-          </ng-template>
-        }
-        <ngx-datatable-column
-          [width]="40"
-          [sortable]="false"
-          [canAutoResize]="false"
-          [draggable]="false"
-          [resizeable]="false"
-          [headerCheckboxable]="true"
-          [checkboxable]="true"
-        />
-        <ngx-datatable-column name="Name" />
-        <ngx-datatable-column name="Gender" />
-        <ngx-datatable-column name="Company" />
-      </ngx-datatable>
-    </div>
+          </div>
+        </ng-template>
+      }
+      <ngx-datatable-column
+        [width]="40"
+        [sortable]="false"
+        [canAutoResize]="false"
+        [draggable]="false"
+        [resizeable]="false"
+        [headerCheckboxable]="true"
+        [checkboxable]="true"
+      />
+      <ngx-datatable-column name="Name" />
+      <ngx-datatable-column name="Gender" />
+      <ngx-datatable-column name="Company" />
+    </ngx-datatable>
   `,
   styles: `
     .summary-row-actions-bar {

@@ -9,17 +9,15 @@ import { DataService } from '../data.service';
   selector: 'comparator-demo',
   imports: [DatatableComponent, AsyncPipe],
   template: `
-    <div>
-      <ngx-datatable
-        class="material"
-        rowHeight="auto"
-        columnMode="force"
-        [rows]="rows | async"
-        [columns]="columns"
-        [headerHeight]="50"
-        [footerHeight]="50"
-      />
-    </div>
+    <ngx-datatable
+      class="material"
+      rowHeight="auto"
+      columnMode="force"
+      [rows]="rows | async"
+      [columns]="columns"
+      [headerHeight]="50"
+      [footerHeight]="50"
+    />
   `
 })
 export class ComparatorComponent {

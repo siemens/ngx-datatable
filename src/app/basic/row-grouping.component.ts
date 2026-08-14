@@ -22,130 +22,124 @@ import { DataService } from '../data.service';
     DataTableColumnCellDirective
   ],
   template: `
-    <div>
-      <ngx-datatable
-        #myTable
-        class="material expandable"
-        groupRowsBy="age"
-        columnMode="force"
-        selectionType="checkbox"
-        [rows]="rows()"
-        [scrollbarH]="true"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [rowHeight]="40"
-        [limit]="4"
-        [groupExpansionDefault]="true"
+    <ngx-datatable
+      #myTable
+      class="material expandable"
+      groupRowsBy="age"
+      columnMode="force"
+      selectionType="checkbox"
+      [rows]="rows()"
+      [scrollbarH]="true"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="40"
+      [limit]="4"
+      [groupExpansionDefault]="true"
+    >
+      <!-- Group Header Template -->
+      <ngx-datatable-group-header
+        #myGroupHeader
+        [rowHeight]="34"
+        [checkboxable]="true"
+        (toggle)="onDetailToggle($event)"
       >
-        <!-- Group Header Template -->
-        <ngx-datatable-group-header
-          #myGroupHeader
-          [rowHeight]="34"
-          [checkboxable]="true"
-          (toggle)="onDetailToggle($event)"
-        >
-          <ng-template
-            let-group="group"
-            let-expanded="expanded"
-            ngx-datatable-group-header-template
-          >
-            <div style="padding-left:5px;height: 100%; display:flex;align-items: center;">
-              <a
-                href="javascript:void(0)"
-                title="Expand/Collapse Group"
-                (click)="toggleExpandGroup(group)"
-              >
-                <span
-                  aria-hidden="true"
-                  [class.datatable-icon-right]="!expanded"
-                  [class.datatable-icon-down]="expanded"
-                ></span>
-                <b>Age: {{ group ? group.value[0].age : '' }}</b>
-              </a>
-            </div>
-          </ng-template>
-        </ngx-datatable-group-header>
+        <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
+          <div style="padding-left:5px;height: 100%; display:flex;align-items: center;">
+            <a
+              href="javascript:void(0)"
+              title="Expand/Collapse Group"
+              (click)="toggleExpandGroup(group)"
+            >
+              <span
+                aria-hidden="true"
+                [class.datatable-icon-right]="!expanded"
+                [class.datatable-icon-down]="expanded"
+              ></span>
+              <b>Age: {{ group ? group.value[0].age : '' }}</b>
+            </a>
+          </div>
+        </ng-template>
+      </ngx-datatable-group-header>
 
-        <!-- Row Column Template -->
-        <ngx-datatable-column
-          name="Exp. Pay."
-          prop=""
-          editable="true"
-          [headerCheckboxable]="true"
-          [checkboxable]="true"
-          [frozenLeft]="true"
-          [sortable]="false"
+      <!-- Row Column Template -->
+      <ngx-datatable-column
+        name="Exp. Pay."
+        prop=""
+        editable="true"
+        [headerCheckboxable]="true"
+        [checkboxable]="true"
+        [frozenLeft]="true"
+        [sortable]="false"
+      >
+        <ng-template
+          let-rowIndex="rowIndex"
+          let-value="value"
+          let-row="row"
+          let-group="group"
+          ngx-datatable-cell-template
         >
-          <ng-template
-            let-rowIndex="rowIndex"
-            let-value="value"
-            let-row="row"
-            let-group="group"
-            ngx-datatable-cell-template
-          >
-            <label class="datatable-checkbox" [attr.for]="'ep1' + rowIndex">
-              <input
-                type="checkbox"
-                value="0"
-                class="expectedpayment"
-                [id]="'ep1' + rowIndex"
-                [name]="rowIndex"
-                [attr.aria-label]="'ex pay1' + rowIndex"
-                [checked]="row.exppayyes === 1"
-                (change)="checkGroup($event, row, rowIndex, group!)"
-              />
-            </label>
-            <label class="datatable-checkbox" [attr.for]="'ep2' + rowIndex">
-              <input
-                type="checkbox"
-                value="1"
-                class="expectedpayment2"
-                [id]="'ep2' + rowIndex"
-                [name]="rowIndex"
-                [attr.aria-label]="'ex pay2' + rowIndex"
-                [checked]="row.exppayno === 1"
-                (change)="checkGroup($event, row, rowIndex, group!)"
-              />
-            </label>
-            <label class="datatable-checkbox" [attr.for]="'ep3' + rowIndex">
-              <input
-                type="checkbox"
-                value="2"
-                class="expectedpayment3"
-                [id]="'ep3' + rowIndex"
-                [name]="rowIndex"
-                [attr.aria-label]="'ex pay3' + rowIndex"
-                [checked]="row.exppaypending === 1"
-                (change)="checkGroup($event, row, rowIndex, group!)"
-              />
-            </label>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column name="Source" prop="source" editable="false" [frozenLeft]="true" />
-        <ngx-datatable-column name="Name" prop="name" editable="true" />
-        <ngx-datatable-column name="Gender" prop="gender" />
-        <ngx-datatable-column name="Age" prop="age" />
-        <ngx-datatable-column name="Comment" prop="comment">
-          <ng-template
-            let-rowIndex="rowIndex"
-            let-value="value"
-            let-row="row"
-            let-group="group"
-            let-rowHeight="rowHeight"
-            ngx-datatable-cell-template
-          >
+          <label class="datatable-checkbox" [attr.for]="'ep1' + rowIndex">
             <input
-              type="text"
-              name="comment"
-              aria-label="comment"
-              [value]="value"
-              (blur)="updateValue($event, 'comment', rowIndex)"
+              type="checkbox"
+              value="0"
+              class="expectedpayment"
+              [id]="'ep1' + rowIndex"
+              [name]="rowIndex"
+              [attr.aria-label]="'ex pay1' + rowIndex"
+              [checked]="row.exppayyes === 1"
+              (change)="checkGroup($event, row, rowIndex, group!)"
             />
-          </ng-template>
-        </ngx-datatable-column>
-      </ngx-datatable>
-    </div>
+          </label>
+          <label class="datatable-checkbox" [attr.for]="'ep2' + rowIndex">
+            <input
+              type="checkbox"
+              value="1"
+              class="expectedpayment2"
+              [id]="'ep2' + rowIndex"
+              [name]="rowIndex"
+              [attr.aria-label]="'ex pay2' + rowIndex"
+              [checked]="row.exppayno === 1"
+              (change)="checkGroup($event, row, rowIndex, group!)"
+            />
+          </label>
+          <label class="datatable-checkbox" [attr.for]="'ep3' + rowIndex">
+            <input
+              type="checkbox"
+              value="2"
+              class="expectedpayment3"
+              [id]="'ep3' + rowIndex"
+              [name]="rowIndex"
+              [attr.aria-label]="'ex pay3' + rowIndex"
+              [checked]="row.exppaypending === 1"
+              (change)="checkGroup($event, row, rowIndex, group!)"
+            />
+          </label>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Source" prop="source" editable="false" [frozenLeft]="true" />
+      <ngx-datatable-column name="Name" prop="name" editable="true" />
+      <ngx-datatable-column name="Gender" prop="gender" />
+      <ngx-datatable-column name="Age" prop="age" />
+      <ngx-datatable-column name="Comment" prop="comment">
+        <ng-template
+          let-rowIndex="rowIndex"
+          let-value="value"
+          let-row="row"
+          let-group="group"
+          let-rowHeight="rowHeight"
+          ngx-datatable-cell-template
+        >
+          <input
+            type="text"
+            name="comment"
+            aria-label="comment"
+            [value]="value"
+            (blur)="updateValue($event, 'comment', rowIndex)"
+          />
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
   `
 })
 export class RowGroupingComponent {

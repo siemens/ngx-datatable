@@ -9,21 +9,19 @@ import { DataService } from '../data.service';
   selector: 'cell-selection-demo',
   imports: [DatatableComponent, AsyncPipe],
   template: `
-    <div>
-      <ngx-datatable
-        class="material selection-cell"
-        columnMode="force"
-        selectionType="cell"
-        [rows]="rows | async"
-        [columns]="columns"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [rowHeight]="50"
-        [selected]="selected"
-        (selectedChange)="onSelect($event)"
-        (activate)="onActivate($event)"
-      />
-    </div>
+    <ngx-datatable
+      class="material selection-cell"
+      columnMode="force"
+      selectionType="cell"
+      [rows]="rows | async"
+      [columns]="columns"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="50"
+      [selected]="selected"
+      (selectedChange)="onSelect($event)"
+      (activate)="onActivate($event)"
+    />
   `
 })
 export class CellSelectionComponent {

@@ -8,24 +8,22 @@ import { DataService } from '../data.service';
   selector: 'bootstrap-theme-demo',
   imports: [DatatableComponent],
   template: `
-    <div>
-      @let rows = this.rows();
-      @let loadingIndicator = this.loadingIndicator();
-      <ngx-datatable
-        class="bootstrap"
-        rowHeight="auto"
-        columnMode="force"
-        summaryPosition="bottom"
-        [rows]="rows"
-        [loadingIndicator]="loadingIndicator"
-        [columns]="columns"
-        [headerHeight]="40"
-        [summaryRow]="true"
-        [footerHeight]="40"
-        [limit]="10"
-        [reorderable]="reorderable"
-      />
-    </div>
+    @let rows = this.rows();
+    @let loadingIndicator = this.loadingIndicator();
+    <ngx-datatable
+      class="bootstrap"
+      rowHeight="auto"
+      columnMode="force"
+      summaryPosition="bottom"
+      [rows]="rows"
+      [loadingIndicator]="loadingIndicator"
+      [columns]="columns"
+      [headerHeight]="40"
+      [summaryRow]="true"
+      [footerHeight]="40"
+      [limit]="10"
+      [reorderable]="reorderable"
+    />
   `
 })
 export class BootstrapThemeComponent {

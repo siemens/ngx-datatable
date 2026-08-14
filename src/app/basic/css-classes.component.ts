@@ -10,21 +10,19 @@ import { DataService } from '../data.service';
   selector: 'css-classes-demo',
   imports: [DatatableComponent, DataTableColumnDirective, AsyncPipe],
   template: `
-    <div>
-      <ngx-datatable
-        class="material"
-        columnMode="force"
-        [rows]="rows | async"
-        [headerHeight]="50"
-        [rowHeight]="50"
-        [rowClass]="getRowClass"
-        [scrollbarV]="true"
-      >
-        <ngx-datatable-column name="Name" />
-        <ngx-datatable-column name="Gender" headerClass="is-gender" [cellClass]="getCellClass" />
-        <ngx-datatable-column name="Age" />
-      </ngx-datatable>
-    </div>
+    <ngx-datatable
+      class="material"
+      columnMode="force"
+      [rows]="rows | async"
+      [headerHeight]="50"
+      [rowHeight]="50"
+      [rowClass]="getRowClass"
+      [scrollbarV]="true"
+    >
+      <ngx-datatable-column name="Name" />
+      <ngx-datatable-column name="Gender" headerClass="is-gender" [cellClass]="getCellClass" />
+      <ngx-datatable-column name="Age" />
+    </ngx-datatable>
   `
 })
 export class CssClassesComponent {

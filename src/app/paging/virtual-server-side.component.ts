@@ -9,34 +9,32 @@ import { Page } from './model/page';
   selector: 'virtual-server-side-demo',
   imports: [DatatableComponent],
   template: `
-    <div>
-      @let isLoading = this.isLoading();
-      @let totalElements = this.totalElements();
-      @let rows = this.rows();
-      <ngx-datatable
-        class="material"
-        columnMode="force"
-        [rows]="rows"
-        [columns]="[
-          { name: 'Name', sortable: false },
-          { name: 'Gender', sortable: false },
-          { name: 'Company', sortable: false }
-        ]"
-        [headerHeight]="50"
-        [loadingIndicator]="isLoading > 0"
-        [ghostLoadingIndicator]="isLoading > 0"
-        [scrollbarV]="true"
-        [footerHeight]="50"
-        [rowHeight]="50"
-        [externalPaging]="true"
-        [externalSorting]="true"
-        [count]="totalElements"
-        [offset]="pageNumber"
-        (page)="setPage($event)"
-      >
-        <div loading-indicator class="custom-loading-indicator">loading...</div>
-      </ngx-datatable>
-    </div>
+    @let isLoading = this.isLoading();
+    @let totalElements = this.totalElements();
+    @let rows = this.rows();
+    <ngx-datatable
+      class="material"
+      columnMode="force"
+      [rows]="rows"
+      [columns]="[
+        { name: 'Name', sortable: false },
+        { name: 'Gender', sortable: false },
+        { name: 'Company', sortable: false }
+      ]"
+      [headerHeight]="50"
+      [loadingIndicator]="isLoading > 0"
+      [ghostLoadingIndicator]="isLoading > 0"
+      [scrollbarV]="true"
+      [footerHeight]="50"
+      [rowHeight]="50"
+      [externalPaging]="true"
+      [externalSorting]="true"
+      [count]="totalElements"
+      [offset]="pageNumber"
+      (page)="setPage($event)"
+    >
+      <div loading-indicator class="custom-loading-indicator">loading...</div>
+    </ngx-datatable>
   `,
   styleUrl: './virtual-server-side.component.scss',
   providers: [MockServerResultsService]

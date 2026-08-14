@@ -8,29 +8,27 @@ import { DataService } from '../data.service';
   selector: 'column-reorder-demo',
   imports: [DatatableComponent],
   template: `
-    <div>
-      @let rows = this.rows();
-      @let loadingIndicator = this.loadingIndicator();
-      <ngx-datatable
-        class="material"
-        rowHeight="auto"
-        columnMode="force"
-        [rows]="rows"
-        [loadingIndicator]="loadingIndicator"
-        [columns]="columns"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [reorderable]="reorderable"
-        [swapColumns]="swapColumns"
-        [targetMarkerTemplate]="targetMarkerTemplate"
-      />
-      <ng-template #targetMarkerTemplate let-class="class">
-        <div [class]="class">
-          <div class="icon datatable-icon-down"></div>
-          <div class="icon datatable-icon-up"></div>
-        </div>
-      </ng-template>
-    </div>
+    @let rows = this.rows();
+    @let loadingIndicator = this.loadingIndicator();
+    <ngx-datatable
+      class="material"
+      rowHeight="auto"
+      columnMode="force"
+      [rows]="rows"
+      [loadingIndicator]="loadingIndicator"
+      [columns]="columns"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [reorderable]="reorderable"
+      [swapColumns]="swapColumns"
+      [targetMarkerTemplate]="targetMarkerTemplate"
+    />
+    <ng-template #targetMarkerTemplate let-class="class">
+      <div [class]="class">
+        <div class="icon datatable-icon-down"></div>
+        <div class="icon datatable-icon-up"></div>
+      </div>
+    </ng-template>
   `,
   styles: `
     .icon {

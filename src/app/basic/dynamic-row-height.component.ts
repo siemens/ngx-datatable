@@ -10,21 +10,19 @@ import { DataService } from '../data.service';
   selector: 'dynamic-row-height-demo',
   imports: [DatatableComponent, DataTableColumnDirective, AsyncPipe],
   template: `
-    <div>
-      <ngx-datatable
-        class="material"
-        columnMode="force"
-        [rows]="rows | async"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [rowHeight]="getRowHeight"
-        [scrollbarV]="true"
-      >
-        <ngx-datatable-column name="Name" />
-        <ngx-datatable-column name="Gender" />
-        <ngx-datatable-column name="Row Height" prop="height" />
-      </ngx-datatable>
-    </div>
+    <ngx-datatable
+      class="material"
+      columnMode="force"
+      [rows]="rows | async"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="getRowHeight"
+      [scrollbarV]="true"
+    >
+      <ngx-datatable-column name="Name" />
+      <ngx-datatable-column name="Gender" />
+      <ngx-datatable-column name="Row Height" prop="height" />
+    </ngx-datatable>
   `
 })
 export class DynamicRowHeightComponent {

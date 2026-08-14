@@ -5,26 +5,24 @@ import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
   selector: 'multiple-tables-demo',
   imports: [DatatableComponent],
   template: `
-    <div>
-      <ngx-datatable
-        class="material"
-        columnMode="force"
-        [rows]="rows1"
-        [columns]="columns1"
-        [headerHeight]="50"
-        [footerHeight]="0"
-        [rowHeight]="100"
-      />
-      <br />
-      <ngx-datatable
-        class="material"
-        rowHeight="auto"
-        [rows]="rows2"
-        [columns]="columns2"
-        [headerHeight]="50"
-        [footerHeight]="50"
-      />
-    </div>
+    <ngx-datatable
+      class="material"
+      columnMode="force"
+      [rows]="rows1"
+      [columns]="columns1"
+      [headerHeight]="50"
+      [footerHeight]="0"
+      [rowHeight]="100"
+    />
+    <br />
+    <ngx-datatable
+      class="material"
+      rowHeight="auto"
+      [rows]="rows2"
+      [columns]="columns2"
+      [headerHeight]="50"
+      [footerHeight]="50"
+    />
   `
 })
 export class MultipleTablesComponent {

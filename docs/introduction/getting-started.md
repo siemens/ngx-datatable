@@ -1,33 +1,35 @@
 # Getting Started
 
-After [Installing](installing.md), include `NgxDatatableModule`
-in your application module like:
+You can grab the latest release from the [Releases Page](https://github.com/siemens/ngx-datatable/releases)
+in GitHub or via [NPM](https://www.npmjs.com/package/@siemens/ngx-datatable).
 
-```javascript
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { NgxDatatableModule } from '@siemens/ngx-datatable';
+- `npm install @siemens/ngx-datatable`
 
-import { AppComponent } from './app.component';
+## CSS
 
-@NgModule({
-  declarations: [AppComponent],
-  imports: [NgxDatatableModule, BrowserModule],
-  bootstrap: [AppComponent]
-})
-export class AppModule {}
+To use the material theme, add the following to your application's SCSS file and apply the `material` class to your data table:
+
+```scss
+@use '@siemens/ngx-datatable/themes/material';
+@import '@siemens/ngx-datatable/assets/icons.css';
 ```
 
-then in your `app.component.ts` you define a table like:
+For more information, visit the [Theming](themes.md) section.
 
-```javascript
+## Add a table
+
+In your `app.component.ts`, import `DatatableComponent` directly into your standalone component and apply the `material` class to the data table:
+
+```typescript
 import { Component } from '@angular/core';
+import { DatatableComponent } from '@siemens/ngx-datatable';
 
 @Component({
   selector: 'app',
+  imports: [DatatableComponent],
   template: `
     <div>
-      <ngx-datatable [rows]="rows" [columns]="columns"> </ngx-datatable>
+      <ngx-datatable class="material" [rows]="rows" [columns]="columns"> </ngx-datatable>
     </div>
   `
 })

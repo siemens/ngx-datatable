@@ -15,12 +15,11 @@ extra_css = [
 nav = [
     { "Introduction" = [
         "index.md",
+        { "Getting Started" = "introduction/getting-started.md" },
         { "Features" = "introduction/features.md" },
         { "Modes" = "introduction/column-modes.md" },
         { "Architecture" = "introduction/architecture.md" },
-        { "Installing" = "introduction/installing.md" },
         { "Theming" = "introduction/themes.md" },
-        { "Getting Started" = "introduction/getting-started.md" },
         { "Change Detection" = "introduction/cd.md" },
     ] },
     { "API" = [

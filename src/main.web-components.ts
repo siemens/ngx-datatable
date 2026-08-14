@@ -9,7 +9,14 @@ import { createCustomElement } from '@angular/elements';
 import { createApplication } from '@angular/platform-browser';
 import { providedNgxDatatableConfig } from '@siemens/ngx-datatable';
 
+import { routes } from './app/app.routes';
 import { DATA_ASSETS_URL } from './app/data.service';
+
+const exampleLoaders = new Map(
+  routes.flatMap(route =>
+    route.path && route.loadComponent ? [[route.path, route.loadComponent] as const] : []
+  )
+);
 
 declare global {
   interface Window {
@@ -27,44 +34,19 @@ createApplication({
 })
   .then(appRef => {
     window.loadDatatableExample = async example => {
-      switch (example) {
-        case 'fluid-row-height': {
-          registerExample(
-            'ngx-datatable-fluid-row-height',
-            await import('./app/basic/fluid-row-height.component').then(
-              c => c.FluidRowHeightComponent
-            ),
-            appRef
-          );
-          return;
-        }
-        case 'standard-column': {
-          registerExample(
-            'ngx-datatable-standard-column',
-            await import('./app/columns/fixed-column.component').then(c => c.FixedColumnComponent),
-            appRef
-          );
-          return;
-        }
-        case 'flex-column': {
-          registerExample(
-            'ngx-datatable-flex-column',
-            await import('./app/columns/flex-column.component').then(c => c.FlexColumnComponent),
-            appRef
-          );
-          return;
-        }
-        case 'force-column': {
-          registerExample(
-            'ngx-datatable-force-column',
-            await import('./app/columns/force-column.component').then(c => c.ForceColumnComponent),
-            appRef
-          );
-          return;
-        }
-        default:
-          throw new Error(`Unknown datatable example: ${example}`);
+      const loadComponent = exampleLoaders.get(example);
+      if (!loadComponent) {
+        throw new Error(`Unknown datatable example: ${example}`);
       }
+
+      const componentPromise = loadComponent();
+      if (!(componentPromise instanceof Promise)) {
+        throw new Error(`Invalid datatable example component: ${example}`);
+      }
+
+      const componentResult = await componentPromise;
+      const component = 'default' in componentResult ? componentResult.default : componentResult;
+      registerExample(`ngx-datatable-${example}`, component, appRef);
     };
 
     window.dispatchEvent(new Event('ngx-datatable-examples-ready'));

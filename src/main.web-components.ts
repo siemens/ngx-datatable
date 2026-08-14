@@ -38,6 +38,30 @@ createApplication({
           );
           return;
         }
+        case 'standard-column': {
+          registerExample(
+            'ngx-datatable-standard-column',
+            await import('./app/columns/fixed-column.component').then(c => c.FixedColumnComponent),
+            appRef
+          );
+          return;
+        }
+        case 'flex-column': {
+          registerExample(
+            'ngx-datatable-flex-column',
+            await import('./app/columns/flex-column.component').then(c => c.FlexColumnComponent),
+            appRef
+          );
+          return;
+        }
+        case 'force-column': {
+          registerExample(
+            'ngx-datatable-force-column',
+            await import('./app/columns/force-column.component').then(c => c.ForceColumnComponent),
+            appRef
+          );
+          return;
+        }
         default:
           throw new Error(`Unknown datatable example: ${example}`);
       }

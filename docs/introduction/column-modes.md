@@ -7,6 +7,8 @@ to the columns. The table comes with 3 modes; `standard`, `flex`, `force`.
 
 Columns are distributed given the width's defined in the column options.
 
+{{ datatable_example('src/app/columns/fixed-column.component.ts', 'standard-column', '400px') }}
+
 ## Flex
 
 Flex mode distributes the width's grow factor relative to other columns.
@@ -15,6 +17,8 @@ Basically it takes any available extra width and distribute it proportionally
 according to each column's `flexGrow` value.
 
 Flex is **not** suggested for when using `scrollH`.
+
+{{ datatable_example('src/app/columns/flex-column.component.ts', 'flex-column', '400px') }}
 
 ## Force
 
@@ -35,3 +39,5 @@ the min-width of each column is reached. The rules are:
 
 Force is usually the ideal column distribution method when columns do not need
 to be a fixed sized.
+
+{{ datatable_example('src/app/columns/force-column.component.ts', 'force-column', '400px') }}

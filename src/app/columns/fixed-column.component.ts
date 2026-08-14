@@ -13,33 +13,32 @@ import { DataService } from '../data.service';
   selector: 'fixed-column-demo',
   imports: [DatatableComponent, DataTableColumnDirective, DataTableColumnCellDirective, AsyncPipe],
   template: `
-    <div>
-      <ngx-datatable
-        class="material"
-        rowHeight="auto"
-        columnMode="standard"
-        [rows]="rows | async"
-        [headerHeight]="50"
-        [footerHeight]="50"
-      >
-        <ngx-datatable-column name="Name" [width]="300">
-          <ng-template let-value="value" ngx-datatable-cell-template>
-            {{ value }}
-          </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="Gender" [width]="300">
-          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-            {{ value }}
-          </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="Age" [width]="300">
-          <ng-template let-value="value" ngx-datatable-cell-template>
-            {{ value }}
-          </ng-template>
-        </ngx-datatable-column>
-      </ngx-datatable>
-    </div>
-  `
+    <ngx-datatable
+      class="material"
+      rowHeight="auto"
+      columnMode="standard"
+      [rows]="rows | async"
+      [headerHeight]="50"
+      [footerHeight]="50"
+    >
+      <ngx-datatable-column name="Name" [width]="300" [minWidth]="160">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Gender" [width]="300" [minWidth]="94">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          {{ value }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Age" [width]="300" [minWidth]="75">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value }}
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  `,
+  host: { class: 'datatable-example' }
 })
 export class FixedColumnComponent {
   protected readonly rows = inject(DataService)

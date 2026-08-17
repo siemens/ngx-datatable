@@ -16,11 +16,14 @@ nav = [
     { "Introduction" = [
         "index.md",
         { "Getting Started" = "introduction/getting-started.md" },
-        { "Features" = "introduction/features.md" },
         { "Modes" = "introduction/column-modes.md" },
         { "Architecture" = "introduction/architecture.md" },
         { "Theming" = "introduction/themes.md" },
         { "Change Detection" = "introduction/cd.md" },
+    ] },
+    { "Features" = [
+        "features/index.md",
+        { "Configuration" = "features/configuration.md" },
     ] },
     { "API" = [
         "api/index.md",

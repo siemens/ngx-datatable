@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { page, userEvent } from 'vitest/browser';
 
-import { SelectionType } from '../../types/public.types';
+import { ActivateEvent, SelectionType } from '../../types/public.types';
 import { TableColumn } from '../../types/table-column.type';
 import { DatatableComponent } from '../datatable.component';
 
@@ -18,6 +18,7 @@ import { DatatableComponent } from '../datatable.component';
       [groupExpansionDefault]="groupExpansionDefault()"
       [selected]="selected()"
       (selectedChange)="selected.set($event)"
+      (activate)="activate.set($event)"
     />
   `,
   host: {
@@ -41,6 +42,7 @@ class KeyboardNavigationTestComponent {
   readonly disableRowCheck = signal<((row: Record<string, string>) => boolean) | undefined>(
     undefined
   );
+  readonly activate = signal<ActivateEvent<Record<string, string>> | undefined>(undefined);
 }
 
 describe('keyboard navigation', () => {
@@ -180,6 +182,33 @@ describe('keyboard navigation', () => {
       await userEvent.keyboard('{ArrowUp}');
       await fixture.whenStable();
       expect(document.activeElement).toBe(graceCityCell);
+    });
+
+    it('uses pinned render order for focus and original column order for activation', async () => {
+      fixture.componentInstance.columns.set([
+        { name: 'City', prop: 'city' },
+        { name: 'Name', prop: 'name', frozenLeft: true }
+      ]);
+      await fixture.whenStable();
+      const adaNameCell = page
+        .getByRole('row', { name: 'Ada London' })
+        .getByRole('cell', { name: 'Ada' })
+        .element();
+      const graceNameCell = page
+        .getByRole('row', { name: 'Grace New York' })
+        .getByRole('cell', { name: 'Grace' })
+        .element();
+      adaNameCell.focus();
+
+      await userEvent.keyboard('{ArrowDown}');
+      await fixture.whenStable();
+
+      expect(document.activeElement).toBe(graceNameCell);
+
+      await userEvent.keyboard('{Enter}');
+      await fixture.whenStable();
+
+      expect(fixture.componentInstance.activate()?.cellIndex).toBe(1);
     });
 
     it('keeps cell focus at horizontal and vertical boundaries', async () => {

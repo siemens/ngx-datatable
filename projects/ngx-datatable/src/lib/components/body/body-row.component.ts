@@ -34,7 +34,7 @@ import { DataTableBodyCellComponent } from './body-cell.component';
           [style.grid-column]="'span ' + colGroup.columns.length"
           [class.row-disabled]="disabled()"
         >
-          @for (column of colGroup.columns; track column.$$id; let ii = $index) {
+          @for (column of colGroup.columns; track column.$$id) {
             <datatable-body-cell
               role="cell"
               tabindex="-1"
@@ -48,7 +48,7 @@ import { DataTableBodyCellComponent } from './body-cell.component';
               [displayCheck]="displayCheck()"
               [disabled]="disabled()"
               [treeStatus]="treeStatus()"
-              (activate)="onActivate($event, ii)"
+              (activate)="onActivate($event, column)"
               (treeAction)="onTreeAction()"
             />
           }
@@ -118,8 +118,13 @@ export class DataTableBodyRowComponent<TRow extends Row = any> implements DoChec
     }
   }
 
-  onActivate(event: CellActiveEvent<TRow>, index: number): void {
-    this.activate.emit({ ...event, rowElement: this._element, cellIndex: index });
+  onActivate(event: CellActiveEvent<TRow>, column: TableColumnInternal): void {
+    this.activate.emit({
+      ...event,
+      rowElement: this._element,
+      cellIndex: this.columns().indexOf(column),
+      renderedCellIndex: this.cells().findIndex(cell => cell.column() === column)
+    });
   }
 
   focus(): void {

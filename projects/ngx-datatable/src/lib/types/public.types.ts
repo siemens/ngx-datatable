@@ -77,7 +77,13 @@ export interface ActivateEvent<TRow> {
   value?: any;
   cellElement?: HTMLElement;
   treeStatus?: TreeStatus;
+  /** Index of the cell in the originally supplied column order. */
   cellIndex?: number;
+  /**
+   * Index of the cell in rendered order.
+   * The order of columns may differ from the supplied order when frozen left/right is used.
+   */
+  renderedCellIndex?: number;
   rowElement: HTMLElement;
 }
 

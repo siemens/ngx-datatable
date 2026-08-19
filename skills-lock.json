@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "gh-stack": {
+      "source": "github/gh-stack",
+      "sourceType": "github",
+      "skillPath": "skills/gh-stack/SKILL.md",
+      "computedHash": "213d3fe0b3dc87b453912b5a5947fd189a884e4a82ce41fe8ce6c16fb93cd8b3"
+    },
     "playwright-cli": {
       "source": "microsoft/playwright-cli",
       "sourceType": "github",

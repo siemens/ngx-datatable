@@ -9,9 +9,10 @@ export const routes: Routes = [
   },
   // Basic
   {
-    path: '10k-rows',
-    data: { title: '10k Rows', sourcePath: 'basic/10k-rows.component.ts' },
-    loadComponent: () => import('./basic/10k-rows.component').then(c => c.TenKRowsComponent)
+    path: 'large-data-set',
+    data: { title: 'Large Data Set', sourcePath: 'basic/large-data-set.component.ts' },
+    loadComponent: () =>
+      import('./basic/large-data-set.component').then(c => c.LargeDataSetComponent)
   },
   {
     path: 'full-screen',

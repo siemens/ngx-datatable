@@ -11,7 +11,7 @@ import { FullEmployee } from '../data.model';
 import { DataService } from '../data.service';
 
 @Component({
-  selector: 'ten-k-rows-demo',
+  selector: 'large-data-set-demo',
   imports: [
     DatatableComponent,
     DataTableColumnDirective,
@@ -62,7 +62,7 @@ import { DataService } from '../data.service';
     </ngx-datatable>
   `
 })
-export class TenKRowsComponent {
+export class LargeDataSetComponent {
   private dataService = inject(DataService);
   readonly rows = signal<(FullEmployee & { height: number })[]>([]);
   readonly scrollTarget = signal(0);

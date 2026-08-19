@@ -33,6 +33,7 @@ import { DataService } from '../data.service';
   `
 })
 export class LiveDataComponent {
+  static readonly exampleTitle = 'Live Data';
   private dataService = inject(DataService);
   @ViewChild('mydatatable') mydatatable!: DatatableComponent<Employee & { updated: string }>;
 

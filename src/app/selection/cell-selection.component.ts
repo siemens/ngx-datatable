@@ -25,6 +25,7 @@ import { DataService } from '../data.service';
   `
 })
 export class CellSelectionComponent {
+  static readonly exampleTitle = 'Cell Selection';
   readonly rows = inject(DataService).load('company.json');
   selected: Employee[] = [];
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];

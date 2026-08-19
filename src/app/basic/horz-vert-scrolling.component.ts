@@ -27,5 +27,6 @@ import { DataService } from '../data.service';
   `
 })
 export class HorzVertScrollingComponent {
+  static readonly exampleTitle = 'Horz/Vert Scrolling';
   protected readonly rows = inject(DataService).load('100k.json');
 }

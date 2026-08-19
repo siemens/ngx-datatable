@@ -19,6 +19,14 @@
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
+        "build-routes": {
+          "builder": "@ngx-datatable/example-routes-builder:example-routes",
+          "options": {
+            "sourceRoot": "src/app",
+            "routesFile": "src/app/app.routes.ts",
+            "webComponentsFile": "src/app/app.web-components.ts"
+          }
+        },
         "build": {
           "builder": "@angular/build:application",
           "options": {
@@ -95,6 +103,20 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
+        }
+      }
+    },
+    "example-routes-builder": {
+      "projectType": "application",
+      "root": "tools/example-routes-builder",
+      "sourceRoot": "tools/example-routes-builder",
+      "architect": {
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["tools/example-routes-builder/**/*.mts"],
+            "eslintConfig": "tools/example-routes-builder/eslint.config.mjs"
           }
         }
       }

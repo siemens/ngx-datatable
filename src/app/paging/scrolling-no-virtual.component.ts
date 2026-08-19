@@ -33,6 +33,7 @@ import { Page } from './model/page';
   providers: [MockServerResultsService]
 })
 export class ScrollingNoVirtualComponent implements OnInit {
+  static readonly exampleTitle = 'Scrolling no virtual';
   private serverResultsService = inject(MockServerResultsService);
   readonly page = signal<Page>({
     pageNumber: 0,

@@ -26,6 +26,7 @@ import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
   `
 })
 export class MultipleTablesComponent {
+  static readonly exampleTitle = 'Multiple Tables';
   columns1: TableColumn[] = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company' }];
 
   columns2: TableColumn[] = [{ prop: 'name', name: 'Name' }, { name: 'Gender' }];

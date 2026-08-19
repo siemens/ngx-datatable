@@ -83,6 +83,7 @@ import { DataService } from '../data.service';
   `
 })
 export class DisabledComponent {
+  static readonly exampleTitle = 'Disabled';
   private dataService = inject(DataService);
   readonly rows = signal<(FullEmployee & { isDisabled?: boolean })[]>([]);
 

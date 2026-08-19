@@ -42,6 +42,7 @@ import { DataService } from '../data.service';
   `
 })
 export class DisableSelectionCallbackComponent {
+  static readonly exampleTitle = 'Disable Selection Callback';
   readonly rows = inject(DataService).load('company.json');
 
   selected: Employee[] = [];

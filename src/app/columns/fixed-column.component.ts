@@ -41,6 +41,7 @@ import { DataService } from '../data.service';
   host: { class: 'datatable-example' }
 })
 export class FixedColumnComponent {
+  static readonly exampleTitle = 'Fixed Column';
   protected readonly rows = inject(DataService)
     .load('company.json')
     .pipe(map(data => data.slice(0, 5)));

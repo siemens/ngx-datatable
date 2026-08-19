@@ -46,6 +46,7 @@ import { DataService } from '../data.service';
   `
 })
 export class ColumnReorderComponent {
+  static readonly exampleTitle = 'Column Reorder';
   private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
   readonly loadingIndicator = signal(true);

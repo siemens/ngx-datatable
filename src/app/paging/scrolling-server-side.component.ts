@@ -48,6 +48,7 @@ export class MockServerResultsService {
   providers: [MockServerResultsService]
 })
 export class ScrollingServerSideComponent implements OnInit {
+  static readonly exampleTitle = 'Scrolling server-side';
   private serverResultsService = inject(MockServerResultsService);
   private el = inject(ElementRef);
   readonly headerHeight = 50;

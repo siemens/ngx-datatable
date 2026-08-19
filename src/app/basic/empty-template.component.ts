@@ -32,6 +32,7 @@ import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
   `
 })
 export class EmptyTemplateComponent {
+  static readonly exampleTitle = 'Empty Template';
   columns: TableColumn[] = [
     { prop: 'name' },
     { name: 'Gender' },

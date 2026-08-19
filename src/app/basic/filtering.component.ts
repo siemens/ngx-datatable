@@ -28,6 +28,7 @@ import { DataService } from '../data.service';
   `
 })
 export class FilteringComponent {
+  static readonly exampleTitle = 'Filtering';
   private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
 

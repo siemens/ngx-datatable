@@ -34,6 +34,7 @@ import { DataService } from '../data.service';
   `
 })
 export class TemplateRefComponent implements OnInit {
+  static readonly exampleTitle = 'TemplateRef';
   readonly rows = inject(DataService)
     .load('company.json')
     .pipe(map(data => data.slice(0, 5)));

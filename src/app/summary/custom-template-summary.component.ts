@@ -31,6 +31,7 @@ import { DataService } from '../data.service';
   styleUrl: './custom-template-summary.component.scss'
 })
 export class CustomTemplateSummaryComponent implements OnInit {
+  static readonly exampleTitle = 'Custom Template Summary';
   private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
 

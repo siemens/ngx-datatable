@@ -4,8 +4,8 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { providedNgxDatatableConfig } from '@siemens/ngx-datatable';
 
-import { routes } from './app/app-routing.module';
 import { AppComponent } from './app/app.component';
+import { routes } from './app/app.routes';
 
 bootstrapApplication(AppComponent, {
   providers: [

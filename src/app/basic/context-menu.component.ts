@@ -44,6 +44,7 @@ import { DataService } from '../data.service';
   `
 })
 export class ContextMenuComponent {
+  static readonly exampleTitle = 'Context Menu';
   protected readonly rows = inject(DataService).load('company.json');
 
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company' }];

@@ -29,5 +29,6 @@ import { DataService } from '../data.service';
   `
 })
 export class FullScreenComponent {
+  static readonly exampleTitle = 'Full Screen';
   protected readonly rows = inject(DataService).load('100k.json');
 }

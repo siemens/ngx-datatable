@@ -40,6 +40,7 @@ import { Page } from './model/page';
   providers: [MockServerResultsService]
 })
 export class VirtualServerSideComponent {
+  static readonly exampleTitle = 'Virtual server-side';
   private serverResultsService = inject(MockServerResultsService);
   readonly totalElements = signal(0);
   pageNumber = 0;

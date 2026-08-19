@@ -20,6 +20,7 @@ import { DataService } from '../data.service';
   `
 })
 export class FixedRowHeightComponent {
+  static readonly exampleTitle = 'Fixed Row Height';
   protected readonly rows = inject(DataService).load('company.json');
   columns: TableColumn[] = [{ prop: 'name' }, { name: 'Company' }, { name: 'Gender' }];
 }

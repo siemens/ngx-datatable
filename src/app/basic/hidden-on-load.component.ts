@@ -59,6 +59,7 @@ import { DataService } from '../data.service';
   `
 })
 export class HiddenOnLoadComponent {
+  static readonly exampleTitle = 'Hidden On Load';
   protected readonly rows = inject(DataService).load('100k.json');
 
   tab1 = true;

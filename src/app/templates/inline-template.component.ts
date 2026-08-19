@@ -56,6 +56,7 @@ import { DataService } from '../data.service';
   `
 })
 export class InlineTemplateComponent {
+  static readonly exampleTitle = 'Inline Template';
   protected readonly rows = inject(DataService)
     .load('company.json')
     .pipe(map(data => data.slice(0, 5)));

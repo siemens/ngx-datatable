@@ -244,6 +244,6 @@
     @if (title()) {
       <example-title [title]="title()" [sourcePath]="sourcePath()" />
     }
-    <router-outlet #outlet="outlet" (activate)="routeActivate(outlet)" />
+    <router-outlet #outlet="outlet" (activate)="routeActivate($event, outlet)" />
   </main>
 </div>

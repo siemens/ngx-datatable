@@ -26,6 +26,7 @@ import { DataService } from '../data.service';
   `
 })
 export class CssClassesComponent {
+  static readonly exampleTitle = 'CSS Classes';
   protected readonly rows = inject(DataService)
     .load('100k.json')
     .pipe(map(data => data.slice(0, 50)));

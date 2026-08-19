@@ -29,6 +29,7 @@ import { Page } from './model/page';
   providers: [MockServerResultsService]
 })
 export class ServerSidePagingComponent implements OnInit {
+  static readonly exampleTitle = 'Server-side Paging';
   private serverResultsService = inject(MockServerResultsService);
   readonly page = signal<Page>({
     pageNumber: 0,

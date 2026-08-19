@@ -42,6 +42,7 @@ import { DataService } from '../data.service';
   styleUrl: './simple-summary.component.scss'
 })
 export class SimpleSummaryComponent {
+  static readonly exampleTitle = 'Simple Summary';
   protected readonly rows = inject(DataService)
     .load('company.json')
     .pipe(map(data => data.slice(0, 5)));

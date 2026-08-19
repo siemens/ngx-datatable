@@ -65,6 +65,7 @@ import { DataService } from '../data.service';
   `
 })
 export class SummaryRowActionsComponent {
+  static readonly exampleTitle = 'Summary Row Actions';
   private dataService = inject(DataService);
   protected readonly rows = signal<Employee[]>([]);
   protected readonly selected = signal<Employee[]>([]);

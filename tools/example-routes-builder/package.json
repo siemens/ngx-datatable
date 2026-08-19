@@ -1,0 +1,6 @@
+{
+  "name": "@ngx-datatable/example-routes-builder",
+  "private": true,
+  "type": "module",
+  "builders": "./builders.json"
+}

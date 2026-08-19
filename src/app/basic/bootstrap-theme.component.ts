@@ -27,6 +27,7 @@ import { DataService } from '../data.service';
   `
 })
 export class BootstrapThemeComponent {
+  static readonly exampleTitle = 'Bootstrap Theme';
   private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
   readonly loadingIndicator = signal(true);

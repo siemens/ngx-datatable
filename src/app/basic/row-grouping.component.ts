@@ -143,6 +143,7 @@ import { DataService } from '../data.service';
   `
 })
 export class RowGroupingComponent {
+  static readonly exampleTitle = 'Row Grouping';
   private dataService = inject(DataService);
   @ViewChild('myTable') table!: DatatableComponent<GroupedEmployee>;
 

@@ -21,5 +21,6 @@ import { DataService } from '../data.service';
   `
 })
 export class ClientSidePagingComponent {
+  static readonly exampleTitle = 'Client-side Paging';
   protected readonly rows = inject(DataService).load('company.json');
 }

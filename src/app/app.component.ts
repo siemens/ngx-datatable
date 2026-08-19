@@ -5,6 +5,11 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import packageInfo from '../../projects/ngx-datatable/package.json';
 import { ExampleTitleComponent } from './example-title.component';
 
+interface ExampleComponentConstructor {
+  dark?: boolean;
+  exampleTitle: string;
+}
+
 @Component({
   selector: 'app-root',
   imports: [ExampleTitleComponent, RouterLink, RouterOutlet],
@@ -24,11 +29,12 @@ export class AppComponent {
   readonly title = signal('');
   readonly sourcePath = signal('');
 
-  routeActivate(outlet: RouterOutlet): void {
-    const { dark = false, sourcePath = '', title = '' } = outlet.activatedRoute.snapshot.data;
+  routeActivate(component: object, outlet: RouterOutlet): void {
+    const { sourcePath = '' } = outlet.activatedRoute.snapshot.data;
+    const example = component.constructor as unknown as ExampleComponentConstructor;
 
-    this.dark.set(dark);
+    this.dark.set(example.dark ?? false);
     this.sourcePath.set(sourcePath);
-    this.title.set(title);
+    this.title.set(example.exampleTitle);
   }
 }

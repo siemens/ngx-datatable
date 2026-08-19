@@ -43,6 +43,7 @@ import { DataService } from '../data.service';
   styles: ['.icon {height: 10px; width: 10px; }', '.disabled {opacity: 0.5; }']
 })
 export class ClientSideTreeComponent {
+  static readonly exampleTitle = 'Client Side Tree';
   protected readonly rows = inject(DataService).load('company_tree.json');
 
   onTreeAction(event: any) {

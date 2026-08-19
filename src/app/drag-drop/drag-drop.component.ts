@@ -43,6 +43,7 @@ import { DataService } from '../data.service';
   `
 })
 export class DragDropComponent {
+  static readonly exampleTitle = 'Drag Drop';
   private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
   readonly loadingIndicator = signal<boolean>(true);

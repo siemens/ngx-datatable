@@ -22,6 +22,7 @@ import { DataService } from '../data.service';
   `
 })
 export class RxjsComponent {
+  static readonly exampleTitle = 'RxJS';
   private dataService = inject(DataService);
   rows: Observable<Employee[]>;
 

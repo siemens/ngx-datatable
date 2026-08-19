@@ -48,6 +48,7 @@ import { DataService } from '../data.service';
   `
 })
 export class SingleRowSelectionComponent {
+  static readonly exampleTitle = 'Single Row Selection';
   private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
 

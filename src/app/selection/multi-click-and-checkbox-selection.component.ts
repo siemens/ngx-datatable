@@ -68,6 +68,7 @@ import { DataService } from '../data.service';
   `
 })
 export class MultiClickAndCheckboxSelectionComponent {
+  static readonly exampleTitle = 'Multi Click and Checkbox Selection';
   private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
   selected: Employee[] = [];

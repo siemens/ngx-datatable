@@ -21,6 +21,7 @@ import { DataService } from '../data.service';
   `
 })
 export class ComparatorComponent {
+  static readonly exampleTitle = 'Comparator';
   protected readonly rows = inject(DataService)
     .load('company.json')
     .pipe(map(data => data.slice(0, 20)));

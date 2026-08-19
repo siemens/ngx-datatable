@@ -45,6 +45,7 @@ import { DataService } from '../data.service';
   `
 })
 export class MultiClickRowSelectionComponent {
+  static readonly exampleTitle = 'Multi Click Row Selection';
   readonly rows = inject(DataService).load('company.json');
 
   selected: Employee[] = [];

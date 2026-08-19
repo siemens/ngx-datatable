@@ -28,6 +28,7 @@ import { DataService } from '../data.service';
   `
 })
 export class InlineHtmlSummaryComponent {
+  static readonly exampleTitle = 'Inline HTML Summary';
   private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
 

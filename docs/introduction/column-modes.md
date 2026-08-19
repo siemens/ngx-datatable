@@ -7,7 +7,7 @@ to the columns. The table comes with 3 modes; `standard`, `flex`, `force`.
 
 Columns are distributed given the width's defined in the column options.
 
-{{ datatable_example('src/app/columns/fixed-column.component.ts', 'standard-column', '400px') }}
+{{ datatable_example('src/app/columns/fixed-column.component.ts', 'fixed-column', '400px') }}
 
 ## Flex
 

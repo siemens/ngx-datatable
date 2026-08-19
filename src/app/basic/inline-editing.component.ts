@@ -70,6 +70,7 @@ import { DataService } from '../data.service';
   `
 })
 export class InlineEditingComponent {
+  static readonly exampleTitle = 'Inline Editing';
   private dataService = inject(DataService);
   editing: Record<string, boolean> = {};
   rows: Employee[] = [];

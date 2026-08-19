@@ -47,6 +47,7 @@ import { DataService } from '../data.service';
   `
 })
 export class MultiRowSelectionComponent {
+  static readonly exampleTitle = 'Multi Row Selection';
   readonly rows = inject(DataService).load('company.json');
 
   readonly selected = signal<Employee[]>([]);

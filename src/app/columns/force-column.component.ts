@@ -41,6 +41,7 @@ import { DataService } from '../data.service';
   host: { class: 'datatable-example' }
 })
 export class ForceColumnComponent {
+  static readonly exampleTitle = 'Force Column';
   protected readonly rows = inject(DataService)
     .load('company.json')
     .pipe(map(data => data.slice(0, 5)));

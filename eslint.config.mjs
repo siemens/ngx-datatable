@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 
 export const tsConfig = typescriptEslint.config({
   extends: [...angularTypescriptConfig],
-  files: ['**/*.ts'],
+  files: ['**/*.{ts,mts}'],
   languageOptions: {
     parserOptions: {
       project: ['tsconfig.app.json'],

@@ -40,6 +40,7 @@ import { Employee } from '../data.model';
   `
 })
 export class ColumnTogglingComponent {
+  static readonly exampleTitle = 'Column Toggling';
   rows: Employee[] = [
     {
       name: 'Claudine Neal',

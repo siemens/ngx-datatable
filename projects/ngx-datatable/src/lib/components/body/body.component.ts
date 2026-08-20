@@ -951,8 +951,8 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       }
       if (!isCellSelection) {
         this.focusRow(index, key, indexInGroup);
-      } else if (isCellSelection && modelObject.cellIndex !== undefined) {
-        this.focusCell(index, key, modelObject.cellIndex, indexInGroup);
+      } else if (isCellSelection && modelObject.renderedCellIndex !== undefined) {
+        this.focusCell(index, key, modelObject.renderedCellIndex, indexInGroup);
       }
     }
   }

@@ -27,5 +27,6 @@ import { DataService } from '../data.service';
   `
 })
 export class ColumnPinningComponent {
+  static readonly exampleTitle = 'Column Pinning';
   protected readonly rows = inject(DataService).load('100k.json');
 }

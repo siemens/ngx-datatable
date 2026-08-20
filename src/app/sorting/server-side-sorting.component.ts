@@ -23,6 +23,7 @@ import { DataService } from '../data.service';
   `
 })
 export class ServerSideSortingComponent {
+  static readonly exampleTitle = 'Server-side Sorting';
   private dataService = inject(DataService);
   readonly loading = signal(false);
 

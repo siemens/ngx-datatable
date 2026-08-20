@@ -15,6 +15,7 @@
     "start": "ng serve",
     "start:prod": "http-server dist/ngx-datatable-examples -s -p 4200 -a 127.0.0.1",
     "build": "ng build",
+    "build:routes": "tsc -p tools/example-routes-builder/tsconfig.json && ng run ngx-datatable:build-routes",
     "build:prod": "ng build --configuration production",
     "build:web-components": "ng build --configuration web-components",
     "format": "prettier --write .",
@@ -37,6 +38,9 @@
     "package": "npm run build:lib:prod && npm run copy-files && npm run build:css"
   },
   "private": true,
+  "workspaces": [
+    "tools/example-routes-builder"
+  ],
   "overrides": {
     "@microsoft/api-extractor": {
       "typescript": "6.0.3"

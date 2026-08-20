@@ -40,5 +40,6 @@ import { DataService } from '../data.service';
   `
 })
 export class DefaultSortComponent {
+  static readonly exampleTitle = 'Default Sort';
   protected readonly rows = inject(DataService).load('company.json');
 }

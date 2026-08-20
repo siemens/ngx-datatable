@@ -73,6 +73,7 @@ import { DataService } from '../data.service';
   `
 })
 export class VertDynamicScrollingComponent {
+  static readonly exampleTitle = 'Vert Dynamic Scrolling';
   private dataService = inject(DataService);
   editing: Record<string, boolean> = {};
   rows: Employee[] = [];

@@ -63,6 +63,7 @@ import { DataService } from '../data.service';
   `
 })
 export class LargeDataSetComponent {
+  static readonly exampleTitle = 'Large Data Set';
   private dataService = inject(DataService);
   readonly rows = signal<(FullEmployee & { height: number })[]>([]);
   readonly scrollTarget = signal(0);

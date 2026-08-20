@@ -7,5 +7,9 @@ tmp
 playwright/snapshots
 CHANGELOG.md
 
+# Generated files
+src/app/app.routes.ts
+src/app/app.web-components.ts
+
 # Skills managed by skills.sh
 .agents/skills/playwright-cli

@@ -26,6 +26,7 @@ import { DataService } from '../data.service';
   `
 })
 export class DynamicRowHeightComponent {
+  static readonly exampleTitle = 'Dynamic Row Height';
   protected readonly rows = inject(DataService)
     .load('100k.json')
     .pipe(

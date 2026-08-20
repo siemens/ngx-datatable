@@ -26,6 +26,8 @@ import { DataService } from '../data.service';
   `
 })
 export class DarkThemeComponent {
+  static readonly exampleTitle = 'Dark Theme';
+  static readonly dark = true;
   private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
   readonly loadingIndicator = signal(true);

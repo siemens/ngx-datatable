@@ -34,6 +34,9 @@
     },
     {
       "path": "./projects/ngx-datatable/tsconfig.spec.json"
+    },
+    {
+      "path": "./tools/example-routes-builder/tsconfig.json"
     }
   ]
 }

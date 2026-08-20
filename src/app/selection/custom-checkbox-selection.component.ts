@@ -86,6 +86,7 @@ import { DataService } from '../data.service';
   `
 })
 export class CustomCheckboxSelectionComponent {
+  static readonly exampleTitle = 'Custom Checkbox Selection';
   private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
   selected: Employee[] = [];

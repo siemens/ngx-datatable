@@ -26,6 +26,7 @@ import { DataService } from '../data.service';
   host: { class: 'datatable-example' }
 })
 export class FluidRowHeightComponent {
+  static readonly exampleTitle = 'Fluid Row Height';
   private dataService = inject(DataService);
   readonly rows = signal<Employee[]>([]);
   readonly loadingIndicator = signal(true);

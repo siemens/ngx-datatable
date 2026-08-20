@@ -22,6 +22,7 @@ import { DataService } from '../data.service';
   `
 })
 export class ClientSideSortingComponent {
+  static readonly exampleTitle = 'Client-side Sorting';
   protected readonly rows = inject(DataService).load('company.json');
 
   columns: TableColumn[] = [{ name: 'Company' }, { name: 'Name' }, { name: 'Gender' }];

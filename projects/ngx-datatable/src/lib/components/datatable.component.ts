@@ -30,7 +30,6 @@ import { Subscription } from 'rxjs';
 
 import { ScrollContainerDirective } from '../directives/scroll-container.directive';
 import {
-  AllPartial,
   NGX_DATATABLE_CONFIG,
   NgxDatatableConfig,
   NgxDatatableCssClasses,
@@ -132,10 +131,10 @@ export class DatatableComponent<TRow extends Row = any>
   private cd = inject(ChangeDetectorRef);
   element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   rowDiffer: IterableDiffer<TRow | undefined> = inject(IterableDiffers).find([]).create();
-  private readonly globalConfiguration: AllPartial<NgxDatatableConfig> =
+  private readonly globalConfiguration: NgxDatatableConfig =
     inject(NGX_DATATABLE_CONFIG, { optional: true }) ??
     // This is the old injection token for backward compatibility.
-    inject<AllPartial<NgxDatatableConfig>>('configuration' as any, { optional: true }) ??
+    inject<NgxDatatableConfig>('configuration' as any, { optional: true }) ??
     {};
   readonly datatableConfiguration = new DatatableConfiguration(this, this.globalConfiguration);
   protected readonly configuration = this.datatableConfiguration.configuration;

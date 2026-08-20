@@ -698,7 +698,10 @@ export class DatatableComponent<TRow extends Row = any>
    */
   readonly _footerComponent = viewChild(DataTableFooterComponent);
   protected verticalScrollVisible = false;
-  private readonly dimensions = signal<Pick<DOMRect, 'width' | 'height'>>({ height: 0, width: 0 });
+  private readonly dimensions = signal<Pick<DOMRect, 'width' | 'height'>>(
+    { height: 0, width: 0 },
+    { equal: (a, b) => a.width === b.width && a.height === b.height }
+  );
 
   /** Re-measures the table whenever the host element's size changes. */
   private resizeObserver?: ResizeObserver;
@@ -721,6 +724,7 @@ export class DatatableComponent<TRow extends Row = any>
         }, 5);
       });
       this.resizeObserver.observe(this.element);
+      this.dimensions.set(this.element.getBoundingClientRect());
     });
   }
 

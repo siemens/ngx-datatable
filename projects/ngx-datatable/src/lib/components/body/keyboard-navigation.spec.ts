@@ -10,12 +10,15 @@ import { DatatableComponent } from '../datatable.component';
   imports: [DatatableComponent],
   template: `
     <ngx-datatable
+      style="height: 400px"
       [columns]="columns()"
       [rows]="rows()"
       [selectionType]="selectionType()"
       [disableRowCheck]="disableRowCheck()"
       [groupRowsBy]="groupRowsBy()"
       [groupExpansionDefault]="groupExpansionDefault()"
+      [scrollbarV]="true"
+      [virtualization]="true"
       [selected]="selected()"
       (selectedChange)="selected.set($event)"
       (activate)="activate.set($event)"
@@ -130,6 +133,52 @@ describe('keyboard navigation', () => {
     await userEvent.keyboard('{ArrowUp}');
     await fixture.whenStable();
     expect(document.activeElement).toBe(graceRow);
+  });
+
+  it('scrolls and focuses the next virtual row', async () => {
+    fixture.componentInstance.rows.set(
+      Array.from({ length: 100 }, (_, index) => ({ name: `Name ${index}`, city: `City ${index}` }))
+    );
+    await fixture.whenStable();
+
+    const lastRenderedRow = page.getByRole('row', { name: 'Name 12 City 12' });
+    const targetRow = page.getByRole('row', { name: 'Name 13 City 13' });
+    lastRenderedRow.element().focus();
+
+    await expect.element(targetRow).not.toBeInTheDocument();
+    await userEvent.keyboard('{ArrowDown}');
+    await fixture.whenStable();
+
+    await expect.element(targetRow).toBeInTheDocument();
+    await expect.element(targetRow).toHaveFocus();
+
+    await userEvent.keyboard('{ArrowUp}');
+    await expect.element(lastRenderedRow).toHaveFocus();
+  });
+
+  it('navigates virtual rows after scrolling to a nonzero offset', async () => {
+    const rows = Array.from({ length: 100 }, (_, index) => ({
+      name: `Name ${index}`,
+      city: `City ${index}`
+    }));
+    fixture.componentInstance.rows.set(rows);
+    await fixture.whenStable();
+
+    const table = page.getByRole('table').element();
+    table.scrollTop = 1500;
+    table.dispatchEvent(new Event('scroll'));
+    await fixture.whenStable();
+
+    const lastRenderedRow = page.getByRole('row', { name: 'Name 62 City 62' });
+    const targetRow = page.getByRole('row', { name: 'Name 63 City 63' });
+    lastRenderedRow.element().focus();
+
+    await expect.element(targetRow).not.toBeInTheDocument();
+    await userEvent.keyboard('{ArrowDown}');
+    await expect.element(targetRow).toHaveFocus();
+
+    await userEvent.keyboard('{ArrowUp}');
+    await expect.element(lastRenderedRow).toHaveFocus();
   });
 
   it('selects the focused row with Enter', async () => {

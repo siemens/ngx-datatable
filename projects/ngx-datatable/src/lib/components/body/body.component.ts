@@ -359,6 +359,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   readonly rowHeightsCache = computed(() => this.computeRowHeightsCache());
   readonly offsetY = signal(0);
   readonly indexes = computed(() => this.computeIndexes());
+  private readonly pendingFocus = signal<{ index: number; cellIndex?: number } | undefined>(undefined);
   rowTrackingFn: TrackByFunction<RowOrGroup<TRow> | undefined>;
   readonly rowExpansions = signal<TRow[]>([]);
   readonly groupExpansions = signal<Group<TRow>[]>([]);
@@ -506,6 +507,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
 
     this.updatePage(event.direction);
     this.cd.detectChanges();
+    this.focusPendingRow();
   }
 
   /**
@@ -961,6 +963,8 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     const nextRow = this.getPrevNextRow(index, key, indexInGroup);
     if (nextRow) {
       nextRow.focus();
+    } else {
+      this.focusVirtualRow(index, key);
     }
   }
 
@@ -995,7 +999,44 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       nextRow = this.getPrevNextRow(index, key, indexInGroup);
     }
 
-    nextRow?.focusCell(nextCellIndex);
+    if (nextRow) {
+      nextRow.focusCell(nextCellIndex);
+    } else if (key === ARROW_UP || key === ARROW_DOWN) {
+      this.focusVirtualRow(index, key, nextCellIndex);
+    }
+  }
+
+  private focusVirtualRow(index: number, key: string, cellIndex?: number): void {
+    if (!this.virtualization() || !this.scrollbarV()) {
+      return;
+    }
+
+    const nextIndex = this.indexes().first + index + (key === ARROW_DOWN ? 1 : -1);
+    if (nextIndex < 0 || nextIndex >= this.rowCount()) {
+      return;
+    }
+
+    this.pendingFocus.set({ index: nextIndex, cellIndex });
+    this.scrollToIndex(nextIndex, { block: key === ARROW_DOWN ? 'end' : 'start' });
+  }
+
+  private focusPendingRow(): void {
+    const pendingFocus = this.pendingFocus();
+    if (!pendingFocus) {
+      return;
+    }
+
+    const nextRow = this.getRow(pendingFocus.index);
+    if (!nextRow) {
+      return;
+    }
+
+    if (pendingFocus.cellIndex === undefined) {
+      nextRow.focus();
+    } else {
+      nextRow.focusCell(pendingFocus.cellIndex);
+    }
+    this.pendingFocus.set(undefined);
   }
 
   private getRow(index: number, indexInGroup?: number): DataTableBodyRowComponent | undefined {

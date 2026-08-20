@@ -1,11 +1,15 @@
 import { computed } from '@angular/core';
 
-import type { AllPartial, NgxDatatableConfig } from '../ngx-datatable.config';
+import type { NgxDatatableConfig } from '../ngx-datatable.config';
 import type { DatatableComponent } from './datatable.component';
+
+type AllRequired<T> = T extends (...args: any[]) => any
+  ? T
+  : { [K in keyof T]-?: AllRequired<NonNullable<T[K]>> };
 
 /** @internal */
 export class DatatableConfiguration {
-  readonly configuration = computed(() => {
+  readonly configuration = computed<AllRequired<NgxDatatableConfig>>(() => {
     const configuration = this.globalConfiguration;
 
     return {
@@ -49,6 +53,6 @@ export class DatatableConfiguration {
 
   constructor(
     private readonly datatable: DatatableComponent,
-    private readonly globalConfiguration: AllPartial<NgxDatatableConfig>
+    private readonly globalConfiguration: NgxDatatableConfig
   ) {}
 }

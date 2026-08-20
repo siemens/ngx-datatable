@@ -1,15 +1,21 @@
 import { Routes } from '@angular/router';
 
+// Route paths must match their component selectors without the `-demo` suffix.
 export const routes: Routes = [
   {
     path: '',
+    redirectTo: 'fluid-row-height',
+    pathMatch: 'full'
+  },
+  {
+    path: 'fluid-row-height',
     data: { title: 'Fluid Row Height', sourcePath: 'basic/fluid-row-height.component.ts' },
     loadComponent: () =>
       import('./basic/fluid-row-height.component').then(c => c.FluidRowHeightComponent)
   },
   // Basic
   {
-    path: '10k-rows',
+    path: 'ten-k-rows',
     data: { title: '10k Rows', sourcePath: 'basic/10k-rows.component.ts' },
     loadComponent: () => import('./basic/10k-rows.component').then(c => c.TenKRowsComponent)
   },

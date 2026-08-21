@@ -19,6 +19,8 @@ The current features include:
 - Decoupled theme'ing with included Google Material theme
 - Light codebase / No external dependencies
 
+See [Configuration](configuration.md) to configure shared defaults for all tables.
+
 ### Roadmap
 
 We are really excited about the table and wanted to get it out into the open as quickly as
@@ -31,7 +33,7 @@ possible so we had to delay some of the features but we plan to add the followin
 ### Alternatives
 
 This might not be the best fit for you given the above, there are some other great solutions
-and some this project borrows from; heres a short list:
+and some this project borrows from; here's a short list:
 
 - [ng2-super-table](https://github.com/andyperlitch/ng2-super-table)
 - [ng2-table](https://github.com/valor-software/ng2-table)

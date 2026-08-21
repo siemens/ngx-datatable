@@ -128,11 +128,15 @@ export class DataTableBodyRowComponent<TRow extends Row = any> implements DoChec
   }
 
   focus(): void {
-    this._element.focus();
+    this._element.focus({ preventScroll: true });
   }
 
   focusCell(index: number): void {
     this.cells()[index]?.focus();
+  }
+
+  scrollIntoView(): void {
+    this._element.scrollIntoView({ block: 'nearest' });
   }
 
   @HostListener('keydown', ['$event'])

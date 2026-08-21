@@ -107,3 +107,9 @@ export interface RowIndex {
   /** Index of a row inside a group. Only present if the row is inside a group. */
   indexInGroup?: number;
 }
+
+/** Identifies a row within the outer row or group collection. */
+export interface RowLocation {
+  outerIndex: number;
+  innerIndex?: number;
+}

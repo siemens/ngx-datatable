@@ -24,7 +24,7 @@ import {
   viewChild
 } from '@angular/core';
 
-import { TableColumnInternal } from '../../types/internal.types';
+import { RowLocation, TableColumnInternal } from '../../types/internal.types';
 import {
   ActivateEvent,
   DetailToggleEvents,
@@ -114,6 +114,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
           let-disabled="disabled"
           ngx-datatable-body-row
         >
+          @let absoluteIndex = indexes().first + index;
           <datatable-row-wrapper
             [attr.hidden]="
               ghostLoadingIndicator() && (!rowCount || !virtualization() || !scrollbarV)
@@ -125,7 +126,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
             [row]="row"
             [disabled]="disabled"
             [expanded]="getRowExpanded(row)"
-            [rowIndex]="indexes().first + index"
+            [rowIndex]="absoluteIndex"
             [checkRowPropertyChanges]="checkRowPropertyChanges()"
             (rowContextmenu)="rowContextmenu.emit($event)"
           >
@@ -137,7 +138,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
               [rowHeight]="getRowHeight(row)"
               [row]="row"
               [group]="groupedRows"
-              [rowIndex]="{ index: index, indexInGroup: indexInGroup }"
+              [rowIndex]="{ index: absoluteIndex, indexInGroup: indexInGroup }"
               [expanded]="getRowExpanded(row)"
               [rowClass]="rowClass()"
               [displayCheck]="displayCheck()"
@@ -145,7 +146,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
               [draggable]="rowDraggable()"
               [checkRowPropertyChanges]="checkRowPropertyChanges()"
               (treeAction)="onTreeAction(row)"
-              (activate)="onActivate($event, index, indexInGroup)"
+              (activate)="onActivate($event, absoluteIndex, indexInGroup)"
               (drop)="drop($event, row, rowElement)"
               (dragover)="dragOver($event, row)"
               (dragenter)="dragEnter($event, row, rowElement)"
@@ -158,6 +159,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
 
         <div class="datatable-row-render-wrapper" [style.transform]="renderOffset()">
           @for (group of rowsToRender(); track rowTrackingFn(i, group); let i = $index) {
+            @let absoluteIndex = indexes().first + i;
             @if (!group && ghostLoadingIndicator()) {
               <ghost-loader
                 [columns]="columns"
@@ -186,7 +188,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
                     [ngTemplateOutlet]="bodyRow"
                     [ngTemplateOutletContext]="{
                       row: group,
-                      index: indexes().first + i,
+                      index: i,
                       disabled
                     }"
                   />
@@ -202,10 +204,10 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
                       : null
                   "
                   [groupHeader]="groupHeader()"
-                  [groupHeaderRowHeight]="getGroupHeaderRowHeight(group, i)"
+                  [groupHeaderRowHeight]="getGroupHeaderRowHeight(group, absoluteIndex)"
                   [disabled]="disabled"
                   [expanded]="getGroupExpanded(group)"
-                  [rowIndex]="indexes().first + i"
+                  [rowIndex]="absoluteIndex"
                   [selected]="selected()"
                   [allColumnsColspan]="allColumnsColspan()"
                   (groupSelectedChange)="groupSelectedChange($event, group)"
@@ -217,7 +219,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
                       [ngTemplateOutletContext]="{
                         row,
                         groupedRows: group?.value,
-                        index: indexes().first + i,
+                        index: i,
                         indexInGroup: $index,
                         disabled
                       }"
@@ -320,7 +322,8 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
 
   private readonly scroller = viewChild(ScrollerComponent);
   private readonly rowWrappers = viewChildren(DataTableRowWrapperComponent);
-  private readonly rowComponents = viewChildren(DataTableBodyRowComponent);
+  private readonly rowComponents =
+    viewChildren<DataTableBodyRowComponent<TRow>>(DataTableBodyRowComponent);
 
   /**
    * Returns if selection is enabled.
@@ -359,11 +362,13 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   readonly rowHeightsCache = computed(() => this.computeRowHeightsCache());
   readonly offsetY = signal(0);
   readonly indexes = computed(() => this.computeIndexes());
+  private readonly pendingFocus = signal<{ location: RowLocation; cellIndex?: number } | undefined>(
+    undefined
+  );
   rowTrackingFn: TrackByFunction<RowOrGroup<TRow> | undefined>;
   readonly rowExpansions = signal<TRow[]>([]);
   readonly groupExpansions = signal<Group<TRow>[]>([]);
 
-  _rows!: (TRow | undefined)[];
   readonly _bodyHeight = computed(() => {
     if (this.scrollbarV()) {
       return this.bodyHeight() + 'px';
@@ -395,6 +400,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       }
     };
     effect(() => this.defaultGroupExpansionEffect());
+    effect(() => this.focusPendingRow());
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -506,6 +512,19 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
 
     this.updatePage(event.direction);
     this.cd.detectChanges();
+  }
+
+  private focusPendingRow(): void {
+    const pendingFocus = this.pendingFocus();
+    if (!pendingFocus) {
+      return;
+    }
+
+    const row = this.getRenderedRow(pendingFocus.location);
+    if (row) {
+      this.focusRenderedRow(row, pendingFocus.cellIndex);
+      this.pendingFocus.set(undefined);
+    }
   }
 
   /**
@@ -958,51 +977,100 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   }
 
   focusRow(index: number, key: string, indexInGroup?: number): void {
-    const nextRow = this.getPrevNextRow(index, key, indexInGroup);
-    if (nextRow) {
-      nextRow.focus();
+    this.moveFocus({ outerIndex: index, innerIndex: indexInGroup }, key);
+  }
+
+  focusCell(index: number, key: string, cellIndex: number, indexInGroup?: number): void {
+    if (key === ARROW_LEFT) {
+      this.getRenderedRow({ outerIndex: index, innerIndex: indexInGroup })?.focusCell(
+        cellIndex - 1
+      );
+    } else if (key === ARROW_RIGHT) {
+      this.getRenderedRow({ outerIndex: index, innerIndex: indexInGroup })?.focusCell(
+        cellIndex + 1
+      );
+    } else if (key === ARROW_UP || key === ARROW_DOWN) {
+      this.moveFocus({ outerIndex: index, innerIndex: indexInGroup }, key, cellIndex);
     }
   }
 
-  getPrevNextRow(
-    index: number,
-    key: string,
-    indexInGroup?: number
-  ): DataTableBodyRowComponent | undefined {
-    // It is safe to assume, the currentRow always exists since this is called by a keypress an event on that row.
-    const currentRow = this.getRow(index, indexInGroup)!;
-    const currentRowIndex = this.rowComponents().indexOf(currentRow);
-
-    if (key === ARROW_UP) {
-      return this.rowComponents()[currentRowIndex - 1];
+  private moveFocus(current: RowLocation, key: string, cellIndex?: number): void {
+    if (this.pendingFocus()) {
+      return;
     }
-    if (key === ARROW_DOWN) {
-      return this.rowComponents()[currentRowIndex + 1];
+
+    const target = this.getAdjacentRowLocation(current, key);
+    if (!target) {
+      this.pendingFocus.set(undefined);
+      return;
+    }
+
+    const row = this.getRenderedRow(target);
+    if (row) {
+      this.pendingFocus.set(undefined);
+      row.scrollIntoView();
+      this.focusRenderedRow(row, cellIndex);
+      return;
+    }
+
+    this.pendingFocus.set({ location: target, cellIndex });
+    this.scrollToIndex(target.outerIndex, { block: 'nearest' });
+  }
+
+  private getAdjacentRowLocation(current: RowLocation, key: string): RowLocation | undefined {
+    if (key !== ARROW_UP && key !== ARROW_DOWN) {
+      return undefined;
+    }
+
+    const step = key === ARROW_UP ? -1 : 1;
+    const groups = this.groupedRows();
+    if (!groups) {
+      const outerIndex = current.outerIndex + step;
+      return outerIndex >= 0 && outerIndex < this.rowCount() ? { outerIndex } : undefined;
+    }
+
+    if (current.innerIndex === undefined) {
+      return undefined;
+    }
+
+    const group = groups[current.outerIndex];
+    if (!group) {
+      return undefined;
+    }
+
+    const innerIndex = current.innerIndex + step;
+    if (innerIndex >= 0 && innerIndex < group.value.length) {
+      return { outerIndex: current.outerIndex, innerIndex };
+    }
+
+    for (let outerIndex = current.outerIndex + step; groups[outerIndex]; outerIndex += step) {
+      const adjacentGroup = groups[outerIndex];
+      if (adjacentGroup.value.length && this.getGroupExpanded(adjacentGroup)) {
+        return {
+          outerIndex,
+          innerIndex: key === ARROW_UP ? adjacentGroup.value.length - 1 : 0
+        };
+      }
     }
 
     return undefined;
   }
 
-  focusCell(index: number, key: string, cellIndex: number, indexInGroup?: number): void {
-    let nextRow = this.getRow(index, indexInGroup);
-    let nextCellIndex = cellIndex;
-
-    if (key === ARROW_LEFT) {
-      nextCellIndex--;
-    } else if (key === ARROW_RIGHT) {
-      nextCellIndex++;
-    } else if (key === ARROW_UP || key === ARROW_DOWN) {
-      nextRow = this.getPrevNextRow(index, key, indexInGroup);
-    }
-
-    nextRow?.focusCell(nextCellIndex);
-  }
-
-  private getRow(index: number, indexInGroup?: number): DataTableBodyRowComponent | undefined {
+  private getRenderedRow(location: RowLocation): DataTableBodyRowComponent<TRow> | undefined {
     return this.rowComponents().find(row => {
       const rowIndex = row.rowIndex();
-      return rowIndex.index === index && rowIndex.indexInGroup === indexInGroup;
+      return (
+        rowIndex.index === location.outerIndex && rowIndex.indexInGroup === location.innerIndex
+      );
     });
+  }
+
+  private focusRenderedRow(row: DataTableBodyRowComponent<TRow>, cellIndex?: number): void {
+    if (cellIndex === undefined) {
+      row.focus();
+    } else {
+      row.focusCell(cellIndex);
+    }
   }
 
   getRowSelected(row: TRow): boolean {

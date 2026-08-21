@@ -240,4 +240,131 @@ describe('keyboard navigation', () => {
       expect(document.activeElement).toBe(linusCityCell);
     });
   });
+
+  describe('with virtual scrolling', () => {
+    @Component({
+      imports: [DatatableComponent],
+      template: `
+        <ngx-datatable
+          [columns]="columns"
+          [rows]="rows()"
+          [rowHeight]="40"
+          [scrollbarV]="true"
+          [virtualization]="true"
+          [selectionType]="selectionType()"
+          [style.block-size.px]="200"
+        />
+      `,
+      host: {
+        '[style.inline-size.px]': '400'
+      }
+    })
+    class VirtualScrollKeyboardNavigationTestComponent {
+      readonly columns: TableColumn[] = [
+        { name: 'Name', prop: 'name' },
+        { name: 'City', prop: 'city' }
+      ];
+      readonly rows = signal(
+        Array.from({ length: 50 }, (_, index) => ({
+          name: `Row ${index + 1}`,
+          city: `City ${index + 1}`
+        }))
+      );
+      readonly selectionType = signal<SelectionType>('single');
+    }
+
+    let virtualFixture: ComponentFixture<VirtualScrollKeyboardNavigationTestComponent>;
+
+    beforeEach(async () => {
+      virtualFixture = TestBed.createComponent(VirtualScrollKeyboardNavigationTestComponent);
+      await virtualFixture.whenStable();
+    });
+
+    it('scrolls down and focuses the next row outside the rendered range', async () => {
+      const table = page.getByRole('table').element();
+      table.scrollTop = 800;
+      table.dispatchEvent(new Event('scroll'));
+      await virtualFixture.whenStable();
+      const lastRenderedRow = page.getByRole('row', { name: 'Row 25 City 25' }).element();
+      const nextRow = page.getByRole('row', { name: 'Row 26 City 26' });
+
+      await expect.element(nextRow).not.toBeInTheDocument();
+
+      lastRenderedRow.focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await virtualFixture.whenStable();
+
+      expect(table.scrollTop).toBeGreaterThan(800);
+      expect(document.activeElement).toBe(nextRow.element());
+    });
+
+    it('scrolls up and focuses the previous row outside the rendered range', async () => {
+      const table = page.getByRole('table').element();
+      table.scrollTop = 800;
+      table.dispatchEvent(new Event('scroll'));
+      await virtualFixture.whenStable();
+      const firstRenderedRow = page.getByRole('row', { name: 'Row 21 City 21' }).element();
+      const previousRow = page.getByRole('row', { name: 'Row 20 City 20' });
+
+      await expect.element(previousRow).not.toBeInTheDocument();
+
+      firstRenderedRow.focus();
+      await userEvent.keyboard('{ArrowUp}');
+      await virtualFixture.whenStable();
+
+      expect(table.scrollTop).toBeLessThan(800);
+      expect(document.activeElement).toBe(previousRow.element());
+    });
+
+    it('retains the focused column when moving outside the rendered range', async () => {
+      virtualFixture.componentInstance.selectionType.set('cell');
+      await virtualFixture.whenStable();
+      const table = page.getByRole('table').element();
+      table.scrollTop = 800;
+      table.dispatchEvent(new Event('scroll'));
+      await virtualFixture.whenStable();
+
+      const cityCell = page
+        .getByRole('row', { name: 'Row 25 City 25' })
+        .getByRole('cell', { name: 'City 25' })
+        .element();
+      const nextCityCell = page
+        .getByRole('row', { name: 'Row 26 City 26' })
+        .getByRole('cell', { name: 'City 26' });
+      cityCell.focus();
+
+      await userEvent.keyboard('{ArrowDown}');
+      await virtualFixture.whenStable();
+
+      expect(document.activeElement).toBe(nextCityCell.element());
+    });
+
+    it('waits for an unloaded row before continuing virtual navigation', async () => {
+      const rows = virtualFixture.componentInstance.rows();
+      const partiallyLoadedRows = rows.slice(0, 25);
+      partiallyLoadedRows.length = rows.length;
+      virtualFixture.componentInstance.rows.set(partiallyLoadedRows);
+      await virtualFixture.whenStable();
+
+      const table = page.getByRole('table').element();
+      table.scrollTop = 800;
+      table.dispatchEvent(new Event('scroll'));
+      await virtualFixture.whenStable();
+
+      const lastLoadedRow = page.getByRole('row', { name: 'Row 25 City 25' }).element();
+      lastLoadedRow.focus();
+      await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+      await virtualFixture.whenStable();
+
+      expect(document.activeElement).toBe(lastLoadedRow);
+      expect(table.scrollTop).toBeLessThan(900);
+
+      virtualFixture.componentInstance.rows.set(rows);
+      await virtualFixture.whenStable();
+
+      expect(document.activeElement).toBe(
+        page.getByRole('row', { name: 'Row 26 City 26' }).element()
+      );
+    });
+  });
 });

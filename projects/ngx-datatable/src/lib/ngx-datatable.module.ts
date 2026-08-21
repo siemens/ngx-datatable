@@ -19,7 +19,7 @@ import { DatatablePagerComponent } from './components/footer/pager.component';
 import { DatatableRowDetailTemplateDirective } from './components/row-detail/row-detail-template.directive';
 import { DatatableRowDetailDirective } from './components/row-detail/row-detail.directive';
 import { DisableRowDirective } from './directives/disable-row.directive';
-import { AllPartial, NgxDatatableConfig, providedNgxDatatableConfig } from './ngx-datatable.config';
+import { NgxDatatableConfig, providedNgxDatatableConfig } from './ngx-datatable.config';
 
 @NgModule({
   imports: [
@@ -63,12 +63,10 @@ import { AllPartial, NgxDatatableConfig, providedNgxDatatableConfig } from './ng
 })
 export class NgxDatatableModule {
   /**
-   * Configure global configuration via INgxDatatableConfig
+   * Configure global configuration via NgxDatatableConfig
    * @param configuration
    */
-  static forRoot(
-    configuration: AllPartial<NgxDatatableConfig>
-  ): ModuleWithProviders<NgxDatatableModule> {
+  static forRoot(configuration: NgxDatatableConfig): ModuleWithProviders<NgxDatatableModule> {
     return {
       ngModule: NgxDatatableModule,
       providers: [providedNgxDatatableConfig(configuration)]

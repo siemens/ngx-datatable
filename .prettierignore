@@ -9,3 +9,4 @@ CHANGELOG.md
 
 # Skills managed by skills.sh
 .agents/skills/playwright-cli
+.agents/skills/gh-stack

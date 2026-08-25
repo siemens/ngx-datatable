@@ -1,3 +1,19 @@
+## [27.0.3](https://github.com/siemens/ngx-datatable/compare/27.0.2...27.0.3) (2026-08-25)
+
+
+### Bug Fixes
+
+* **body:** move arrow-key focus between grouped rows ([19c0f3f](https://github.com/siemens/ngx-datatable/commit/19c0f3f53fee8c0369de18ec9ccb4b1acd67b88b))
+* **body:** preserve focus during virtual keyboard navigation ([8802273](https://github.com/siemens/ngx-datatable/commit/8802273b2ff6618d0c63c31992f1a0043f0f7ba1))
+* **body:** preserve original cell index in keyboard navigation ([9f50297](https://github.com/siemens/ngx-datatable/commit/9f50297caa070a00ff3ba6788eb389bf8dc88314))
+* **header:** handle drag end without movement ([87e4531](https://github.com/siemens/ngx-datatable/commit/87e453181948a3af97b651d22a006e63c0537981)), closes [#790](https://github.com/siemens/ngx-datatable/issues/790)
+* restore partial typing for all NgxDatatableConfig fields ([8f82f90](https://github.com/siemens/ngx-datatable/commit/8f82f90d975465501188afe178e9b5806ab8735c))
+
+
+### Performance Improvements
+
+* **datatable:** measure initial dimensions without debounce ([e77cd65](https://github.com/siemens/ngx-datatable/commit/e77cd654d34a067002afa61d479a9a3a19112f33))
+
 ## [27.0.2](https://github.com/siemens/ngx-datatable/compare/27.0.1...27.0.2) (2026-08-11)
 
 

@@ -37,6 +37,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ELEMENT_BOT_GITHUB_TOKEN }}
 
   publish-documentation:
+    if: github.ref_name == 'main'
     runs-on: ubuntu-24.04
     permissions:
       pages: write

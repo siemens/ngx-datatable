@@ -1,3 +1,10 @@
+## [26.2.2](https://github.com/siemens/ngx-datatable/compare/26.2.1...26.2.2) (2026-08-26)
+
+
+### Bug Fixes
+
+* **header:** handle drag end without movement ([4292290](https://github.com/siemens/ngx-datatable/commit/429229019b5c30658706027e832679c5ea72e325)), closes [#790](https://github.com/siemens/ngx-datatable/issues/790)
+
 ## [26.2.1](https://github.com/siemens/ngx-datatable/compare/26.2.0...26.2.1) (2026-06-19)
 
 

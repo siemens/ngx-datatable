@@ -65,7 +65,7 @@
     "@angular/cli": "22.0.8",
     "@angular/compiler-cli": "22.0.8",
     "@angular/language-service": "22.0.8",
-    "@axe-core/playwright": "4.12.1",
+    "@axe-core/playwright": "4.13.0",
     "@microsoft/api-extractor": "7.59.0",
     "@playwright/test": "1.62.1",
     "@semantic-release/changelog": "7.0.0",

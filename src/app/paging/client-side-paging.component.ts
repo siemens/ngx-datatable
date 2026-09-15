@@ -18,7 +18,8 @@ import { DataService } from '../data.service';
       [footerHeight]="50"
       [limit]="10"
     />
-  `
+  `,
+  host: { class: 'datatable-example' }
 })
 export class ClientSidePagingComponent {
   static readonly exampleTitle = 'Client-side Paging';

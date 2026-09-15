@@ -23,6 +23,7 @@ nav = [
     ] },
     { "Features" = [
         "features/index.md",
+        { "Pagination and Scrolling" = "features/pagination-and-scrolling.md" },
         { "Configuration" = "features/configuration.md" },
     ] },
     { "API" = [
@@ -56,6 +57,8 @@ url = "https://github.com/siemens/ngx-datatable"
 module_name = "docs_extensions.datatable_example"
 
 [project.markdown_extensions.pymdownx.blocks.details]
+
+[project.markdown_extensions.pymdownx.blocks.admonition]
 
 [project.markdown_extensions.pymdownx.highlight]
 anchor_linenums = true

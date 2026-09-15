@@ -37,7 +37,8 @@ import { Page } from './model/page';
     </ngx-datatable>
   `,
   styleUrl: './virtual-server-side.component.scss',
-  providers: [MockServerResultsService]
+  providers: [MockServerResultsService],
+  host: { class: 'datatable-example' }
 })
 export class VirtualServerSideComponent {
   static readonly exampleTitle = 'Virtual server-side';

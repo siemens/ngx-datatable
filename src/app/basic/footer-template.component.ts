@@ -51,7 +51,8 @@ import { DataService } from '../data.service';
         </ng-template>
       </ngx-datatable-footer>
     </ngx-datatable>
-  `
+  `,
+  host: { class: 'datatable-example' }
 })
 export class FooterTemplateComponent {
   static readonly exampleTitle = 'Footer Template';

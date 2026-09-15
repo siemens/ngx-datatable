@@ -24,7 +24,8 @@ import { DataService } from '../data.service';
       <ngx-datatable-column name="City" prop="address.city" [width]="300" />
       <ngx-datatable-column name="State" prop="address.state" [width]="300" />
     </ngx-datatable>
-  `
+  `,
+  host: { class: 'datatable-example' }
 })
 export class HorzVertScrollingComponent {
   static readonly exampleTitle = 'Horz/Vert Scrolling';

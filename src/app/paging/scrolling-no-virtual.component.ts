@@ -30,7 +30,8 @@ import { Page } from './model/page';
       (page)="setPage($event.offset)"
     />
   `,
-  providers: [MockServerResultsService]
+  providers: [MockServerResultsService],
+  host: { class: 'datatable-example' }
 })
 export class ScrollingNoVirtualComponent implements OnInit {
   static readonly exampleTitle = 'Scrolling no virtual';

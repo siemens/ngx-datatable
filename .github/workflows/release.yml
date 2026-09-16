@@ -62,7 +62,7 @@ jobs:
       - run: npm run build:prod
       - run: npm run build:web-components
       # Build the Zensical documentation site (output: ./site).
-      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
       - run: uv sync --frozen
       - run: uv run zensical build
       # Place the examples under "/examples" within the documentation site.

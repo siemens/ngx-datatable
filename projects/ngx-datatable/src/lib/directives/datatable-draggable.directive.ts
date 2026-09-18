@@ -83,7 +83,6 @@ export class DatatableDraggableDirective implements OnDestroy {
       return;
     }
     event.stopPropagation();
-    event.preventDefault();
 
     this.document.addEventListener('mouseup', this.ending);
     this.delay(this.dragStartDelay()).then(() => {

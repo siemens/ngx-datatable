@@ -8,6 +8,7 @@
 
   &.dragging {
     pointer-events: none;
+    user-select: none;
   }
 
   :host-context(ngx-datatable.fixed-header) & {
@@ -64,10 +65,6 @@
 
     .resize-handle {
       visibility: visible;
-    }
-
-    .datatable-header-cell-label.draggable {
-      user-select: none;
     }
   }
 }

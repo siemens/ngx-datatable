@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { DatatableConfiguration } from '../datatable-configuration';
 
@@ -14,8 +14,7 @@ import { DatatableConfiguration } from '../datatable-configuration';
         <div class="bar"></div>
       </div>
     </div>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  `
 })
 export class ProgressBarComponent {
   protected readonly configuration = inject(DatatableConfiguration).configuration;

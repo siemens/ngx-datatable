@@ -1,6 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   HostListener,
@@ -82,7 +81,6 @@ import { DatatableConfiguration } from '../datatable-configuration';
     }
   `,
   styleUrl: './header-cell.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'datatable-header-cell',
     '[attr.resizeable]': 'showResizeHandle()',

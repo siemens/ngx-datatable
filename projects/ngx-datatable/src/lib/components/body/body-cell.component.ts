@@ -1,7 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
   booleanAttribute,
-  ChangeDetectionStrategy,
   Component,
   computed,
   DoCheck,
@@ -84,7 +83,6 @@ import { DatatableConfiguration } from '../datatable-configuration';
     </div>
   `,
   styleUrl: './body-cell.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'datatable-body-cell',
     '[class]': 'columnCssClasses()',

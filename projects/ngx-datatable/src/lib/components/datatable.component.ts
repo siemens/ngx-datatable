@@ -2,7 +2,6 @@ import {
   AfterViewInit,
   afterNextRender,
   booleanAttribute,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -107,7 +106,6 @@ import { DatatableRowDetailDirective } from './row-detail/row-detail.directive';
       useFactory: () => inject(DatatableComponent).datatableConfiguration
     }
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'ngx-datatable',
     '[class.fixed-header]': '_isFixedHeader()',

@@ -1,11 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  numberAttribute,
-  input
-} from '@angular/core';
+import { Component, computed, numberAttribute, input } from '@angular/core';
 
 import { TableColumnInternal } from '../../../types/internal.types';
 
@@ -13,8 +7,7 @@ import { TableColumnInternal } from '../../../types/internal.types';
   selector: 'ghost-loader',
   imports: [NgTemplateOutlet],
   templateUrl: './ghost-loader.component.html',
-  styleUrl: './ghost-loader.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrl: './ghost-loader.component.scss'
 })
 export class DataTableGhostLoaderComponent {
   readonly columns = input.required<TableColumnInternal[]>();

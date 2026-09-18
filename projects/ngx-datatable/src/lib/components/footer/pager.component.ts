@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { Page } from '../../types/internal.types';
 import { DATATABLE_COMPONENT_TOKEN } from '../../utils/table-token';
@@ -87,7 +87,6 @@ import { DatatableConfiguration } from '../datatable-configuration';
     </ul>
   `,
   styleUrl: './pager.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'datatable-pager'
   }

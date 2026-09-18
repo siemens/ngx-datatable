@@ -43,6 +43,7 @@ describe('DraggableDirective', () => {
   let dragMoveSpy: Mock<(event: DragEvent) => void>;
 
   beforeEach(async () => {
+    vi.spyOn(HTMLElement.prototype, 'setPointerCapture').mockImplementation(() => {});
     fixture = TestBed.createComponent(TestFixtureComponent);
     component = fixture.componentInstance;
     const loader = TestbedHarnessEnvironment.loader(fixture);
@@ -50,6 +51,10 @@ describe('DraggableDirective', () => {
     dragStartSpy = vi.spyOn(component, 'dragStart');
     dragEndSpy = vi.spyOn(component, 'dragEnd');
     dragMoveSpy = vi.spyOn(component, 'dragMove');
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('should fire mouse drag events', async () => {
@@ -154,17 +159,17 @@ describe('DraggableDirective', () => {
       await fixture.whenStable();
 
       const addEventCalls = addEventListenerSpy.mock.calls.filter(
-        ([type]) => type === 'mousedown' || type === 'touchstart'
+        ([type]) => type === 'pointerdown'
       );
-      expect(addEventCalls).toHaveLength(2);
+      expect(addEventCalls).toHaveLength(1);
 
       component.enabled.set(false);
       await fixture.whenStable();
 
       const removeEventCalls = removeEventListenerSpy.mock.calls.filter(
-        ([type]) => type === 'mousedown' || type === 'touchstart'
+        ([type]) => type === 'pointerdown'
       );
-      expect(removeEventCalls).toHaveLength(2);
+      expect(removeEventCalls).toHaveLength(1);
 
       addEventCalls.forEach(([type, handler]) => {
         expect(

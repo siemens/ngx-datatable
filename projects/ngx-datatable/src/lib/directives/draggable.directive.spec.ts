@@ -3,6 +3,7 @@ import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import type { Mock } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
 
 import { DragEvent, DatatableDraggableDirective } from './datatable-draggable.directive';
 import { DraggableHarness } from './testing/draggable.harness';
@@ -17,7 +18,9 @@ import { DraggableHarness } from './testing/draggable.harness';
       (dragStart)="dragStart()"
       (dragEnd)="dragEnd($event)"
       (dragMove)="dragMove($event)"
-    ></div>
+    >
+      <input aria-label="Header filter" />
+    </div>
   `
 })
 class TestFixtureComponent {
@@ -68,6 +71,14 @@ describe('DraggableDirective', () => {
     await harness.mouseMove(200);
     expect(dragMoveSpy).toHaveBeenCalledTimes(2);
     vi.useRealTimers();
+  });
+
+  it('should allow an input to receive focus', async () => {
+    const input = page.getByRole('textbox', { name: 'Header filter' }).element();
+
+    await userEvent.click(input);
+
+    expect(document.activeElement).toBe(input);
   });
 
   it('should provide the initial position when dragging ends without moving', async () => {

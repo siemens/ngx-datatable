@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   DOCUMENT,
@@ -80,7 +79,6 @@ import { DataTableHeaderCellComponent } from './header-cell.component';
     </div>
   `,
   styleUrl: './header.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'datatable-header',
     '[style.height.px]': 'configuration().headerHeight'

@@ -23,6 +23,7 @@ describe('DataTableHeaderComponent', () => {
   };
 
   beforeEach(async () => {
+    vi.spyOn(HTMLElement.prototype, 'setPointerCapture').mockImplementation(() => {});
     TestBed.configureTestingModule({
       providers: [provideDatatableConfigurationMock()]
     });
@@ -37,6 +38,7 @@ describe('DataTableHeaderComponent', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
   it('should render with given column headers', async () => {
@@ -225,33 +227,37 @@ describe('DataTableHeaderComponent', () => {
     const secondRect = secondCell.getBoundingClientRect();
 
     // Start drag on first cell
-    const mouseDownEvent = new MouseEvent('mousedown', {
+    const pointerDownEvent = new PointerEvent('pointerdown', {
+      bubbles: true,
       clientX: firstRect.left + firstRect.width / 2,
       clientY: firstRect.top + firstRect.height / 2,
-      bubbles: true
+      pointerId: 1
     });
-    firstCell.dispatchEvent(mouseDownEvent);
+    firstCell.dispatchEvent(pointerDownEvent);
     // Wait for drag start delay
     vi.advanceTimersByTime(500);
     await fixture.whenStable();
 
     // Move to the second cell position
-    const mouseMoveEvent = new MouseEvent('mousemove', {
+    const pointerMoveEvent = new PointerEvent('pointermove', {
+      bubbles: true,
+      cancelable: true,
       clientX: secondRect.left + secondRect.width / 2,
       clientY: secondRect.top + secondRect.height / 2,
-      bubbles: true
+      pointerId: 1
     });
-    document.dispatchEvent(mouseMoveEvent);
+    document.dispatchEvent(pointerMoveEvent);
     vi.advanceTimersByTime(0);
     await fixture.whenStable();
 
     // End drag
-    const mouseUpEvent = new MouseEvent('mouseup', {
+    const pointerUpEvent = new PointerEvent('pointerup', {
+      bubbles: true,
       clientX: secondRect.left + secondRect.width / 2,
       clientY: secondRect.top + secondRect.height / 2,
-      bubbles: true
+      pointerId: 1
     });
-    document.dispatchEvent(mouseUpEvent);
+    document.dispatchEvent(pointerUpEvent);
 
     // Allow time for any async operations
     vi.advanceTimersByTime(200);

@@ -59,13 +59,21 @@ export class HeaderHarness extends ComponentHarness {
   async resizeColumn(index: number, newWidth: number): Promise<void> {
     const resizeHandle = (await this.cellResizeHandle())[index];
     if (resizeHandle) {
-      await resizeHandle.dispatchEvent('mousedown', { clientX: 0, screenX: 0 });
+      await resizeHandle.dispatchEvent('pointerdown', {
+        clientX: 0,
+        screenX: 0,
+        pointerId: 1
+      });
       // wait a cycle to skip dragStartDelay
       await new Promise(resolve => setTimeout(resolve, 0));
-      const mouseMove = new MouseEvent('mousemove', { clientX: newWidth, screenX: newWidth });
-      document.dispatchEvent(mouseMove);
-      const mouseUp = new MouseEvent('mouseup');
-      document.dispatchEvent(mouseUp);
+      const pointerMove = new PointerEvent('pointermove', {
+        clientX: newWidth,
+        screenX: newWidth,
+        pointerId: 1
+      });
+      document.dispatchEvent(pointerMove);
+      const pointerUp = new PointerEvent('pointerup', { pointerId: 1 });
+      document.dispatchEvent(pointerUp);
     }
   }
 

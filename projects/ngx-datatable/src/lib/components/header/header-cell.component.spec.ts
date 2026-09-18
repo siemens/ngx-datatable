@@ -30,6 +30,7 @@ describe('DataTableHeaderCellComponent', () => {
   let harness: HeaderCellHarness;
 
   beforeEach(async () => {
+    vi.spyOn(HTMLElement.prototype, 'setPointerCapture').mockImplementation(() => {});
     TestBed.configureTestingModule({
       providers: [provideDatatableConfigurationMock()]
     });
@@ -53,6 +54,10 @@ describe('DataTableHeaderCellComponent', () => {
       ]);
     });
     harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, HeaderCellHarness);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('should emit new width on resize', async () => {

@@ -3,14 +3,14 @@ import {
   computed,
   Directive,
   ElementRef,
+  DOCUMENT,
   effect,
   inject,
   input,
   numberAttribute,
   OnDestroy,
   output,
-  signal,
-  DOCUMENT
+  signal
 } from '@angular/core';
 
 import { TableColumnInternal } from '../types/internal.types';
@@ -33,7 +33,7 @@ export interface DragEvent {
   }
 })
 export class DatatableDraggableDirective implements OnDestroy {
-  private document = inject(DOCUMENT);
+  private readonly document = inject(DOCUMENT);
   readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
   readonly dragModel = input<TableColumnInternal>();
@@ -44,7 +44,7 @@ export class DatatableDraggableDirective implements OnDestroy {
   readonly dragStart = output<DragEvent>();
 
   private timeoutId?: number;
-  private touchId?: number;
+  private pointerId?: number;
   private readonly startX = signal<number | undefined>(undefined);
   private readonly startY = signal<number | undefined>(undefined);
   private currentX?: number;
@@ -53,46 +53,57 @@ export class DatatableDraggableDirective implements OnDestroy {
     () => this.dragStartDelay() !== 0 && this.isDragging()
   );
   protected readonly isDragging = computed(() => this.startX() !== undefined);
-  private removePointerListeners?: () => void;
+  private removeEventListeners?: () => void;
 
   constructor() {
     effect(() => {
       if (this.enabled()) {
-        this.element.addEventListener('mousedown', this.mousedown);
-        this.element.addEventListener('touchstart', this.touchstart);
+        this.element.addEventListener('pointerdown', this.pointerdown);
         this.element.addEventListener('contextmenu', this.contextmenu);
-        this.removePointerListeners = () => {
-          this.element.removeEventListener('mousedown', this.mousedown);
-          this.element.removeEventListener('touchstart', this.touchstart);
+        this.removeEventListeners = () => {
+          this.element.removeEventListener('pointerdown', this.pointerdown);
           this.element.removeEventListener('contextmenu', this.contextmenu);
         };
       } else {
-        this.removePointerListeners?.();
-        this.removePointerListeners = undefined;
+        this.removeEventListeners?.();
+        this.removeEventListeners = undefined;
       }
     });
   }
 
   ngOnDestroy(): void {
     clearTimeout(this.timeoutId);
-    this.removePointerListeners?.();
+    this.removeEventListeners?.();
+    this.stopDragging();
   }
 
-  protected readonly mousedown = (event: MouseEvent): void => {
-    if (!this.enabled()) {
+  protected readonly pointerdown = (event: PointerEvent): void => {
+    if (this.pointerId !== undefined || !this.enabled()) {
       return;
     }
     event.stopPropagation();
-
-    this.document.addEventListener('mouseup', this.ending);
     this.delay(this.dragStartDelay()).then(() => {
-      this.document.addEventListener('mousemove', this.mousemove);
+      if (this.pointerId !== event.pointerId) {
+        return;
+      }
+
+      this.element.setPointerCapture(event.pointerId);
       this.starting(event.clientX, event.clientY);
       this.setDragging(true);
     });
+
+    this.pointerId = event.pointerId;
+    this.document.addEventListener('pointermove', this.pointermove);
+    this.document.addEventListener('pointerup', this.ending);
+    this.document.addEventListener('pointercancel', this.ending);
   };
 
-  private mousemove = (event: MouseEvent): void => this.moving(event.clientX, event.clientY);
+  private pointermove = (event: PointerEvent): void => {
+    if (event.pointerId === this.pointerId && this.isDragging()) {
+      event.preventDefault();
+      this.moving(event.clientX, event.clientY);
+    }
+  };
 
   // Prevent context menu on long-press drag. Since we don't call preventDefault() on
   // touchstart to allow click events (sorting), the browser would show a context menu
@@ -100,33 +111,6 @@ export class DatatableDraggableDirective implements OnDestroy {
   private contextmenu = (event: MouseEvent): void => {
     if (this.isDragging()) {
       event.preventDefault();
-    }
-  };
-
-  protected readonly touchstart = (event: TouchEvent): void => {
-    if (!this.enabled()) {
-      return;
-    }
-    event.stopPropagation();
-    const touch = event.touches.item(0)!;
-    this.touchId = touch.identifier;
-
-    this.document.addEventListener('touchend', this.ending);
-    this.delay(this.dragStartDelay()).then(() => {
-      if (this.touchId === touch.identifier) {
-        this.document.addEventListener('touchmove', this.touchmove, { passive: false });
-        this.starting(touch.clientX, touch.clientY);
-        this.setDragging(true);
-      }
-    });
-  };
-
-  private touchmove = (event: TouchEvent): void => {
-    const touchMove = this.findTouch(event);
-    if (touchMove) {
-      // Prevent scrolling and other default touch behaviors during drag
-      event.preventDefault();
-      this.moving(touchMove.clientX, touchMove.clientY);
     }
   };
 
@@ -144,17 +128,14 @@ export class DatatableDraggableDirective implements OnDestroy {
     this.dragMove.emit(this.dragEvent());
   }
 
-  private ending = (): void => {
+  private ending = (event: PointerEvent): void => {
+    if (event.pointerId !== this.pointerId) {
+      return;
+    }
+
     const dragged = this.isDragging();
     const dragEvent = dragged ? this.dragEvent() : undefined;
-    this.document.removeEventListener('mousemove', this.mousemove);
-    this.document.removeEventListener('touchmove', this.touchmove);
-    this.document.removeEventListener('mouseup', this.ending);
-    this.document.removeEventListener('touchend', this.ending);
-    this.touchId = undefined;
-    this.startX.set(undefined);
-    this.startY.set(undefined);
-    clearTimeout(this.timeoutId);
+    this.stopDragging();
     // This function is also called if the long press was aborted before the delay.
     // In that case, we don't want to emit dragEnd.
     if (dragged) {
@@ -181,8 +162,19 @@ export class DatatableDraggableDirective implements OnDestroy {
     }
   }
 
-  private findTouch(event: TouchEvent): Touch | undefined {
-    return Array.from(event.touches).find(touch => touch.identifier === this.touchId);
+  private stopDragging(): void {
+    if (this.pointerId !== undefined) {
+      if (this.element.hasPointerCapture(this.pointerId)) {
+        this.element.releasePointerCapture(this.pointerId);
+      }
+    }
+    this.document.removeEventListener('pointermove', this.pointermove);
+    this.document.removeEventListener('pointerup', this.ending);
+    this.document.removeEventListener('pointercancel', this.ending);
+    this.pointerId = undefined;
+    this.startX.set(undefined);
+    this.startY.set(undefined);
+    clearTimeout(this.timeoutId);
   }
 
   private delay(ms: number): Promise<void> {

@@ -6,7 +6,7 @@ with the data rather than implementing complex filtering/etc that is often very 
 The current features include:
 
 - Handle large data sets ( Virtual DOM )
-- Expressive Header and Cell Templates
+- [Header customization](header-customization.md) with label, actions, and complete-cell templates
 - Horizontal & Vertical Scrolling
 - Column Reordering & Resizing
 - Client/Server side Pagination & Sorting

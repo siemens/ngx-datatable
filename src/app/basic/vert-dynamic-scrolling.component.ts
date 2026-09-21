@@ -22,7 +22,6 @@ import { DataService } from '../data.service';
       [virtualization]="false"
       [scrollbarV]="true"
       [scrollbarVDynamic]="true"
-      [footerHeight]="50"
       [rows]="rows"
     >
       <ngx-datatable-column name="Name">

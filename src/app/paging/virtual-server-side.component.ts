@@ -25,7 +25,6 @@ import { Page } from './model/page';
       [loadingIndicator]="isLoading > 0"
       [ghostLoadingIndicator]="isLoading > 0"
       [scrollbarV]="true"
-      [footerHeight]="50"
       [rowHeight]="50"
       [externalPaging]="true"
       [externalSorting]="true"

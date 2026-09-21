@@ -27,7 +27,6 @@ import { DataService } from '../data.service';
       columnMode="force"
       [rows]="rows | async"
       [columns]="columns"
-      [footerHeight]="100"
       [headerHeight]="50"
     >
       <ngx-datatable-footer>

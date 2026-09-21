@@ -32,9 +32,9 @@ and enable `externalPaging` while supplying only the current page's rows.
 
 {{ datatable_example('src/app/basic/horz-vert-scrolling.component.ts', 'horz-vert-scrolling', '400px') }}
 
-By default, no pager is visible. Set `footerHeight` to a value greater than zero to display it (see
+The footer and pager are shown automatically when more than one page is available (see
 [Pager component](#pager-component)). In continuous mode, selecting a page scrolls the body to the
-first row of that page.
+first row of that page. Set `hideFooter` to hide them explicitly.
 
 {{ datatable_example('src/app/paging/virtual-server-side.component.ts', 'virtual-server-side', '400px') }}
 
@@ -64,9 +64,17 @@ the table uses continuous pagination and `limit` is ignored.
 
 ## Pager component
 
-Set `footerHeight` to a value greater than zero to display the table footer. The default footer
-shows the total row count and adds the built-in pager when more than one page is available.
-It works with both continuous and discrete pagination.
+The table displays its footer automatically when more than one page is available. The default
+footer shows the total row count and the built-in pager. Custom footer content also causes the
+footer to be displayed, even when all rows fit on one page. The footer takes its height from its
+content and works with both continuous and discrete pagination. Set `hideFooter` to suppress it.
+
+/// note | Deprecated `footerHeight`
+`footerHeight` is deprecated. Omit it to use automatic visibility and content-based sizing, and
+use `hideFooter` when the footer must always be hidden. Existing numeric values remain supported
+as a minimum height during the deprecation period; a value of `0` retains the previous hidden
+behavior.
+///
 
 When using a custom footer, place the `ngx-datatable-pager` component inside the template
 if the standard navigation controls should remain available.

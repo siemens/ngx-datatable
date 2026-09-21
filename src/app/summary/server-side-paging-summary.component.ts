@@ -19,7 +19,6 @@ import { Page } from '../paging/model/page';
       [headerHeight]="50"
       [summaryRow]="true"
       [summaryHeight]="55"
-      [footerHeight]="50"
       [externalPaging]="true"
       [count]="page.totalElements"
       [offset]="page.pageNumber"

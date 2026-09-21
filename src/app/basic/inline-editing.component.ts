@@ -19,7 +19,6 @@ import { DataService } from '../data.service';
       columnMode="force"
       [headerHeight]="50"
       [limit]="5"
-      [footerHeight]="50"
       [rows]="rows"
     >
       <ngx-datatable-column name="Name">

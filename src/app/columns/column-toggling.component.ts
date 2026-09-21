@@ -14,7 +14,6 @@ import { Employee } from '../data.model';
         columnMode="force"
         [rows]="rows"
         [headerHeight]="50"
-        [footerHeight]="50"
       >
         @for (col of columns; track col) {
           <ngx-datatable-column [name]="col.name" />

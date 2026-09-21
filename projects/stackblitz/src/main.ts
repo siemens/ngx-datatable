@@ -13,7 +13,6 @@ import { DataTableColumnDirective, DatatableComponent } from '@siemens/ngx-datat
       [limit]="10"
       [rowHeight]="50"
       [headerHeight]="50"
-      [footerHeight]="50"
       [rows]="mockData"
     >
       <ngx-datatable-column name="index" />

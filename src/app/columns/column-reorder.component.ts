@@ -18,7 +18,6 @@ import { DataService } from '../data.service';
       [loadingIndicator]="loadingIndicator"
       [columns]="columns"
       [headerHeight]="50"
-      [footerHeight]="50"
       [reorderable]="reorderable"
       [swapColumns]="swapColumns"
       [targetMarkerTemplate]="targetMarkerTemplate"

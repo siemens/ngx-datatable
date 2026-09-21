@@ -23,7 +23,7 @@ import { DataService } from '../data.service';
       columnMode="force"
       [rows]="rows()"
       [headerHeight]="50"
-      [footerHeight]="0"
+      [hideFooter]="true"
       [rowHeight]="80"
       [scrollbarV]="true"
       [disableRowCheck]="isRowDisabled"

@@ -38,7 +38,6 @@ import { DataService } from '../data.service';
       [rows]="rows | async"
       [columns]="columns"
       [headerHeight]="50"
-      [footerHeight]="50"
       (tableContextmenu)="onTableContextMenu($event)"
     />
   `

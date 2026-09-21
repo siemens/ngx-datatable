@@ -50,6 +50,7 @@ export interface NgxDatatableConfig {
   messages?: NgxDatatableMessages;
   cssClasses?: NgxDatatableCssClasses;
   headerHeight?: number | 'auto';
+  /** @deprecated The footer now sizes itself from its content. */
   footerHeight?: number;
   rowHeight?: number | 'auto' | ((row: any) => number);
   defaultColumnWidth?: number;

@@ -19,7 +19,6 @@ import { Page } from './model/page';
       [rows]="rows"
       [columns]="[{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }]"
       [headerHeight]="50"
-      [footerHeight]="50"
       [scrollbarV]="true"
       [virtualization]="false"
       [externalPaging]="true"

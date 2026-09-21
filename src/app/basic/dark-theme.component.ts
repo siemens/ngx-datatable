@@ -19,7 +19,6 @@ import { DataService } from '../data.service';
       [columns]="columns"
       [headerHeight]="40"
       [summaryRow]="true"
-      [footerHeight]="40"
       [limit]="10"
       [reorderable]="reorderable"
     />

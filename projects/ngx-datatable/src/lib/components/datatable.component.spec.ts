@@ -10,6 +10,8 @@ import { DataTableColumnCellDirective } from './columns/column-cell.directive';
 import { DataTableColumnHeaderDirective } from './columns/column-header.directive';
 import { DataTableColumnDirective } from './columns/column.directive';
 import { DatatableComponent } from './datatable.component';
+import { DataTableFooterTemplateDirective } from './footer/footer-template.directive';
+import { DatatableFooterDirective } from './footer/footer.directive';
 import { DataTableHeaderCellComponent } from './header/header-cell.component';
 
 describe('DatatableComponent', () => {
@@ -17,14 +19,28 @@ describe('DatatableComponent', () => {
   let component: TestFixtureComponent;
 
   @Component({
-    imports: [DatatableComponent],
+    imports: [DatatableComponent, DatatableFooterDirective, DataTableFooterTemplateDirective],
     template: `
       <ngx-datatable
         [columns]="columns()"
         [rows]="rows()"
         [sorts]="sorts()"
         [columnMode]="columnMode()"
-      />
+        [limit]="limit()"
+        [hideFooter]="hideFooter()"
+        [scrollbarV]="scrollbarV()"
+        [style.block-size.px]="height()"
+      >
+        @if (customFooter()) {
+          <ngx-datatable-footer>
+            <ng-template ngx-datatable-footer-template>
+              <div class="custom-footer" [style.block-size.px]="customFooterHeight()">
+                Custom footer
+              </div>
+            </ng-template>
+          </ngx-datatable-footer>
+        }
+      </ngx-datatable>
     `,
     host: {
       '[style.inline-size.px]': 'size()'
@@ -35,12 +51,80 @@ describe('DatatableComponent', () => {
     readonly rows = signal<Record<string, any>[]>([]);
     readonly sorts = signal<any[]>([]);
     readonly columnMode = signal<ColumnMode>('standard');
+    readonly limit = signal<number | undefined>(undefined);
+    readonly hideFooter = signal(false);
+    readonly scrollbarV = signal(false);
+    readonly height = signal<number | undefined>(undefined);
+    readonly customFooter = signal(false);
+    readonly customFooterHeight = signal<number | undefined>(undefined);
     readonly size = signal<number>(400);
   }
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestFixtureComponent);
     component = fixture.componentInstance;
+  });
+
+  describe('footer visibility', () => {
+    it('should hide the footer when all rows fit on one page', async () => {
+      component.rows.set([{ id: 1 }]);
+      component.limit.set(2);
+      await fixture.whenStable();
+
+      expect(fixture.debugElement.query(By.css('datatable-footer'))).toBeNull();
+    });
+
+    it('should show the footer when there is more than one page', async () => {
+      component.rows.set([{ id: 1 }, { id: 2 }, { id: 3 }]);
+      component.limit.set(2);
+      await fixture.whenStable();
+
+      expect(fixture.debugElement.query(By.css('datatable-footer'))).not.toBeNull();
+    });
+
+    it('should show custom footer content without pagination', async () => {
+      component.rows.set([{ id: 1 }]);
+      component.limit.set(2);
+      component.customFooter.set(true);
+      await fixture.whenStable();
+
+      expect(fixture.debugElement.query(By.css('.custom-footer'))).not.toBeNull();
+    });
+
+    it('should let hideFooter override automatic visibility', async () => {
+      component.rows.set([{ id: 1 }, { id: 2 }, { id: 3 }]);
+      component.limit.set(2);
+      component.customFooter.set(true);
+      component.hideFooter.set(true);
+      await fixture.whenStable();
+
+      expect(fixture.debugElement.query(By.css('datatable-footer'))).toBeNull();
+    });
+
+    it('should measure the rendered footer when sizing a scrolling body', async () => {
+      component.rows.set([{ id: 1 }]);
+      component.customFooter.set(true);
+      component.customFooterHeight.set(73);
+      component.scrollbarV.set(true);
+      component.height.set(300);
+      await fixture.whenStable();
+
+      const datatable = fixture.debugElement.query(By.directive(DatatableComponent))
+        .componentInstance as DatatableComponent;
+      const tableHeight = fixture.debugElement
+        .query(By.directive(DatatableComponent))
+        .nativeElement.getBoundingClientRect().height;
+      const headerHeight = fixture.debugElement
+        .query(By.css('datatable-header'))
+        .nativeElement.getBoundingClientRect().height;
+      const footerHeight = fixture.debugElement
+        .query(By.css('datatable-footer'))
+        .nativeElement.getBoundingClientRect().height;
+
+      await expect
+        .poll(() => datatable.bodyHeight())
+        .toBeCloseTo(tableHeight - headerHeight - footerHeight);
+    });
   });
 
   it('should sort date values', async () => {

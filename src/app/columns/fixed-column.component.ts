@@ -19,7 +19,6 @@ import { DataService } from '../data.service';
       columnMode="standard"
       [rows]="rows | async"
       [headerHeight]="50"
-      [footerHeight]="50"
     >
       <ngx-datatable-column name="Name" [width]="300" [minWidth]="160">
         <ng-template let-value="value" ngx-datatable-cell-template>

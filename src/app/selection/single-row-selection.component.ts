@@ -25,7 +25,6 @@ import { DataService } from '../data.service';
         [rows]="rows"
         [columns]="columns"
         [headerHeight]="50"
-        [footerHeight]="50"
         [limit]="5"
         [(selected)]="selected"
         (activate)="onActivate($event)"

@@ -43,7 +43,6 @@ import { DataService } from '../data.service';
       columnMode="force"
       [rows]="rows"
       [headerHeight]="50"
-      [footerHeight]="50"
       [rowHeight]="getRowHeight"
       [scrollbarV]="true"
       (page)="onPage($event)"

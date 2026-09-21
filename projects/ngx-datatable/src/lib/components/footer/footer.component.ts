@@ -13,7 +13,7 @@ import { DatatablePagerComponent } from './pager.component';
     <div
       class="datatable-footer-inner"
       [class.selected-count]="selectedMessage()"
-      [style.height.px]="configuration().footerHeight"
+      [style.min-height.px]="configuration().footerHeight || null"
     >
       @let footerTemplate = this.footerTemplate()?.template();
       @if (footerTemplate) {

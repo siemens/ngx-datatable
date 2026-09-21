@@ -27,7 +27,7 @@ describe('DataTableFooterComponent', () => {
       footerHeight.set(123);
       await page.detectChangesAndRunQueries();
 
-      expect(page.datatableFooterInner.nativeElement.style.height).toEqual('123px');
+      expect(page.datatableFooterInner.nativeElement.style.minHeight).toEqual('123px');
     });
 
     it('should have `.selected-count` class when selectedMessage is set', async () => {

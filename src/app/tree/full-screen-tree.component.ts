@@ -21,7 +21,7 @@ import { DataService } from '../data.service';
       treeFromRelation="parentId"
       treeToRelation="id"
       [headerHeight]="50"
-      [footerHeight]="0"
+      [hideFooter]="true"
       [rowHeight]="50"
       [scrollbarV]="true"
       [scrollbarH]="true"

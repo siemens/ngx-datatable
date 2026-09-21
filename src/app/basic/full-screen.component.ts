@@ -13,7 +13,7 @@ import { DataService } from '../data.service';
       style="top: 52px"
       columnMode="force"
       [headerHeight]="50"
-      [footerHeight]="0"
+      [hideFooter]="true"
       [rowHeight]="50"
       [scrollbarV]="true"
       [scrollbarH]="true"

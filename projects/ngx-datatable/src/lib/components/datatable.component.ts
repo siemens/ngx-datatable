@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   afterNextRender,
+  afterRenderEffect,
   booleanAttribute,
   ChangeDetectorRef,
   Component,
@@ -222,11 +223,18 @@ export class DatatableComponent<TRow extends Row = any>
 
   /**
    * The minimum footer height in pixels.
-   * Pass falsey for no footer
+   *
+   * @deprecated The footer now sizes itself from its content. Use
+   * {@link hideFooter} to explicitly hide it.
    */
-  readonly footerHeight = input(this.globalConfiguration.footerHeight ?? 0, {
-    transform: numberAttribute
+  readonly footerHeight = input(this.globalConfiguration.footerHeight, {
+    transform: numberOrUndefinedAttribute
   });
+
+  /**
+   * Hides the footer, including custom footer content and pagination.
+   */
+  readonly hideFooter = input(false, { transform: booleanAttribute });
 
   /**
    * If the table should use external paging
@@ -582,13 +590,40 @@ export class DatatableComponent<TRow extends Row = any>
       let height = this.dimensions().height;
       const headerElement = this._headerElement();
       if (headerElement) {
-        height = height - headerElement.nativeElement.getBoundingClientRect().height;
+        height -= headerElement.nativeElement.getBoundingClientRect().height;
       }
-      return height - this.footerHeight();
+      return height - this.renderedFooterHeight();
     }
     return 0;
   });
   readonly rowCount = computed(() => this.calcRowCount());
+  readonly _showFooter = computed(() => {
+    if (this.hideFooter()) {
+      return false;
+    }
+
+    const configuredHeight = this.footerHeight();
+    if (configuredHeight !== undefined) {
+      return configuredHeight > 0;
+    }
+
+    if (this._footer()) {
+      return true;
+    }
+
+    let pageSize = this.pageSize();
+    const rowHeight = this.rowHeight();
+    if (this.scrollbarV() && this.virtualization() && typeof rowHeight === 'number') {
+      let height = this.dimensions().height;
+      const headerElement = this._headerElement();
+      if (headerElement) {
+        height -= headerElement.nativeElement.getBoundingClientRect().height;
+      }
+      pageSize = Math.max(Math.ceil(height / rowHeight), 0);
+    }
+
+    return this.rowCount() > pageSize;
+  });
   /** This counter is increased, when the rowDiffer detects a change. This will cause an update of _internalRows. */
   private readonly _rowDiffCount = signal(0);
 
@@ -694,14 +729,20 @@ export class DatatableComponent<TRow extends Row = any>
    * so we need to get if from here until we have a state service.
    */
   readonly _footerComponent = viewChild(DataTableFooterComponent);
+  private readonly _footerElement = viewChild(DataTableFooterComponent, {
+    read: ElementRef<HTMLElement>
+  });
   protected verticalScrollVisible = false;
   private readonly dimensions = signal<Pick<DOMRect, 'width' | 'height'>>(
     { height: 0, width: 0 },
     { equal: (a, b) => a.width === b.width && a.height === b.height }
   );
 
-  /** Re-measures the table whenever the host element's size changes. */
-  private resizeObserver?: ResizeObserver;
+  /** Re-measures the table and its footer whenever either size changes. */
+  private readonly resizeObserver = signal<ResizeObserver | undefined>(undefined);
+
+  /** Actual footer height, used to size a vertically scrolling body. */
+  private readonly renderedFooterHeight = signal(0);
 
   /** Pending debounce timer for the {@link resizeObserver} callback. */
   private resizeDebounce?: ReturnType<typeof setTimeout>;
@@ -710,18 +751,43 @@ export class DatatableComponent<TRow extends Row = any>
     effect(() => this.recalculateColumns());
 
     afterNextRender(() => {
-      this.resizeObserver = new ResizeObserver(entries => {
-        const borderBox = entries[entries.length - 1]?.borderBoxSize?.[0];
-        if (!borderBox) {
-          return;
+      const resizeObserver = new ResizeObserver(entries => {
+        let dimensions: Pick<DOMRect, 'width' | 'height'> | undefined;
+        for (const entry of entries) {
+          const borderBox = entry.borderBoxSize?.[0];
+          if (!borderBox) {
+            continue;
+          }
+
+          if (entry.target === this.element) {
+            dimensions = {
+              width: borderBox.inlineSize,
+              height: borderBox.blockSize
+            };
+          } else if (entry.target === this._footerElement()?.nativeElement) {
+            this.renderedFooterHeight.set(borderBox.blockSize);
+          }
         }
-        clearTimeout(this.resizeDebounce);
-        this.resizeDebounce = setTimeout(() => {
-          this.dimensions.set({ width: borderBox.inlineSize, height: borderBox.blockSize });
-        }, 5);
+
+        if (dimensions) {
+          clearTimeout(this.resizeDebounce);
+          this.resizeDebounce = setTimeout(() => this.dimensions.set(dimensions), 5);
+        }
       });
-      this.resizeObserver.observe(this.element);
+      resizeObserver.observe(this.element);
+      this.resizeObserver.set(resizeObserver);
       this.dimensions.set(this.element.getBoundingClientRect());
+    });
+
+    afterRenderEffect(onCleanup => {
+      const footer = this._footerElement()?.nativeElement;
+      this.renderedFooterHeight.set(footer?.getBoundingClientRect().height ?? 0);
+
+      const resizeObserver = this.resizeObserver();
+      if (footer && resizeObserver) {
+        resizeObserver.observe(footer);
+        onCleanup(() => resizeObserver.unobserve(footer));
+      }
     });
   }
 
@@ -1112,7 +1178,7 @@ export class DatatableComponent<TRow extends Row = any>
   }
 
   ngOnDestroy() {
-    this.resizeObserver?.disconnect();
+    this.resizeObserver()?.disconnect();
     clearTimeout(this.resizeDebounce);
     this._subscriptions.forEach(subscription => subscription.unsubscribe());
   }

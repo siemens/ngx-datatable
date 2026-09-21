@@ -11,7 +11,7 @@ import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
       [rows]="rows1"
       [columns]="columns1"
       [headerHeight]="50"
-      [footerHeight]="0"
+      [hideFooter]="true"
       [rowHeight]="100"
     />
     <br />
@@ -21,7 +21,6 @@ import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
       [rows]="rows2"
       [columns]="columns2"
       [headerHeight]="50"
-      [footerHeight]="50"
     />
   `
 })

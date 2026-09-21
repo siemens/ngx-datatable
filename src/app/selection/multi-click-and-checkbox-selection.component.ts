@@ -22,7 +22,6 @@ import { DataService } from '../data.service';
         selectionType="multiClick"
         [rows]="rows"
         [headerHeight]="50"
-        [footerHeight]="50"
         [limit]="5"
         [selected]="selected"
         [selectAllRowsOnPage]="false"

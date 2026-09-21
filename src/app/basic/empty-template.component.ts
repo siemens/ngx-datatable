@@ -12,7 +12,6 @@ import { DatatableComponent, TableColumn } from '@siemens/ngx-datatable';
       [rows]="[]"
       [columns]="columns"
       [headerHeight]="50"
-      [footerHeight]="50"
     >
       <div empty-content>My custom empty component<br />uses two lines.</div>
     </ngx-datatable>

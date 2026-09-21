@@ -251,6 +251,7 @@ describe('keyboard navigation', () => {
           [rowHeight]="40"
           [scrollbarV]="true"
           [virtualization]="true"
+          [hideFooter]="true"
           [selectionType]="selectionType()"
           [style.block-size.px]="200"
         />

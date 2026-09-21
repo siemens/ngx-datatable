@@ -17,7 +17,6 @@ import { Page } from './model/page';
       [rows]="rows()"
       [columns]="[{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }]"
       [headerHeight]="50"
-      [footerHeight]="50"
       [externalPaging]="true"
       [count]="page.totalElements"
       [offset]="page.pageNumber"

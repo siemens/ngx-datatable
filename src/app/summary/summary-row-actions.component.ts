@@ -21,7 +21,6 @@ import { DataService } from '../data.service';
       selectionType="checkbox"
       [rows]="rows"
       [headerHeight]="50"
-      [footerHeight]="50"
       [limit]="10"
       [(selected)]="selected"
     >

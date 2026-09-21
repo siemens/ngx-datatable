@@ -21,7 +21,6 @@ import { DataService } from '../data.service';
       columnMode="force"
       [columns]="columns"
       [headerHeight]="50"
-      [footerHeight]="50"
       [limit]="10"
       [rows]="rows()"
     />

@@ -31,7 +31,6 @@ import { DataService } from '../data.service';
       [rows]="rows()"
       [scrollbarH]="true"
       [headerHeight]="50"
-      [footerHeight]="50"
       [rowHeight]="40"
       [limit]="4"
       [groupExpansionDefault]="true"

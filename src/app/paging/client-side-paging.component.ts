@@ -15,7 +15,6 @@ import { DataService } from '../data.service';
       [rows]="rows | async"
       [columns]="[{ name: 'Name' }, { name: 'Gender' }, { name: 'Company' }]"
       [headerHeight]="50"
-      [footerHeight]="50"
       [limit]="10"
     />
   `,

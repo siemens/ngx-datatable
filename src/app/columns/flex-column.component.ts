@@ -18,7 +18,6 @@ import { DataService } from '../data.service';
       rowHeight="auto"
       columnMode="flex"
       [headerHeight]="50"
-      [footerHeight]="50"
       [rows]="rows | async"
     >
       <ngx-datatable-column name="Name" [flexGrow]="3" [minWidth]="160">

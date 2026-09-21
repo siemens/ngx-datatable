@@ -11,53 +11,26 @@ import { By } from '@angular/platform-browser';
 import { DatatableComponent } from '@siemens/ngx-datatable';
 
 import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
-import { DATATABLE_COMPONENT_TOKEN } from '../../utils/table-token';
+import { createTableControllerMock } from '../../../testing/table-controller.mock';
 import { DatatablePagerComponent } from './pager.component';
 import { PagerHarness } from './testing/pager.harness';
-
-interface MockFooter {
-  curPage: WritableSignal<number>;
-  pageSize: WritableSignal<number>;
-  rowCount: WritableSignal<number>;
-  groupCount: WritableSignal<number | undefined>;
-  pagerNextIcon: WritableSignal<string | undefined>;
-  pagerRightArrowIcon: WritableSignal<string | undefined>;
-  pagerLeftArrowIcon: WritableSignal<string | undefined>;
-  pagerPreviousIcon: WritableSignal<string | undefined>;
-  page: {
-    emit: (event: { page: number }) => void;
-  };
-}
 
 describe('DataTablePagerComponent', () => {
   let fixture: ComponentFixture<DatatablePagerComponent>;
   let harness: PagerHarness;
-  let footer: MockFooter;
+  let controllerMock: ReturnType<typeof createTableControllerMock>;
   let messages: WritableSignal<ReturnType<DatatableComponent['messages']>>;
 
   beforeEach(async () => {
-    footer = {
-      curPage: signal(0),
-      pageSize: signal(1),
-      rowCount: signal(0),
-      groupCount: signal<number | undefined>(undefined),
-      pagerNextIcon: signal(''),
-      pagerRightArrowIcon: signal(''),
-      pagerLeftArrowIcon: signal(''),
-      pagerPreviousIcon: signal(''),
-      page: { emit: ({ page }: { page: number }) => footer.curPage.set(page) }
-    };
+    controllerMock = createTableControllerMock();
+    controllerMock.state.externalPaging.set(true);
+    controllerMock.table.onFooterPage = ({ page }: { page: number }) =>
+      controllerMock.state.offset.set(page - 1);
     messages = signal({});
     TestBed.overrideComponent(DatatablePagerComponent, {
       set: {
         changeDetection: ChangeDetectionStrategy.Default,
-        providers: [
-          provideDatatableConfigurationMock({ messages }),
-          {
-            provide: DATATABLE_COMPONENT_TOKEN,
-            useValue: { _footerComponent: signal(footer), messages }
-          }
-        ]
+        providers: [provideDatatableConfigurationMock({ messages }), controllerMock.provider]
       }
     });
     fixture = TestBed.createComponent(DatatablePagerComponent);
@@ -66,86 +39,89 @@ describe('DataTablePagerComponent', () => {
 
   describe('totalPages', () => {
     it('should calculate totalPages', async () => {
-      footer.pageSize.set(10);
-      footer.rowCount.set(28);
+      controllerMock.state.limit.set(10);
+      controllerMock.state.count.set(28);
       expect(await harness.pageCount()).toEqual(3);
     });
 
     it('should have 1 page if size is 0', async () => {
-      footer.pageSize.set(0);
-      footer.rowCount.set(28);
+      controllerMock.state.limit.set(0);
+      controllerMock.state.count.set(28);
       expect(await harness.pageCount()).toEqual(1);
     });
 
     it('should have 1 page if count is 0', async () => {
-      footer.pageSize.set(10);
-      footer.rowCount.set(0);
+      controllerMock.state.limit.set(10);
+      controllerMock.state.count.set(0);
       expect(await harness.pageCount()).toEqual(1);
     });
 
     it('should prefer using groupCount if available', async () => {
-      footer.pageSize.set(10);
-      footer.rowCount.set(28);
-      footer.groupCount.set(53);
+      controllerMock.state.limit.set(10);
+      controllerMock.state.count.set(28);
+      controllerMock.state.externalPaging.set(false);
+      controllerMock.state.groupedRows.set(
+        Array.from({ length: 53 }, (_, key) => ({ key, value: [] }))
+      );
       expect(await harness.pageCount()).toEqual(5);
     });
   });
 
   describe('canPrevious()', () => {
     beforeEach(() => {
-      footer.pageSize.set(10);
-      footer.rowCount.set(100);
+      controllerMock.state.limit.set(10);
+      controllerMock.state.count.set(100);
     });
 
     it('should return true if not on first page', async () => {
-      footer.curPage.set(2);
+      controllerMock.state.offset.set(2 - 1);
       expect(await harness.hasPrevious()).toBe(true);
     });
 
     it('should return false if on first page', async () => {
-      footer.curPage.set(1);
+      controllerMock.state.offset.set(1 - 1);
       expect(await harness.hasPrevious()).toBe(false);
     });
   });
 
   describe('canNext()', () => {
     beforeEach(() => {
-      footer.pageSize.set(10);
-      footer.rowCount.set(100);
+      controllerMock.state.limit.set(10);
+      controllerMock.state.count.set(100);
     });
 
     it('should return true if not on last page', async () => {
-      footer.curPage.set(2);
+      controllerMock.state.offset.set(2 - 1);
       expect(await harness.hasNext()).toBe(true);
     });
 
     it('should return false if on last page', async () => {
-      footer.curPage.set(10);
+      controllerMock.state.offset.set(10 - 1);
       expect(await harness.hasNext()).toBe(false);
     });
   });
 
   describe('prevPage()', () => {
     beforeEach(() => {
-      footer.pageSize.set(10);
-      footer.rowCount.set(100);
+      controllerMock.state.limit.set(10);
+      controllerMock.state.count.set(100);
     });
 
     it('should set current page to previous page', async () => {
-      footer.curPage.set(2);
+      controllerMock.state.offset.set(2 - 1);
       await harness.clickPrevious();
       expect(await harness.currentPage()).toEqual(1);
     });
 
     it('should emit change event', async () => {
-      vi.spyOn(footer.page, 'emit');
-      footer.curPage.set(2);
+      const onFooterPage = vi.spyOn(controllerMock.table, 'onFooterPage');
+      controllerMock.state.offset.set(2 - 1);
       await harness.clickPrevious();
-      expect(footer.page.emit).toHaveBeenCalledWith({ page: 1 });
+      expect(onFooterPage).toHaveBeenCalledWith({ page: 1 });
     });
 
     it('should not change page if already on first page', async () => {
-      footer.curPage.set(1);
+      controllerMock.state.offset.set(1 - 1);
       await harness.clickPrevious();
       expect(await harness.currentPage()).toEqual(1);
     });
@@ -153,25 +129,25 @@ describe('DataTablePagerComponent', () => {
 
   describe('nextPage()', () => {
     beforeEach(() => {
-      footer.pageSize.set(10);
-      footer.rowCount.set(100);
+      controllerMock.state.limit.set(10);
+      controllerMock.state.count.set(100);
     });
 
     it('should set current page to next page', async () => {
-      footer.curPage.set(2);
+      controllerMock.state.offset.set(2 - 1);
       await harness.clickNext();
       expect(await harness.currentPage()).toEqual(3);
     });
 
     it('should emit change event', async () => {
-      vi.spyOn(footer.page, 'emit');
-      footer.curPage.set(2);
+      const onFooterPage = vi.spyOn(controllerMock.table, 'onFooterPage');
+      controllerMock.state.offset.set(2 - 1);
       await harness.clickNext();
-      expect(footer.page.emit).toHaveBeenCalledWith({ page: 3 });
+      expect(onFooterPage).toHaveBeenCalledWith({ page: 3 });
     });
 
     it('should not change page if already on last page', async () => {
-      footer.curPage.set(10);
+      controllerMock.state.offset.set(10 - 1);
       await harness.clickNext();
       expect(await harness.currentPage()).toEqual(10);
     });
@@ -179,9 +155,9 @@ describe('DataTablePagerComponent', () => {
 
   describe('selectPage()', () => {
     beforeEach(() => {
-      footer.pageSize.set(10);
-      footer.rowCount.set(100);
-      footer.curPage.set(1);
+      controllerMock.state.limit.set(10);
+      controllerMock.state.count.set(100);
+      controllerMock.state.offset.set(1 - 1);
     });
 
     describe('with a new page', () => {
@@ -191,29 +167,29 @@ describe('DataTablePagerComponent', () => {
       });
 
       it('should emit change event', async () => {
-        vi.spyOn(footer.page, 'emit');
+        const onFooterPage = vi.spyOn(controllerMock.table, 'onFooterPage');
         await harness.clickPage(3);
-        expect(footer.page.emit).toHaveBeenCalledWith({ page: 3 });
+        expect(onFooterPage).toHaveBeenCalledWith({ page: 3 });
 
         await harness.clickPage(4);
-        expect(footer.page.emit).toHaveBeenCalledWith({ page: 4 });
+        expect(onFooterPage).toHaveBeenCalledWith({ page: 4 });
       });
     });
 
     describe('with the current page', () => {
       it('should not emit change event', async () => {
-        vi.spyOn(footer.page, 'emit');
-        await harness.clickPage(footer.curPage());
-        expect(footer.page.emit).not.toHaveBeenCalled();
+        const onFooterPage = vi.spyOn(controllerMock.table, 'onFooterPage');
+        await harness.clickPage(controllerMock.controller.currentPage());
+        expect(onFooterPage).not.toHaveBeenCalled();
       });
     });
   });
 
   describe('calcPages()', () => {
     beforeEach(() => {
-      footer.pageSize.set(10);
-      footer.rowCount.set(73);
-      footer.curPage.set(1);
+      controllerMock.state.limit.set(10);
+      controllerMock.state.count.set(73);
+      controllerMock.state.offset.set(1 - 1);
     });
 
     it('should return array with max 5 pages to display', async () => {
@@ -221,12 +197,12 @@ describe('DataTablePagerComponent', () => {
     });
 
     it('should return array with available pages to display', async () => {
-      footer.rowCount.set(30);
+      controllerMock.state.count.set(30);
       expect(await harness.pageRange()).toEqual('1-3');
     });
 
     it('should return array containing specified page', async () => {
-      footer.curPage.set(6);
+      controllerMock.state.offset.set(6 - 1);
       expect(await harness.pageRange()).toEqual('4-8');
     });
   });
@@ -241,8 +217,8 @@ describe('DataTablePagerComponent', () => {
       page: number;
     }[];
     beforeEach(async () => {
-      footer.pageSize.set(10);
-      footer.rowCount.set(100);
+      controllerMock.state.limit.set(10);
+      controllerMock.state.count.set(100);
       await fixture.whenStable();
       [firstButton, previousButton, nextButton, lastButton] = fixture.debugElement
         .queryAll(By.css('.page-button'))

@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { vi } from 'vitest';
 
 import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
+import { createTableControllerMock } from '../../../testing/table-controller.mock';
 import { columnsByPinArr, gridColumnTemplate } from '../../utils/column';
 import { toInternalColumn } from '../../utils/column-helper';
 import { DataTableHeaderComponent } from './header.component';
@@ -14,25 +15,31 @@ describe('DataTableHeaderComponent', () => {
   let fixture: ComponentFixture<DataTableHeaderComponent>;
   let componentRef: ComponentRef<DataTableHeaderComponent>;
   let harness: HeaderHarness;
+  type ControllerMock = ReturnType<typeof createTableControllerMock>;
+  let controller: ControllerMock['controller'];
+  let state: ControllerMock['state'];
+  let table: ControllerMock['table'];
+  let provider: ControllerMock['provider'];
 
   const applyMockGridTemplate = (): void => {
     fixture.nativeElement.style.width = 'max-content';
     fixture.nativeElement.style.gridTemplateColumns = gridColumnTemplate(
-      columnsByPinArr(componentRef.instance.columns())
+      columnsByPinArr(controller.columns())
     );
   };
 
   beforeEach(async () => {
+    ({ controller, state, table, provider } = createTableControllerMock());
     TestBed.configureTestingModule({
-      providers: [provideDatatableConfigurationMock()]
+      providers: [provideDatatableConfigurationMock(), provider]
     });
     fixture = TestBed.createComponent(DataTableHeaderComponent);
-    fixture.componentRef.setInput('columns', []);
-    fixture.componentRef.setInput('sorts', []);
-    fixture.componentRef.setInput('sortType', 'single');
+    componentRef = fixture.componentRef;
+    controller.columns.set([]);
+    state.sorts.set([]);
+    table.sortType.set('single');
 
     harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, HeaderHarness);
-    componentRef = fixture.componentRef;
   });
 
   afterEach(() => {
@@ -40,8 +47,7 @@ describe('DataTableHeaderComponent', () => {
   });
 
   it('should render with given column headers', async () => {
-    componentRef.setInput(
-      'columns',
+    controller.columns.set(
       toInternalColumn([
         { prop: 'col1', name: 'Column 1', width: 100 },
         { prop: 'col2', name: 'Column 2', width: 200 }
@@ -53,8 +59,7 @@ describe('DataTableHeaderComponent', () => {
 
   it('should calculate inner row widths based on columns total width', async () => {
     vi.useFakeTimers();
-    componentRef.setInput(
-      'columns',
+    controller.columns.set(
       toInternalColumn([
         { prop: 'col1', name: 'Column 1', width: 300 },
         { prop: 'col2', name: 'Column 2', width: 200 }
@@ -67,8 +72,7 @@ describe('DataTableHeaderComponent', () => {
   });
 
   it('should place header cells based on column pinning group', async () => {
-    componentRef.setInput(
-      'columns',
+    controller.columns.set(
       toInternalColumn([
         { prop: 'col1', name: 'Column 1', width: 100, frozenLeft: true },
         { prop: 'col2', name: 'Column 2', width: 200, frozenRight: true },
@@ -88,8 +92,7 @@ describe('DataTableHeaderComponent', () => {
   });
 
   it('should allow resizing columns', async () => {
-    componentRef.setInput(
-      'columns',
+    controller.columns.set(
       toInternalColumn([
         { prop: 'col1', name: 'Column 1', width: 100, resizeable: true },
         { prop: 'col2', name: 'Column 2', width: 200, resizeable: true }
@@ -99,7 +102,7 @@ describe('DataTableHeaderComponent', () => {
     componentRef.instance.resizing.subscribe(event => {
       const { column, newValue } = event;
       column.width.set(newValue);
-      componentRef.setInput('columns', [...componentRef.instance.columns()]);
+      controller.columns.set([...controller.columns()]);
       applyMockGridTemplate();
     });
 
@@ -113,8 +116,7 @@ describe('DataTableHeaderComponent', () => {
   });
 
   it('should not have resize handle for non-resizable columns', async () => {
-    componentRef.setInput(
-      'columns',
+    controller.columns.set(
       toInternalColumn([
         { prop: 'col1', name: 'Column 1', width: 100, resizeable: true },
         { prop: 'col2', name: 'Column 2', width: 200, resizeable: true },
@@ -129,8 +131,7 @@ describe('DataTableHeaderComponent', () => {
   });
 
   it('should not have resize handle for last column irrespective of resizability', async () => {
-    componentRef.setInput(
-      'columns',
+    controller.columns.set(
       toInternalColumn([
         { prop: 'col1', name: 'Column 1', width: 100, resizeable: true },
         { prop: 'col2', name: 'Column 2', width: 200, resizeable: true },
@@ -142,8 +143,7 @@ describe('DataTableHeaderComponent', () => {
   });
 
   it('should apply sorting on column click', async () => {
-    componentRef.setInput(
-      'columns',
+    controller.columns.set(
       toInternalColumn([
         { prop: 'col1', name: 'Column 1', width: 100, sortable: true },
         { prop: 'col2', name: 'Column 2', width: 200, sortable: true }
@@ -152,7 +152,7 @@ describe('DataTableHeaderComponent', () => {
 
     componentRef.instance.sort.subscribe(sort => {
       expect(sort.sorts[0]).toEqual({ prop: 'col1', dir: 'asc' });
-      componentRef.setInput('sorts', sort.sorts);
+      state.sorts.set(sort.sorts);
     });
 
     expect((await harness.getActiveSortColumn()).length).toBe(0);
@@ -162,17 +162,16 @@ describe('DataTableHeaderComponent', () => {
   });
 
   it('should apply multiple sorts if enabled', async () => {
-    componentRef.setInput(
-      'columns',
+    controller.columns.set(
       toInternalColumn([
         { prop: 'col1', name: 'Column 1', width: 100, sortable: true },
         { prop: 'col2', name: 'Column 2', width: 200, sortable: true }
       ])
     );
-    componentRef.setInput('sortType', 'multi');
+    table.sortType.set('multi');
 
     componentRef.instance.sort.subscribe(sort => {
-      componentRef.setInput('sorts', sort.sorts);
+      state.sorts.set(sort.sorts);
     });
 
     expect((await harness.getActiveSortColumn()).length).toBe(0);
@@ -187,8 +186,7 @@ describe('DataTableHeaderComponent', () => {
 
   it('should reorder columns on drag', async () => {
     vi.useFakeTimers();
-    componentRef.setInput(
-      'columns',
+    controller.columns.set(
       toInternalColumn([
         { prop: 'col1', name: 'Column 1', width: 100, draggable: true },
         { prop: 'col2', name: 'Column 2', width: 200, draggable: true },
@@ -196,19 +194,19 @@ describe('DataTableHeaderComponent', () => {
       ])
     );
 
-    componentRef.setInput('reorderable', true);
+    table.reorderable.set(true);
 
     componentRef.instance.reorder.subscribe(event => {
       const { newValue, prevValue } = event;
 
       // Get fresh reference to columns
-      const currentColumns = [...componentRef.instance.columns()];
+      const currentColumns = [...controller.columns()];
       const columnIndex = prevValue;
       const movedColumn = currentColumns.splice(columnIndex, 1)[0];
       currentColumns.splice(newValue, 0, movedColumn);
 
       // Update columns
-      componentRef.setInput('columns', currentColumns);
+      controller.columns.set(currentColumns);
       vi.advanceTimersByTime(0);
     });
 
@@ -266,8 +264,8 @@ describe('DataTableHeaderComponent', () => {
       { prop: 'col1', name: 'Column 1', width: 100, draggable: true },
       { prop: 'col2', name: 'Column 2', width: 200, draggable: true }
     ]);
-    componentRef.setInput('columns', columns);
-    componentRef.setInput('reorderable', true);
+    controller.columns.set(columns);
+    table.reorderable.set(true);
     await fixture.whenStable();
 
     const firstCell = fixture.nativeElement.querySelector('datatable-header-cell') as HTMLElement;

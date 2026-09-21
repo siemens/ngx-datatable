@@ -11,10 +11,13 @@ import { DataTableColumnHeaderDirective } from './columns/column-header.directiv
 import { DataTableColumnDirective } from './columns/column.directive';
 import { DatatableComponent } from './datatable.component';
 import { DataTableHeaderCellComponent } from './header/header-cell.component';
+import { TableController } from './table-controller';
 
 describe('DatatableComponent', () => {
   let fixture: ComponentFixture<TestFixtureComponent>;
   let component: TestFixtureComponent;
+  const getController = (): TableController =>
+    fixture.debugElement.query(By.directive(DatatableComponent)).injector.get(TableController);
 
   @Component({
     imports: [DatatableComponent],
@@ -407,7 +410,7 @@ describe('DatatableComponent', () => {
     const cellSizes = () => headerCells.map(cell => cell.nativeElement.clientWidth);
     // The ResizeObserver measures the host asynchronously; wait for it before
     // resizing, since the resize handler distributes using the measured width.
-    await expect.poll(() => datatable._innerWidth()).toBe(400);
+    await expect.poll(() => getController().innerWidth()).toBe(400);
 
     headerCells[1].triggerEventHandler('resize', {
       width: 150,
@@ -675,12 +678,13 @@ describe('DatatableComponent With Ghost Loading', () => {
 
   let fixture: ComponentFixture<TestFixtureWithGhostLoadingComponent>;
   let component: TestFixtureWithGhostLoadingComponent;
-  let datatable: DatatableComponent;
+  let controller: TableController;
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestFixtureWithGhostLoadingComponent);
     component = fixture.componentInstance;
-    datatable = fixture.debugElement.query(By.directive(DatatableComponent)).componentInstance;
+    const datatableDebugElement = fixture.debugElement.query(By.directive(DatatableComponent));
+    controller = datatableDebugElement.injector.get(TableController);
   });
 
   it('should push enough undefined rows to fill pageSize when ghost loading with no data', async () => {
@@ -689,26 +693,26 @@ describe('DatatableComponent With Ghost Loading', () => {
     component.rows.set([]);
     await fixture.whenStable();
 
-    const internalRows = datatable._internalRows();
-    const pageSize = datatable.pageSize();
-    const undefinedCount = internalRows.filter(r => r === undefined).length;
+    const rows = controller.rows();
+    const pageSize = controller.pageSize();
+    const undefinedCount = rows.filter(r => r === undefined).length;
 
     expect(undefinedCount).toBe(Math.max(pageSize, 1));
   });
 
   it('should push only one undefined row when data already fills the viewport', async () => {
-    const rows = Array.from({ length: 20 }, (_, i) => ({ name: `Row ${i}` }));
-    component.rows.set(rows);
+    const dataRows = Array.from({ length: 20 }, (_, i) => ({ name: `Row ${i}` }));
+    component.rows.set(dataRows);
     await fixture.whenStable();
 
     component.ghostLoadingIndicator.set(true);
     await fixture.whenStable();
 
-    const internalRows = datatable._internalRows();
-    const undefinedCount = internalRows.filter(r => r === undefined).length;
+    const rows = controller.rows();
+    const undefinedCount = rows.filter(r => r === undefined).length;
 
     expect(undefinedCount).toBe(1);
-    expect(internalRows.length).toBe(rows.length + 1);
+    expect(rows.length).toBe(dataRows.length + 1);
   });
 
   it('should push enough undefined rows to fill remaining viewport when partial data is loaded', async () => {
@@ -716,24 +720,24 @@ describe('DatatableComponent With Ghost Loading', () => {
     component.scrollbarV.set(true);
     await fixture.whenStable();
 
-    const pageSize = datatable.pageSize();
+    const pageSize = controller.pageSize();
     const partialRows = Array.from({ length: 3 }, (_, i) => ({ name: `Row ${i}` }));
     component.rows.set(partialRows);
     await fixture.whenStable();
 
-    const internalRows = datatable._internalRows();
-    const undefinedCount = internalRows.filter(r => r === undefined).length;
+    const rows = controller.rows();
+    const undefinedCount = rows.filter(r => r === undefined).length;
 
     expect(undefinedCount).toBe(Math.max(pageSize - partialRows.length, 1));
-    expect(internalRows.length).toBe(partialRows.length + undefinedCount);
+    expect(rows.length).toBe(partialRows.length + undefinedCount);
   });
 
   it('should not add undefined rows when ghostLoadingIndicator is false', async () => {
     component.ghostLoadingIndicator.set(false);
     await fixture.whenStable();
 
-    const internalRows = datatable._internalRows();
-    const undefinedCount = internalRows.filter(r => r === undefined).length;
+    const rows = controller.rows();
+    const undefinedCount = rows.filter(r => r === undefined).length;
 
     expect(undefinedCount).toBe(0);
   });
@@ -743,8 +747,8 @@ describe('DatatableComponent With Ghost Loading', () => {
     component.scrollbarV.set(false);
     await fixture.whenStable();
 
-    const internalRows = datatable._internalRows();
-    const undefinedCount = internalRows.filter(r => r === undefined).length;
+    const rows = controller.rows();
+    const undefinedCount = rows.filter(r => r === undefined).length;
 
     expect(undefinedCount).toBe(0);
   });

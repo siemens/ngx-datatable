@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 
 import { TableColumn } from '../../types/table-column.type';
 import { DatatableComponent } from '../datatable.component';
-import { DataTableBodyComponent } from './body.component';
+import { TableController } from '../table-controller';
 
 interface TreeRow {
   id: number;
@@ -20,6 +20,7 @@ const expectedOffset = (index: number): number => index * ROW_HEIGHT;
 describe('Client-side Scrolling – DatatableComponent.scrollToRow', () => {
   let fixture: ComponentFixture<DatatableComponent>;
   let datatable: DatatableComponent;
+  let controller: TableController;
   /** The `role="table"` grid element, which is the scrollable container. */
   let bodyEl: HTMLElement;
 
@@ -60,6 +61,7 @@ describe('Client-side Scrolling – DatatableComponent.scrollToRow', () => {
     await fixture.whenStable();
 
     datatable = fixture.componentInstance;
+    controller = fixture.debugElement.injector.get(TableController);
     bodyEl = fixture.debugElement.query(By.css('[role="table"]')).nativeElement as HTMLElement;
   });
 
@@ -86,9 +88,8 @@ describe('Client-side Scrolling – DatatableComponent.scrollToRow', () => {
     });
 
     describe('block option', () => {
-      let body: DataTableBodyComponent;
       /** The viewport height scrollToIndex uses (grid height minus header band). */
-      const viewportHeight = (): number => body.bodyHeight() as number;
+      const viewportHeight = (): number => controller.bodyHeight();
       // The browser snaps the applied scroll offset to a physical pixel (the
       // sticky header is sub-pixel tall), so the read-back drifts <1px from the
       // computed target. Assert with a sub-pixel tolerance.
@@ -97,11 +98,9 @@ describe('Client-side Scrolling – DatatableComponent.scrollToRow', () => {
       beforeEach(async () => {
         // Force a deterministic viewport height so block calculations are predictable.
         fixture.nativeElement.style.height = '200px';
-        body = fixture.debugElement.query(By.directive(DataTableBodyComponent))
-          .componentInstance as DataTableBodyComponent;
         // The host ResizeObserver measures the new height asynchronously; poll
         // until `bodyHeight()` (which scrollToIndex relies on) reflects it.
-        await expect.poll(() => body.bodyHeight()).toBeGreaterThan(100);
+        await expect.poll(() => controller.bodyHeight()).toBeGreaterThan(100);
       });
 
       it('should scroll to start by default', () => {

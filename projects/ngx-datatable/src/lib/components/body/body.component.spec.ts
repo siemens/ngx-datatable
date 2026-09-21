@@ -3,10 +3,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
+import { createTableControllerMock } from '../../../testing/table-controller.mock';
 import { ScrollContainerDirective } from '../../directives/scroll-container.directive';
 import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 import { toInternalColumn } from '../../utils/column-helper';
 import { DATATABLE_COMPONENT_TOKEN } from '../../utils/table-token';
+import { TableController } from '../table-controller';
 import { DataTableBodyRowComponent } from './body-row.component';
 import { DataTableBodyComponent } from './body.component';
 import { DataTableGhostLoaderComponent } from './ghost-loader/ghost-loader.component';
@@ -29,24 +31,31 @@ describe('DataTableBodyComponent', () => {
   let fixture: ComponentFixture<DataTableBodyComponent>;
   let component: DataTableBodyComponent;
   let rowHeight: WritableSignal<any>;
+  type ControllerMock = ReturnType<typeof createTableControllerMock<any>>;
+  let controller: TableController<any>;
+  let state: ControllerMock['state'];
+  let table: ControllerMock['table'];
+  let provider: ControllerMock['provider'];
 
   // provide our implementations or mocks to the dependency injector
   beforeEach(async () => {
-    rowHeight = signal('auto');
+    ({ controller, state, table, provider } = createTableControllerMock<any>());
+    rowHeight = table.rowHeight;
+    table.headerHeight.set(0);
+    rowHeight.set('auto');
     TestBed.configureTestingModule({
       providers: [
         ScrollbarHelper,
         { provide: DATATABLE_COMPONENT_TOKEN, useValue: {} },
         provideDatatableConfigurationMock({ rowHeight }),
+        provider,
         { provide: ScrollContainerDirective, useValue: scrollContainerStub }
       ]
     });
     fixture = TestBed.createComponent(DataTableBodyComponent);
     fixture.componentRef.setInput('rowDragEvents', new EventEmitter<any>());
-    fixture.componentRef.setInput('rowIdentity', (row: any) => row);
-    fixture.componentRef.setInput('summaryPosition', 'top');
-    fixture.componentRef.setInput('summaryHeight', 50);
-    fixture.componentRef.setInput('offsetX', 0);
+    table.rowIdentity.set((row: any) => row);
+    controller.offsetX.set(0);
     component = fixture.componentInstance;
   });
 
@@ -58,39 +67,28 @@ describe('DataTableBodyComponent', () => {
 
   describe('Paging', () => {
     it('should have correct indexes for normal paging with rows > pageSize', () => {
-      fixture.componentRef.setInput('externalPaging', false);
-      fixture.componentRef.setInput('rows', [
-        { num: 1 },
-        { num: 2 },
-        { num: 3 },
-        { num: 4 },
-        { num: 5 },
-        { num: 6 },
-        { num: 7 },
-        { num: 8 },
-        { num: 9 },
-        { num: 10 }
-      ]);
-      fixture.componentRef.setInput('pageSize', 10);
-      fixture.componentRef.setInput('offset', 1);
-      fixture.componentRef.setInput('rowCount', 20);
+      state.externalPaging.set(false);
+      state.rows.set(Array.from({ length: 20 }, (_, index) => ({ num: index + 1 })));
+      state.limit.set(10);
+      state.offset.set(1);
+      state.count.set(20);
       const expectedIndexes = { first: 10, last: 20 };
-      expect(component.indexes()).toEqual(expectedIndexes);
+      expect(controller.indexes()).toEqual(expectedIndexes);
     });
 
     it('should have correct indexes for normal paging with rows < pageSize', () => {
-      fixture.componentRef.setInput('externalPaging', false);
-      fixture.componentRef.setInput('rows', [{ num: 1 }, { num: 2 }, { num: 3 }, { num: 4 }]);
-      fixture.componentRef.setInput('pageSize', 5);
-      fixture.componentRef.setInput('offset', 1);
-      fixture.componentRef.setInput('rowCount', 9);
+      state.externalPaging.set(false);
+      state.rows.set(Array.from({ length: 9 }, (_, index) => ({ num: index + 1 })));
+      state.limit.set(5);
+      state.offset.set(1);
+      state.count.set(9);
       const expectedIndexes = { first: 5, last: 9 };
-      expect(component.indexes()).toEqual(expectedIndexes);
+      expect(controller.indexes()).toEqual(expectedIndexes);
     });
 
     it('should have correct indexes for external paging with rows > pageSize', () => {
-      fixture.componentRef.setInput('externalPaging', true);
-      fixture.componentRef.setInput('rows', [
+      state.externalPaging.set(true);
+      state.rows.set([
         { num: 1 },
         { num: 2 },
         { num: 3 },
@@ -102,43 +100,43 @@ describe('DataTableBodyComponent', () => {
         { num: 9 },
         { num: 10 }
       ]);
-      fixture.componentRef.setInput('pageSize', 10);
-      fixture.componentRef.setInput('offset', 1);
-      fixture.componentRef.setInput('rowCount', 20);
+      state.limit.set(10);
+      state.offset.set(1);
+      state.count.set(20);
       const expectedIndexes = { first: 0, last: 10 };
-      expect(component.indexes()).toEqual(expectedIndexes);
+      expect(controller.indexes()).toEqual(expectedIndexes);
     });
 
     it('should have correct indexes for external paging with rows < pageSize', () => {
-      fixture.componentRef.setInput('externalPaging', true);
-      fixture.componentRef.setInput('rows', [{ num: 1 }, { num: 2 }, { num: 3 }, { num: 4 }]);
-      fixture.componentRef.setInput('pageSize', 5);
-      fixture.componentRef.setInput('offset', 1);
-      fixture.componentRef.setInput('rowCount', 9);
+      state.externalPaging.set(true);
+      state.rows.set([{ num: 1 }, { num: 2 }, { num: 3 }, { num: 4 }]);
+      state.limit.set(5);
+      state.offset.set(1);
+      state.count.set(9);
       const expectedIndexes = { first: 0, last: 5 };
-      expect(component.indexes()).toEqual(expectedIndexes);
+      expect(controller.indexes()).toEqual(expectedIndexes);
     });
 
     it('should render ghost rows based rowCount', async () => {
-      fixture.componentRef.setInput('trackByProp', 'num');
-      fixture.componentRef.setInput('rows', [{ num: 1 }, { num: 2 }, { num: 3 }, { num: 4 }]);
-      fixture.componentRef.setInput('columns', toInternalColumn([{ name: 'num', prop: 'num' }]));
-      fixture.componentRef.setInput('externalPaging', true);
-      fixture.componentRef.setInput('scrollbarV', true);
-      fixture.componentRef.setInput('virtualization', true);
+      table.trackByProp.set('num');
+      state.rows.set([{ num: 1 }, { num: 2 }, { num: 3 }, { num: 4 }]);
+      controller.columns.set(toInternalColumn([{ name: 'num', prop: 'num' }]));
+      state.externalPaging.set(true);
+      state.scrollbarV.set(true);
+      state.virtualization.set(true);
       rowHeight.set(50);
-      fixture.componentRef.setInput('ghostLoadingIndicator', true);
-      fixture.componentRef.setInput('bodyHeight', 200);
-      fixture.componentRef.setInput('pageSize', 5);
-      fixture.componentRef.setInput('rowCount', 10);
-      fixture.componentRef.setInput('offset', 0);
+      table.ghostLoadingIndicator.set(true);
+      controller.setDimensions({ height: 200, width: 0 });
+      state.limit.set(5);
+      state.count.set(10);
+      state.offset.set(0);
       await fixture.whenStable();
-      expect(component.indexes()).toEqual({ first: 0, last: 5 });
+      expect(controller.indexes()).toEqual({ first: 0, last: 5 });
       fixture.debugElement
         .query(By.directive(ScrollerComponent))
         .triggerEventHandler('scroll', { scrollYPos: 250, scrollXPos: 0 });
       await fixture.whenStable();
-      expect(component.indexes()).toEqual({ first: 5, last: 10 });
+      expect(controller.indexes()).toEqual({ first: 5, last: 10 });
       expect(
         fixture.debugElement.queryAll(By.directive(DataTableGhostLoaderComponent))
       ).toHaveLength(5);
@@ -147,26 +145,23 @@ describe('DataTableBodyComponent', () => {
 
   describe('with disableCheck', () => {
     beforeEach(() => {
-      fixture.componentRef.setInput(
-        'columns',
-        toInternalColumn([{ name: 'value', prop: 'value' }])
-      );
-      fixture.componentRef.setInput('disableRowCheck', (row: any) => row.disabled);
+      controller.columns.set(toInternalColumn([{ name: 'value', prop: 'value' }]));
+      table.disableRowCheck.set((row: any) => row.disabled);
     });
 
     it('should disable rows', async () => {
-      fixture.componentRef.setInput('rows', [
+      state.rows.set([
         { value: '1', disabled: false },
         { value: '2', disabled: true }
       ]);
-      fixture.componentRef.setInput('rowCount', 2);
-      fixture.componentRef.setInput('pageSize', 2);
-      fixture.componentRef.setInput('offset', 0);
+      state.count.set(2);
+      state.limit.set(2);
+      state.offset.set(0);
       await fixture.whenStable();
       let rows = fixture.debugElement.queryAll(By.directive(DataTableBodyRowComponent));
       expect(rows[0].classes['row-disabled']).toBeFalsy();
       expect(rows[1].classes['row-disabled']).toBe(true);
-      fixture.componentRef.setInput('rows', [
+      state.rows.set([
         { value: '1', disabled: true },
         { value: '2', disabled: false }
       ]);
@@ -177,7 +172,7 @@ describe('DataTableBodyComponent', () => {
     });
 
     it('should disable grouped rows', async () => {
-      fixture.componentRef.setInput('groupedRows', [
+      state.groupedRows.set([
         {
           key: 'g1',
           value: [
@@ -186,11 +181,11 @@ describe('DataTableBodyComponent', () => {
           ]
         }
       ]);
-      fixture.componentRef.setInput('groupExpansionDefault', true);
-      fixture.componentRef.setInput('rows', ['dummy']);
-      fixture.componentRef.setInput('rowCount', 2);
-      fixture.componentRef.setInput('pageSize', 2);
-      fixture.componentRef.setInput('offset', 0);
+      table.groupExpansionDefault.set(true);
+      state.rows.set(['dummy']);
+      state.count.set(2);
+      state.limit.set(2);
+      state.offset.set(0);
       await fixture.whenStable();
       const rows = fixture.debugElement.queryAll(By.directive(DataTableBodyRowComponent));
       expect(rows[0].classes['row-disabled']).toBeFalsy();
@@ -207,39 +202,36 @@ describe('DataTableBodyComponent', () => {
         value: [row1, row2]
       };
 
-      fixture.componentRef.setInput(
-        'columns',
-        toInternalColumn([{ name: 'value', prop: 'value' }])
-      );
-      fixture.componentRef.setInput('groupedRows', [group]);
-      fixture.componentRef.setInput('groupExpansionDefault', false);
-      fixture.componentRef.setInput('rows', ['dummy']);
-      fixture.componentRef.setInput('rowCount', 2);
-      fixture.componentRef.setInput('pageSize', 2);
-      fixture.componentRef.setInput('offset', 0);
-      fixture.componentRef.setInput('rowIdentity', (row: any) => row.id ?? row.key);
+      controller.columns.set(toInternalColumn([{ name: 'value', prop: 'value' }]));
+      state.groupedRows.set([group]);
+      table.groupExpansionDefault.set(false);
+      state.rows.set(['dummy']);
+      state.count.set(2);
+      state.limit.set(2);
+      state.offset.set(0);
+      table.rowIdentity.set((row: any) => row.id ?? row.key);
 
       await fixture.whenStable();
 
       // Initially, group should be collapsed
       expect(component.getGroupExpanded(group)).toBe(false);
-      expect(component.rowExpansions()).toHaveLength(0);
+      expect(controller.rowExpansions()).toHaveLength(0);
 
       // Expand the group
       component.toggleGroupExpansion(group);
       await fixture.whenStable();
 
       expect(component.getGroupExpanded(group)).toBe(true);
-      expect(component.groupExpansions()).toHaveLength(1);
-      expect(component.groupExpansions()[0]).toBe(group);
+      expect(controller.groupExpansions()).toHaveLength(1);
+      expect(controller.groupExpansions()[0]).toBe(group);
 
       // Now expand row detail for the first row in the group
       component.toggleRowExpansion(row1);
       await fixture.whenStable();
 
       expect(component.getRowExpanded(row1)).toBe(true);
-      expect(component.rowExpansions()).toHaveLength(1);
-      expect(component.rowExpansions()[0]).toBe(row1);
+      expect(controller.rowExpansions()).toHaveLength(1);
+      expect(controller.rowExpansions()[0]).toBe(row1);
 
       // Group should still be expanded
       expect(component.getGroupExpanded(group)).toBe(true);
@@ -249,17 +241,17 @@ describe('DataTableBodyComponent', () => {
       await fixture.whenStable();
 
       expect(component.getRowExpanded(row2)).toBe(true);
-      expect(component.rowExpansions()).toHaveLength(2);
-      expect(component.rowExpansions()).toContain(row1);
-      expect(component.rowExpansions()).toContain(row2);
+      expect(controller.rowExpansions()).toHaveLength(2);
+      expect(controller.rowExpansions()).toContain(row1);
+      expect(controller.rowExpansions()).toContain(row2);
 
       // Collapse the first row detail
       component.toggleRowExpansion(row1);
       await fixture.whenStable();
 
       expect(component.getRowExpanded(row1)).toBe(false);
-      expect(component.rowExpansions()).toHaveLength(1);
-      expect(component.rowExpansions()[0]).toBe(row2);
+      expect(controller.rowExpansions()).toHaveLength(1);
+      expect(controller.rowExpansions()[0]).toBe(row2);
 
       // Group should still be expanded
       expect(component.getGroupExpanded(group)).toBe(true);
@@ -276,28 +268,28 @@ describe('DataTableBodyComponent', () => {
     ];
 
     beforeEach(() => {
-      fixture.componentRef.setInput('rows', rows);
-      fixture.componentRef.setInput('rowCount', rows.length);
-      fixture.componentRef.setInput('pageSize', rows.length);
-      fixture.componentRef.setInput('offset', 0);
-      fixture.componentRef.setInput('selectionType', 'multi');
-      fixture.componentRef.setInput('selected', []);
+      state.rows.set(rows);
+      state.count.set(rows.length);
+      state.limit.set(rows.length);
+      state.offset.set(0);
+      state.selectionType.set('multi');
+      state.selected.set([]);
     });
 
     it('should keep prior ctrl-selected rows when shift-clicking a range', () => {
       // Regression for https://github.com/siemens/ngx-datatable/issues/582
       // 1. Click Georgina (idx 4)
       component.selectRow(new MouseEvent('click'), 4, rows[4]);
-      expect(component.selected()).toEqual([rows[4]]);
+      expect(controller.selected()).toEqual([rows[4]]);
 
       // 2. Ctrl-click Beryl (idx 2) - extends selection, becomes new anchor
       component.selectRow(new MouseEvent('click', { ctrlKey: true }), 2, rows[2]);
-      expect(component.selected()).toEqual([rows[4], rows[2]]);
+      expect(controller.selected()).toEqual([rows[4], rows[2]]);
 
       // 3. Shift-click Ethel (idx 0) - range from last anchor (Beryl, idx 2) to Ethel (idx 0)
       component.selectRow(new MouseEvent('click', { shiftKey: true }), 0, rows[0]);
 
-      const selected = component.selected();
+      const selected = controller.selected();
       // Georgina must still be selected (the bug)
       expect(selected).toContain(rows[4]);
       // Range Beryl..Ethel must be selected
@@ -313,7 +305,7 @@ describe('DataTableBodyComponent', () => {
         component.selectRow(new MouseEvent('click', { shiftKey: true }), 2, rows[2])
       ).not.toThrow();
       // First-ever shift-click without a prior anchor selects just the clicked row.
-      expect(component.selected()).toEqual([rows[2]]);
+      expect(controller.selected()).toEqual([rows[2]]);
     });
   });
 });

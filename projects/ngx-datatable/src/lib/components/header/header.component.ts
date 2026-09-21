@@ -22,17 +22,11 @@ import {
   SortableTableColumnInternal,
   TableColumnInternal
 } from '../../types/internal.types';
-import {
-  Row,
-  SelectionType,
-  SortDirection,
-  SortEvent,
-  SortPropDir,
-  SortType
-} from '../../types/public.types';
+import { Row, SortDirection, SortEvent, SortPropDir } from '../../types/public.types';
 import { columnsByPinArr } from '../../utils/column';
 import { toPublicColumn } from '../../utils/column-helper';
 import { DatatableConfiguration } from '../datatable-configuration';
+import { TableController } from '../table-controller';
 import { DataTableHeaderCellComponent } from './header-cell.component';
 
 @Component({
@@ -51,18 +45,18 @@ import { DataTableHeaderCellComponent } from './header-cell.component';
               <datatable-header-cell
                 role="columnheader"
                 dragStartDelay="500"
-                [datatableDraggable]="reorderable() && column.draggable"
+                [datatableDraggable]="controller.reorderable() && column.draggable"
                 [dragModel]="column"
                 [isTarget]="targetColumn() === column"
                 [targetMarkerTemplate]="targetMarkerTemplate()"
                 [targetMarkerContext]="targetMarkerContext()"
                 [column]="column"
                 [showResizeHandle]="lastColumnId() !== column.$$id && column.resizeable"
-                [sortType]="sortType()"
-                [sorts]="sorts()"
-                [selectionType]="selectionType()"
-                [allRowsSelected]="allRowsSelected()"
-                [enableClearingSortState]="enableClearingSortState()"
+                [sortType]="controller.sortType()"
+                [sorts]="controller.sorts()"
+                [selectionType]="controller.selectionType()"
+                [allRowsSelected]="controller.allRowsSelected()"
+                [enableClearingSortState]="controller.enableClearingSortState()"
                 (dragStart)="onDragStart($event)"
                 (dragMove)="onDragMove($event)"
                 (dragEnd)="onDragEnd($event)"
@@ -87,22 +81,12 @@ import { DataTableHeaderCellComponent } from './header-cell.component';
 export class DataTableHeaderComponent {
   private readonly document = inject(DOCUMENT);
   protected readonly configuration = inject(DatatableConfiguration).configuration;
+  protected readonly controller = inject(TableController);
   private readonly headerCells = viewChildren(DataTableHeaderCellComponent, { read: ElementRef });
 
-  readonly lastColumnId = computed(() => this.columns().at(-1)?.$$id);
+  readonly lastColumnId = computed(() => this.controller.columns().at(-1)?.$$id);
 
-  readonly scrollbarH = input<boolean>();
-  readonly dealsWithGroup = input<boolean>();
   readonly targetMarkerTemplate = input<TemplateRef<unknown>>();
-  readonly enableClearingSortState = input(false);
-  readonly sorts = input.required<SortPropDir[]>();
-  readonly sortType = input.required<SortType>();
-  readonly allRowsSelected = input<boolean>();
-  readonly selectionType = input<SelectionType>();
-  readonly reorderable = input<boolean>();
-  readonly verticalScrollVisible = input(false);
-
-  readonly columns = input.required<TableColumnInternal[]>();
 
   readonly sort = output<SortEvent>();
   readonly reorder = output<ReorderEventInternal>();
@@ -115,7 +99,7 @@ export class DataTableHeaderComponent {
   }>();
 
   readonly columnGroups = computed(() => {
-    return columnsByPinArr(this.columns());
+    return columnsByPinArr(this.controller.columns());
   });
   private readonly renderedColumns = computed(() =>
     this.columnGroups().flatMap(group => group.columns)
@@ -227,7 +211,7 @@ export class DataTableHeaderComponent {
   ): SortPropDir[] {
     let idx = 0;
 
-    const sorts = this.sorts().map((s, i) => {
+    const sorts = this.controller.sorts().map((s, i) => {
       s = { ...s };
       if (s.prop === column.prop) {
         idx = i;
@@ -240,8 +224,8 @@ export class DataTableHeaderComponent {
     } else if (prevValue) {
       sorts[idx].dir = newValue;
     } else {
-      if (this.sortType() === 'single') {
-        sorts.splice(0, this.sorts().length);
+      if (this.controller.sortType() === 'single') {
+        sorts.splice(0, this.controller.sorts().length);
       }
 
       sorts.push({ dir: newValue, prop: column.prop });

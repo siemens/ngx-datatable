@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
-import { DATATABLE_COMPONENT_TOKEN } from '../../utils/table-token';
+import { createTableControllerMock } from '../../../testing/table-controller.mock';
 import { DataTableFooterTemplateDirective } from './footer-template.directive';
 import { DataTableFooterComponent } from './footer.component';
 import { DatatableFooterDirective } from './footer.directive';
@@ -11,11 +11,21 @@ import { DatatableFooterDirective } from './footer.directive';
 let fixture: ComponentFixture<TestFixtureComponent>;
 let component: TestFixtureComponent;
 let page: Page;
+let controllerMock: ReturnType<typeof createTableControllerMock>;
 const footerHeight = signal(0);
 
 describe('DataTableFooterComponent', () => {
   beforeEach(async () => {
     footerHeight.set(0);
+    controllerMock = createTableControllerMock();
+    controllerMock.state.externalPaging.set(true);
+    controllerMock.state.count.set(100);
+    controllerMock.state.limit.set(1);
+    controllerMock.table.onFooterPage = ({ page: pageNumber }: { page: number }) =>
+      controllerMock.state.offset.set(pageNumber - 1);
+    TestBed.overrideComponent(TestFixtureComponent, {
+      add: { providers: [controllerMock.provider] }
+    });
     fixture = TestBed.createComponent(TestFixtureComponent);
     component = fixture.componentInstance;
     page = new Page();
@@ -31,8 +41,8 @@ describe('DataTableFooterComponent', () => {
     });
 
     it('should have `.selected-count` class when selectedMessage is set', async () => {
-      component.selectedMessage.set(true);
-      component.selectedCount.set(1);
+      controllerMock.state.selectionType.set('multi');
+      controllerMock.state.selected.set([{}]);
       await page.detectChangesAndRunQueries();
 
       expect(page.datatableFooterInner.nativeElement.classList.contains('selected-count')).toBe(
@@ -41,7 +51,7 @@ describe('DataTableFooterComponent', () => {
     });
 
     it('should not have `.selected-count` class if selectedMessage is not set', async () => {
-      component.selectedMessage.set(false);
+      controllerMock.state.selectionType.set(undefined);
       await page.detectChangesAndRunQueries();
 
       expect(page.datatableFooterInner.nativeElement.classList.contains('selected-count')).toBe(
@@ -60,9 +70,9 @@ describe('DataTableFooterComponent', () => {
 
     it('should display the selected count and total if selectedMessage set', async () => {
       component.footerTemplate.set(undefined);
-      component.selectedMessage.set(true);
-      component.selectedCount.set(7);
-      component.rowCount.set(10);
+      controllerMock.state.selectionType.set('multi');
+      controllerMock.state.selected.set(Array.from({ length: 7 }, () => ({})));
+      controllerMock.state.count.set(10);
       await page.detectChangesAndRunQueries();
 
       expect(page.pageCount.nativeElement.innerText).toEqual('7 selected / 10 total');
@@ -70,8 +80,8 @@ describe('DataTableFooterComponent', () => {
 
     it('should display only the total if selectedMessage is not set', async () => {
       component.footerTemplate.set(undefined);
-      component.selectedMessage.set(false);
-      component.rowCount.set(100);
+      controllerMock.state.selectionType.set(undefined);
+      controllerMock.state.count.set(100);
       await page.detectChangesAndRunQueries();
 
       expect(page.pageCount.nativeElement.innerText).toEqual('100 total');
@@ -85,14 +95,14 @@ describe('DataTableFooterComponent', () => {
     });
 
     it('should show & hide the DataTablePagerComponent', async () => {
-      component.rowCount.set(200);
-      component.pageSize.set(5);
+      controllerMock.state.count.set(200);
+      controllerMock.state.limit.set(5);
       await page.detectChangesAndRunQueries();
 
       expect(page.datatablePager).toBeTruthy();
 
-      component.rowCount.set(1);
-      component.pageSize.set(2);
+      controllerMock.state.count.set(1);
+      controllerMock.state.limit.set(2);
       await page.detectChangesAndRunQueries();
 
       expect(page.datatablePager).toBeFalsy();
@@ -118,10 +128,10 @@ describe('DataTableFooterComponent', () => {
 
     it('should give the template proper context', async () => {
       component.footerTemplate.set(component.footerTemplateDirective());
-      component.rowCount.set(12);
-      component.pageSize.set(1);
-      component.selectedCount.set(4);
-      component.offset.set(0);
+      controllerMock.state.count.set(12);
+      controllerMock.state.limit.set(1);
+      controllerMock.state.selected.set(Array.from({ length: 4 }, () => ({})));
+      controllerMock.state.offset.set(0);
       await page.detectChangesAndRunQueries();
       const listItems = page.templateList.queryAll(By.css('li'));
 
@@ -141,20 +151,7 @@ describe('DataTableFooterComponent', () => {
 @Component({
   imports: [DataTableFooterComponent, DatatableFooterDirective, DataTableFooterTemplateDirective],
   template: `
-    <datatable-footer
-      [rowCount]="rowCount()"
-      [groupCount]="undefined"
-      [pageSize]="pageSize()"
-      [offset]="offset()"
-      [footerTemplate]="footerTemplate()"
-      [pagerLeftArrowIcon]="pagerLeftArrowIcon()"
-      [pagerRightArrowIcon]="pagerRightArrowIcon()"
-      [pagerPreviousIcon]="pagerPreviousIcon()"
-      [selectedCount]="selectedCount()"
-      [selectedMessage]="selectedMessage()"
-      [pagerNextIcon]="pagerNextIcon()"
-      (page)="onPageEvent()"
-    />
+    <datatable-footer [footerTemplate]="footerTemplate()" (page)="onPageEvent()" />
 
     <ngx-datatable-footer>
       <ng-template
@@ -176,23 +173,11 @@ describe('DataTableFooterComponent', () => {
       </ng-template>
     </ngx-datatable-footer>
   `,
-  providers: [
-    { provide: DATATABLE_COMPONENT_TOKEN, useExisting: TestFixtureComponent },
-    provideDatatableConfigurationMock({ footerHeight })
-  ]
+  providers: [provideDatatableConfigurationMock({ footerHeight })]
 })
 class TestFixtureComponent {
   readonly footerHeight = signal(0);
-  readonly rowCount = signal(100);
-  readonly pageSize = signal(1);
-  readonly offset = signal(0);
-  readonly pagerLeftArrowIcon = signal('');
-  readonly pagerRightArrowIcon = signal('');
-  readonly pagerPreviousIcon = signal('');
-  readonly pagerNextIcon = signal('');
   readonly footerTemplate = signal<DatatableFooterDirective | undefined>(undefined);
-  readonly selectedCount = signal(0);
-  readonly selectedMessage = signal(false);
   readonly messages = signal({});
 
   /**
@@ -201,9 +186,6 @@ class TestFixtureComponent {
    * in these unit tests
    */
   readonly footerTemplateDirective = viewChild.required(DatatableFooterDirective);
-
-  // Used to mimic the DatatableComponent
-  readonly _footerComponent = viewChild(DataTableFooterComponent);
 
   onPageEvent() {
     return;

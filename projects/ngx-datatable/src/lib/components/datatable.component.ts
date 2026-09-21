@@ -15,12 +15,10 @@ import {
   input,
   IterableDiffer,
   IterableDiffers,
-  linkedSignal,
   model,
   numberAttribute,
   OnDestroy,
   output,
-  signal,
   TemplateRef,
   untracked,
   viewChild
@@ -61,18 +59,11 @@ import {
   TreeStatus
 } from '../types/public.types';
 import { TableColumn } from '../types/table-column.type';
-import {
-  columnGroupWidths,
-  columnsByPin,
-  columnsByPinArr,
-  gridColumnTemplate
-} from '../utils/column';
-import { toInternalColumn, toPublicColumn } from '../utils/column-helper';
+import { toPublicColumn } from '../utils/column-helper';
 import { adjustColumnWidths, forceFillColumnWidths } from '../utils/math';
 import { numberOrUndefinedAttribute } from '../utils/number-or-undefined-attribute';
-import { sortGroupedRows, sortRows } from '../utils/sort';
 import { DATATABLE_COMPONENT_TOKEN } from '../utils/table-token';
-import { expandToRow, groupRowsByParents, optionalGetterForProp } from '../utils/tree';
+import { expandToRow, optionalGetterForProp } from '../utils/tree';
 import { DatatableGroupHeaderDirective } from './body/body-group-header.directive';
 import { DatatableRowDefDirective } from './body/body-row-def.component';
 import { DataTableBodyComponent } from './body/body.component';
@@ -84,6 +75,7 @@ import { DataTableFooterComponent } from './footer/footer.component';
 import { DatatableFooterDirective } from './footer/footer.directive';
 import { DataTableHeaderComponent } from './header/header.component';
 import { DatatableRowDetailDirective } from './row-detail/row-detail.directive';
+import { TableController } from './table-controller';
 
 @Component({
   selector: 'ngx-datatable',
@@ -104,6 +96,10 @@ import { DatatableRowDetailDirective } from './row-detail/row-detail.directive';
     {
       provide: DatatableConfiguration,
       useFactory: () => inject(DatatableComponent).datatableConfiguration
+    },
+    {
+      provide: TableController,
+      useFactory: () => inject(DatatableComponent)._controller
     }
   ],
   host: {
@@ -119,7 +115,7 @@ import { DatatableRowDetailDirective } from './row-detail/row-detail.directive';
     '[class.single-selection]': 'selectionType() === "single"',
     '[class.multi-selection]': 'selectionType() === "multi"',
     '[class.multi-click-selection]': 'selectionType() === "multiClick"',
-    '[class.horizontal-overflow]': '_innerWidth() < totalColumnGroupWidths()'
+    '[class.horizontal-overflow]': '_controller.innerWidth() < _controller.totalColumnGroupWidths()'
   }
 })
 export class DatatableComponent<TRow extends Row = any>
@@ -136,7 +132,6 @@ export class DatatableComponent<TRow extends Row = any>
     {};
   readonly datatableConfiguration = new DatatableConfiguration(this, this.globalConfiguration);
   protected readonly configuration = this.datatableConfiguration.configuration;
-
   /**
    * Template for the target marker of drag target columns.
    */
@@ -551,155 +546,23 @@ export class DatatableComponent<TRow extends Row = any>
     read: TemplateRef
   });
 
-  /**
-   * Returns if all rows are selected.
-   */
-  readonly allRowsSelected = computed(() => {
-    const selected = this.selected();
-    let allRowsSelected = selected.length === this.rows()?.length;
+  /** @internal */
+  readonly _controller = new TableController<TRow>(this);
 
-    if (this.selectAllRowsOnPage()) {
-      const { first, last } = this._bodyComponent().indexes();
-      const rowsOnPage = last - first;
-      allRowsSelected = selected.length === rowsOnPage;
-    }
+  // Kept for compatibility. Internal rendering uses the controller directly.
+  readonly allRowsSelected = this._controller.allRowsSelected;
+  readonly pageSize = this._controller.pageSize;
+  readonly bodyHeight = this._controller.bodyHeight;
+  readonly rowCount = this._controller.rowCount;
+  readonly correctedOffset = this._controller.offset;
+  readonly totalColumnGroupWidths = this._controller.totalColumnGroupWidths;
 
-    return !!(selected && this.rows()?.length !== 0 && allRowsSelected);
-  });
-
-  readonly _innerWidth = computed(() => this.dimensions().width);
-  readonly pageSize = computed(() => this.calcPageSize());
-  private readonly viewportRowCount = computed(() => {
-    const size = Math.ceil(this.bodyHeight() / (this.rowHeight() as number));
-    return Math.max(size, 0);
-  });
   readonly _isFixedHeader = computed(() => {
     const headerHeight: number | string = this.headerHeight();
     return typeof headerHeight === 'string' ? (headerHeight as string) !== 'auto' : true;
   });
-  readonly bodyHeight = computed(() => {
-    if (this.scrollbarV()) {
-      let height = this.dimensions().height;
-      const headerElement = this._headerElement();
-      if (headerElement) {
-        height = height - headerElement.nativeElement.getBoundingClientRect().height;
-      }
-      return height - this.footerHeight();
-    }
-    return 0;
-  });
-  readonly rowCount = computed(() => this.calcRowCount());
-  /** This counter is increased, when the rowDiffer detects a change. This will cause an update of _internalRows. */
-  private readonly _rowDiffCount = signal(0);
-
-  _offsetX = 0;
-  readonly _internalRows = computed(() => {
-    this._rowDiffCount(); // to trigger recalculation when row differ detects a change
-    let rows = this.rows()?.slice() ?? [];
-
-    const sorts = this.sorts();
-    if (sorts.length && !this.externalSorting()) {
-      rows = sortRows(rows, this._internalColumns(), this.sorts());
-    }
-
-    if (this.treeFromRelation() && this.treeToRelation()) {
-      rows = groupRowsByParents(
-        rows,
-        optionalGetterForProp(this.treeFromRelation()),
-        optionalGetterForProp(this.treeToRelation())
-      );
-    }
-
-    if (this.ghostLoadingIndicator() && this.scrollbarV() && !this.externalPaging()) {
-      const ghostRowCount = Math.max(this.viewportRowCount() - rows.length, 1);
-      for (let i = 0; i < ghostRowCount; i++) {
-        rows.push(undefined);
-      }
-    }
-
-    return rows;
-  });
-
-  readonly _internalGroupedRows = computed(() => {
-    let groupedRows = this.groupedRows();
-    const groupRowsBy = this.groupRowsBy();
-
-    if (!groupedRows && groupRowsBy) {
-      this._rowDiffCount(); // to trigger recalculation when row differ detects a change
-      groupedRows = this.groupArrayBy(this.rows() ?? [], groupRowsBy);
-    }
-
-    if (!groupedRows) {
-      // return here to prevent subscription to sorts when no grouping
-      return undefined;
-    }
-
-    const sorts = this.sorts();
-    if (sorts.length && !this.externalSorting()) {
-      if (groupedRows?.length) {
-        groupedRows = sortGroupedRows(
-          groupedRows,
-          this._internalColumns(),
-          sorts,
-          sorts.find(sortColumns => sortColumns.prop === groupRowsBy)
-        );
-      }
-    }
-
-    return groupedRows;
-  });
-
-  // TODO: consider removing internal modifications of the columns.
-  // This requires a different strategy for certain properties like width.
-  readonly _internalColumns = linkedSignal(() =>
-    toInternalColumn(
-      this.columnTemplates().length
-        ? this.columnTemplates().map(c => c.column())
-        : (this.columns() ?? []),
-      this._defaultColumnWidth
-    )
-  );
-
-  /**
-   * The shared `grid-template-columns` definition for the combined css-grid.
-   * It is exposed once as a custom property on the scroll container so the
-   * header and every body row align to the same column tracks via `var()`,
-   * instead of each row binding its own (identical) template string.
-   */
-  readonly _gridTemplateColumns = computed(() =>
-    gridColumnTemplate(columnsByPinArr(this._internalColumns()))
-  );
-
-  /**
-   * Computed signal that returns the corrected offset value.
-   * It ensures the offset is within valid bounds based on rowCount and pageSize.
-   */
-  readonly correctedOffset = computed(() => {
-    const offset = this.offset();
-    const rowCount = this.rowCount();
-    const pageSize = this.pageSize();
-    return Math.max(Math.min(offset, Math.ceil(rowCount / pageSize) - 1), 0);
-  });
-
-  readonly totalColumnGroupWidths = computed(() => {
-    const colsByPin = columnsByPin(this._internalColumns());
-    return columnGroupWidths(colsByPin, this._internalColumns()).total;
-  });
-
   _subscriptions: Subscription[] = [];
   _defaultColumnWidth = this.globalConfiguration.defaultColumnWidth ?? 150;
-  /**
-   * To have this available for all components.
-   * The Footer itself is not available in the injection context in templates,
-   * so we need to get if from here until we have a state service.
-   */
-  readonly _footerComponent = viewChild(DataTableFooterComponent);
-  protected verticalScrollVisible = false;
-  private readonly dimensions = signal<Pick<DOMRect, 'width' | 'height'>>(
-    { height: 0, width: 0 },
-    { equal: (a, b) => a.width === b.width && a.height === b.height }
-  );
-
   /** Re-measures the table whenever the host element's size changes. */
   private resizeObserver?: ResizeObserver;
 
@@ -717,11 +580,17 @@ export class DatatableComponent<TRow extends Row = any>
         }
         clearTimeout(this.resizeDebounce);
         this.resizeDebounce = setTimeout(() => {
-          this.dimensions.set({ width: borderBox.inlineSize, height: borderBox.blockSize });
+          this._controller.setDimensions(
+            { width: borderBox.inlineSize, height: borderBox.blockSize },
+            this._headerElement()?.nativeElement.getBoundingClientRect().height ?? 0
+          );
         }, 5);
       });
       this.resizeObserver.observe(this.element);
-      this.dimensions.set(this.element.getBoundingClientRect());
+      this._controller.setDimensions(
+        this.element.getBoundingClientRect(),
+        this._headerElement()?.nativeElement.getBoundingClientRect().height ?? 0
+      );
     });
   }
 
@@ -731,7 +600,7 @@ export class DatatableComponent<TRow extends Row = any>
   ngDoCheck(): void {
     const rowDiffers = this.checkRowListChanges() ? this.rowDiffer.diff(this.rows()) : null;
     if (rowDiffers || this.disableRowCheck()) {
-      this._rowDiffCount.update(count => count + 1);
+      this._controller.markRowsChanged();
       this.cd.markForCheck();
     }
   }
@@ -746,7 +615,7 @@ export class DatatableComponent<TRow extends Row = any>
       queueMicrotask(() =>
         this.page.emit({
           count: this.count(),
-          pageSize: this.pageSize(),
+          pageSize: this._controller.pageSize(),
           limit: this.limit(),
           offset: 0,
           sorts: this.sorts()
@@ -778,30 +647,7 @@ export class DatatableComponent<TRow extends Row = any>
    * @param groupBy the key of the column to group the data by
    */
   groupArrayBy(originalArray: (TRow | undefined)[], groupBy: keyof TRow) {
-    // create a map to hold groups with their corresponding results
-    const map = new Map<TRow[keyof TRow], TRow[]>();
-    let i = 0;
-
-    originalArray.forEach(item => {
-      if (!item) {
-        // skip undefined items
-        return;
-      }
-
-      const key = item[groupBy];
-      const value = map.get(key);
-      if (!value) {
-        map.set(key, [item]);
-      } else {
-        value.push(item);
-      }
-      i++;
-    });
-
-    const addGroup = (key: TRow[keyof TRow], value: TRow[]) => ({ key, value });
-
-    // convert map back to a simple array of objects
-    return Array.from(map, x => addGroup(x[0], x[1]));
+    return this._controller.groupArrayBy(originalArray, groupBy);
   }
 
   /**
@@ -824,14 +670,14 @@ export class DatatableComponent<TRow extends Row = any>
     forceIdx = -1,
     allowBleed: boolean = this.scrollbarH()
   ): TableColumnInternal[] {
-    let width = this._innerWidth();
-    const columns = this._internalColumns();
+    let width = this._controller.innerWidth();
+    const columns = this._controller.columns();
     if (!width) {
       return [];
     }
-    this.verticalScrollVisible = this._scrollContainer().verticalScrollVisible;
+    this._controller.verticalScrollVisible.set(this._scrollContainer().verticalScrollVisible);
     if (this.scrollbarV() || this.scrollbarVDynamic()) {
-      width = width - (this.verticalScrollVisible ? this.scrollbarHelper.width : 0);
+      width = width - (this._controller.verticalScrollVisible() ? this.scrollbarHelper.width : 0);
     }
 
     // TODO: this is a temporary workaround to avoid signal writes in a computed.
@@ -873,12 +719,12 @@ export class DatatableComponent<TRow extends Row = any>
 
     this.offset.set(offset);
 
-    if (!isNaN(this.correctedOffset())) {
+    if (!isNaN(this._controller.offset())) {
       this.page.emit({
         count: this.count(),
-        pageSize: this.pageSize(),
+        pageSize: this._controller.pageSize(),
         limit: this.limit(),
-        offset: this.correctedOffset(),
+        offset: this._controller.offset(),
         sorts: this.sorts()
       });
     }
@@ -888,7 +734,7 @@ export class DatatableComponent<TRow extends Row = any>
    * The body triggered a scroll event.
    */
   onBodyScroll(event: ScrollEvent): void {
-    this._offsetX = event.offsetX;
+    this._controller.setScrollOffset(event.offsetX, event.offsetY);
     this.scroll.emit(event);
   }
 
@@ -897,13 +743,13 @@ export class DatatableComponent<TRow extends Row = any>
    */
   onFooterPage(event: PagerPageEvent) {
     this.offset.set(event.page - 1);
-    this._bodyComponent().updateOffsetY(this.correctedOffset());
+    this._bodyComponent().updateOffsetY(this._controller.offset());
 
     this.page.emit({
       count: this.count(),
-      pageSize: this.pageSize(),
+      pageSize: this._controller.pageSize(),
       limit: this.limit(),
-      offset: this.correctedOffset(),
+      offset: this._controller.offset(),
       sorts: this.sorts()
     });
 
@@ -916,34 +762,14 @@ export class DatatableComponent<TRow extends Row = any>
    * Recalculates the sizes of the page
    */
   calcPageSize(): number {
-    if (this.scrollbarV() && this.virtualization()) {
-      return this.viewportRowCount();
-    }
-
-    // if limit is passed, we are paging
-    const limit = this.limit();
-    if (limit !== undefined) {
-      return limit;
-    }
-
-    // otherwise use row length
-    return this._internalRows().length;
+    return this._controller.pageSize();
   }
 
   /**
    * Calculates the row count.
    */
   calcRowCount(): number {
-    if (!this.externalPaging()) {
-      const groupedRows = this._internalGroupedRows();
-      if (groupedRows) {
-        return groupedRows.length;
-      } else {
-        return this._internalRows().length;
-      }
-    }
-
-    return this.count();
+    return this._controller.rowCount();
   }
 
   /**
@@ -973,8 +799,8 @@ export class DatatableComponent<TRow extends Row = any>
       return;
     }
 
-    const idx = this._internalColumns().indexOf(column);
-    const cols = this._internalColumns();
+    const idx = this._controller.columns().indexOf(column);
+    const cols = this._controller.columns();
     cols[idx].width.set(newValue);
     // set this so we can force the column
     // width distribution to be to this value
@@ -994,7 +820,7 @@ export class DatatableComponent<TRow extends Row = any>
     }
     column.width.set(newValue);
     column.$$oldWidth = newValue;
-    const idx = this._internalColumns().indexOf(column);
+    const idx = this._controller.columns().indexOf(column);
     this.recalculateColumns(idx);
   }
 
@@ -1003,7 +829,7 @@ export class DatatableComponent<TRow extends Row = any>
    */
   onColumnReorder(event: ReorderEventInternal): void {
     const { column, newValue, prevValue } = event;
-    const cols = this._internalColumns().map(c => ({ ...c }));
+    const cols = this._controller.columns().map(c => ({ ...c }));
     const prevCol = cols[newValue];
     if (column.frozenLeft !== prevCol.frozenLeft || column.frozenRight !== prevCol.frozenRight) {
       return;
@@ -1028,7 +854,7 @@ export class DatatableComponent<TRow extends Row = any>
       }
     }
 
-    this._internalColumns.set(cols);
+    this._controller.columns.set(cols);
 
     this.reorder.emit({ ...event, column: toPublicColumn(event.column) });
   }
@@ -1046,13 +872,13 @@ export class DatatableComponent<TRow extends Row = any>
 
     // Always go to first page when sorting to see the newly sorted data
     this.offset.set(0);
-    this._bodyComponent().updateOffsetY(this.correctedOffset());
+    this._bodyComponent().updateOffsetY(this._controller.offset());
     // Emit the page object with updated offset value
     this.page.emit({
       count: this.count(),
-      pageSize: this.pageSize(),
+      pageSize: this._controller.pageSize(),
       limit: this.limit(),
-      offset: this.correctedOffset(),
+      offset: this._controller.offset(),
       sorts: this.sorts()
     });
   }
@@ -1063,13 +889,14 @@ export class DatatableComponent<TRow extends Row = any>
   onHeaderSelect(): void {
     if (this.selectAllRowsOnPage()) {
       // before we splice, chk if we currently have all selected
-      const { first, last } = this._bodyComponent().indexes();
+      const { first, last } = this._controller.indexes();
       const allSelected = this.selected().length === last - first;
 
       // do the opposite here
       if (!allSelected) {
         this.selected.set(
-          this._internalRows()
+          this._controller
+            .rows()
             .slice(first, last)
             .filter(row => !!row) as TRow[]
         );
@@ -1107,7 +934,7 @@ export class DatatableComponent<TRow extends Row = any>
     const rowIndex = (this.rows() ?? []).findIndex(
       r => r && r[treeToRel!] === event.row[treeToRel!]
     );
-    this._rowDiffCount.update(v => v + 1);
+    this._controller.markRowsChanged();
     this.treeAction.emit({ row, rowIndex });
   }
 
@@ -1123,7 +950,7 @@ export class DatatableComponent<TRow extends Row = any>
     }
 
     // TODO: We could / should add support for all those cases below.
-    if (this._internalGroupedRows()?.length) {
+    if (this._controller.groupedRows()?.length) {
       throw new Error('Scrolling is not supported with grouped rows.');
     }
 
@@ -1136,7 +963,7 @@ export class DatatableComponent<TRow extends Row = any>
       return;
     }
 
-    const index = this._internalRows().indexOf(row);
+    const index = this._controller.rows().indexOf(row);
     if (index === -1) {
       throw new Error(`Row not found: ${row}`);
     }
@@ -1147,7 +974,7 @@ export class DatatableComponent<TRow extends Row = any>
   }
 
   private scrollToRowTree(row: TRow, options?: ScrollToRowOptions, afterExpand = false): void {
-    const index = this._internalRows().indexOf(row);
+    const index = this._controller.rows().indexOf(row);
 
     if (index !== -1) {
       this._bodyComponent().scrollToIndex(index, options);
@@ -1164,7 +991,7 @@ export class DatatableComponent<TRow extends Row = any>
       optionalGetterForProp(this.treeFromRelation()),
       optionalGetterForProp(this.treeToRelation())
     );
-    this._rowDiffCount.update(v => v + 1);
+    this._controller.markRowsChanged();
     // We need a setTimeout to wait until the DOM was updated
     setTimeout(() => this.scrollToRowTree(row, options, true));
   }

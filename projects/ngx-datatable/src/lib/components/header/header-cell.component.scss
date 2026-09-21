@@ -29,7 +29,30 @@
 }
 
 .datatable-header-cell-template-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
   block-size: inherit;
+}
+
+.datatable-header-sort-button {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+
+  &:focus-visible {
+    outline: 2px solid currentcolor;
+    outline-offset: 2px;
+  }
+}
+
+.datatable-header-actions {
+  display: inline-flex;
+  align-items: center;
 }
 
 .sort-btn {

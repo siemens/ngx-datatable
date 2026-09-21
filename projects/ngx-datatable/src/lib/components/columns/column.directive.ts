@@ -10,11 +10,21 @@ import {
   TemplateRef
 } from '@angular/core';
 
-import { CellContext, HeaderCellContext, Row } from '../../types/public.types';
+import {
+  CellContext,
+  HeaderActionsContext,
+  HeaderCellContext,
+  HeaderLabelContext,
+  Row
+} from '../../types/public.types';
 import { TableColumn, TableColumnProp } from '../../types/table-column.type';
 import { DataTableColumnCellDirective } from './column-cell.directive';
 import { DataTableColumnGhostCellDirective } from './column-ghost-cell.directive';
-import { DataTableColumnHeaderDirective } from './column-header.directive';
+import {
+  DataTableColumnHeaderActionsDirective,
+  DataTableColumnHeaderCellDirective,
+  DataTableColumnHeaderLabelDirective
+} from './column-header.directive';
 import { DataTableColumnCellTreeToggle } from './tree.directive';
 
 @Directive({
@@ -157,13 +167,26 @@ export class DataTableColumnDirective<TRow extends Row> {
   });
   readonly cellTemplateQuery = contentChild(DataTableColumnCellDirective, { read: TemplateRef });
 
-  /**
-   * Template used to render header cells.
-   */
-  readonly headerTemplateInput = input<TemplateRef<HeaderCellContext> | undefined>(undefined, {
-    alias: 'headerTemplate'
+  readonly headerLabelTemplateInput = input<TemplateRef<HeaderLabelContext> | undefined>(
+    undefined,
+    { alias: 'headerLabelTemplate' }
+  );
+  readonly headerLabelTemplateQuery = contentChild(DataTableColumnHeaderLabelDirective, {
+    read: TemplateRef
   });
-  readonly headerTemplateQuery = contentChild(DataTableColumnHeaderDirective, {
+
+  readonly headerActionsTemplateInput = input<TemplateRef<HeaderActionsContext> | undefined>(
+    undefined,
+    { alias: 'headerActionsTemplate' }
+  );
+  readonly headerActionsTemplateQuery = contentChild(DataTableColumnHeaderActionsDirective, {
+    read: TemplateRef
+  });
+
+  readonly headerCellTemplateInput = input<TemplateRef<HeaderCellContext> | undefined>(undefined, {
+    alias: 'headerCellTemplate'
+  });
+  readonly headerCellTemplateQuery = contentChild(DataTableColumnHeaderCellDirective, {
     read: TemplateRef
   });
 
@@ -209,7 +232,9 @@ export class DataTableColumnDirective<TRow extends Row> {
     summaryFunc: this.summaryFunc(),
     summaryTemplate: this.summaryTemplate(),
     cellTemplate: this.cellTemplateInput() ?? this.cellTemplateQuery(),
-    headerTemplate: this.headerTemplateInput() ?? this.headerTemplateQuery(),
+    headerLabelTemplate: this.headerLabelTemplateInput() ?? this.headerLabelTemplateQuery(),
+    headerActionsTemplate: this.headerActionsTemplateInput() ?? this.headerActionsTemplateQuery(),
+    headerCellTemplate: this.headerCellTemplateInput() ?? this.headerCellTemplateQuery(),
     treeToggleTemplate: this.treeToggleTemplateInput() ?? this.treeToggleTemplateQuery(),
     ghostCellTemplate: this.ghostCellTemplateInput() ?? this.ghostCellTemplateQuery()
   }));

@@ -15,10 +15,12 @@ import { DraggableHarness } from './testing/draggable.harness';
     <div
       [datatableDraggable]="enabled()"
       [dragStartDelay]="dragStartDelay()"
+      [dragHandleSelector]="dragHandleSelector()"
       (dragStart)="dragStart()"
       (dragEnd)="dragEnd($event)"
       (dragMove)="dragMove($event)"
     >
+      <button type="button" class="drag-handle" (click)="handleClick()">Move</button>
       <input aria-label="Header filter" />
     </div>
   `
@@ -26,12 +28,15 @@ import { DraggableHarness } from './testing/draggable.harness';
 class TestFixtureComponent {
   readonly dragStartDelay = signal(0);
   readonly enabled = signal(true);
+  readonly dragHandleSelector = signal<string | undefined>(undefined);
 
   dragStart(): void {}
 
   dragEnd(event: DragEvent): void {}
 
   dragMove(event: DragEvent): void {}
+
+  handleClick(): void {}
 }
 
 describe('DraggableDirective', () => {
@@ -84,6 +89,37 @@ describe('DraggableDirective', () => {
     await userEvent.click(input);
 
     expect(document.activeElement).toBe(input);
+  });
+
+  it('should only start dragging from the configured handle', async () => {
+    component.dragHandleSelector.set('.drag-handle');
+    await fixture.whenStable();
+    const input = fixture.nativeElement.querySelector('input');
+
+    input.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 1 }));
+    expect(dragStartSpy).not.toHaveBeenCalled();
+  });
+
+  it('should suppress a handle click after dragging', async () => {
+    component.dragHandleSelector.set('.drag-handle');
+    await fixture.whenStable();
+    vi.useFakeTimers();
+    const handle = fixture.nativeElement.querySelector('.drag-handle') as HTMLButtonElement;
+    const clickSpy = vi.spyOn(component, 'handleClick');
+
+    handle.dispatchEvent(
+      new PointerEvent('pointerdown', { bubbles: true, clientX: 0, pointerId: 1 })
+    );
+    vi.advanceTimersByTime(0);
+    await fixture.whenStable();
+    document.dispatchEvent(
+      new PointerEvent('pointermove', { bubbles: true, clientX: 10, pointerId: 1 })
+    );
+    document.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 1 }));
+    handle.click();
+
+    expect(clickSpy).not.toHaveBeenCalled();
+    vi.useRealTimers();
   });
 
   it('should provide the initial position when dragging ends without moving', async () => {

@@ -221,6 +221,7 @@ describe('DataTableHeaderComponent', () => {
     // Get the first cell (Column 1) that we want to drag
     const firstCell = headerCells[0].nativeElement;
     const secondCell = headerCells[1].nativeElement;
+    const firstHandle = firstCell.querySelector('.datatable-header-reorder-handle');
 
     // Get positions
     const firstRect = firstCell.getBoundingClientRect();
@@ -233,7 +234,7 @@ describe('DataTableHeaderComponent', () => {
       clientY: firstRect.top + firstRect.height / 2,
       pointerId: 1
     });
-    firstCell.dispatchEvent(pointerDownEvent);
+    firstHandle.dispatchEvent(pointerDownEvent);
     // Wait for drag start delay
     vi.advanceTimersByTime(500);
     await fixture.whenStable();

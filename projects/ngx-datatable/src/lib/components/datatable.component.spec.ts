@@ -407,7 +407,7 @@ describe('DatatableComponent', () => {
     const cellSizes = () => headerCells.map(cell => cell.nativeElement.clientWidth);
     // The ResizeObserver measures the host asynchronously; wait for it before
     // resizing, since the resize handler distributes using the measured width.
-    await expect.poll(() => datatable._innerWidth()).toBe(400);
+    await expect.poll(() => datatable.tableWidth()).toBe(400);
 
     headerCells[1].triggerEventHandler('resize', {
       width: 150,

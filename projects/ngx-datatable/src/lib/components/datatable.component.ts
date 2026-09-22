@@ -119,7 +119,7 @@ import { DatatableRowDetailDirective } from './row-detail/row-detail.directive';
     '[class.single-selection]': 'selectionType() === "single"',
     '[class.multi-selection]': 'selectionType() === "multi"',
     '[class.multi-click-selection]': 'selectionType() === "multiClick"',
-    '[class.horizontal-overflow]': '_innerWidth() < totalColumnGroupWidths()'
+    '[class.horizontal-overflow]': 'tableWidth() < totalColumnGroupWidths()'
   }
 })
 export class DatatableComponent<TRow extends Row = any>
@@ -536,7 +536,7 @@ export class DatatableComponent<TRow extends Row = any>
       DataTableBodyComponent
     );
 
-  private readonly _headerElement = viewChild(DataTableHeaderComponent, {
+  private readonly _bodyElement = viewChild.required(DataTableBodyComponent, {
     read: ElementRef<HTMLElement>
   });
 
@@ -567,7 +567,8 @@ export class DatatableComponent<TRow extends Row = any>
     return !!(selected && this.rows()?.length !== 0 && allRowsSelected);
   });
 
-  readonly _innerWidth = computed(() => this.dimensions().width);
+  readonly tableWidth = signal(0);
+  readonly bodyHeight = signal(0);
   readonly pageSize = computed(() => this.calcPageSize());
   private readonly viewportRowCount = computed(() => {
     const size = Math.ceil(this.bodyHeight() / (this.rowHeight() as number));
@@ -576,17 +577,6 @@ export class DatatableComponent<TRow extends Row = any>
   readonly _isFixedHeader = computed(() => {
     const headerHeight: number | string = this.headerHeight();
     return typeof headerHeight === 'string' ? (headerHeight as string) !== 'auto' : true;
-  });
-  readonly bodyHeight = computed(() => {
-    if (this.scrollbarV()) {
-      let height = this.dimensions().height;
-      const headerElement = this._headerElement();
-      if (headerElement) {
-        height = height - headerElement.nativeElement.getBoundingClientRect().height;
-      }
-      return height - this.footerHeight();
-    }
-    return 0;
   });
   readonly rowCount = computed(() => this.calcRowCount());
   /** This counter is increased, when the rowDiffer detects a change. This will cause an update of _internalRows. */
@@ -695,33 +685,43 @@ export class DatatableComponent<TRow extends Row = any>
    */
   readonly _footerComponent = viewChild(DataTableFooterComponent);
   protected verticalScrollVisible = false;
-  private readonly dimensions = signal<Pick<DOMRect, 'width' | 'height'>>(
-    { height: 0, width: 0 },
-    { equal: (a, b) => a.width === b.width && a.height === b.height }
-  );
 
-  /** Re-measures the table whenever the host element's size changes. */
+  /** Re-measures the table width and body viewport height whenever either changes. */
   private resizeObserver?: ResizeObserver;
 
-  /** Pending debounce timer for the {@link resizeObserver} callback. */
-  private resizeDebounce?: ReturnType<typeof setTimeout>;
+  /** Pending debounce timers for the {@link resizeObserver} callback. */
+  private widthResizeDebounce?: ReturnType<typeof setTimeout>;
+  private heightResizeDebounce?: ReturnType<typeof setTimeout>;
 
   constructor() {
     effect(() => this.recalculateColumns());
 
     afterNextRender(() => {
       this.resizeObserver = new ResizeObserver(entries => {
-        const borderBox = entries[entries.length - 1]?.borderBoxSize?.[0];
-        if (!borderBox) {
-          return;
+        const bodyElement = this._bodyElement().nativeElement;
+
+        for (const entry of entries) {
+          const borderBox = entry.borderBoxSize?.[0];
+          if (!borderBox) {
+            continue;
+          }
+          if (entry.target === this.element) {
+            clearTimeout(this.widthResizeDebounce);
+            this.widthResizeDebounce = setTimeout(() => {
+              this.tableWidth.set(borderBox.inlineSize);
+            }, 5);
+          } else if (entry.target === bodyElement) {
+            clearTimeout(this.heightResizeDebounce);
+            this.heightResizeDebounce = setTimeout(() => {
+              this.bodyHeight.set(borderBox.blockSize);
+            }, 5);
+          }
         }
-        clearTimeout(this.resizeDebounce);
-        this.resizeDebounce = setTimeout(() => {
-          this.dimensions.set({ width: borderBox.inlineSize, height: borderBox.blockSize });
-        }, 5);
       });
       this.resizeObserver.observe(this.element);
-      this.dimensions.set(this.element.getBoundingClientRect());
+      this.resizeObserver.observe(this._bodyElement().nativeElement);
+      this.tableWidth.set(this.element.getBoundingClientRect().width);
+      this.bodyHeight.set(this._bodyElement().nativeElement.getBoundingClientRect().height);
     });
   }
 
@@ -824,7 +824,7 @@ export class DatatableComponent<TRow extends Row = any>
     forceIdx = -1,
     allowBleed: boolean = this.scrollbarH()
   ): TableColumnInternal[] {
-    let width = this._innerWidth();
+    let width = this.tableWidth();
     const columns = this._internalColumns();
     if (!width) {
       return [];
@@ -1113,7 +1113,8 @@ export class DatatableComponent<TRow extends Row = any>
 
   ngOnDestroy() {
     this.resizeObserver?.disconnect();
-    clearTimeout(this.resizeDebounce);
+    clearTimeout(this.widthResizeDebounce);
+    clearTimeout(this.heightResizeDebounce);
     this._subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 

@@ -11,7 +11,6 @@ bootstrapApplication(AppComponent, {
   providers: [
     providedNgxDatatableConfig({
       rowHeight: 48,
-      headerHeight: 48,
       defaultColumnWidth: 200,
       messages: {
         emptyMessage: 'No results found',

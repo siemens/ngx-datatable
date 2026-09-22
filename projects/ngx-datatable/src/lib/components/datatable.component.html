@@ -6,7 +6,7 @@
     [style.--ngx-datatable-grid-template-columns]="_gridTemplateColumns()"
     [style.scroll-padding-block-start.px]="_isFixedHeader() ? headerHeight() : null"
   >
-    @if (headerHeight()) {
+    @if (!hideHeader() && headerHeight()) {
       <datatable-header
         role="rowgroup"
         [sorts]="sorts()"

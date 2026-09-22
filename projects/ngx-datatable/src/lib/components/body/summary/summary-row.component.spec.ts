@@ -155,6 +155,22 @@ describe('DataTableSummaryRowComponent', () => {
         expect(vi.mocked(transformSpy)).toHaveBeenCalled();
         expect(col1Text).toBe(transformed);
       });
+
+      it('should use the pipe instead of the cell value transform', async () => {
+        const transformed = '$11';
+        const transformSpy = vi.fn().mockReturnValue(transformed);
+        const cellValueTransformSpy = vi.fn().mockReturnValue('cell transformed');
+
+        columns[0].pipe = { transform: transformSpy };
+        columns[0].cellValueTransform = cellValueTransformSpy;
+        componentRef.setInput('columns', [...columns]);
+
+        const col1Text = await harness.getSummaryRowCellText(0);
+
+        expect(transformSpy).toHaveBeenCalledWith(11);
+        expect(cellValueTransformSpy).not.toHaveBeenCalled();
+        expect(col1Text).toBe(transformed);
+      });
     });
   });
 });

@@ -11,7 +11,11 @@ import {
 } from '@angular/core';
 
 import { CellContext, HeaderCellContext, Row } from '../../types/public.types';
-import { TableColumn, TableColumnProp } from '../../types/table-column.type';
+import {
+  CellValueTransformContext,
+  TableColumn,
+  TableColumnProp
+} from '../../types/table-column.type';
 import { DataTableColumnCellDirective } from './column-cell.directive';
 import { DataTableColumnGhostCellDirective } from './column-ghost-cell.directive';
 import { DataTableColumnHeaderDirective } from './column-header.directive';
@@ -67,9 +71,27 @@ export class DataTableColumnDirective<TRow extends Row> {
   >();
 
   /**
-   * Custom pipe used to transform cell values.
+   * @deprecated For ordinary cells, use {@link cellValueTransform} instead.
+   *
+   * ```ts
+   * const column: TableColumn = {
+   *   // before
+   *   pipe: { transform: value => doTransform(value) },
+   *   // after
+   *   cellValueTransform: ({ value, row, column }) => doTransform(value),
+   * }
+   * ```
+   * When using summary rows with a {@link summaryFunc}, transform the value returned by it accordingly.
    */
   readonly pipe = input<PipeTransform | undefined>();
+
+  /**
+   * Custom transformer used to transform ordinary cell values. It receives an
+   * object containing the cell value, its row, and its column.
+   */
+  readonly cellValueTransform = input<
+    ((context: CellValueTransformContext<TRow>) => any) | undefined
+  >();
 
   /**
    * Whether row values can be sorted by this column. Default value: `true`.
@@ -194,6 +216,7 @@ export class DataTableColumnDirective<TRow extends Row> {
     resizeable: this.resizeable(),
     comparator: this.comparator(),
     pipe: this.pipe(),
+    cellValueTransform: this.cellValueTransform(),
     sortable: this.sortable(),
     draggable: this.draggable(),
     canAutoResize: this.canAutoResize(),

@@ -188,8 +188,13 @@ export class DataTableBodyCellComponent<TRow extends Row = any> implements DoChe
     } else {
       const val = column.$$valueGetter(row, column.prop);
       const userPipe = column.pipe;
+      const cellValueTransform = column.cellValueTransform;
 
-      if (userPipe) {
+      // Summary rows reuse this component and are marked with an index of -1.
+      // Their values are transformed by summaryFunc instead.
+      if (cellValueTransform && this.rowIndex()?.index !== -1) {
+        value = cellValueTransform({ value: val, row, column: this.publicColumn() });
+      } else if (userPipe) {
         value = userPipe.transform(val);
       } else if (value !== undefined) {
         value = val;

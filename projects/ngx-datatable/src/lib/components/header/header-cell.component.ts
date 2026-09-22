@@ -4,7 +4,6 @@ import {
   ElementRef,
   HostListener,
   inject,
-  OnDestroy,
   OnInit,
   TemplateRef,
   input,
@@ -12,8 +11,8 @@ import {
   computed,
   booleanAttribute
 } from '@angular/core';
-import { Subscription } from 'rxjs';
 
+import { DataTableColumnReorderHandleDirective } from '../../directives/column-reorder-handle.directive';
 import {
   DragEvent,
   DatatableDraggableDirective
@@ -36,7 +35,7 @@ import { DatatableConfiguration } from '../datatable-configuration';
 
 @Component({
   selector: 'datatable-header-cell',
-  imports: [NgTemplateOutlet, DatatableDraggableDirective],
+  imports: [NgTemplateOutlet, DatatableDraggableDirective, DataTableColumnReorderHandleDirective],
   template: `
     <div class="datatable-header-cell-template-wrap">
       @if (isTarget()) {
@@ -45,30 +44,66 @@ import { DatatableConfiguration } from '../datatable-configuration';
           [ngTemplateOutletContext]="targetMarkerContext()"
         />
       }
-      @if (isCheckboxable()) {
-        <label class="datatable-checkbox">
-          <input
-            type="checkbox"
-            [attr.aria-label]="configuration().messages.ariaHeaderCheckboxMessage"
-            [checked]="allRowsSelected()"
-            (change)="select.emit()"
-          />
-        </label>
-      }
       @let column = this.column();
-      @if (column.headerTemplate) {
+      @if (column.headerCellTemplate) {
         <ng-template
-          [ngTemplateOutlet]="column.headerTemplate"
+          [ngTemplateOutlet]="column.headerCellTemplate"
           [ngTemplateOutletContext]="cellContext()"
         />
       } @else {
-        <span class="datatable-header-cell-wrapper">
-          <span class="datatable-header-cell-label draggable" (click)="onSort()">
-            {{ name() }}
+        @if (isCheckboxable()) {
+          <label class="datatable-checkbox">
+            <input
+              type="checkbox"
+              [attr.aria-label]="configuration().messages.ariaHeaderCheckboxMessage"
+              [checked]="allRowsSelected()"
+              (change)="select.emit()"
+            />
+          </label>
+        }
+        @if (column.sortable) {
+          <button
+            type="button"
+            class="datatable-header-cell-wrapper datatable-header-sort-button"
+            ngxDatatableReorderHandle
+            (click)="onSort()"
+          >
+            <span class="datatable-header-cell-label">
+              @if (column.headerLabelTemplate) {
+                <ng-template
+                  [ngTemplateOutlet]="column.headerLabelTemplate"
+                  [ngTemplateOutletContext]="labelContext()"
+                />
+              } @else {
+                {{ name() }}
+              }
+            </span>
+            <span aria-hidden="true" [class]="sortClass()"></span>
+          </button>
+        } @else {
+          <span
+            class="datatable-header-cell-wrapper datatable-header-cell-label"
+            ngxDatatableReorderHandle
+          >
+            @if (column.headerLabelTemplate) {
+              <ng-template
+                [ngTemplateOutlet]="column.headerLabelTemplate"
+                [ngTemplateOutletContext]="labelContext()"
+              />
+            } @else {
+              {{ name() }}
+            }
           </span>
-        </span>
+        }
+        @if (column.headerActionsTemplate) {
+          <div class="datatable-header-actions">
+            <ng-template
+              [ngTemplateOutlet]="column.headerActionsTemplate"
+              [ngTemplateOutletContext]="actionsContext()"
+            />
+          </div>
+        }
       }
-      <span aria-hidden="true" [class]="sortClass()" (click)="onSort()"> </span>
     </div>
     @if (showResizeHandle()) {
       <span
@@ -85,7 +120,6 @@ import { DatatableConfiguration } from '../datatable-configuration';
     class: 'datatable-header-cell',
     '[attr.resizeable]': 'showResizeHandle()',
     '[attr.title]': 'name()',
-    '[attr.tabindex]': 'column().sortable ? 0 : -1',
     '[attr.aria-sort]': 'ariaSort()',
     '[class]': 'columnCssClasses()',
     '[class.sortable]': 'column().sortable',
@@ -95,7 +129,7 @@ import { DatatableConfiguration } from '../datatable-configuration';
     '[class.sort-desc]': 'sortDir() === "desc"'
   }
 })
-export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
+export class DataTableHeaderCellComponent implements OnInit {
   private element = inject(ElementRef).nativeElement;
   protected readonly configuration = inject(DatatableConfiguration).configuration;
 
@@ -133,7 +167,7 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
 
   protected readonly name = computed(() => {
     // guaranteed to have a value by setColumnDefaults() in column-helper.ts
-    return this.column().headerTemplate === undefined ? this.column().name : undefined;
+    return this.column().name;
   });
 
   protected readonly isCheckboxable = computed(() => this.column().headerCheckboxable);
@@ -169,8 +203,16 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
     };
   });
 
+  protected readonly labelContext = computed(() => ({
+    column: toPublicColumn(this.column())
+  }));
+
+  protected readonly actionsContext = computed(() => {
+    const { sortFn: _sortFn, ...context } = this.cellContext();
+    return context;
+  });
+
   private initialWidth?: number;
-  private subscription?: Subscription;
 
   @HostListener('contextmenu', ['$event'])
   onContextmenu($event: MouseEvent): void {
@@ -180,20 +222,11 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
     }
   }
 
-  @HostListener('keydown.enter')
-  enter(): void {
-    this.onSort();
-  }
-
   ngOnInit() {
     // If there is already a default sort then start the counter with 1.
     if (this.sortDir()) {
       this.totalSortStatesApplied = 1;
     }
-  }
-
-  ngOnDestroy() {
-    this.destroySubscription();
   }
 
   calcSortDir(sorts: SortPropDir[]): any {
@@ -256,12 +289,5 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
       width: this.initialWidth! + (currentX - initialX),
       column: this.column()
     });
-  }
-
-  private destroySubscription(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-      this.subscription = undefined;
-    }
   }
 }

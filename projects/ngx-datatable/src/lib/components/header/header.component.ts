@@ -51,6 +51,7 @@ import { DataTableHeaderCellComponent } from './header-cell.component';
               <datatable-header-cell
                 role="columnheader"
                 dragStartDelay="500"
+                dragHandleSelector=".datatable-header-reorder-handle"
                 [datatableDraggable]="reorderable() && column.draggable"
                 [dragModel]="column"
                 [isTarget]="targetColumn() === column"

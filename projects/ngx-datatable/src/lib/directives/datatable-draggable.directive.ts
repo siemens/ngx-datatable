@@ -38,6 +38,7 @@ export class DatatableDraggableDirective implements OnDestroy {
 
   readonly dragModel = input<TableColumnInternal>();
   readonly dragStartDelay = input(0, { transform: numberAttribute });
+  readonly dragHandleSelector = input<string>();
   readonly enabled = input(true, { transform: booleanAttribute, alias: 'datatableDraggable' });
   readonly dragMove = output<DragEvent>();
   readonly dragEnd = output<DragEvent>();
@@ -49,6 +50,7 @@ export class DatatableDraggableDirective implements OnDestroy {
   private readonly startY = signal<number | undefined>(undefined);
   private currentX?: number;
   private currentY?: number;
+  private suppressHandleClick = false;
   protected readonly isLongPressing = computed(
     () => this.dragStartDelay() !== 0 && this.isDragging()
   );
@@ -60,9 +62,11 @@ export class DatatableDraggableDirective implements OnDestroy {
       if (this.enabled()) {
         this.element.addEventListener('pointerdown', this.pointerdown);
         this.element.addEventListener('contextmenu', this.contextmenu);
+        this.element.addEventListener('click', this.click, true);
         this.removeEventListeners = () => {
           this.element.removeEventListener('pointerdown', this.pointerdown);
           this.element.removeEventListener('contextmenu', this.contextmenu);
+          this.element.removeEventListener('click', this.click, true);
         };
       } else {
         this.removeEventListeners?.();
@@ -78,9 +82,10 @@ export class DatatableDraggableDirective implements OnDestroy {
   }
 
   protected readonly pointerdown = (event: PointerEvent): void => {
-    if (this.pointerId !== undefined || !this.enabled()) {
+    if (this.pointerId !== undefined || !this.enabled() || !this.isHandleEvent(event.target)) {
       return;
     }
+    this.suppressHandleClick = false;
     event.stopPropagation();
     this.delay(this.dragStartDelay()).then(() => {
       if (this.pointerId !== event.pointerId) {
@@ -100,8 +105,22 @@ export class DatatableDraggableDirective implements OnDestroy {
 
   private pointermove = (event: PointerEvent): void => {
     if (event.pointerId === this.pointerId && this.isDragging()) {
+      if (
+        Math.abs(event.clientX - this.startX()!) >= 4 ||
+        Math.abs(event.clientY - this.startY()!) >= 4
+      ) {
+        this.suppressHandleClick = true;
+      }
       event.preventDefault();
       this.moving(event.clientX, event.clientY);
+    }
+  };
+
+  private click = (event: MouseEvent): void => {
+    if (this.suppressHandleClick && this.isHandleEvent(event.target)) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      this.suppressHandleClick = false;
     }
   };
 
@@ -179,5 +198,14 @@ export class DatatableDraggableDirective implements OnDestroy {
 
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => (this.timeoutId = window.setTimeout(() => resolve(), ms)));
+  }
+
+  private isHandleEvent(target: EventTarget | null): boolean {
+    const selector = this.dragHandleSelector();
+    if (!selector) {
+      return true;
+    }
+
+    return target instanceof Element && !!target.closest(selector);
   }
 }

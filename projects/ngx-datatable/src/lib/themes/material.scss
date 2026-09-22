@@ -253,6 +253,8 @@ $datatable-ghost-cell-animation-duration: 10s;
 
       .datatable-header-cell-wrapper {
         position: relative;
+        display: inline-flex;
+        align-items: center;
       }
 
       &.longpress {

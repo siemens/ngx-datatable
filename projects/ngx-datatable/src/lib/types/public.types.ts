@@ -87,12 +87,18 @@ export interface ActivateEvent<TRow> {
   rowElement: HTMLElement;
 }
 
-export interface HeaderCellContext {
+export interface HeaderLabelContext {
   column: TableColumn;
-  sortDir: SortDirection | 'asc' | 'desc' | undefined;
-  sortFn: () => void;
+}
+
+export interface HeaderActionsContext extends HeaderLabelContext {
+  sortDir: SortDirection | undefined;
   allRowsSelected?: boolean;
   selectFn: () => void;
+}
+
+export interface HeaderCellContext extends HeaderActionsContext {
+  sortFn: () => void;
 }
 
 export interface GroupContext<TRow extends Row = any> {

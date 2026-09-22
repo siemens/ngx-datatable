@@ -9,7 +9,11 @@ import {
 import { DatatableSummaryRowDirective } from './components/body/summary/summary-row.directive';
 import { DataTableColumnCellDirective } from './components/columns/column-cell.directive';
 import { DataTableColumnGhostCellDirective } from './components/columns/column-ghost-cell.directive';
-import { DataTableColumnHeaderDirective } from './components/columns/column-header.directive';
+import {
+  DataTableColumnHeaderActionsDirective,
+  DataTableColumnHeaderCellDirective,
+  DataTableColumnHeaderLabelDirective
+} from './components/columns/column-header.directive';
 import { DataTableColumnDirective } from './components/columns/column.directive';
 import { DataTableColumnCellTreeToggle } from './components/columns/tree.directive';
 import { DatatableComponent } from './components/datatable.component';
@@ -18,6 +22,7 @@ import { DatatableFooterDirective } from './components/footer/footer.directive';
 import { DatatablePagerComponent } from './components/footer/pager.component';
 import { DatatableRowDetailTemplateDirective } from './components/row-detail/row-detail-template.directive';
 import { DatatableRowDetailDirective } from './components/row-detail/row-detail.directive';
+import { DataTableColumnReorderHandleDirective } from './directives/column-reorder-handle.directive';
 import { DisableRowDirective } from './directives/disable-row.directive';
 import { NgxDatatableConfig, providedNgxDatatableConfig } from './ngx-datatable.config';
 
@@ -29,7 +34,10 @@ import { NgxDatatableConfig, providedNgxDatatableConfig } from './ngx-datatable.
     DatatableRowDetailDirective,
     DatatableGroupHeaderDirective,
     DatatableRowDetailTemplateDirective,
-    DataTableColumnHeaderDirective,
+    DataTableColumnHeaderCellDirective,
+    DataTableColumnHeaderLabelDirective,
+    DataTableColumnHeaderActionsDirective,
+    DataTableColumnReorderHandleDirective,
     DataTableColumnCellDirective,
     DataTableColumnGhostCellDirective,
     DataTableColumnCellTreeToggle,
@@ -47,7 +55,10 @@ import { NgxDatatableConfig, providedNgxDatatableConfig } from './ngx-datatable.
     DatatableGroupHeaderDirective,
     DatatableRowDetailTemplateDirective,
     DataTableColumnDirective,
-    DataTableColumnHeaderDirective,
+    DataTableColumnHeaderCellDirective,
+    DataTableColumnHeaderLabelDirective,
+    DataTableColumnHeaderActionsDirective,
+    DataTableColumnReorderHandleDirective,
     DataTableColumnCellDirective,
     DataTableColumnGhostCellDirective,
     DataTableColumnCellTreeToggle,

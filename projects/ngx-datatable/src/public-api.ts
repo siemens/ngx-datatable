@@ -22,6 +22,7 @@ export * from './lib/components/body/summary/summary-row.directive';
 
 // directives
 export * from './lib/directives/disable-row.directive';
+export * from './lib/directives/column-reorder-handle.directive';
 
 // types
 export * from './lib/types/public.types';

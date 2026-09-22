@@ -1,3 +1,33 @@
+# [27.1.0](https://github.com/siemens/ngx-datatable/compare/27.0.3...27.1.0) (2026-09-22)
+
+
+### Features
+
+* **column:** add cell value transform function ([53cb6db](https://github.com/siemens/ngx-datatable/commit/53cb6dbeece72e05871e78bce12de2f2108109f7)), closes [#838](https://github.com/siemens/ngx-datatable/issues/838)
+
+
+### Bug Fixes
+
+* **header:** allow interactive elements in header templates ([9d32d85](https://github.com/siemens/ngx-datatable/commit/9d32d85c3718b9f28968ccf53956e69a54fe49da)), closes [#820](https://github.com/siemens/ngx-datatable/issues/820)
+
+
+### DEPRECATIONS
+
+* **column:** The `pipe` column property is deprecated.
+  For ordinary cells, use `cellValueTransform` instead.
+  
+  ```ts
+  const column: TableColumn = {
+    // before
+    pipe: { transform: value => doTransform(value) },
+    // after
+    cellValueTransform: ({value, row, column}) => doTransform(value),
+  }
+  ```
+  
+  When using summary rows with a `summaryFunc`,
+  transform the value returned by it accordingly.
+
 ## [27.0.3](https://github.com/siemens/ngx-datatable/compare/27.0.2...27.0.3) (2026-08-25)
 
 

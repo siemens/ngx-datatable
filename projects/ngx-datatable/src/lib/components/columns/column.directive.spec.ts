@@ -64,6 +64,7 @@ describe('DataTableColumnDirective', () => {
       expect(directive.resizeable()).toBeUndefined();
       expect(directive.comparator()).toBeUndefined();
       expect(directive.pipe()).toBeUndefined();
+      expect(directive.cellValueTransform()).toBeUndefined();
       expect(directive.sortable()).toBeUndefined();
       expect(directive.draggable()).toBeUndefined();
       expect(directive.canAutoResize()).toBeUndefined();

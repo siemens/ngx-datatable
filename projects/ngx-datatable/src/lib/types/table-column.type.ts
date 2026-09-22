@@ -10,6 +10,20 @@ import { CellContext, HeaderCellContext, Row } from './public.types';
 export type TableColumnProp = string | number;
 
 /**
+ * Context provided to a cell value transformer.
+ */
+export interface CellValueTransformContext<TRow extends Row = any> {
+  /** The cell value to transform. */
+  value: any;
+
+  /** The row containing the cell value. */
+  row: TRow;
+
+  /** The column containing the cell value. */
+  column: TableColumn<TRow>;
+}
+
+/**
  * Column Type
  */
 export interface TableColumn<TRow extends Row = any> {
@@ -61,9 +75,25 @@ export interface TableColumn<TRow extends Row = any> {
   comparator?: (valueA: any, valueB: any, rowA: TRow, rowB: TRow) => number;
 
   /**
-   * Custom pipe used to transform cell values.
+   * @deprecated For ordinary cells, use {@link cellValueTransform} instead.
+   *
+   * ```ts
+   * const column: TableColumn = {
+   *   // before
+   *   pipe: { transform: value => doTransform(value) },
+   *   // after
+   *   cellValueTransform: ({ value, row, column }) => doTransform(value),
+   * }
+   * ```
+   * When using summary rows with a {@link summaryFunc}, transform the value returned by it accordingly.
    */
   pipe?: PipeTransform;
+
+  /**
+   * Custom transformer used to transform ordinary cell values. It receives an
+   * object containing the cell value, its row, and its column.
+   */
+  cellValueTransform?: (context: CellValueTransformContext<TRow>) => any;
 
   /**
    * Whether row values can be sorted by this column. Default value: `true`.

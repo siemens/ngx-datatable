@@ -48,6 +48,21 @@ describe('DataTableBodyCellComponent', () => {
     expect(cellText).toEqual('Hello');
   });
 
+  it('should provide the row and public column to the cell value transform', async () => {
+    const row = { id: 1 };
+    const cellValueTransform = vi.fn().mockReturnValue('transformed');
+    const column = toInternalColumn([{ prop: 'id', cellValueTransform }])[0];
+    component.setInput('row', row);
+    component.setInput('column', column);
+
+    expect(await harness.getBodyCellText()).toEqual('transformed');
+    expect(cellValueTransform).toHaveBeenCalledWith({
+      value: 1,
+      row,
+      column: expect.objectContaining({ prop: 'id' })
+    });
+  });
+
   describe('checkboxable', () => {
     beforeEach(() => {
       component.setInput('row', { id: 1 });

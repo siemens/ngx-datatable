@@ -215,10 +215,17 @@ export class DatatableComponent<TRow extends Row = any>
   readonly columnMode = input<ColumnMode | keyof typeof ColumnMode>('standard');
 
   /**
-   * The minimum header height in pixels.
-   * Pass a falsey for no header
+   * The header height in pixels, or `'auto'` to use its natural height.
+   *
+   * @deprecated By default, the natural height of the header is used. Use {@link hideHeader} to
+   * hide the header.
    */
-  readonly headerHeight = input<number | 'auto'>(this.globalConfiguration.headerHeight ?? 30);
+  readonly headerHeight = input<number | 'auto'>(this.globalConfiguration.headerHeight ?? 'auto');
+
+  /**
+   * Whether to hide the table header.
+   */
+  readonly hideHeader = input(false, { transform: booleanAttribute });
 
   /**
    * The minimum footer height in pixels.
@@ -575,6 +582,10 @@ export class DatatableComponent<TRow extends Row = any>
     return Math.max(size, 0);
   });
   readonly _isFixedHeader = computed(() => {
+    if (this.hideHeader()) {
+      return false;
+    }
+
     const headerHeight: number | string = this.headerHeight();
     return typeof headerHeight === 'string' ? (headerHeight as string) !== 'auto' : true;
   });

@@ -49,6 +49,10 @@ export interface NgxDatatableCssClasses {
 export interface NgxDatatableConfig {
   messages?: NgxDatatableMessages;
   cssClasses?: NgxDatatableCssClasses;
+  /**
+   * @deprecated By default, the natural height of the header is used. Use
+   * {@link DatatableComponent.hideHeader} to hide the header.
+   */
   headerHeight?: number | 'auto';
   footerHeight?: number;
   rowHeight?: number | 'auto' | ((row: any) => number);

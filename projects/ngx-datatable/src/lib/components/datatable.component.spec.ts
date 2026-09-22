@@ -24,6 +24,7 @@ describe('DatatableComponent', () => {
         [rows]="rows()"
         [sorts]="sorts()"
         [columnMode]="columnMode()"
+        [hideHeader]="hideHeader()"
       />
     `,
     host: {
@@ -35,12 +36,31 @@ describe('DatatableComponent', () => {
     readonly rows = signal<Record<string, any>[]>([]);
     readonly sorts = signal<any[]>([]);
     readonly columnMode = signal<ColumnMode>('standard');
+    readonly hideHeader = signal(false);
     readonly size = signal<number>(400);
   }
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestFixtureComponent);
     component = fixture.componentInstance;
+  });
+
+  it('should use the natural header height by default', async () => {
+    component.columns.set([{ prop: 'name' }]);
+    await fixture.whenStable();
+
+    const datatable = fixture.debugElement.query(By.directive(DatatableComponent));
+    const header = fixture.debugElement.query(By.css('datatable-header'));
+
+    expect(datatable.componentInstance.headerHeight()).toBe('auto');
+    expect(header.nativeElement.style.height).toBe('');
+  });
+
+  it('should hide the header when hideHeader is set', async () => {
+    component.hideHeader.set(true);
+    await fixture.whenStable();
+
+    expect(fixture.debugElement.query(By.css('datatable-header'))).toBeNull();
   });
 
   it('should sort date values', async () => {

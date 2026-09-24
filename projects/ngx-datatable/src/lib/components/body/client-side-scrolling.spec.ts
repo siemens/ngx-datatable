@@ -51,6 +51,7 @@ describe('Client-side Scrolling – DatatableComponent.scrollToRow', () => {
         inputBinding('rowHeight', rowHeight),
         inputBinding('headerHeight', () => 30),
         inputBinding('scrollbarV', scrollbarV),
+        inputBinding('hideFooter', () => true),
         inputBinding('virtualization', virtualization),
         inputBinding('limit', limit),
         inputBinding('groupRowsBy', groupRowsBy),

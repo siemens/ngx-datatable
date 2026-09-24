@@ -1,6 +1,6 @@
 import {
-  AfterViewInit,
   afterNextRender,
+  AfterViewInit,
   booleanAttribute,
   ChangeDetectorRef,
   Component,
@@ -234,11 +234,21 @@ export class DatatableComponent<TRow extends Row = any>
   readonly hideHeader = input(false, { transform: booleanAttribute });
 
   /**
-   * The minimum footer height in pixels.
-   * Pass falsey for no footer
+   * The footer height in pixels. A positive height shows the footer even when
+   * {@link hideFooter} is `true`.
+   *
+   * @deprecated Use CSS to define the footer height.
+   * To hide a footer, use {@link hideFooter}.
    */
-  readonly footerHeight = input(this.globalConfiguration.footerHeight ?? 0, {
-    transform: numberAttribute
+  readonly footerHeight = input(this.globalConfiguration.footerHeight, {
+    transform: numberOrUndefinedAttribute
+  });
+
+  /**
+   * Whether to hide the table footer.
+   */
+  readonly hideFooter = input(false, {
+    transform: booleanAttribute
   });
 
   /**
@@ -543,6 +553,8 @@ export class DatatableComponent<TRow extends Row = any>
    * @internal
    */
   readonly _footer = contentChild(DatatableFooterDirective);
+
+  protected readonly _showFooter = computed(() => this.footerHeight() ?? !this.hideFooter());
 
   private readonly _bodyComponent =
     viewChild.required<DataTableBodyComponent<TRow & { treeStatus?: TreeStatus }>>(

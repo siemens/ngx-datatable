@@ -19,7 +19,6 @@ import { DataService } from '../data.service';
       treeFromRelation="manager"
       treeToRelation="name"
       [headerHeight]="50"
-      [footerHeight]="50"
       [rows]="rows | async"
       (treeAction)="onTreeAction($event)"
     >

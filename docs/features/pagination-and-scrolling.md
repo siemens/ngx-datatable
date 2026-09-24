@@ -32,9 +32,7 @@ and enable `externalPaging` while supplying only the current page's rows.
 
 {{ datatable_example('src/app/basic/horz-vert-scrolling.component.ts', 'horz-vert-scrolling', '400px') }}
 
-By default, no pager is visible. Set `footerHeight` to a value greater than zero to display it (see
-[Pager component](#pager-component)). In continuous mode, selecting a page scrolls the body to the
-first row of that page.
+In continuous mode, selecting a page scrolls the body to the first row of that page.
 
 {{ datatable_example('src/app/paging/virtual-server-side.component.ts', 'virtual-server-side', '400px') }}
 
@@ -64,9 +62,9 @@ the table uses continuous pagination and `limit` is ignored.
 
 ## Pager component
 
-Set `footerHeight` to a value greater than zero to display the table footer. The default footer
-shows the total row count and adds the built-in pager when more than one page is available.
-It works with both continuous and discrete pagination.
+The footer is visible by default. Set `hideFooter` to `true` to hide it. The default footer shows
+the total row count and adds the built-in pager when more than one page is available. It works with
+both continuous and discrete pagination.
 
 When using a custom footer, place the `ngx-datatable-pager` component inside the template
 if the standard navigation controls should remain available.

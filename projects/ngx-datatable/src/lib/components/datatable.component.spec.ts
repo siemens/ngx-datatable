@@ -10,6 +10,8 @@ import { DataTableColumnCellDirective } from './columns/column-cell.directive';
 import { DataTableColumnHeaderDirective } from './columns/column-header.directive';
 import { DataTableColumnDirective } from './columns/column.directive';
 import { DatatableComponent } from './datatable.component';
+import { DataTableFooterTemplateDirective } from './footer/footer-template.directive';
+import { DatatableFooterDirective } from './footer/footer.directive';
 import { DataTableHeaderCellComponent } from './header/header-cell.component';
 
 describe('DatatableComponent', () => {
@@ -17,7 +19,7 @@ describe('DatatableComponent', () => {
   let component: TestFixtureComponent;
 
   @Component({
-    imports: [DatatableComponent],
+    imports: [DatatableComponent, DatatableFooterDirective, DataTableFooterTemplateDirective],
     template: `
       <ngx-datatable
         [columns]="columns()"
@@ -25,7 +27,17 @@ describe('DatatableComponent', () => {
         [sorts]="sorts()"
         [columnMode]="columnMode()"
         [hideHeader]="hideHeader()"
-      />
+        [hideFooter]="hideFooter()"
+        [footerHeight]="footerHeight()"
+        [scrollbarV]="scrollbarV()"
+        [limit]="limit()"
+      >
+        @if (showFooterTemplate()) {
+          <ngx-datatable-footer>
+            <ng-template ngx-datatable-footer-template>Custom footer</ng-template>
+          </ngx-datatable-footer>
+        }
+      </ngx-datatable>
     `,
     host: {
       '[style.inline-size.px]': 'size()'
@@ -37,6 +49,11 @@ describe('DatatableComponent', () => {
     readonly sorts = signal<any[]>([]);
     readonly columnMode = signal<ColumnMode>('standard');
     readonly hideHeader = signal(false);
+    readonly hideFooter = signal<boolean | undefined>(false);
+    readonly footerHeight = signal<number | undefined>(undefined);
+    readonly scrollbarV = signal(false);
+    readonly limit = signal<number | undefined>(undefined);
+    readonly showFooterTemplate = signal(false);
     readonly size = signal<number>(400);
   }
 
@@ -61,6 +78,92 @@ describe('DatatableComponent', () => {
     await fixture.whenStable();
 
     expect(fixture.debugElement.query(By.css('datatable-header'))).toBeNull();
+  });
+
+  describe('footer visibility and height', () => {
+    const footer = () => fixture.debugElement.query(By.css('datatable-footer'));
+    const inner = () => fixture.debugElement.query(By.css('.datatable-footer-inner'));
+
+    it('coerces hideFooter attributes', async () => {
+      @Component({
+        imports: [DatatableComponent],
+        template: `
+          <ngx-datatable hideFooter />
+          <ngx-datatable hideFooter="false" />
+          <ngx-datatable />
+        `
+      })
+      class AttributeFixtureComponent {}
+
+      const attributeFixture = TestBed.createComponent(AttributeFixtureComponent);
+      await attributeFixture.whenStable();
+
+      const datatables = attributeFixture.debugElement.queryAll(By.directive(DatatableComponent));
+      expect(datatables.map(table => table.componentInstance.hideFooter())).toEqual([
+        true,
+        false,
+        false
+      ]);
+    });
+
+    it('hides with true and shows at natural height with false when footerHeight is unset', async () => {
+      component.hideFooter.set(true);
+      await fixture.whenStable();
+      expect(footer()).toBeNull();
+
+      component.hideFooter.set(false);
+      await fixture.whenStable();
+      expect(footer()).not.toBeNull();
+      expect(inner().nativeElement.style.height).toBe('');
+    });
+
+    it('shows a fixed-height footer when footerHeight is positive even if hideFooter is true', async () => {
+      component.hideFooter.set(true);
+      component.footerHeight.set(75);
+      await fixture.whenStable();
+      expect(footer()).not.toBeNull();
+      expect(inner().nativeElement.style.height).toBe('75px');
+
+      component.footerHeight.set(0);
+      await fixture.whenStable();
+      expect(footer()).toBeNull();
+    });
+
+    it('shows a custom footer by default and hides it when requested', async () => {
+      await fixture.whenStable();
+      expect(footer()).not.toBeNull();
+
+      component.showFooterTemplate.set(true);
+      await fixture.whenStable();
+      expect(inner().nativeElement.textContent).toContain('Custom footer');
+      expect(inner().nativeElement.style.height).toBe('');
+
+      component.hideFooter.set(true);
+      await fixture.whenStable();
+      expect(footer()).toBeNull();
+    });
+
+    it('shows the footer regardless of vertical scrolling', async () => {
+      component.footerHeight.set(75);
+      component.scrollbarV.set(true);
+      await fixture.whenStable();
+      expect(footer()).not.toBeNull();
+      expect(inner().nativeElement.style.height).toBe('75px');
+
+      component.scrollbarV.set(false);
+      await fixture.whenStable();
+      expect(footer()).not.toBeNull();
+    });
+
+    it('shows the footer regardless of the page limit', async () => {
+      component.limit.set(0);
+      await fixture.whenStable();
+      expect(footer()).not.toBeNull();
+
+      component.limit.set(undefined);
+      await fixture.whenStable();
+      expect(footer()).not.toBeNull();
+    });
   });
 
   it('should sort date values', async () => {

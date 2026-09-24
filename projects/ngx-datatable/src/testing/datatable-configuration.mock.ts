@@ -8,6 +8,7 @@ export interface DatatableConfigurationOverrides {
   rowHeight?: Signal<NgxDatatableConfig['rowHeight']>;
   headerHeight?: Signal<NgxDatatableConfig['headerHeight']>;
   footerHeight?: Signal<NgxDatatableConfig['footerHeight']>;
+  hideFooter?: Signal<boolean | undefined>;
   cssClasses?: Signal<NgxDatatableConfig['cssClasses']>;
   messages?: Signal<NgxDatatableConfig['messages']>;
 }
@@ -18,7 +19,8 @@ export const provideDatatableConfigurationMock = (
   const {
     rowHeight = signal(30),
     headerHeight = signal(30),
-    footerHeight = signal(0),
+    footerHeight = signal<number | undefined>(undefined),
+    hideFooter = signal<boolean | undefined>(false),
     cssClasses = signal({}),
     messages = signal({})
   } = overrides;
@@ -26,6 +28,7 @@ export const provideDatatableConfigurationMock = (
     rowHeight,
     headerHeight,
     footerHeight,
+    hideFooter,
     cssClasses,
     messages
   };

@@ -79,7 +79,7 @@
       </ng-content>
     </datatable-body>
   </div>
-  @if (footerHeight()) {
+  @if (_showFooter()) {
     <datatable-footer
       [rowCount]="_internalGroupedRows() !== undefined ? _internalRows().length : rowCount()"
       [groupCount]="_internalGroupedRows() !== undefined ? rowCount() : undefined"

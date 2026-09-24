@@ -12,6 +12,7 @@ import { DataService } from '../data.service';
       class="material"
       columnMode="force"
       rowHeight="auto"
+      hideFooter
       [summaryRow]="true"
       [columns]="columns"
       [headerHeight]="50"

@@ -246,6 +246,7 @@ describe('keyboard navigation', () => {
       imports: [DatatableComponent],
       template: `
         <ngx-datatable
+          hideFooter
           [columns]="columns"
           [rows]="rows()"
           [rowHeight]="40"

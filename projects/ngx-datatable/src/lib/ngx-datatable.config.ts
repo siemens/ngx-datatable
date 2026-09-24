@@ -54,6 +54,10 @@ export interface NgxDatatableConfig {
    * {@link DatatableComponent.hideHeader} to hide the header.
    */
   headerHeight?: number | 'auto';
+  /**
+   * @deprecated Use CSS to define the footer height.
+   * To hide a footer, use {@link DatatableComponent.hideFooter}.
+   */
   footerHeight?: number;
   rowHeight?: number | 'auto' | ((row: any) => number);
   defaultColumnWidth?: number;

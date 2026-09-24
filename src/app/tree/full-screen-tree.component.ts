@@ -20,8 +20,8 @@ import { DataService } from '../data.service';
       columnMode="force"
       treeFromRelation="parentId"
       treeToRelation="id"
+      hideFooter
       [headerHeight]="50"
-      [footerHeight]="0"
       [rowHeight]="50"
       [scrollbarV]="true"
       [scrollbarH]="true"

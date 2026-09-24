@@ -7,9 +7,13 @@ type AllRequired<T> = T extends (...args: any[]) => any
   ? T
   : { [K in keyof T]-?: AllRequired<NonNullable<T[K]>> };
 
+type ResolvedDatatableConfig = Omit<AllRequired<NgxDatatableConfig>, 'footerHeight'> & {
+  footerHeight: number | undefined;
+};
+
 /** @internal */
 export class DatatableConfiguration {
-  readonly configuration = computed<AllRequired<NgxDatatableConfig>>(() => {
+  readonly configuration = computed<ResolvedDatatableConfig>(() => {
     const configuration = this.globalConfiguration;
 
     return {
@@ -17,7 +21,7 @@ export class DatatableConfiguration {
       defaultColumnWidth: configuration.defaultColumnWidth ?? 150,
       rowHeight: this.datatable.rowHeight(),
       headerHeight: this.datatable.headerHeight(),
-      footerHeight: this.datatable.footerHeight() ?? 0,
+      footerHeight: this.datatable.footerHeight(),
       cssClasses: {
         sortAscending: 'datatable-icon-up',
         sortDescending: 'datatable-icon-down',

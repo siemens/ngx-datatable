@@ -21,9 +21,9 @@ import { DataService } from '../data.service';
     <ngx-datatable
       class="material"
       columnMode="force"
+      hideFooter
       [rows]="rows()"
       [headerHeight]="50"
-      [footerHeight]="0"
       [rowHeight]="80"
       [scrollbarV]="true"
       [disableRowCheck]="isRowDisabled"

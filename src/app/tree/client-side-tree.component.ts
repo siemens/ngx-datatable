@@ -18,8 +18,8 @@ import { DataService } from '../data.service';
       columnMode="flex"
       treeFromRelation="manager"
       treeToRelation="name"
+      hideFooter="false"
       [headerHeight]="50"
-      [footerHeight]="50"
       [rows]="rows | async"
       (treeAction)="onTreeAction($event)"
     >

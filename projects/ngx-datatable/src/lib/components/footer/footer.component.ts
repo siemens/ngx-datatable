@@ -3,6 +3,7 @@ import { Component, computed, inject, input, output, Signal } from '@angular/cor
 
 import { FooterContext, PagerPageEvent } from '../../types/public.types';
 import { DatatableConfiguration } from '../datatable-configuration';
+import { DatatableController } from '../datatable-controller';
 import { DatatableFooterDirective } from './footer.directive';
 import { DatatablePagerComponent } from './pager.component';
 
@@ -44,10 +45,10 @@ import { DatatablePagerComponent } from './pager.component';
 })
 export class DataTableFooterComponent {
   protected readonly configuration = inject(DatatableConfiguration).configuration;
+  private readonly controller = inject(DatatableController);
   readonly rowCount = input.required<number>();
   readonly groupCount = input.required<number | undefined>();
   readonly pageSize = input.required<number>();
-  readonly offset = input.required<number>();
   readonly pagerLeftArrowIcon = input<string | undefined>();
   readonly pagerRightArrowIcon = input<string | undefined>();
   readonly pagerPreviousIcon = input<string | undefined>();
@@ -60,12 +61,12 @@ export class DataTableFooterComponent {
   readonly page = output<PagerPageEvent>();
 
   protected readonly isVisible = computed(() => this.rowCount() / this.pageSize() > 1);
-  readonly curPage = computed(() => this.offset() + 1);
+  readonly curPage = computed(() => this.controller.offset() + 1);
   protected readonly templateContext: Signal<FooterContext> = computed(() => ({
     rowCount: this.rowCount(),
     pageSize: this.pageSize(),
     selectedCount: this.selectedCount(),
     curPage: this.curPage(),
-    offset: this.offset()
+    offset: this.controller.offset()
   }));
 }

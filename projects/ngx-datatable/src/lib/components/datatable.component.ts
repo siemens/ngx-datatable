@@ -80,6 +80,7 @@ import { ProgressBarComponent } from './body/progress-bar.component';
 import { DatatableSummaryRowDirective } from './body/summary/summary-row.directive';
 import { DataTableColumnDirective } from './columns/column.directive';
 import { DatatableConfiguration } from './datatable-configuration';
+import { DatatableController } from './datatable-controller';
 import { DataTableFooterComponent } from './footer/footer.component';
 import { DatatableFooterDirective } from './footer/footer.directive';
 import { DataTableHeaderComponent } from './header/header.component';
@@ -104,6 +105,10 @@ import { DatatableRowDetailDirective } from './row-detail/row-detail.directive';
     {
       provide: DatatableConfiguration,
       useFactory: () => inject(DatatableComponent).datatableConfiguration
+    },
+    {
+      provide: DatatableController,
+      useFactory: () => inject(DatatableComponent).controller
     }
   ],
   host: {
@@ -135,6 +140,7 @@ export class DatatableComponent<TRow extends Row = any>
     inject<NgxDatatableConfig>('configuration' as any, { optional: true }) ??
     {};
   readonly datatableConfiguration = new DatatableConfiguration(this, this.globalConfiguration);
+  readonly controller = new DatatableController(this);
   protected readonly configuration = this.datatableConfiguration.configuration;
 
   /**
@@ -672,15 +678,10 @@ export class DatatableComponent<TRow extends Row = any>
   );
 
   /**
-   * Computed signal that returns the corrected offset value.
-   * It ensures the offset is within valid bounds based on rowCount and pageSize.
+   * The current page offset, corrected to remain within the available pages.
+   * @deprecated This is an internal property. Use {@link offset} instead.
    */
-  readonly correctedOffset = computed(() => {
-    const offset = this.offset();
-    const rowCount = this.rowCount();
-    const pageSize = this.pageSize();
-    return Math.max(Math.min(offset, Math.ceil(rowCount / pageSize) - 1), 0);
-  });
+  readonly correctedOffset = computed(() => this.controller.offset());
 
   readonly totalColumnGroupWidths = computed(() => {
     const colsByPin = columnsByPin(this._internalColumns());
@@ -884,12 +885,12 @@ export class DatatableComponent<TRow extends Row = any>
 
     this.offset.set(offset);
 
-    if (!isNaN(this.correctedOffset())) {
+    if (!isNaN(this.controller.offset())) {
       this.page.emit({
         count: this.count(),
         pageSize: this.pageSize(),
         limit: this.limit(),
-        offset: this.correctedOffset(),
+        offset: this.controller.offset(),
         sorts: this.sorts()
       });
     }
@@ -908,13 +909,13 @@ export class DatatableComponent<TRow extends Row = any>
    */
   onFooterPage(event: PagerPageEvent) {
     this.offset.set(event.page - 1);
-    this._bodyComponent().updateOffsetY(this.correctedOffset());
+    this._bodyComponent().syncScrollOffset();
 
     this.page.emit({
       count: this.count(),
       pageSize: this.pageSize(),
       limit: this.limit(),
-      offset: this.correctedOffset(),
+      offset: this.controller.offset(),
       sorts: this.sorts()
     });
 
@@ -1057,13 +1058,13 @@ export class DatatableComponent<TRow extends Row = any>
 
     // Always go to first page when sorting to see the newly sorted data
     this.offset.set(0);
-    this._bodyComponent().updateOffsetY(this.correctedOffset());
+    this._bodyComponent().syncScrollOffset();
     // Emit the page object with updated offset value
     this.page.emit({
       count: this.count(),
       pageSize: this.pageSize(),
       limit: this.limit(),
-      offset: this.correctedOffset(),
+      offset: this.controller.offset(),
       sorts: this.sorts()
     });
   }

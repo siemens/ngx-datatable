@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
+import { provideDatatableControllerMock } from '../../../testing/datatable-controller.mock';
 import { DATATABLE_COMPONENT_TOKEN } from '../../utils/table-token';
 import { DataTableFooterTemplateDirective } from './footer-template.directive';
 import { DataTableFooterComponent } from './footer.component';
@@ -12,10 +13,16 @@ let fixture: ComponentFixture<TestFixtureComponent>;
 let component: TestFixtureComponent;
 let page: Page;
 const footerHeight = signal(0);
+const rowCount = signal(100);
+const pageSize = signal(1);
+const offset = signal(0);
 
 describe('DataTableFooterComponent', () => {
   beforeEach(async () => {
     footerHeight.set(0);
+    rowCount.set(100);
+    pageSize.set(1);
+    offset.set(0);
     fixture = TestBed.createComponent(TestFixtureComponent);
     component = fixture.componentInstance;
     page = new Page();
@@ -121,15 +128,15 @@ describe('DataTableFooterComponent', () => {
       component.rowCount.set(12);
       component.pageSize.set(1);
       component.selectedCount.set(4);
-      component.offset.set(0);
+      component.offset.set(2);
       await page.detectChangesAndRunQueries();
       const listItems = page.templateList.queryAll(By.css('li'));
 
       expect(listItems[0].nativeElement.innerHTML).toContain('rowCount 12');
       expect(listItems[1].nativeElement.innerHTML).toContain('pageSize 1');
       expect(listItems[2].nativeElement.innerHTML).toContain('selectedCount 4');
-      expect(listItems[3].nativeElement.innerHTML).toContain('curPage 1');
-      expect(listItems[4].nativeElement.innerHTML).toContain('offset 0');
+      expect(listItems[3].nativeElement.innerHTML).toContain('curPage 3');
+      expect(listItems[4].nativeElement.innerHTML).toContain('offset 2');
     });
   });
 });
@@ -145,7 +152,6 @@ describe('DataTableFooterComponent', () => {
       [rowCount]="rowCount()"
       [groupCount]="undefined"
       [pageSize]="pageSize()"
-      [offset]="offset()"
       [footerTemplate]="footerTemplate()"
       [pagerLeftArrowIcon]="pagerLeftArrowIcon()"
       [pagerRightArrowIcon]="pagerRightArrowIcon()"
@@ -178,14 +184,15 @@ describe('DataTableFooterComponent', () => {
   `,
   providers: [
     { provide: DATATABLE_COMPONENT_TOKEN, useExisting: TestFixtureComponent },
-    provideDatatableConfigurationMock({ footerHeight })
+    provideDatatableConfigurationMock({ footerHeight }),
+    provideDatatableControllerMock({ offset, rowCount, pageSize })
   ]
 })
 class TestFixtureComponent {
   readonly footerHeight = signal(0);
-  readonly rowCount = signal(100);
-  readonly pageSize = signal(1);
-  readonly offset = signal(0);
+  readonly rowCount = rowCount;
+  readonly pageSize = pageSize;
+  readonly offset = offset;
   readonly pagerLeftArrowIcon = signal('');
   readonly pagerRightArrowIcon = signal('');
   readonly pagerPreviousIcon = signal('');

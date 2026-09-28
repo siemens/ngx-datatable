@@ -41,6 +41,7 @@ import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, ENTER } from '../../util
 import { RowHeightCache } from '../../utils/row-height-cache';
 import { selectRows, selectRowsBetween } from '../../utils/selection';
 import { DatatableConfiguration } from '../datatable-configuration';
+import { DatatableController } from '../datatable-controller';
 import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive';
 import { DatatableGroupHeaderDirective } from './body-group-header.directive';
 import { DataTableGroupWrapperComponent } from './body-group-wrapper.component';
@@ -265,6 +266,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   cd = inject(ChangeDetectorRef);
   destroyRef = inject(DestroyRef);
   protected readonly configuration = inject(DatatableConfiguration).configuration;
+  private readonly controller = inject(DatatableController);
 
   readonly rowDefTemplate = input<TemplateRef<any>>();
   readonly scrollbarV = input(false, { transform: booleanAttribute });
@@ -301,8 +303,6 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   readonly rows = input.required<(TRow | undefined)[]>();
 
   readonly columns = input.required<TableColumnInternal[]>();
-
-  readonly offset = input<number>(0);
 
   readonly rowCount = input<number>(0);
 
@@ -467,9 +467,9 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   }
 
   /**
-   * Updates the Y offset given a new offset.
+   * Updates the Y scroll position for the current page offset.
    */
-  updateOffsetY(offset?: number): void {
+  syncScrollOffset(): void {
     // scroller is missing on empty table
     const scroller = this.scroller();
     if (!scroller) {
@@ -477,6 +477,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     }
 
     const virtualization = this.virtualization();
+    let offset = this.controller.offset();
     if (this.scrollbarV() && virtualization && offset) {
       // First get the row Index that we need to move to.
       const rowIndex = this.pageSize() * offset;
@@ -675,7 +676,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       // The server is handling paging and will pass an array that begins with the
       // element at a specified offset.  first should always be 0 with external paging.
       if (!this.externalPaging()) {
-        first = Math.max(this.offset() * this.pageSize(), 0);
+        first = Math.max(this.controller.offset() * this.pageSize(), 0);
       }
       last = Math.min(first + this.pageSize(), this.rowCount());
     }
@@ -700,7 +701,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
         rowHeight: this.configuration().rowHeight,
         detailRowHeight: this.detailRowHeightFn(),
         externalVirtual: this.scrollbarV() && this.externalPaging(),
-        indexOffset: this.externalPaging() ? this.offset() * this.pageSize() : 0,
+        indexOffset: this.externalPaging() ? this.controller.offset() * this.pageSize() : 0,
         rowCount: this.rowCount(),
         rowExpansions: new Set<TRow>(this.rowDetail() ? this.rowExpansions() : [])
       });

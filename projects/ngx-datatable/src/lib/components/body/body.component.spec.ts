@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
+import { provideDatatableControllerMock } from '../../../testing/datatable-controller.mock';
 import { ScrollContainerDirective } from '../../directives/scroll-container.directive';
 import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 import { toInternalColumn } from '../../utils/column-helper';
@@ -29,15 +30,18 @@ describe('DataTableBodyComponent', () => {
   let fixture: ComponentFixture<DataTableBodyComponent>;
   let component: DataTableBodyComponent;
   let rowHeight: WritableSignal<any>;
+  let offset: WritableSignal<number>;
 
   // provide our implementations or mocks to the dependency injector
   beforeEach(async () => {
     rowHeight = signal('auto');
+    offset = signal(0);
     TestBed.configureTestingModule({
       providers: [
         ScrollbarHelper,
         { provide: DATATABLE_COMPONENT_TOKEN, useValue: {} },
         provideDatatableConfigurationMock({ rowHeight }),
+        provideDatatableControllerMock({ offset, rowCount: signal(100), pageSize: signal(10) }),
         { provide: ScrollContainerDirective, useValue: scrollContainerStub }
       ]
     });
@@ -72,7 +76,7 @@ describe('DataTableBodyComponent', () => {
         { num: 10 }
       ]);
       fixture.componentRef.setInput('pageSize', 10);
-      fixture.componentRef.setInput('offset', 1);
+      offset.set(1);
       fixture.componentRef.setInput('rowCount', 20);
       const expectedIndexes = { first: 10, last: 20 };
       expect(component.indexes()).toEqual(expectedIndexes);
@@ -82,7 +86,7 @@ describe('DataTableBodyComponent', () => {
       fixture.componentRef.setInput('externalPaging', false);
       fixture.componentRef.setInput('rows', [{ num: 1 }, { num: 2 }, { num: 3 }, { num: 4 }]);
       fixture.componentRef.setInput('pageSize', 5);
-      fixture.componentRef.setInput('offset', 1);
+      offset.set(1);
       fixture.componentRef.setInput('rowCount', 9);
       const expectedIndexes = { first: 5, last: 9 };
       expect(component.indexes()).toEqual(expectedIndexes);
@@ -103,7 +107,7 @@ describe('DataTableBodyComponent', () => {
         { num: 10 }
       ]);
       fixture.componentRef.setInput('pageSize', 10);
-      fixture.componentRef.setInput('offset', 1);
+      offset.set(1);
       fixture.componentRef.setInput('rowCount', 20);
       const expectedIndexes = { first: 0, last: 10 };
       expect(component.indexes()).toEqual(expectedIndexes);
@@ -113,7 +117,7 @@ describe('DataTableBodyComponent', () => {
       fixture.componentRef.setInput('externalPaging', true);
       fixture.componentRef.setInput('rows', [{ num: 1 }, { num: 2 }, { num: 3 }, { num: 4 }]);
       fixture.componentRef.setInput('pageSize', 5);
-      fixture.componentRef.setInput('offset', 1);
+      offset.set(1);
       fixture.componentRef.setInput('rowCount', 9);
       const expectedIndexes = { first: 0, last: 5 };
       expect(component.indexes()).toEqual(expectedIndexes);
@@ -131,7 +135,7 @@ describe('DataTableBodyComponent', () => {
       fixture.componentRef.setInput('bodyHeight', 200);
       fixture.componentRef.setInput('pageSize', 5);
       fixture.componentRef.setInput('rowCount', 10);
-      fixture.componentRef.setInput('offset', 0);
+      offset.set(0);
       await fixture.whenStable();
       expect(component.indexes()).toEqual({ first: 0, last: 5 });
       fixture.debugElement
@@ -161,7 +165,7 @@ describe('DataTableBodyComponent', () => {
       ]);
       fixture.componentRef.setInput('rowCount', 2);
       fixture.componentRef.setInput('pageSize', 2);
-      fixture.componentRef.setInput('offset', 0);
+      offset.set(0);
       await fixture.whenStable();
       let rows = fixture.debugElement.queryAll(By.directive(DataTableBodyRowComponent));
       expect(rows[0].classes['row-disabled']).toBeFalsy();
@@ -190,7 +194,7 @@ describe('DataTableBodyComponent', () => {
       fixture.componentRef.setInput('rows', ['dummy']);
       fixture.componentRef.setInput('rowCount', 2);
       fixture.componentRef.setInput('pageSize', 2);
-      fixture.componentRef.setInput('offset', 0);
+      offset.set(0);
       await fixture.whenStable();
       const rows = fixture.debugElement.queryAll(By.directive(DataTableBodyRowComponent));
       expect(rows[0].classes['row-disabled']).toBeFalsy();
@@ -216,7 +220,7 @@ describe('DataTableBodyComponent', () => {
       fixture.componentRef.setInput('rows', ['dummy']);
       fixture.componentRef.setInput('rowCount', 2);
       fixture.componentRef.setInput('pageSize', 2);
-      fixture.componentRef.setInput('offset', 0);
+      offset.set(0);
       fixture.componentRef.setInput('rowIdentity', (row: any) => row.id ?? row.key);
 
       await fixture.whenStable();
@@ -279,7 +283,7 @@ describe('DataTableBodyComponent', () => {
       fixture.componentRef.setInput('rows', rows);
       fixture.componentRef.setInput('rowCount', rows.length);
       fixture.componentRef.setInput('pageSize', rows.length);
-      fixture.componentRef.setInput('offset', 0);
+      offset.set(0);
       fixture.componentRef.setInput('selectionType', 'multi');
       fixture.componentRef.setInput('selected', []);
     });

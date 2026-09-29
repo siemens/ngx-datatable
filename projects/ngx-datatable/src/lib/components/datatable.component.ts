@@ -22,7 +22,6 @@ import {
   output,
   signal,
   TemplateRef,
-  untracked,
   viewChild
 } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -68,7 +67,7 @@ import {
   gridColumnTemplate
 } from '../utils/column';
 import { toInternalColumn, toPublicColumn } from '../utils/column-helper';
-import { adjustColumnWidths, forceFillColumnWidths } from '../utils/math';
+import { columnModeStrategyFactories } from '../utils/column-mode-strategy';
 import { numberOrUndefinedAttribute } from '../utils/number-or-undefined-attribute';
 import { sortGroupedRows, sortRows } from '../utils/sort';
 import { DATATABLE_COMPONENT_TOKEN } from '../utils/table-token';
@@ -219,6 +218,10 @@ export class DatatableComponent<TRow extends Row = any>
    * uses the flex-grow algorithm, and `force` distributes space proportionally.
    */
   readonly columnMode = input<ColumnMode | keyof typeof ColumnMode>('standard');
+
+  private readonly columnStrategy = computed(() =>
+    columnModeStrategyFactories[this.columnMode()]()
+  );
 
   /**
    * The header height in pixels, or `'auto'` to use its natural height.
@@ -850,6 +853,7 @@ export class DatatableComponent<TRow extends Row = any>
   ): TableColumnInternal[] {
     let width = this.tableWidth();
     const columns = this._internalColumns();
+    const strategy = this.columnStrategy();
     if (!width) {
       return [];
     }
@@ -858,21 +862,13 @@ export class DatatableComponent<TRow extends Row = any>
       width = width - (this.verticalScrollVisible ? this.scrollbarHelper.width : 0);
     }
 
-    // TODO: this is a temporary workaround to avoid signal writes in a computed.
-    // Later, a computed adjustedWidth has to be added to the internal column to avoid this.
-    untracked(() => {
-      if (this.columnMode() === 'force') {
-        forceFillColumnWidths(
-          columns,
-          width,
-          forceIdx,
-          allowBleed,
-          this._defaultColumnWidth,
-          this.scrollbarHelper.width
-        );
-      } else if (this.columnMode() === 'flex') {
-        adjustColumnWidths(columns, width);
-      }
+    strategy.recalculate({
+      columns,
+      width,
+      forceIdx,
+      allowBleed,
+      defaultColumnWidth: this._defaultColumnWidth,
+      verticalScrollWidth: this.scrollbarHelper.width
     });
 
     return columns;

@@ -558,6 +558,21 @@ describe('DatatableComponent', () => {
     await expect.poll(cellSizes).toEqual([100, 200, 100]);
   });
 
+  it('should recalculate columns when the column mode changes', async () => {
+    component.columns.set([
+      { prop: 'A', width: 100, flexGrow: 1 },
+      { prop: 'B', width: 100, flexGrow: 2 },
+      { prop: 'C', width: 100, flexGrow: 1 }
+    ]);
+    await fixture.whenStable();
+    const headerCells = fixture.debugElement.queryAll(By.directive(DataTableHeaderCellComponent));
+    const cellSizes = () => headerCells.map(cell => cell.nativeElement.clientWidth);
+
+    await expect.poll(cellSizes).toEqual([100, 100, 100]);
+    component.columnMode.set('flex');
+    await expect.poll(cellSizes).toEqual([100, 200, 100]);
+  });
+
   it('should redistribute remaining width across the other flex columns after a column resize', async () => {
     component.columns.set([
       { prop: 'A', width: 100, flexGrow: 1 },

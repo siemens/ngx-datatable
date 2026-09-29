@@ -2,12 +2,40 @@ import { signal } from '@angular/core';
 
 import { TableColumnInternal } from '../types/internal.types';
 import { toInternalColumn } from './column-helper';
+import {
+  ColumnLayoutContext,
+  columnModeStrategyFactories,
+  StandardColumnModeStrategy
+} from './column-mode-strategy';
 import { emptyStringGetter } from './column-prop-getters';
-import { adjustColumnWidths, forceFillColumnWidths } from './math';
+import { FlexColumnModeStrategy } from './flex-column-mode-strategy';
+import { ForceColumnModeStrategy } from './force-column-mode-strategy';
 import { orderByComparator } from './sort';
 
-describe('Math function', () => {
-  describe('forceFillColumnWidths', () => {
+const context = (
+  columns: TableColumnInternal[],
+  width: number,
+  forceIdx = -1,
+  allowBleed = false
+): ColumnLayoutContext => ({
+  columns,
+  width,
+  forceIdx,
+  allowBleed,
+  defaultColumnWidth: 150,
+  verticalScrollWidth: 0
+});
+
+describe('Column mode strategies', () => {
+  it('creates a new strategy instance for each request', () => {
+    expect(columnModeStrategyFactories.standard()).toBeInstanceOf(StandardColumnModeStrategy);
+    expect(columnModeStrategyFactories.flex()).toBeInstanceOf(FlexColumnModeStrategy);
+    expect(columnModeStrategyFactories.force()).toBeInstanceOf(ForceColumnModeStrategy);
+    expect(columnModeStrategyFactories.flex()).not.toBe(columnModeStrategyFactories.flex());
+  });
+
+  describe('ForceColumnModeStrategy', () => {
+    const strategy = new ForceColumnModeStrategy();
     describe('when column expanded', () => {
       it('should resize only columns right to the resized column', () => {
         const columns = toInternalColumn([
@@ -16,7 +44,7 @@ describe('Math function', () => {
           { prop: 'email', width: 250, canAutoResize: true }
         ]);
 
-        forceFillColumnWidths(columns, 750, 1, true); // Column 2 expanded from 250 to 400
+        strategy.recalculate(context(columns, 750, 1, true)); // Column 2 expanded from 250 to 400
 
         expect(columns[0].width()).toBe(250); // Not changed
         expect(columns[1].width()).toBe(400);
@@ -32,7 +60,7 @@ describe('Math function', () => {
           { prop: 'email', width: 250, canAutoResize: true }
         ]);
 
-        forceFillColumnWidths(columns, 750, 1, true); // Column 2 contracted from 250 to 180
+        strategy.recalculate(context(columns, 750, 1, true)); // Column 2 contracted from 250 to 180
 
         expect(columns[0].width()).toBe(250); // Not changed
         expect(columns[1].width()).toBe(180);
@@ -41,7 +69,8 @@ describe('Math function', () => {
     });
   });
 
-  describe('adjustColumnWidths', () => {
+  describe('FlexColumnModeStrategy', () => {
+    const strategy = new FlexColumnModeStrategy();
     describe('flex mode', () => {
       it('should not go over/under compared to given max width', () => {
         const cols = toInternalColumn([
@@ -84,7 +113,7 @@ describe('Math function', () => {
 
         const givenTableWidth = 1180;
 
-        adjustColumnWidths(cols, givenTableWidth);
+        strategy.recalculate(context(cols, givenTableWidth));
 
         const totalAdjustedColumnWidths = cols.map(c => c.width()).reduce((p, c) => p + c, 0);
         expect(totalAdjustedColumnWidths).toBeCloseTo(givenTableWidth, 0.001);
@@ -109,7 +138,7 @@ describe('Math function', () => {
         ]);
         const maxWidth = 199;
 
-        adjustColumnWidths(cols, maxWidth);
+        strategy.recalculate(context(cols, maxWidth));
 
         const totalAdjustedColumnWidths = cols.map(c => c.width()).reduce((p, c) => p + c, 0);
         expect(totalAdjustedColumnWidths).toBeGreaterThan(maxWidth);
@@ -133,7 +162,7 @@ describe('Math function', () => {
           }
         ]);
 
-        adjustColumnWidths(cols, 40);
+        strategy.recalculate(context(cols, 40));
 
         for (const col of cols) {
           expect(col.width() - col.minWidth!).toBeGreaterThanOrEqual(0);
@@ -180,7 +209,7 @@ describe('Math function', () => {
           }
         ];
 
-        adjustColumnWidths(cols, 500);
+        strategy.recalculate(context(cols, 500));
         expect(cols.map(c => c.width())).toEqual([100, 200, 200]);
       });
     });

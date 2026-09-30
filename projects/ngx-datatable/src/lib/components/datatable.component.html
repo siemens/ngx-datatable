@@ -40,7 +40,6 @@
       [loadingIndicator]="loadingIndicator()"
       [ghostLoadingIndicator]="ghostLoadingIndicator()"
       [externalPaging]="externalPaging()"
-      [rowCount]="rowCount()"
       [trackByProp]="trackByProp()"
       [columns]="_internalColumns()"
       [pageSize]="pageSize()"
@@ -80,8 +79,10 @@
   </div>
   @if (_showFooter()) {
     <datatable-footer
-      [rowCount]="_internalGroupedRows() !== undefined ? _internalRows().length : rowCount()"
-      [groupCount]="_internalGroupedRows() !== undefined ? rowCount() : undefined"
+      [rowCount]="
+        _internalGroupedRows() !== undefined ? _internalRows().length : controller.rowCount()
+      "
+      [groupCount]="_internalGroupedRows() !== undefined ? controller.rowCount() : undefined"
       [pageSize]="pageSize()"
       [footerTemplate]="_footer()"
       [pagerLeftArrowIcon]="configuration().cssClasses.pagerLeftArrow"

@@ -185,7 +185,12 @@ describe('DataTableFooterComponent', () => {
   providers: [
     { provide: DATATABLE_COMPONENT_TOKEN, useExisting: TestFixtureComponent },
     provideDatatableConfigurationMock({ footerHeight, hideFooter: signal(undefined) }),
-    provideDatatableControllerMock({ offset, rowCount, pageSize })
+    provideDatatableControllerMock({
+      offset,
+      externalPaging: signal(true),
+      count: rowCount,
+      pageSize
+    })
   ]
 })
 class TestFixtureComponent {

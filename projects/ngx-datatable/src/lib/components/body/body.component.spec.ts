@@ -1,4 +1,4 @@
-import { EventEmitter, signal, WritableSignal } from '@angular/core';
+import { computed, EventEmitter, signal, WritableSignal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -31,17 +31,26 @@ describe('DataTableBodyComponent', () => {
   let component: DataTableBodyComponent;
   let rowHeight: WritableSignal<any>;
   let offset: WritableSignal<number>;
+  let rowCount: WritableSignal<number>;
 
   // provide our implementations or mocks to the dependency injector
   beforeEach(async () => {
     rowHeight = signal('auto');
     offset = signal(0);
+    rowCount = signal(100);
     TestBed.configureTestingModule({
       providers: [
         ScrollbarHelper,
         { provide: DATATABLE_COMPONENT_TOKEN, useValue: {} },
         provideDatatableConfigurationMock({ rowHeight }),
-        provideDatatableControllerMock({ offset, rowCount: signal(100), pageSize: signal(10) }),
+        provideDatatableControllerMock({
+          offset,
+          externalPaging: computed(() => !!component.externalPaging()),
+          count: rowCount,
+          _internalRows: computed(() => component.rows()),
+          _internalGroupedRows: computed(() => component.groupedRows()),
+          pageSize: computed(() => component.pageSize())
+        }),
         { provide: ScrollContainerDirective, useValue: scrollContainerStub }
       ]
     });
@@ -73,21 +82,41 @@ describe('DataTableBodyComponent', () => {
         { num: 7 },
         { num: 8 },
         { num: 9 },
-        { num: 10 }
+        { num: 10 },
+        { num: 11 },
+        { num: 12 },
+        { num: 13 },
+        { num: 14 },
+        { num: 15 },
+        { num: 16 },
+        { num: 17 },
+        { num: 18 },
+        { num: 19 },
+        { num: 20 }
       ]);
       fixture.componentRef.setInput('pageSize', 10);
       offset.set(1);
-      fixture.componentRef.setInput('rowCount', 20);
+      rowCount.set(20);
       const expectedIndexes = { first: 10, last: 20 };
       expect(component.indexes()).toEqual(expectedIndexes);
     });
 
     it('should have correct indexes for normal paging with rows < pageSize', () => {
       fixture.componentRef.setInput('externalPaging', false);
-      fixture.componentRef.setInput('rows', [{ num: 1 }, { num: 2 }, { num: 3 }, { num: 4 }]);
+      fixture.componentRef.setInput('rows', [
+        { num: 1 },
+        { num: 2 },
+        { num: 3 },
+        { num: 4 },
+        { num: 5 },
+        { num: 6 },
+        { num: 7 },
+        { num: 8 },
+        { num: 9 }
+      ]);
       fixture.componentRef.setInput('pageSize', 5);
       offset.set(1);
-      fixture.componentRef.setInput('rowCount', 9);
+      rowCount.set(9);
       const expectedIndexes = { first: 5, last: 9 };
       expect(component.indexes()).toEqual(expectedIndexes);
     });
@@ -108,7 +137,7 @@ describe('DataTableBodyComponent', () => {
       ]);
       fixture.componentRef.setInput('pageSize', 10);
       offset.set(1);
-      fixture.componentRef.setInput('rowCount', 20);
+      rowCount.set(20);
       const expectedIndexes = { first: 0, last: 10 };
       expect(component.indexes()).toEqual(expectedIndexes);
     });
@@ -118,7 +147,7 @@ describe('DataTableBodyComponent', () => {
       fixture.componentRef.setInput('rows', [{ num: 1 }, { num: 2 }, { num: 3 }, { num: 4 }]);
       fixture.componentRef.setInput('pageSize', 5);
       offset.set(1);
-      fixture.componentRef.setInput('rowCount', 9);
+      rowCount.set(9);
       const expectedIndexes = { first: 0, last: 5 };
       expect(component.indexes()).toEqual(expectedIndexes);
     });
@@ -134,7 +163,7 @@ describe('DataTableBodyComponent', () => {
       fixture.componentRef.setInput('ghostLoadingIndicator', true);
       fixture.componentRef.setInput('bodyHeight', 200);
       fixture.componentRef.setInput('pageSize', 5);
-      fixture.componentRef.setInput('rowCount', 10);
+      rowCount.set(10);
       offset.set(0);
       await fixture.whenStable();
       expect(component.indexes()).toEqual({ first: 0, last: 5 });
@@ -163,7 +192,7 @@ describe('DataTableBodyComponent', () => {
         { value: '1', disabled: false },
         { value: '2', disabled: true }
       ]);
-      fixture.componentRef.setInput('rowCount', 2);
+      rowCount.set(2);
       fixture.componentRef.setInput('pageSize', 2);
       offset.set(0);
       await fixture.whenStable();
@@ -192,7 +221,7 @@ describe('DataTableBodyComponent', () => {
       ]);
       fixture.componentRef.setInput('groupExpansionDefault', true);
       fixture.componentRef.setInput('rows', ['dummy']);
-      fixture.componentRef.setInput('rowCount', 2);
+      rowCount.set(2);
       fixture.componentRef.setInput('pageSize', 2);
       offset.set(0);
       await fixture.whenStable();
@@ -218,7 +247,7 @@ describe('DataTableBodyComponent', () => {
       fixture.componentRef.setInput('groupedRows', [group]);
       fixture.componentRef.setInput('groupExpansionDefault', false);
       fixture.componentRef.setInput('rows', ['dummy']);
-      fixture.componentRef.setInput('rowCount', 2);
+      rowCount.set(2);
       fixture.componentRef.setInput('pageSize', 2);
       offset.set(0);
       fixture.componentRef.setInput('rowIdentity', (row: any) => row.id ?? row.key);
@@ -281,7 +310,7 @@ describe('DataTableBodyComponent', () => {
 
     beforeEach(() => {
       fixture.componentRef.setInput('rows', rows);
-      fixture.componentRef.setInput('rowCount', rows.length);
+      rowCount.set(rows.length);
       fixture.componentRef.setInput('pageSize', rows.length);
       offset.set(0);
       fixture.componentRef.setInput('selectionType', 'multi');

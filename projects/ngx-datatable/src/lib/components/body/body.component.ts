@@ -78,7 +78,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
     @let columns = this.columns();
     @let bodyHeight = this._bodyHeight();
     @let rows = this.rows();
-    @let rowCount = this.rowCount();
+    @let rowCount = this.controller.rowCount();
     @if (ghostLoadingIndicator() && (!rowCount || !virtualization() || !scrollbarV)) {
       <ghost-loader
         class="ghost-overlay"
@@ -266,7 +266,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   cd = inject(ChangeDetectorRef);
   destroyRef = inject(DestroyRef);
   protected readonly configuration = inject(DatatableConfiguration).configuration;
-  private readonly controller = inject(DatatableController);
+  protected readonly controller = inject(DatatableController);
 
   readonly rowDefTemplate = input<TemplateRef<any>>();
   readonly scrollbarV = input(false, { transform: booleanAttribute });
@@ -304,8 +304,6 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
 
   readonly columns = input.required<TableColumnInternal[]>();
 
-  readonly rowCount = input<number>(0);
-
   readonly bodyHeight = input<string | number>();
   readonly verticalScrollVisible = input(false);
 
@@ -338,8 +336,13 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
    * calculate scroll height automatically (as height will be undefined).
    */
   readonly scrollHeight = computed(() => {
-    if (this.rowHeightsCache() && this.scrollbarV() && this.virtualization() && this.rowCount()) {
-      return this.rowHeightsCache().query(this.rowCount() - 1);
+    if (
+      this.rowHeightsCache() &&
+      this.scrollbarV() &&
+      this.virtualization() &&
+      this.controller.rowCount()
+    ) {
+      return this.rowHeightsCache().query(this.controller.rowCount() - 1);
     }
     // avoid TS7030: Not all code paths return a value.
     return undefined;
@@ -402,12 +405,10 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.bodyHeight || changes.rows || changes.rowCount || changes.pageSize) {
-      if (changes.pageSize) {
-        this._offsetEvent = -1;
-        this.updatePage('up');
-        this.updatePage('down');
-      }
+    if (changes.pageSize) {
+      this._offsetEvent = -1;
+      this.updatePage('up');
+      this.updatePage('down');
     }
   }
 
@@ -567,7 +568,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     const groupedRows = this.groupedRows();
     const rows = groupedRows
       ? groupedRows.slice(first, Math.min(last, groupedRows.length))
-      : this.rows().slice(first, Math.min(last, this.rowCount()));
+      : this.rows().slice(first, Math.min(last, this.controller.rowCount()));
 
     rows.length = last - first;
     return rows;
@@ -661,7 +662,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
    */
   computeIndexes(): { first: number; last: number } {
     let first = 0;
-    let last = this.rowCount();
+    let last = this.controller.rowCount();
 
     if (this.scrollbarV()) {
       if (this.virtualization()) {
@@ -678,7 +679,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       if (!this.externalPaging()) {
         first = Math.max(this.controller.offset() * this.pageSize(), 0);
       }
-      last = Math.min(first + this.pageSize(), this.rowCount());
+      last = Math.min(first + this.pageSize(), this.controller.rowCount());
     }
 
     return { first, last };
@@ -702,7 +703,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
         detailRowHeight: this.detailRowHeightFn(),
         externalVirtual: this.scrollbarV() && this.externalPaging(),
         indexOffset: this.externalPaging() ? this.controller.offset() * this.pageSize() : 0,
-        rowCount: this.rowCount(),
+        rowCount: this.controller.rowCount(),
         rowExpansions: new Set<TRow>(this.rowDetail() ? this.rowExpansions() : [])
       });
     }
@@ -1025,7 +1026,9 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     const groups = this.groupedRows();
     if (!groups) {
       const outerIndex = current.outerIndex + step;
-      return outerIndex >= 0 && outerIndex < this.rowCount() ? { outerIndex } : undefined;
+      return outerIndex >= 0 && outerIndex < this.controller.rowCount()
+        ? { outerIndex }
+        : undefined;
     }
 
     if (current.innerIndex === undefined) {

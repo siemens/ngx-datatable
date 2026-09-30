@@ -610,7 +610,12 @@ export class DatatableComponent<TRow extends Row = any>
     const headerHeight: number | string = this.headerHeight();
     return typeof headerHeight === 'string' ? (headerHeight as string) !== 'auto' : true;
   });
-  readonly rowCount = computed(() => this.calcRowCount());
+  /**
+   * The calculated row count.
+   * @deprecated This is an internal property. Use {@link count} for external paging instead.
+   */
+  readonly rowCount = this.controller.rowCount;
+
   /** This counter is increased, when the rowDiffer detects a change. This will cause an update of _internalRows. */
   private readonly _rowDiffCount = signal(0);
 
@@ -952,18 +957,10 @@ export class DatatableComponent<TRow extends Row = any>
 
   /**
    * Calculates the row count.
+   * @deprecated This is an internal method. Use {@link count} for external paging instead.
    */
   calcRowCount(): number {
-    if (!this.externalPaging()) {
-      const groupedRows = this._internalGroupedRows();
-      if (groupedRows) {
-        return groupedRows.length;
-      } else {
-        return this._internalRows().length;
-      }
-    }
-
-    return this.count();
+    return this.controller.rowCount();
   }
 
   /**

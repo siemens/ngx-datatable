@@ -1,9 +1,14 @@
 import { untracked } from '@angular/core';
 
 import { TableColumnInternal } from '../types/internal.types';
+import { columnsByPinArr, gridColumnTemplate } from './column';
 import { ColumnLayoutContext, ColumnModeStrategy } from './column-mode-strategy';
 
 export class ForceColumnModeStrategy implements ColumnModeStrategy {
+  gridColumnTemplate(columns: TableColumnInternal[]): string {
+    return gridColumnTemplate(columnsByPinArr(columns));
+  }
+
   /**
    * Distributes available space among columns to the right of a resized column,
    * overflowing when necessary and respecting minimum and maximum widths.

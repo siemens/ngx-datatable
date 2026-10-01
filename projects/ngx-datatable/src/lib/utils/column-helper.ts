@@ -14,7 +14,7 @@ export const toInternalColumn = <T extends Row>(
 ): TableColumnInternal<T>[] => {
   let hasTreeColumn = false;
   // TS fails to infer the type here.
-  return (columns as TableColumn<T>[]).map(column => {
+  return (columns as TableColumn<T>[]).map((column, index) => {
     const prop = column.prop ?? (column.name ? camelCase(column.name) : undefined);
     // Only one column should hold the tree view,
     // Thus if multiple columns are provided with
@@ -36,6 +36,7 @@ export const toInternalColumn = <T extends Row>(
       draggable: column.draggable ?? true,
       canAutoResize: column.canAutoResize ?? true,
       width: signal(column.width ?? defaultColumnWidth),
+      sortIndex: signal(index),
       isTreeColumn,
       // in case of the directive, those are getters, so call them explicitly.
       headerTemplate: column.headerTemplate,

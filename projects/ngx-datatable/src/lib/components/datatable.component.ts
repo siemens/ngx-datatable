@@ -60,12 +60,7 @@ import {
   TreeStatus
 } from '../types/public.types';
 import { TableColumn } from '../types/table-column.type';
-import {
-  columnGroupWidths,
-  columnsByPin,
-  columnsByPinArr,
-  gridColumnTemplate
-} from '../utils/column';
+import { columnGroupWidths, columnsByPin } from '../utils/column';
 import { toInternalColumn, toPublicColumn } from '../utils/column-helper';
 import { columnModeStrategyFactories } from '../utils/column-mode-strategy';
 import { numberOrUndefinedAttribute } from '../utils/number-or-undefined-attribute';
@@ -689,7 +684,7 @@ export class DatatableComponent<TRow extends Row = any>
    * instead of each row binding its own (identical) template string.
    */
   readonly _gridTemplateColumns = computed(() =>
-    gridColumnTemplate(columnsByPinArr(this._internalColumns()))
+    this.columnStrategy().gridColumnTemplate(this._internalColumns())
   );
 
   /**

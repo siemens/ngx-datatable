@@ -2,10 +2,14 @@ import { untracked } from '@angular/core';
 
 import { TableColumnGroup, TableColumnInternal } from '../types/internal.types';
 import { TableColumnProp } from '../types/table-column.type';
-import { columnsByPin, columnTotalWidth } from './column';
+import { columnsByPin, columnsByPinArr, columnTotalWidth, gridColumnTemplate } from './column';
 import { ColumnLayoutContext, ColumnModeStrategy } from './column-mode-strategy';
 
 export class FlexColumnModeStrategy implements ColumnModeStrategy {
+  gridColumnTemplate(columns: TableColumnInternal[]): string {
+    return gridColumnTemplate(columnsByPinArr(columns));
+  }
+
   /** Adjusts widths according to flexGrow while respecting manually resized columns. */
   recalculate(context: ColumnLayoutContext): void {
     // Width signals are both read and written by the distribution algorithm.

@@ -74,6 +74,8 @@ export interface BaseTableColumnInternal<TRow extends Row = any> extends Omit<
   // Those properties are never null on the internal type:
   name: string;
   width: WritableSignal<number>;
+  /** Current position in the internal column order. */
+  sortIndex: WritableSignal<number>;
   prop: TableColumnProp;
 }
 

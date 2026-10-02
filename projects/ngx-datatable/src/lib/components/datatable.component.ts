@@ -532,8 +532,9 @@ export class DatatableComponent<TRow extends Row = any>
   /**
    * Row Detail templates gathered from the ContentChild
    */
-  @ContentChild(DatatableRowDetailDirective)
-  rowDetail?: DatatableRowDetailDirective;
+  protected readonly rowDetail = contentChild<DatatableRowDetailDirective<TRow>>(
+    DatatableRowDetailDirective
+  );
 
   /**
    * Group Header templates gathered from the ContentChild

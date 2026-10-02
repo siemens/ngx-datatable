@@ -9,7 +9,7 @@ export default defineConfig(
     plugins: {
       defaultValue: defaultValuePlugin
     },
-    files: ['**/*.ts'],
+    files: ['**/*.{ts,mts}'],
     languageOptions: {
       parserOptions: {
         project: [

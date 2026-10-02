@@ -146,6 +146,7 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/ngx-datatable/tsconfig.spec.json",
+            "runnerConfig": "projects/ngx-datatable/vitest.config.mts",
             "browsers": ["chromium"]
           },
           "configurations": {
@@ -165,7 +166,7 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
-              "projects/ngx-datatable/**/*.ts",
+              "projects/ngx-datatable/**/*.{ts,mts}",
               "projects/ngx-datatable/**/*.html"
             ],
             "eslintConfig": "projects/ngx-datatable/eslint.config.mjs"

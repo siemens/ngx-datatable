@@ -5,7 +5,6 @@ import {
   ChangeDetectorRef,
   Component,
   computed,
-  ContentChild,
   contentChild,
   contentChildren,
   DoCheck,
@@ -539,8 +538,9 @@ export class DatatableComponent<TRow extends Row = any>
   /**
    * Group Header templates gathered from the ContentChild
    */
-  @ContentChild(DatatableGroupHeaderDirective)
-  groupHeader?: DatatableGroupHeaderDirective;
+  protected readonly groupHeader = contentChild<DatatableGroupHeaderDirective<TRow>>(
+    DatatableGroupHeaderDirective
+  );
 
   /**
    * Custom summary row template gathered from the ContentChild

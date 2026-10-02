@@ -42,7 +42,6 @@
       [externalPaging]="externalPaging()"
       [trackByProp]="trackByProp()"
       [columns]="_internalColumns()"
-      [pageSize]="pageSize()"
       [offsetX]="_offsetX"
       [rowDetail]="rowDetail"
       [groupHeader]="groupHeader"
@@ -83,7 +82,6 @@
         _internalGroupedRows() !== undefined ? _internalRows().length : controller.rowCount()
       "
       [groupCount]="_internalGroupedRows() !== undefined ? controller.rowCount() : undefined"
-      [pageSize]="pageSize()"
       [footerTemplate]="_footer()"
       [pagerLeftArrowIcon]="configuration().cssClasses.pagerLeftArrow"
       [pagerRightArrowIcon]="configuration().cssClasses.pagerRightArrow"

@@ -48,7 +48,6 @@ export class DataTableFooterComponent {
   private readonly controller = inject(DatatableController);
   readonly rowCount = input.required<number>();
   readonly groupCount = input.required<number | undefined>();
-  readonly pageSize = input.required<number>();
   readonly pagerLeftArrowIcon = input<string | undefined>();
   readonly pagerRightArrowIcon = input<string | undefined>();
   readonly pagerPreviousIcon = input<string | undefined>();
@@ -60,11 +59,11 @@ export class DataTableFooterComponent {
 
   readonly page = output<PagerPageEvent>();
 
-  protected readonly isVisible = computed(() => this.rowCount() / this.pageSize() > 1);
+  protected readonly isVisible = computed(() => this.rowCount() / this.controller.pageSize() > 1);
   readonly curPage = computed(() => this.controller.offset() + 1);
   protected readonly templateContext: Signal<FooterContext> = computed(() => ({
     rowCount: this.rowCount(),
-    pageSize: this.pageSize(),
+    pageSize: this.controller.pageSize(),
     selectedCount: this.selectedCount(),
     curPage: this.curPage(),
     offset: this.controller.offset()

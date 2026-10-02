@@ -8,7 +8,11 @@ export const provideDatatableControllerMock = (
   provide: DatatableController,
   useValue: new DatatableController({
     offset: signal(0),
-    pageSize: signal(10),
+    scrollbarV: signal(false),
+    virtualization: signal(true),
+    bodyHeight: signal(0),
+    rowHeight: signal(30),
+    limit: signal(10),
     externalPaging: signal(false),
     count: signal(0),
     _internalRows: signal([]),

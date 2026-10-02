@@ -15,7 +15,6 @@ import {
   input,
   IterableDiffer,
   IterableDiffers,
-  linkedSignal,
   model,
   numberAttribute,
   OnDestroy,
@@ -671,15 +670,20 @@ export class DatatableComponent<TRow extends Row = any>
     return groupedRows;
   });
 
-  // TODO: consider removing internal modifications of the columns.
-  // This requires a different strategy for certain properties like width.
-  readonly _internalColumns = linkedSignal(() =>
+  // Keep column creation separate so reordering preserves column objects and their signals.
+  private readonly _unsortedInternalColumns = computed(() =>
     toInternalColumn(
       this.columnTemplates().length
         ? this.columnTemplates().map(c => c.column())
         : (this.columns() ?? []),
       this._defaultColumnWidth
     )
+  );
+
+  readonly _internalColumns = computed(() =>
+    this._unsortedInternalColumns()
+      .slice()
+      .sort((a, b) => a.sortIndex() - b.sortIndex())
   );
 
   /**
@@ -1015,7 +1019,7 @@ export class DatatableComponent<TRow extends Row = any>
    */
   onColumnReorder(event: ReorderEventInternal): void {
     const { column, newValue, prevValue } = event;
-    const cols = this._internalColumns().map(c => ({ ...c }));
+    const cols = this._internalColumns().slice();
     const prevCol = cols[newValue];
     if (column.frozenLeft !== prevCol.frozenLeft || column.frozenRight !== prevCol.frozenRight) {
       return;
@@ -1040,7 +1044,7 @@ export class DatatableComponent<TRow extends Row = any>
       }
     }
 
-    this._internalColumns.set(cols);
+    cols.forEach((col, index) => col.sortIndex.set(index));
 
     this.reorder.emit({ ...event, column: toPublicColumn(event.column) });
   }

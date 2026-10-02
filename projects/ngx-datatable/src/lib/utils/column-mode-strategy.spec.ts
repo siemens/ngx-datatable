@@ -181,6 +181,7 @@ describe('Column mode strategies', () => {
             name: 'Column 1',
             canAutoResize: true,
             width: signal(100),
+            sortIndex: signal(0),
             flexGrow: 1
           },
           {
@@ -193,7 +194,8 @@ describe('Column mode strategies', () => {
             sortable: false,
             name: 'Column 2',
             canAutoResize: true,
-            width: signal(200)
+            width: signal(200),
+            sortIndex: signal(1)
           },
           {
             $$id: 'id3',
@@ -205,6 +207,7 @@ describe('Column mode strategies', () => {
             name: 'Column 3',
             canAutoResize: true,
             width: signal(100),
+            sortIndex: signal(2),
             flexGrow: 2
           }
         ];

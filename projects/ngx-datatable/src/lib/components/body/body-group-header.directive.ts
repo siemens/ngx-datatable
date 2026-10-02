@@ -4,7 +4,8 @@ import { Group, GroupContext, GroupToggleEvents, Row } from '../../types/public.
 import { DatatableGroupHeaderTemplateDirective } from './body-group-header-template.directive';
 
 @Directive({
-  selector: 'ngx-datatable-group-header'
+  selector: 'ngx-datatable-group-header',
+  exportAs: 'ngxDatatableGroupHeader'
 })
 export class DatatableGroupHeaderDirective<TRow extends Row = any> {
   /**

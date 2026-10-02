@@ -9,7 +9,6 @@ import { DatatableRowDetailDirective } from './row-detail.directive';
 describe('DatatableRowDetailDirective', () => {
   let fixture: ComponentFixture<TestFixtureComponent>;
   let component: TestFixtureComponent;
-  let table: DatatableComponent;
 
   interface TestRow {
     id: number;
@@ -25,7 +24,6 @@ describe('DatatableRowDetailDirective', () => {
     ],
     template: `
       <ngx-datatable
-        #myTable
         [rows]="rows()"
         [scrollbarV]="true"
         [rowHeight]="50"
@@ -46,7 +44,9 @@ describe('DatatableRowDetailDirective', () => {
     `
   })
   class TestFixtureComponent {
-    readonly table = viewChild.required<DatatableComponent<TestRow>>('myTable');
+    readonly rowDetail = viewChild.required<DatatableRowDetailDirective<TestRow>>(
+      DatatableRowDetailDirective
+    );
 
     readonly rows = signal<TestRow[]>([
       { id: 1, name: 'Row 1' },
@@ -70,17 +70,16 @@ describe('DatatableRowDetailDirective', () => {
     fixture = TestBed.createComponent(TestFixtureComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
-    table = component.table();
   });
 
   it('should stop calling rowHeight for collapsed details', async () => {
     // Expand first and second rows
-    table.rowDetail!.toggleExpandRow(component.rows()[0]);
-    table.rowDetail!.toggleExpandRow(component.rows()[1]);
+    component.rowDetail().toggleExpandRow(component.rows()[0]);
+    component.rowDetail().toggleExpandRow(component.rows()[1]);
     await fixture.whenStable();
 
     // Collapse the first row
-    table.rowDetail!.toggleExpandRow(component.rows()[0]);
+    component.rowDetail().toggleExpandRow(component.rows()[0]);
     component.detailRowHeight.mockClear();
     await fixture.whenStable();
 
@@ -91,7 +90,7 @@ describe('DatatableRowDetailDirective', () => {
     component.detailRowHeight.mockClear();
 
     // Expand all rows
-    table.rowDetail!.expandAllRows();
+    component.rowDetail().expandAllRows();
     await fixture.whenStable();
 
     expect(component.detailRowHeight).toHaveBeenCalledWith(component.rows()[0], 0);

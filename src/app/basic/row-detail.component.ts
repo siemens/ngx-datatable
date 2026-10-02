@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
@@ -25,16 +25,15 @@ import { DataService } from '../data.service';
   ],
   template: `
     <small>
-      <button type="button" class="example-action" (click)="table.rowDetail!.expandAllRows()">
+      <button type="button" class="example-action" (click)="myDetailRow.expandAllRows()">
         Expand All
       </button>
       |
-      <button type="button" class="example-action" (click)="table.rowDetail!.collapseAllRows()">
+      <button type="button" class="example-action" (click)="myDetailRow.collapseAllRows()">
         Collapse All
       </button>
     </small>
     <ngx-datatable
-      #myTable
       class="material expandable"
       columnMode="force"
       [headerHeight]="50"
@@ -45,7 +44,11 @@ import { DataService } from '../data.service';
       (page)="onPage($event)"
     >
       <!-- Row Detail Template -->
-      <ngx-datatable-row-detail #myDetailRow [rowHeight]="100" (toggle)="onDetailToggle($event)">
+      <ngx-datatable-row-detail
+        #myDetailRow="ngxDatatableRowDetail"
+        [rowHeight]="100"
+        (toggle)="onDetailToggle($event)"
+      >
         <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
           <div style="padding-left:35px;">
             <div><strong>Address</strong></div>
@@ -68,7 +71,7 @@ import { DataService } from '../data.service';
             title="Expand/Collapse Row"
             [class.datatable-icon-right]="!expanded"
             [class.datatable-icon-down]="expanded"
-            (click)="toggleExpandRow(row)"
+            (click)="myDetailRow.toggleExpandRow(row)"
           >
           </a>
         </ng-template>
@@ -103,7 +106,6 @@ export class RowDetailComponent {
   static readonly exampleTitle = 'Row Detail';
   readonly rows = inject(DataService).load('100k.json');
 
-  @ViewChild('myTable') table!: DatatableComponent<FullEmployee>;
   expanded: any = {};
   timeout: any;
 
@@ -113,10 +115,6 @@ export class RowDetailComponent {
       // eslint-disable-next-line no-console
       console.log('paged!', event);
     }, 100);
-  }
-
-  toggleExpandRow(row: FullEmployee) {
-    this.table.rowDetail!.toggleExpandRow(row);
   }
 
   onDetailToggle(event: DetailToggleEvents<FullEmployee>) {

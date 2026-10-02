@@ -11,7 +11,7 @@ import {
   WritableSignal
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 
 import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
 import {

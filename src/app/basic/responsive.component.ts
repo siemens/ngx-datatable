@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
@@ -27,7 +27,6 @@ import { DataService } from '../data.service';
   ],
   template: `
     <ngx-datatable
-      #myTable
       class="material expandable"
       columnMode="force"
       [headerHeight]="50"
@@ -38,7 +37,11 @@ import { DataService } from '../data.service';
       (page)="onPage($event)"
     >
       <!-- Row Detail Template -->
-      <ngx-datatable-row-detail #myDetailRow [rowHeight]="50" (toggle)="onDetailToggle($event)">
+      <ngx-datatable-row-detail
+        #myDetailRow="ngxDatatableRowDetail"
+        [rowHeight]="50"
+        (toggle)="onDetailToggle($event)"
+      >
         <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
           <div style="padding-left:60px; font-size:14px">
             <div>{{ row.gender }}, {{ row.age }}</div>
@@ -61,7 +64,7 @@ import { DataService } from '../data.service';
             class="desktop-hidden"
             [class.datatable-icon-right]="!expanded"
             [class.datatable-icon-down]="expanded"
-            (click)="toggleExpandRow(row)"
+            (click)="myDetailRow.toggleExpandRow(row)"
           >
           </a>
         </ng-template>
@@ -124,7 +127,6 @@ export class ResponsiveComponent {
   static readonly exampleTitle = 'Responsive';
   readonly rows = inject(DataService).load('100k.json');
 
-  @ViewChild('myTable') table!: DatatableComponent<FullEmployee>;
   expanded: any = {};
   timeout: any;
 
@@ -134,10 +136,6 @@ export class ResponsiveComponent {
       // eslint-disable-next-line no-console
       console.log('paged!', event);
     }, 100);
-  }
-
-  toggleExpandRow(row: FullEmployee) {
-    this.table.rowDetail!.toggleExpandRow(row);
   }
 
   onDetailToggle(event: DetailToggleEvents<FullEmployee>) {

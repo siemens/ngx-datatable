@@ -134,7 +134,7 @@ export class DatatableComponent<TRow extends Row = any>
     inject<NgxDatatableConfig>('configuration' as any, { optional: true }) ??
     {};
   readonly datatableConfiguration = new DatatableConfiguration(this, this.globalConfiguration);
-  readonly controller = new DatatableController(this);
+  readonly controller = new DatatableController<TRow>(this);
   protected readonly configuration = this.datatableConfiguration.configuration;
 
   /**

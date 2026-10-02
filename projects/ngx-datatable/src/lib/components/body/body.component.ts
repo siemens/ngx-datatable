@@ -122,7 +122,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
             [detailRowHeightFn]="detailRowHeightFn()"
             [row]="row"
             [disabled]="disabled"
-            [expanded]="getRowExpanded(row)"
+            [expanded]="controller.getRowExpanded(row)"
             [rowIndex]="absoluteIndex"
             [checkRowPropertyChanges]="checkRowPropertyChanges()"
             (rowContextmenu)="rowContextmenu.emit($event)"
@@ -136,7 +136,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
               [row]="row"
               [group]="groupedRows"
               [rowIndex]="{ index: absoluteIndex, indexInGroup: indexInGroup }"
-              [expanded]="getRowExpanded(row)"
+              [expanded]="controller.getRowExpanded(row)"
               [rowClass]="rowClass()"
               [displayCheck]="displayCheck()"
               [treeStatus]="row?.treeStatus"
@@ -259,7 +259,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit {
   cd = inject(ChangeDetectorRef);
   destroyRef = inject(DestroyRef);
   protected readonly configuration = inject(DatatableConfiguration).configuration;
-  protected readonly controller = inject(DatatableController);
+  protected readonly controller = inject<DatatableController<TRow>>(DatatableController);
 
   readonly rowDefTemplate = input<TemplateRef<any>>();
   readonly scrollbarV = input(false, { transform: booleanAttribute });
@@ -358,7 +358,6 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit {
     undefined
   );
   rowTrackingFn: TrackByFunction<RowOrGroup<TRow> | undefined>;
-  readonly rowExpansions = signal<TRow[]>([]);
   readonly groupExpansions = signal<Group<TRow>[]>([]);
 
   readonly _bodyHeight = computed(() => {
@@ -448,10 +447,10 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit {
 
   private rowToggleStateChange({ type, value }: DetailToggleEvents<TRow>) {
     if (type === 'row') {
-      this.toggleRowExpansion(value);
+      this.controller.toggleRowExpansion(value);
     }
     if (type === 'all') {
-      this.toggleAllRows(value);
+      this.controller.toggleAllRows(value);
     }
 
     // Refresh rows after toggle
@@ -697,31 +696,10 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit {
           ? this.controller.offset() * this.controller.pageSize()
           : 0,
         rowCount: this.controller.rowCount(),
-        rowExpansions: new Set<TRow>(this.rowDetail() ? this.rowExpansions() : [])
+        rowExpansions: new Set<TRow>(this.rowDetail() ? this.controller.rowExpansions() : [])
       });
     }
     return cache;
-  }
-
-  /**
-   * Toggle the Expansion of the row i.e. if the row is expanded then it will
-   * collapse and vice versa.   Note that the expanded status is stored as
-   * a part of the row object itself as we have to preserve the expanded row
-   * status in case of sorting and filtering of the row set.
-   */
-  toggleRowExpansion(row: TRow): void {
-    const rowExpandedIdx = this.getExpandedIdx(row, this.rowExpansions());
-    const expanded = rowExpandedIdx > -1;
-
-    // Update the toggled row and update thive nevere heights in the cache.
-    if (expanded) {
-      this.rowExpansions.update(expansions => {
-        expansions.splice(rowExpandedIdx, 1);
-        return [...expansions];
-      });
-    } else {
-      this.rowExpansions.update(expansions => [...expansions, row]);
-    }
   }
 
   toggleGroupExpansion(row: Group<TRow>): void {
@@ -740,25 +718,10 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit {
   }
 
   /**
-   * Expand/Collapse all the rows no matter what their state is.
-   */
-  toggleAllRows(expanded: boolean): void {
-    // TODO requires fixing. This still does not work with groups.
-    this.rowExpansions.set(expanded ? [...(this.rows() as any)] : []);
-  }
-
-  /**
    * Expand/Collapse all the groups no matter what their state is.
    */
   toggleAllGroups(expanded: boolean): void {
     this.groupExpansions.set(expanded ? [...this.groupedRows()!] : []);
-  }
-
-  /**
-   * Returns if the row was expanded and set default row expansion when row expansion is empty
-   */
-  getRowExpanded(row: TRow): boolean {
-    return this.getExpandedIdx(row, this.rowExpansions()) > -1;
   }
 
   getGroupExpanded(group: Group<TRow>): boolean {

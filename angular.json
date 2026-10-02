@@ -146,6 +146,7 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/ngx-datatable/tsconfig.spec.json",
+            "runnerConfig": "projects/ngx-datatable/vitest.config.ts",
             "browsers": ["chromium"]
           },
           "configurations": {

@@ -151,7 +151,6 @@ describe('DataTableFooterComponent', () => {
     <datatable-footer
       [rowCount]="rowCount()"
       [groupCount]="undefined"
-      [pageSize]="pageSize()"
       [footerTemplate]="footerTemplate()"
       [pagerLeftArrowIcon]="pagerLeftArrowIcon()"
       [pagerRightArrowIcon]="pagerRightArrowIcon()"
@@ -189,7 +188,7 @@ describe('DataTableFooterComponent', () => {
       offset,
       externalPaging: signal(true),
       count: rowCount,
-      pageSize
+      limit: pageSize
     })
   ]
 })

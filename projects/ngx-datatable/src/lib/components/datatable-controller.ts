@@ -1,11 +1,12 @@
-import { computed, Signal } from '@angular/core';
+import { computed, Signal, signal } from '@angular/core';
 
+import { Row } from '../types/public.types';
 import type { DatatableComponent } from './datatable.component';
 
-type DatatableControllerTable = {
+type DatatableControllerTable<TRow extends Row> = {
   [
     K in keyof Pick<
-      DatatableComponent,
+      DatatableComponent<TRow>,
       | 'offset'
       | 'scrollbarV'
       | 'virtualization'
@@ -16,11 +17,14 @@ type DatatableControllerTable = {
       | 'count'
       | '_internalRows'
       | '_internalGroupedRows'
+      | 'rowIdentity'
     >
-  ]: Signal<ReturnType<DatatableComponent[K]>>;
+  ]: Signal<ReturnType<DatatableComponent<TRow>[K]>>;
 };
 
-export class DatatableController {
+export class DatatableController<TRow extends Row = any> {
+  readonly rowExpansions = signal<TRow[]>([]);
+
   readonly viewportRowCount = computed(() => {
     const size = Math.ceil(this.datatable.bodyHeight() / (this.datatable.rowHeight() as number));
     return Math.max(size, 0);
@@ -49,5 +53,34 @@ export class DatatableController {
     return Math.max(Math.min(offset, Math.ceil(rowCount / pageSize) - 1), 0);
   });
 
-  constructor(private readonly datatable: DatatableControllerTable) {}
+  constructor(private readonly datatable: DatatableControllerTable<TRow>) {}
+
+  toggleRowExpansion(row: TRow): void {
+    const rowExpandedIdx = this.getExpandedRowIdx(row);
+    this.rowExpansions.update(expansions =>
+      rowExpandedIdx > -1
+        ? expansions.filter((_, index) => index !== rowExpandedIdx)
+        : [...expansions, row]
+    );
+  }
+
+  toggleAllRows(expanded: boolean): void {
+    // TODO requires fixing. This still does not work with groups.
+    this.rowExpansions.set(expanded ? [...(this.datatable._internalRows() as TRow[])] : []);
+  }
+
+  getRowExpanded(row: TRow): boolean {
+    return this.getExpandedRowIdx(row) > -1;
+  }
+
+  private getExpandedRowIdx(row: TRow): number {
+    const expansions = this.rowExpansions();
+    if (!expansions.length) {
+      return -1;
+    }
+
+    const rowIdentity = this.datatable.rowIdentity();
+    const rowId = rowIdentity(row);
+    return expansions.findIndex(expandedRow => rowIdentity(expandedRow) === rowId);
+  }
 }

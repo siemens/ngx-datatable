@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 
 import { Row, RowDetailContext, RowOrGroup, ScrollToRowOptions } from '../../types/public.types';
+import { DatatableController } from '../datatable-controller';
 import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive';
 
 @Component({
@@ -36,6 +37,7 @@ import { DatatableRowDetailDirective } from '../row-detail/row-detail.directive'
 export class DataTableRowWrapperComponent<TRow extends Row = any> implements DoCheck {
   private rowDiffer = inject(KeyValueDiffers).find({}).create<keyof RowOrGroup<TRow>, any>();
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly controller = inject<DatatableController<TRow>>(DatatableController);
 
   readonly rowDetail = input<DatatableRowDetailDirective>();
   readonly detailRowHeightFn = input.required<(row?: TRow, index?: number) => number>();
@@ -48,7 +50,10 @@ export class DataTableRowWrapperComponent<TRow extends Row = any> implements DoC
 
   readonly rowIndex = input.required<number>();
 
-  readonly expanded = input(false, { transform: booleanAttribute });
+  readonly expanded = computed(() => {
+    this.rowDiffedCount(); // Re-evaluate expansion when the row identity is mutated internally.
+    return this.controller.getRowExpanded(this.row());
+  });
   readonly checkRowPropertyChanges = input(true, { transform: booleanAttribute });
 
   readonly detailsRowHeight = computed(() => this.detailRowHeightFn()(this.row(), this.rowIndex()));

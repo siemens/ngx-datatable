@@ -31,6 +31,7 @@ export const exampleLoaders: ReadonlyMap<string, () => Promise<Type<unknown>>> =
     ['force-column', () => import('./columns/force-column.component').then(component => component.ForceColumnComponent)],
     ['full-screen', () => import('./basic/full-screen.component').then(component => component.FullScreenComponent)],
     ['full-screen-tree', () => import('./tree/full-screen-tree.component').then(component => component.FullScreenTreeComponent)],
+    ['header-customization', () => import('./templates/header-customization.component').then(component => component.HeaderCustomizationComponent)],
     ['hidden-on-load', () => import('./basic/hidden-on-load.component').then(component => component.HiddenOnLoadComponent)],
     ['horz-vert-scrolling', () => import('./basic/horz-vert-scrolling.component').then(component => component.HorzVertScrollingComponent)],
     ['inline-editing', () => import('./basic/inline-editing.component').then(component => component.InlineEditingComponent)],

@@ -7,7 +7,7 @@ import { TableColumn } from '../types/table-column.type';
 import { DataTableBodyCellComponent } from './body/body-cell.component';
 import { DataTableBodyRowComponent } from './body/body-row.component';
 import { DataTableColumnCellDirective } from './columns/column-cell.directive';
-import { DataTableColumnHeaderDirective } from './columns/column-header.directive';
+import { DataTableColumnHeaderLabelDirective } from './columns/column-header.directive';
 import { DataTableColumnDirective } from './columns/column.directive';
 import { DatatableComponent } from './datatable.component';
 import { DataTableFooterTemplateDirective } from './footer/footer-template.directive';
@@ -701,12 +701,12 @@ describe('DatatableComponent With Custom Templates', () => {
       DatatableComponent,
       DataTableColumnDirective,
       DataTableColumnCellDirective,
-      DataTableColumnHeaderDirective
+      DataTableColumnHeaderLabelDirective
     ],
     template: `
       <ngx-datatable [rows]="rows()" [sorts]="sorts()">
         <ngx-datatable-column name="Id" prop="id">
-          <ng-template let-column="column" ngx-datatable-header-template>
+          <ng-template let-column="column" ngx-datatable-header-label>
             {{ column.name }}
           </ng-template>
           <ng-template let-row="row" ngx-datatable-cell-template>
@@ -714,7 +714,7 @@ describe('DatatableComponent With Custom Templates', () => {
           </ng-template>
         </ngx-datatable-column>
         <ngx-datatable-column [prop]="columnTwoProp()">
-          <ng-template let-column="column" ngx-datatable-header-template>
+          <ng-template let-column="column" ngx-datatable-header-label>
             {{ column.name }}
           </ng-template>
           <ng-template let-row="row" let-column="column" ngx-datatable-cell-template>
@@ -1006,7 +1006,7 @@ const sortBy = (
 ) => {
   const columnIndex = column - 1;
   const headerCellDe = fixture.debugElement.queryAll(By.css('datatable-header-cell'))[columnIndex];
-  const de = headerCellDe.query(By.css('span:last-child'));
+  const de = headerCellDe.query(By.css('.datatable-header-sort-button'));
   de.triggerEventHandler('click', null);
 };
 

@@ -140,10 +140,17 @@ export interface TableColumn<TRow extends Row = any> {
    */
   ghostCellTemplate?: TemplateRef<any>;
 
+  /** Template used to render the label inside the header's sort button or static label. */
+  headerLabelTemplate?: TemplateRef<HeaderCellContext>;
+
+  /** Template used to render interactive controls next to the header label. */
+  headerActionsTemplate?: TemplateRef<HeaderCellContext>;
+
   /**
-   * Template used to render header cells.
+   * Template used to replace all content inside a header cell. The columnheader host and resize
+   * handle remain managed by the table.
    */
-  headerTemplate?: TemplateRef<HeaderCellContext>;
+  headerCellTemplate?: TemplateRef<HeaderCellContext>;
 
   /**
    * Tree toggle template ref

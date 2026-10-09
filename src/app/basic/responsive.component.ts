@@ -3,7 +3,7 @@ import { Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
-  DataTableColumnHeaderDirective,
+  DataTableColumnHeaderLabelDirective,
   DatatableComponent,
   DatatableRowDetailDirective,
   DatatableRowDetailTemplateDirective,
@@ -22,7 +22,7 @@ import { DataService } from '../data.service';
     DatatableRowDetailTemplateDirective,
     DataTableColumnDirective,
     DataTableColumnCellDirective,
-    DataTableColumnHeaderDirective,
+    DataTableColumnHeaderLabelDirective,
     AsyncPipe
   ],
   template: `
@@ -74,7 +74,7 @@ import { DataService } from '../data.service';
       </ngx-datatable-column>
 
       <ngx-datatable-column name="Gender" [flexGrow]="1">
-        <ng-template let-column="column" let-sort="sortFn" ngx-datatable-header-template>
+        <ng-template let-column="column" ngx-datatable-header-label>
           <span class="mobile-hidden">{{ column.name }}</span>
         </ng-template>
 
@@ -84,7 +84,7 @@ import { DataService } from '../data.service';
       </ngx-datatable-column>
 
       <ngx-datatable-column name="Age" [flexGrow]="1">
-        <ng-template let-column="column" let-sort="sortFn" ngx-datatable-header-template>
+        <ng-template let-column="column" ngx-datatable-header-label>
           <span class="mobile-hidden">{{ column.name }}</span>
         </ng-template>
 

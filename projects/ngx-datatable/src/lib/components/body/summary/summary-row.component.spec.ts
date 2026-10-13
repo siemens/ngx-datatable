@@ -4,16 +4,17 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { provideDatatableConfigurationMock } from '../../../../testing/datatable-configuration.mock';
 import { TableColumnInternal } from '../../../types/internal.types';
+import { Row } from '../../../types/public.types';
 import { toInternalColumn } from '../../../utils/column-helper';
 import { DataTableSummaryRowComponent } from './summary-row.component';
 import { SummaryHarness } from './testing/summary.harness';
 
 describe('DataTableSummaryRowComponent', () => {
-  let fixture: ComponentFixture<DataTableSummaryRowComponent>;
-  let componentRef: ComponentRef<DataTableSummaryRowComponent>;
+  let fixture: ComponentFixture<DataTableSummaryRowComponent<Row>>;
+  let componentRef: ComponentRef<DataTableSummaryRowComponent<Row>>;
   let harness: SummaryHarness;
 
-  let rows: any[];
+  let rows: Row[];
   let columns: TableColumnInternal[];
 
   beforeEach(() => {
@@ -72,6 +73,23 @@ describe('DataTableSummaryRowComponent', () => {
 
         expect(col1Text).toBe((rows[0].col1 + rows[1].col1).toString());
         expect(col2Text).toBe((rows[0].col2 + rows[1].col2).toString());
+      });
+
+      it('should ignore loading placeholders and update when rows are loaded', async () => {
+        const partialRows = new Array<Row | undefined>(4);
+        partialRows[0] = rows[0];
+        partialRows[2] = undefined;
+        partialRows[3] = rows[1];
+        componentRef.setInput('rows', partialRows);
+
+        expect(await harness.getSummaryRowCellText(0)).toBe('11');
+        expect(await harness.getSummaryRowCellText(1)).toBe('50');
+
+        partialRows[1] = { col1: 2, col2: 5 };
+        componentRef.setInput('rows', [...partialRows]);
+
+        expect(await harness.getSummaryRowCellText(0)).toBe('13');
+        expect(await harness.getSummaryRowCellText(1)).toBe('55');
       });
 
       it('should works with empty row', async () => {
@@ -139,6 +157,32 @@ describe('DataTableSummaryRowComponent', () => {
 
       expect(col1Text).toBe(sum1.toString());
       expect(col2Text).toBe(sum2.toString());
+    });
+
+    it('should pass only loaded rows to custom summaries without filtering their cell values', async () => {
+      const summaryFunc = vi.fn().mockReturnValue(4);
+      columns[0].summaryFunc = summaryFunc;
+      componentRef.setInput('columns', [...columns]);
+      const partialRows = new Array<Row | undefined>(10);
+      partialRows[0] = { col1: 0 };
+      partialRows[2] = undefined;
+      partialRows[4] = { col1: null };
+      partialRows[6] = {};
+      partialRows[8] = { col1: false };
+      componentRef.setInput('rows', partialRows);
+
+      expect(await harness.getSummaryRowCellText(0)).toBe('4');
+      expect(summaryFunc).toHaveBeenCalledWith([0, null, undefined, false]);
+    });
+
+    it('should pass an empty array to custom summaries when all rows are unloaded', async () => {
+      const summaryFunc = vi.fn().mockReturnValue(0);
+      columns[0].summaryFunc = summaryFunc;
+      componentRef.setInput('columns', [...columns]);
+      componentRef.setInput('rows', [undefined, undefined]);
+
+      expect(await harness.getSummaryRowCellText(0)).toBe('0');
+      expect(summaryFunc).toHaveBeenCalledWith([]);
     });
 
     describe('Pipe', () => {

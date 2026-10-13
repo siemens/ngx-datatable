@@ -2,6 +2,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, input, TemplateRef } from '@angular/core';
 
 import { TableColumnInternal } from '../../../types/internal.types';
+import { Row } from '../../../types/public.types';
 import { DataTableBodyRowComponent } from '../body-row.component';
 
 const defaultSumFunc = (cells: any[]): any => {
@@ -51,9 +52,9 @@ const noopSumFunc = (cells: any[]): void => {
     class: 'datatable-summary-row'
   }
 })
-export class DataTableSummaryRowComponent {
-  readonly rows = input.required<any[]>();
-  readonly columns = input.required<TableColumnInternal[]>();
+export class DataTableSummaryRowComponent<TRow extends Row = any> {
+  readonly rows = input.required<(TRow | undefined)[]>();
+  readonly columns = input.required<TableColumnInternal<TRow>[]>();
   readonly allColumnsColspan = input.required<number>();
 
   readonly rowHeight = input.required<number>();
@@ -67,18 +68,24 @@ export class DataTableSummaryRowComponent {
   });
   protected readonly summaryRow = computed(() => this.computeSummaryRowValues());
 
-  private computeSummaryRowValues() {
+  // Virtual and ghost loading rows are not part of the aggregation.
+  private readonly loadedRows = computed(() =>
+    this.rows().filter((row): row is TRow => row !== undefined)
+  );
+
+  private computeSummaryRowValues(): Row | undefined {
     if (!this.columns().length || !this.rows().length) {
       return undefined;
     }
-    const summaryRow: any = {};
+    const loadedRows = this.loadedRows();
+    const summaryRow: Row = {};
     this.columns()
       .filter(col => !col.summaryTemplate && col.prop)
       .forEach(col => {
-        const cellsFromSingleColumn = this.rows().map(row => row[col.prop!]);
+        const cellsFromSingleColumn = loadedRows.map(row => row[col.prop]);
         const sumFunc = this.getSummaryFunction(col);
 
-        summaryRow[col.prop!] = col.pipe
+        summaryRow[col.prop] = col.pipe
           ? col.pipe.transform(sumFunc(cellsFromSingleColumn))
           : sumFunc(cellsFromSingleColumn);
       });
@@ -86,7 +93,7 @@ export class DataTableSummaryRowComponent {
     return summaryRow;
   }
 
-  private getSummaryFunction(column: TableColumnInternal): (a: any[]) => any {
+  private getSummaryFunction(column: TableColumnInternal<TRow>): (a: any[]) => any {
     if (column.summaryFunc === undefined) {
       return defaultSumFunc;
     } else if (column.summaryFunc === null) {

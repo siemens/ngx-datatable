@@ -4,7 +4,7 @@
   @include shared.cell-styles();
 
   position: relative;
-  display: inline-block;
+  display: inline-flex;
 
   &.dragging {
     pointer-events: none;
@@ -18,18 +18,20 @@
   }
 
   &.sortable {
-    .datatable-header-cell-wrapper {
+    .datatable-header-sort-button {
       cursor: pointer;
     }
   }
 
-  &.longpress .datatable-header-cell-wrapper {
-    cursor: move;
+  &.longpress {
+    .datatable-header-label {
+      cursor: move;
+    }
   }
 }
 
-.datatable-header-cell-template-wrap {
-  block-size: inherit;
+.datatable-header-actions {
+  display: inline-flex;
 }
 
 .sort-btn {

@@ -15,8 +15,9 @@ export default defineConfig({
           ) => {
             const source = iframe.locator(sourceLocator.selector);
             const target = iframe.locator(targetLocator.selector);
+            // Start on the reorder handle, not empty space in the header cell.
             // Read both positions before the dragged header is translated.
-            const sourceBox = await source.boundingBox();
+            const sourceBox = await source.locator('.datatable-header-label').boundingBox();
             const targetBox = await target.boundingBox();
             if (!sourceBox || !targetBox) {
               throw new Error('Both drag endpoints must have a bounding box');

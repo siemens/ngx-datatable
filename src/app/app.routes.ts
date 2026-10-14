@@ -157,6 +157,11 @@ export const routes: Routes = [
         loadComponent: () => import('./tree/full-screen-tree.component').then(component => component.FullScreenTreeComponent)
     },
     {
+        path: 'header-customization',
+        data: { sourcePath: 'templates/header-customization.component.ts' },
+        loadComponent: () => import('./templates/header-customization.component').then(component => component.HeaderCustomizationComponent)
+    },
+    {
         path: 'hidden-on-load',
         data: { sourcePath: 'basic/hidden-on-load.component.ts' },
         loadComponent: () => import('./basic/hidden-on-load.component').then(component => component.HiddenOnLoadComponent)

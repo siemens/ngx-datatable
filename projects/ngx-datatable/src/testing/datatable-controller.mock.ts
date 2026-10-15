@@ -17,6 +17,7 @@ export const provideDatatableControllerMock = (
     count: signal(0),
     _internalRows: signal([]),
     _internalGroupedRows: signal(undefined),
+    rowIdentity: signal(row => row),
     ...table
   })
 });

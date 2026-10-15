@@ -27,16 +27,16 @@ describe('DatatableRowDetailDirective', () => {
       <ngx-datatable
         #myTable
         [rows]="rows()"
-        [scrollbarV]="true"
+        [scrollbarV]="scrollbarV()"
         [rowHeight]="50"
         [headerHeight]="50"
         [footerHeight]="50"
         [externalPaging]="externalPaging()"
         [offset]="offset()"
       >
-        <ngx-datatable-row-detail [rowHeight]="detailRowHeight" (toggle)="onDetailToggle($event)">
+        <ngx-datatable-row-detail [rowHeight]="rowHeight()" (toggle)="onDetailToggle($event)">
           <ng-template let-row="row" ngx-datatable-row-detail-template>
-            <div>Detail for {{ row.name }}</div>
+            <div style="height: 75px">Detail for {{ row.name }}</div>
           </ng-template>
         </ngx-datatable-row-detail>
 
@@ -60,6 +60,10 @@ describe('DatatableRowDetailDirective', () => {
     readonly offset = signal<number>(0);
 
     detailRowHeight = vi.fn().mockReturnValue(100);
+    readonly rowHeight = signal<number | 'auto' | ((row?: TestRow, index?: number) => number)>(
+      this.detailRowHeight
+    );
+    readonly scrollbarV = signal(true);
 
     onDetailToggle(_event: any) {
       // Handle toggle event
@@ -99,5 +103,16 @@ describe('DatatableRowDetailDirective', () => {
     expect(component.detailRowHeight).toHaveBeenCalledWith(component.rows()[2], 2);
     expect(component.detailRowHeight).toHaveBeenCalledWith(component.rows()[3], 3);
     expect(component.detailRowHeight).toHaveBeenCalledWith(component.rows()[4], 4);
+  });
+
+  it('should render the natural content height when rowHeight is auto', async () => {
+    component.scrollbarV.set(false);
+    component.rowHeight.set('auto');
+    table.rowDetail!.toggleExpandRow(component.rows()[0]);
+    await fixture.whenStable();
+
+    const detail: HTMLElement = fixture.nativeElement.querySelector('.datatable-row-detail');
+    expect(detail.style.height).toBe('auto');
+    expect(detail.getBoundingClientRect().height).toBe(75);
   });
 });

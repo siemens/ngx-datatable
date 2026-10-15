@@ -11,13 +11,13 @@ import { By } from '@angular/platform-browser';
 import { DatatableComponent } from '@siemens/ngx-datatable';
 
 import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
+import { provideDatatableControllerMock } from '../../../testing/datatable-controller.mock';
 import { DATATABLE_COMPONENT_TOKEN } from '../../utils/table-token';
 import { DatatablePagerComponent } from './pager.component';
 import { PagerHarness } from './testing/pager.harness';
 
 interface MockFooter {
   curPage: WritableSignal<number>;
-  pageSize: WritableSignal<number>;
   rowCount: WritableSignal<number>;
   groupCount: WritableSignal<number | undefined>;
   pagerNextIcon: WritableSignal<string | undefined>;
@@ -34,11 +34,11 @@ describe('DataTablePagerComponent', () => {
   let harness: PagerHarness;
   let footer: MockFooter;
   let messages: WritableSignal<ReturnType<DatatableComponent['messages']>>;
+  let limit: WritableSignal<number>;
 
   beforeEach(async () => {
     footer = {
       curPage: signal(0),
-      pageSize: signal(1),
       rowCount: signal(0),
       groupCount: signal<number | undefined>(undefined),
       pagerNextIcon: signal(''),
@@ -48,11 +48,13 @@ describe('DataTablePagerComponent', () => {
       page: { emit: ({ page }: { page: number }) => footer.curPage.set(page) }
     };
     messages = signal({});
+    limit = signal(1);
     TestBed.overrideComponent(DatatablePagerComponent, {
       set: {
         changeDetection: ChangeDetectionStrategy.Default,
         providers: [
           provideDatatableConfigurationMock({ messages }),
+          provideDatatableControllerMock({ limit }),
           {
             provide: DATATABLE_COMPONENT_TOKEN,
             useValue: { _footerComponent: signal(footer), messages }
@@ -66,25 +68,25 @@ describe('DataTablePagerComponent', () => {
 
   describe('totalPages', () => {
     it('should calculate totalPages', async () => {
-      footer.pageSize.set(10);
+      limit.set(10);
       footer.rowCount.set(28);
       expect(await harness.pageCount()).toEqual(3);
     });
 
     it('should have 1 page if size is 0', async () => {
-      footer.pageSize.set(0);
+      limit.set(0);
       footer.rowCount.set(28);
       expect(await harness.pageCount()).toEqual(1);
     });
 
     it('should have 1 page if count is 0', async () => {
-      footer.pageSize.set(10);
+      limit.set(10);
       footer.rowCount.set(0);
       expect(await harness.pageCount()).toEqual(1);
     });
 
     it('should prefer using groupCount if available', async () => {
-      footer.pageSize.set(10);
+      limit.set(10);
       footer.rowCount.set(28);
       footer.groupCount.set(53);
       expect(await harness.pageCount()).toEqual(5);
@@ -93,7 +95,7 @@ describe('DataTablePagerComponent', () => {
 
   describe('canPrevious()', () => {
     beforeEach(() => {
-      footer.pageSize.set(10);
+      limit.set(10);
       footer.rowCount.set(100);
     });
 
@@ -110,7 +112,7 @@ describe('DataTablePagerComponent', () => {
 
   describe('canNext()', () => {
     beforeEach(() => {
-      footer.pageSize.set(10);
+      limit.set(10);
       footer.rowCount.set(100);
     });
 
@@ -127,7 +129,7 @@ describe('DataTablePagerComponent', () => {
 
   describe('prevPage()', () => {
     beforeEach(() => {
-      footer.pageSize.set(10);
+      limit.set(10);
       footer.rowCount.set(100);
     });
 
@@ -153,7 +155,7 @@ describe('DataTablePagerComponent', () => {
 
   describe('nextPage()', () => {
     beforeEach(() => {
-      footer.pageSize.set(10);
+      limit.set(10);
       footer.rowCount.set(100);
     });
 
@@ -179,7 +181,7 @@ describe('DataTablePagerComponent', () => {
 
   describe('selectPage()', () => {
     beforeEach(() => {
-      footer.pageSize.set(10);
+      limit.set(10);
       footer.rowCount.set(100);
       footer.curPage.set(1);
     });
@@ -211,7 +213,7 @@ describe('DataTablePagerComponent', () => {
 
   describe('calcPages()', () => {
     beforeEach(() => {
-      footer.pageSize.set(10);
+      limit.set(10);
       footer.rowCount.set(73);
       footer.curPage.set(1);
     });
@@ -241,7 +243,7 @@ describe('DataTablePagerComponent', () => {
       page: number;
     }[];
     beforeEach(async () => {
-      footer.pageSize.set(10);
+      limit.set(10);
       footer.rowCount.set(100);
       await fixture.whenStable();
       [firstButton, previousButton, nextButton, lastButton] = fixture.debugElement

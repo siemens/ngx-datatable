@@ -1,7 +1,15 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, computed, numberAttribute, input } from '@angular/core';
+import {
+  booleanAttribute,
+  Component,
+  computed,
+  inject,
+  numberAttribute,
+  input
+} from '@angular/core';
 
 import { TableColumnInternal } from '../../../types/internal.types';
+import { DatatableController } from '../../datatable-controller';
 
 @Component({
   selector: 'ghost-loader',
@@ -10,13 +18,14 @@ import { TableColumnInternal } from '../../../types/internal.types';
   styleUrl: './ghost-loader.component.scss'
 })
 export class DataTableGhostLoaderComponent {
+  private readonly controller = inject(DatatableController);
   readonly columns = input.required<TableColumnInternal[]>();
-  readonly pageSize = input.required<number, unknown>({ transform: numberAttribute });
+  readonly singleRow = input(false, { transform: booleanAttribute });
   readonly rowHeight = input.required<number | 'auto' | ((row?: any) => number)>();
   readonly ghostBodyHeight = input<number, unknown>(undefined, { transform: numberAttribute });
 
   protected readonly ghostRows = computed(() =>
-    Array.from({ length: this.pageSize() }, (_, index) => index)
+    Array.from({ length: this.singleRow() ? 1 : this.controller.pageSize() }, (_, index) => index)
   );
 
   protected readonly rowHeightComputed = () => {

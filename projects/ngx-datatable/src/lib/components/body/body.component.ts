@@ -10,12 +10,10 @@ import {
   Input,
   input,
   model,
-  OnChanges,
   OnInit,
   output,
   OutputEmitterRef,
   signal,
-  SimpleChanges,
   TemplateRef,
   TrackByFunction,
   untracked,
@@ -83,7 +81,6 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
       <ghost-loader
         class="ghost-overlay"
         [columns]="columns"
-        [pageSize]="pageSize()"
         [rowHeight]="configuration().rowHeight"
         [ghostBodyHeight]="bodyHeight"
       />
@@ -161,11 +158,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
           @for (group of rowsToRender(); track rowTrackingFn(i, group); let i = $index) {
             @let absoluteIndex = indexes().first + i;
             @if (!group && ghostLoadingIndicator()) {
-              <ghost-loader
-                [columns]="columns"
-                [pageSize]="1"
-                [rowHeight]="configuration().rowHeight"
-              />
+              <ghost-loader singleRow [columns]="columns" [rowHeight]="configuration().rowHeight" />
             } @else if (group) {
               @let disableRowCheck = this.disableRowCheck();
               @let disabled = isRow(group) && disableRowCheck && disableRowCheck(group);
@@ -262,7 +255,7 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
     class: 'datatable-body'
   }
 })
-export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, OnChanges {
+export class DataTableBodyComponent<TRow extends Row = any> implements OnInit {
   cd = inject(ChangeDetectorRef);
   destroyRef = inject(DestroyRef);
   protected readonly configuration = inject(DatatableConfiguration).configuration;
@@ -297,8 +290,6 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   readonly rowDragEvents = input.required<OutputEmitterRef<DragEventData>>();
   readonly disableRowCheck = input<(row: TRow) => boolean | undefined>();
   readonly checkRowPropertyChanges = input(true, { transform: booleanAttribute });
-
-  readonly pageSize = input.required<number>();
 
   readonly rows = input.required<(TRow | undefined)[]>();
 
@@ -402,14 +393,14 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     };
     effect(() => this.defaultGroupExpansionEffect());
     effect(() => this.focusPendingRow());
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.pageSize) {
-      this._offsetEvent = -1;
-      this.updatePage('up');
-      this.updatePage('down');
-    }
+    effect(() => {
+      this.controller.pageSize();
+      untracked(() => {
+        this._offsetEvent = -1;
+        this.updatePage('up');
+        this.updatePage('down');
+      });
+    });
   }
 
   /**
@@ -481,7 +472,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
     let offset = this.controller.offset();
     if (this.scrollbarV() && virtualization && offset) {
       // First get the row Index that we need to move to.
-      const rowIndex = this.pageSize() * offset;
+      const rowIndex = this.controller.pageSize() * offset;
       offset = this.rowHeightsCache().query(rowIndex - 1);
     } else if (this.scrollbarV() && !virtualization) {
       offset = 0;
@@ -531,7 +522,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
    * Updates the page given a direction.
    */
   updatePage(direction: string): void {
-    let offset = this.indexes().first / this.pageSize();
+    let offset = this.indexes().first / this.controller.pageSize();
     const scrollInBetween = !Number.isInteger(offset);
     if (direction === 'up') {
       offset = Math.ceil(offset);
@@ -548,7 +539,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
           this.page.emit(offset - 1);
         }
 
-        const downRow = this.rows()[this.indexes().first + this.pageSize()];
+        const downRow = this.rows()[this.indexes().first + this.controller.pageSize()];
         if (!downRow && direction === 'down') {
           this.page.emit(offset + 1);
         }
@@ -677,9 +668,9 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       // The server is handling paging and will pass an array that begins with the
       // element at a specified offset.  first should always be 0 with external paging.
       if (!this.externalPaging()) {
-        first = Math.max(this.controller.offset() * this.pageSize(), 0);
+        first = Math.max(this.controller.offset() * this.controller.pageSize(), 0);
       }
-      last = Math.min(first + this.pageSize(), this.controller.rowCount());
+      last = Math.min(first + this.controller.pageSize(), this.controller.rowCount());
     }
 
     return { first, last };
@@ -702,7 +693,9 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
         rowHeight: this.configuration().rowHeight,
         detailRowHeight: this.detailRowHeightFn(),
         externalVirtual: this.scrollbarV() && this.externalPaging(),
-        indexOffset: this.externalPaging() ? this.controller.offset() * this.pageSize() : 0,
+        indexOffset: this.externalPaging()
+          ? this.controller.offset() * this.controller.pageSize()
+          : 0,
         rowCount: this.controller.rowCount(),
         rowExpansions: new Set<TRow>(this.rowDetail() ? this.rowExpansions() : [])
       });

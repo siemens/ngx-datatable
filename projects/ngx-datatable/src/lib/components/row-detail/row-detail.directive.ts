@@ -8,10 +8,11 @@ import { DatatableRowDetailTemplateDirective } from './row-detail-template.direc
 })
 export class DatatableRowDetailDirective<TRow extends Row = any> {
   /**
-   * The detail row height is required especially
-   * when virtual scroll is enabled.
+   * The detail row height. Use 'auto' for the natural content height when virtual
+   * scrolling is disabled. Virtual scrolling requires a number or a function
+   * returning a number.
    */
-  readonly rowHeight = input<number | ((row?: TRow, index?: number) => number)>(0);
+  readonly rowHeight = input<number | 'auto' | ((row?: TRow, index?: number) => number)>(0);
 
   /**
    * Template used to render the detail row.

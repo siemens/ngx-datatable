@@ -700,7 +700,7 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
       cache.initCache({
         rows: this.rows() as TRow[], // TODO: RowHeightCache does not support grouping
         rowHeight: this.configuration().rowHeight,
-        detailRowHeight: this.detailRowHeightFn(),
+        detailRowHeight: this.rowDetail()?.rowHeight() ?? 0,
         externalVirtual: this.scrollbarV() && this.externalPaging(),
         indexOffset: this.externalPaging() ? this.controller.offset() * this.pageSize() : 0,
         rowCount: this.controller.rowCount(),

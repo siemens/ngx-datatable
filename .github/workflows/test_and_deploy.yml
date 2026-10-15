@@ -131,3 +131,64 @@ jobs:
         with:
           name: e2e-results
           path: playwright/results
+
+  preview:
+    if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+    runs-on: ubuntu-24.04
+    needs:
+      - build
+      - e2e
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
+    env:
+      BUCKET_NAME: ngx-datatable-preview
+      PREVIEW_URL: https://d119znxtssp2lg.cloudfront.net
+    steps:
+      - name: Download documentation
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: documentation
+          path: pages
+
+      - name: Download Playwright report
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: e2e-results
+          path: playwright-results
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@cbe3b392738ccf3f987d68400dafcf4b0624a56c # v6.2.4
+        with:
+          role-to-assume: arn:aws:iam::974483672234:role/ngx-datatable-preview
+          role-session-name: ngx-datatable-preview
+          aws-region: eu-west-1
+
+      - name: Publish preview
+        run: |
+          aws s3 cp --quiet --no-progress --recursive ./pages s3://${{ env.BUCKET_NAME }}/pr-${{ github.event.pull_request.number }}/pages
+          aws s3 cp --quiet --no-progress --recursive ./playwright-results/preview s3://${{ env.BUCKET_NAME }}/pr-${{ github.event.pull_request.number }}/playwright-report
+
+      - name: Build PR description block
+        run: |
+          cat > pr-preview-description.md <<EOF
+          <!-- preview-links:start -->
+
+          ---
+
+          [Documentation](${{ env.PREVIEW_URL }}/pr-${{ github.event.pull_request.number }}/pages/).
+          [Examples](${{ env.PREVIEW_URL }}/pr-${{ github.event.pull_request.number }}/pages/examples/).
+          [Playwright report](${{ env.PREVIEW_URL }}/pr-${{ github.event.pull_request.number }}/playwright-report/).
+
+          <!-- preview-links:end -->
+          EOF
+
+      - name: Update PR description block
+        uses: nefrob/pr-description@30859d560129561327a48ec569ec3b6aa62dd2c9 # v1.3.0
+        with:
+          token: ${{ github.token }}
+          content: pr-preview-description.md
+          contentIsFilePath: true
+          regex: '<!-- preview-links:start -->.*?<!-- preview-links:end -->'
+          regexFlags: 'ims'

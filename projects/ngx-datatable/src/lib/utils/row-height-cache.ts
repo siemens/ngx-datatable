@@ -28,7 +28,7 @@ export class RowHeightCache<TRow> {
   initCache(details: {
     rows: TRow[];
     rowHeight: number | 'auto' | ((row: TRow) => number);
-    detailRowHeight: number | ((row: TRow, index: number) => number);
+    detailRowHeight: number | 'auto' | ((row: TRow, index: number) => number);
     externalVirtual: boolean | undefined;
     indexOffset: number;
     rowCount: number;
@@ -52,7 +52,7 @@ export class RowHeightCache<TRow> {
     }
 
     // Add this additional guard in case detailRowHeight is set to 'auto' as it wont work.
-    if (!isDetailFn && isNaN(detailRowHeight)) {
+    if (detailRowHeight === 'auto' || (!isDetailFn && isNaN(detailRowHeight))) {
       throw new Error(`Row Height cache initialization failed. Please ensure that 'detailRowHeight' is a
         valid number or function value: (${detailRowHeight}) when 'scrollbarV' is enabled.`);
     }

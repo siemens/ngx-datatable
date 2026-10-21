@@ -122,7 +122,6 @@ import { DataTableSummaryRowComponent } from './summary/summary-row.component';
             [detailRowHeightFn]="detailRowHeightFn()"
             [row]="row"
             [disabled]="disabled"
-            [expanded]="controller.getRowExpanded(row)"
             [rowIndex]="absoluteIndex"
             [checkRowPropertyChanges]="checkRowPropertyChanges()"
             (rowContextmenu)="rowContextmenu.emit($event)"

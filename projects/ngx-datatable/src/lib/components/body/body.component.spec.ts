@@ -8,6 +8,7 @@ import { ScrollContainerDirective } from '../../directives/scroll-container.dire
 import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 import { toInternalColumn } from '../../utils/column-helper';
 import { DATATABLE_COMPONENT_TOKEN } from '../../utils/table-token';
+import { DatatableController } from '../datatable-controller';
 import { DataTableBodyRowComponent } from './body-row.component';
 import { DataTableBodyComponent } from './body.component';
 import { DataTableGhostLoaderComponent } from './ghost-loader/ghost-loader.component';
@@ -29,6 +30,7 @@ const scrollContainerStub: Partial<ScrollContainerDirective> = {
 describe('DataTableBodyComponent', () => {
   let fixture: ComponentFixture<DataTableBodyComponent>;
   let component: DataTableBodyComponent;
+  let controller: DatatableController;
   let rowHeight: WritableSignal<any>;
   let offset: WritableSignal<number>;
   let rowCount: WritableSignal<number>;
@@ -51,6 +53,7 @@ describe('DataTableBodyComponent', () => {
           count: rowCount,
           _internalRows: computed(() => component.rows()),
           _internalGroupedRows: computed(() => component.groupedRows()),
+          rowIdentity: computed(() => component.rowIdentity()),
           limit
         }),
         { provide: ScrollContainerDirective, useValue: scrollContainerStub }
@@ -63,6 +66,7 @@ describe('DataTableBodyComponent', () => {
     fixture.componentRef.setInput('summaryHeight', 50);
     fixture.componentRef.setInput('offsetX', 0);
     component = fixture.componentInstance;
+    controller = TestBed.inject(DatatableController);
   });
 
   describe('fixture', () => {
@@ -275,7 +279,7 @@ describe('DataTableBodyComponent', () => {
 
       // Initially, group should be collapsed
       expect(component.getGroupExpanded(group)).toBe(false);
-      expect(component.rowExpansions()).toHaveLength(0);
+      expect(controller.rowExpansions()).toHaveLength(0);
 
       // Expand the group
       component.toggleGroupExpansion(group);
@@ -286,32 +290,32 @@ describe('DataTableBodyComponent', () => {
       expect(component.groupExpansions()[0]).toBe(group);
 
       // Now expand row detail for the first row in the group
-      component.toggleRowExpansion(row1);
+      controller.toggleRowExpansion(row1);
       await fixture.whenStable();
 
-      expect(component.getRowExpanded(row1)).toBe(true);
-      expect(component.rowExpansions()).toHaveLength(1);
-      expect(component.rowExpansions()[0]).toBe(row1);
+      expect(controller.getRowExpanded(row1)).toBe(true);
+      expect(controller.rowExpansions()).toHaveLength(1);
+      expect(controller.rowExpansions()[0]).toBe(row1);
 
       // Group should still be expanded
       expect(component.getGroupExpanded(group)).toBe(true);
 
       // Expand row detail for the second row as well
-      component.toggleRowExpansion(row2);
+      controller.toggleRowExpansion(row2);
       await fixture.whenStable();
 
-      expect(component.getRowExpanded(row2)).toBe(true);
-      expect(component.rowExpansions()).toHaveLength(2);
-      expect(component.rowExpansions()).toContain(row1);
-      expect(component.rowExpansions()).toContain(row2);
+      expect(controller.getRowExpanded(row2)).toBe(true);
+      expect(controller.rowExpansions()).toHaveLength(2);
+      expect(controller.rowExpansions()).toContain(row1);
+      expect(controller.rowExpansions()).toContain(row2);
 
       // Collapse the first row detail
-      component.toggleRowExpansion(row1);
+      controller.toggleRowExpansion(row1);
       await fixture.whenStable();
 
-      expect(component.getRowExpanded(row1)).toBe(false);
-      expect(component.rowExpansions()).toHaveLength(1);
-      expect(component.rowExpansions()[0]).toBe(row2);
+      expect(controller.getRowExpanded(row1)).toBe(false);
+      expect(controller.rowExpansions()).toHaveLength(1);
+      expect(controller.rowExpansions()[0]).toBe(row2);
 
       // Group should still be expanded
       expect(component.getGroupExpanded(group)).toBe(true);

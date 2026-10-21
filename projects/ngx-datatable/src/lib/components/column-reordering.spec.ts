@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { commands, type Locator, page, userEvent } from 'vitest/browser';
 
-import { ReorderEvent } from '../types/public.types';
+import { ReorderEvent, SortPropDir } from '../types/public.types';
 import { TableColumn } from '../types/table-column.type';
 import { DatatableComponent } from './datatable.component';
 
@@ -14,6 +14,7 @@ import { DatatableComponent } from './datatable.component';
       [rows]="rows"
       [reorderable]="reorderable()"
       [swapColumns]="swapColumns()"
+      [(sorts)]="sorts"
       (reorder)="reorderEvents.push($event)"
     />
   `,
@@ -35,6 +36,7 @@ class ColumnReorderingTestComponent {
   readonly reorderable = signal(true);
   readonly swapColumns = signal(true);
   readonly reorderEvents: ReorderEvent[] = [];
+  readonly sorts = signal<SortPropDir[]>([]);
 }
 
 describe('column reordering through the DOM', () => {
@@ -69,6 +71,7 @@ describe('column reordering through the DOM', () => {
   const drag = async (source: Locator, target: Locator) => {
     await commands.longPressDrag(source, target);
     await fixture.whenStable();
+    expect(component.sorts()).toEqual([]);
   };
 
   beforeEach(async () => {

@@ -11,10 +11,7 @@ import {
   viewChildren
 } from '@angular/core';
 
-import {
-  DatatableDraggableDirective,
-  DragEvent
-} from '../../directives/datatable-draggable.directive';
+import { DragEvent } from '../../directives/datatable-draggable.directive';
 import {
   ColumnResizeEventInternal,
   InnerSortEvent,
@@ -37,7 +34,7 @@ import { DataTableHeaderCellComponent } from './header-cell.component';
 
 @Component({
   selector: 'datatable-header',
-  imports: [DataTableHeaderCellComponent, DatatableDraggableDirective],
+  imports: [DataTableHeaderCellComponent],
   template: `
     <div role="row" class="datatable-header-inner">
       @for (colGroup of columnGroups(); track colGroup.type) {
@@ -50,9 +47,7 @@ import { DataTableHeaderCellComponent } from './header-cell.component';
             @for (column of colGroup.columns; track column.$$id) {
               <datatable-header-cell
                 role="columnheader"
-                dragStartDelay="500"
-                [datatableDraggable]="reorderable() && column.draggable"
-                [dragModel]="column"
+                [reorderable]="reorderable()"
                 [isTarget]="targetColumn() === column"
                 [targetMarkerTemplate]="targetMarkerTemplate()"
                 [targetMarkerContext]="targetMarkerContext()"

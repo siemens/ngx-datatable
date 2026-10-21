@@ -1,11 +1,10 @@
-import { Component, inject, signal, ViewChild } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
   DatatableComponent,
   DatatableGroupHeaderDirective,
   DatatableGroupHeaderTemplateDirective,
-  Group,
   GroupToggleEvents
 } from '@siemens/ngx-datatable';
 
@@ -23,7 +22,6 @@ import { DataService } from '../data.service';
   ],
   template: `
     <ngx-datatable
-      #myTable
       class="material expandable"
       groupRowsBy="age"
       columnMode="force"
@@ -38,7 +36,7 @@ import { DataService } from '../data.service';
     >
       <!-- Group Header Template -->
       <ngx-datatable-group-header
-        #myGroupHeader
+        #myGroupHeader="ngxDatatableGroupHeader"
         [rowHeight]="34"
         [checkboxable]="true"
         (toggle)="onDetailToggle($event)"
@@ -48,7 +46,7 @@ import { DataService } from '../data.service';
             <a
               href="javascript:void(0)"
               title="Expand/Collapse Group"
-              (click)="toggleExpandGroup(group)"
+              (click)="myGroupHeader.toggleExpandGroup(group)"
             >
               <span
                 aria-hidden="true"
@@ -145,7 +143,6 @@ import { DataService } from '../data.service';
 export class RowGroupingComponent {
   static readonly exampleTitle = 'Row Grouping';
   private dataService = inject(DataService);
-  @ViewChild('myTable') table!: DatatableComponent<GroupedEmployee>;
 
   editing: Record<string, boolean> = {};
   readonly rows = signal<GroupedEmployee[]>([]);
@@ -270,10 +267,6 @@ export class RowGroupingComponent {
       };
       return updated;
     });
-  }
-
-  toggleExpandGroup(group: Group<GroupedEmployee>) {
-    this.table.groupHeader!.toggleExpandGroup(group);
   }
 
   onDetailToggle(event: GroupToggleEvents<GroupedEmployee>) {

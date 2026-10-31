@@ -47,7 +47,7 @@
     }
   },
   "dependencies": {
-    "@angular/cdk": "22.2.3",
+    "@angular/cdk": "22.2.4",
     "@angular/common": "22.2.3",
     "@angular/compiler": "22.2.3",
     "@angular/core": "22.2.3",
@@ -61,8 +61,8 @@
   },
   "devDependencies": {
     "@angular-eslint/builder": "22.5.0",
-    "@angular/build": "22.2.3",
-    "@angular/cli": "22.2.3",
+    "@angular/build": "22.2.5",
+    "@angular/cli": "22.2.5",
     "@angular/compiler-cli": "22.2.3",
     "@angular/language-service": "22.2.3",
     "@axe-core/playwright": "4.14.0",
@@ -89,7 +89,7 @@
     "eslint-plugin-prefer-arrow": "1.2.3",
     "eslint-plugin-tsdoc": "0.5.4",
     "http-server": "14.1.1",
-    "ng-packagr": "22.2.4",
+    "ng-packagr": "22.2.5",
     "parsimmon": "1.18.1",
     "prettier": "3.9.10",
     "sass": "1.105.2",

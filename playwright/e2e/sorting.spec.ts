@@ -7,12 +7,12 @@ test.describe('sorting', () => {
       await si.visitExample(example);
 
       const companyHeader = page.locator('datatable-header-cell[title="Company"]');
-      const companyHeaderIcon = companyHeader.locator('span').nth(2);
+      const companySortButton = companyHeader.getByRole('button', { name: 'Company' });
       const firstRow = page.locator('datatable-body-row').first();
 
       await si.runVisualAndA11yTests('default-sort');
 
-      await companyHeaderIcon.click();
+      await companySortButton.click();
 
       await expect(companyHeader).toHaveClass(/sort-active/);
       await expect(companyHeader).toHaveClass(/sort-asc/);
@@ -21,7 +21,7 @@ test.describe('sorting', () => {
 
       await si.runVisualAndA11yTests('sorting-asc');
 
-      await companyHeaderIcon.click();
+      await companySortButton.click();
 
       await expect(companyHeader).toHaveClass(/sort-active/);
       await expect(companyHeader).toHaveClass(/sort-desc/);
@@ -30,7 +30,7 @@ test.describe('sorting', () => {
 
       await si.runVisualAndA11yTests('sorting-desc');
 
-      await companyHeaderIcon.click();
+      await companySortButton.click();
 
       await expect(companyHeader).not.toHaveClass(/sort-active/);
       await expect(companyHeader).not.toHaveClass(/sort-asc/);
@@ -49,7 +49,7 @@ test.describe('sorting', () => {
       await si.visitExample(example);
 
       const nameHeader = page.locator('datatable-header-cell[title="Name"]');
-      const nameHeaderIcon = nameHeader.locator('span').nth(2);
+      const nameSortButton = nameHeader.getByRole('button', { name: 'Name' });
       const firstRow = page.locator('datatable-body-row').first();
 
       await expect(nameHeader).toHaveClass(/sort-active/);
@@ -59,7 +59,7 @@ test.describe('sorting', () => {
 
       await si.runVisualAndA11yTests('default-name-sorting-desc');
 
-      await nameHeaderIcon.click();
+      await nameSortButton.click();
 
       await expect(nameHeader).toHaveClass(/sort-active/);
       await expect(nameHeader).toHaveClass(/sort-asc/);
@@ -68,7 +68,7 @@ test.describe('sorting', () => {
 
       await si.runVisualAndA11yTests('sort-name-by-asc');
 
-      await nameHeaderIcon.click();
+      await nameSortButton.click();
 
       await expect(nameHeader).not.toHaveClass(/sort-active/);
       await expect(nameHeader).not.toHaveClass(/sort-asc/);
@@ -86,11 +86,11 @@ test.describe('sorting', () => {
       await si.visitExample(example);
 
       const companyHeader = page.locator('datatable-header-cell[title="Company"]');
-      const companyHeaderIcon = companyHeader.locator('span').nth(2);
+      const companySortButton = companyHeader.getByRole('button', { name: 'Company' });
       const firstRow = page.locator('datatable-body-row').first();
       const loadingIndicator = page.locator('datatable-progress').locator('div[class="bar"]');
 
-      await companyHeaderIcon.click();
+      await companySortButton.click();
 
       await expect(companyHeader).toHaveClass(/sort-active/);
       await expect(companyHeader).toHaveClass(/sort-asc/);
@@ -101,7 +101,7 @@ test.describe('sorting', () => {
 
       await si.runVisualAndA11yTests('sorting-asc');
 
-      await companyHeaderIcon.click();
+      await companySortButton.click();
 
       await expect(companyHeader).toHaveClass(/sort-active/);
       await expect(companyHeader).toHaveClass(/sort-desc/);
@@ -112,7 +112,7 @@ test.describe('sorting', () => {
 
       await si.runVisualAndA11yTests('sorting-desc');
 
-      await companyHeaderIcon.click();
+      await companySortButton.click();
 
       await expect(loadingIndicator).toHaveCount(0);
 
@@ -129,10 +129,10 @@ test.describe('sorting', () => {
       await si.visitExample(example);
 
       const companyHeader = page.locator('datatable-header-cell[title="Company"]');
-      const companyHeaderIcon = companyHeader.locator('span').nth(2);
+      const companySortButton = companyHeader.getByRole('button', { name: 'Company' });
       const firstRow = page.locator('datatable-body-row').first();
 
-      await companyHeaderIcon.click();
+      await companySortButton.click();
 
       await expect(companyHeader).toHaveClass(/sort-active/);
       await expect(companyHeader).toHaveClass(/sort-asc/);
@@ -141,7 +141,7 @@ test.describe('sorting', () => {
 
       await si.runVisualAndA11yTests('comparator-sorting-asc');
 
-      await companyHeaderIcon.click();
+      await companySortButton.click();
 
       await expect(companyHeader).toHaveClass(/sort-active/);
       await expect(companyHeader).toHaveClass(/sort-desc/);
@@ -150,7 +150,7 @@ test.describe('sorting', () => {
 
       await si.runVisualAndA11yTests('comparator-sorting-desc');
 
-      await companyHeaderIcon.click();
+      await companySortButton.click();
 
       await expect(companyHeader).toHaveClass(/sort-active/);
       await expect(companyHeader).toHaveClass(/sort-asc/);

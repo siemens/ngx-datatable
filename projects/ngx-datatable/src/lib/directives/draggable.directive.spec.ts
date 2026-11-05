@@ -54,6 +54,7 @@ describe('DraggableDirective', () => {
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
@@ -75,7 +76,6 @@ describe('DraggableDirective', () => {
     expect(dragEndSpy).toHaveBeenCalled();
     await harness.mouseMove(200);
     expect(dragMoveSpy).toHaveBeenCalledTimes(2);
-    vi.useRealTimers();
   });
 
   it('should allow an input to receive focus', async () => {
@@ -84,6 +84,34 @@ describe('DraggableDirective', () => {
     await userEvent.click(input);
 
     expect(document.activeElement).toBe(input);
+  });
+
+  it('should suppress the pointer click following a drag without blocking keyboard or later clicks', async () => {
+    component.dragStartDelay.set(100);
+    await fixture.whenStable();
+    const hostElement = fixture.debugElement.query(By.css('div')).nativeElement as HTMLElement;
+    const clickSpy = vi.fn();
+    hostElement.addEventListener('click', clickSpy);
+
+    vi.useFakeTimers();
+    await harness.mouseDown(0);
+    vi.advanceTimersByTime(100);
+    await fixture.whenStable();
+    await harness.mouseMove(100);
+    await harness.mouseUp();
+
+    hostElement.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 0 }));
+    expect(clickSpy).toHaveBeenCalledTimes(1);
+
+    const dragClick = new MouseEvent('click', { bubbles: true, cancelable: true, detail: 1 });
+    hostElement.dispatchEvent(dragClick);
+    expect(dragClick.defaultPrevented).toBe(true);
+    expect(clickSpy).toHaveBeenCalledTimes(1);
+
+    await harness.mouseDown(0);
+    await harness.mouseUp();
+    hostElement.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 }));
+    expect(clickSpy).toHaveBeenCalledTimes(2);
   });
 
   it('should provide the initial position when dragging ends without moving', async () => {
@@ -96,7 +124,6 @@ describe('DraggableDirective', () => {
     expect(dragEndSpy).toHaveBeenCalledWith(
       expect.objectContaining({ currentX: 25, initialX: 25 })
     );
-    vi.useRealTimers();
   });
 
   it('should fire touch drag events', async () => {
@@ -117,7 +144,6 @@ describe('DraggableDirective', () => {
     expect(dragEndSpy).toHaveBeenCalled();
     await harness.touchMove(200);
     expect(dragMoveSpy).toHaveBeenCalledTimes(2);
-    vi.useRealTimers();
   });
 
   it('should not start mouse dragging if disabled', async () => {
@@ -130,7 +156,6 @@ describe('DraggableDirective', () => {
     expect(dragStartSpy).not.toHaveBeenCalled();
     expect(dragEndSpy).not.toHaveBeenCalled();
     expect(dragMoveSpy).not.toHaveBeenCalled();
-    vi.useRealTimers();
   });
 
   it('should not start touch dragging if disabled', async () => {
@@ -143,7 +168,6 @@ describe('DraggableDirective', () => {
     expect(dragStartSpy).not.toHaveBeenCalled();
     expect(dragEndSpy).not.toHaveBeenCalled();
     expect(dragMoveSpy).not.toHaveBeenCalled();
-    vi.useRealTimers();
   });
 
   it('should detach pointer listeners when disabled', async () => {
@@ -188,10 +212,6 @@ describe('DraggableDirective', () => {
     beforeEach(async () => {
       component.dragStartDelay.set(100);
       await fixture.whenStable();
-    });
-
-    afterEach(() => {
-      vi.useRealTimers();
     });
 
     it('should start dragging after the specified delay', async () => {

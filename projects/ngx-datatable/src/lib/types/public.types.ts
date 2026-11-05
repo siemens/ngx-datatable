@@ -87,9 +87,10 @@ export interface ActivateEvent<TRow> {
   rowElement: HTMLElement;
 }
 
+/** Context shared by header label, actions, and complete-cell templates. */
 export interface HeaderCellContext {
   column: TableColumn;
-  sortDir: SortDirection | 'asc' | 'desc' | undefined;
+  sortDir: SortDirection | undefined;
   sortFn: () => void;
   allRowsSelected?: boolean;
   selectFn: () => void;

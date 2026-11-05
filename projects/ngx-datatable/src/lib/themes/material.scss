@@ -242,6 +242,8 @@ $datatable-ghost-cell-animation-duration: 10s;
 
     .datatable-header-cell {
       flex-shrink: 0;
+      align-items: start;
+      gap: 0.25rem;
       text-align: start;
       padding-block: 0.9rem;
       padding-inline: 1.2rem;
@@ -251,8 +253,29 @@ $datatable-ghost-cell-animation-duration: 10s;
       font-size: 12px;
       font-weight: 500;
 
-      .datatable-header-cell-wrapper {
+      .datatable-header-label {
         position: relative;
+        display: inline-block;
+      }
+
+      .datatable-header-sort-button {
+        appearance: none;
+        border: 0;
+        padding: 0;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        text-align: inherit;
+        letter-spacing: inherit;
+      }
+
+      .datatable-header-actions {
+        align-items: center;
+      }
+
+      .datatable-header-sort-button:focus-visible {
+        outline: 2px solid $ngx-datatable-selected-active-background-focus;
+        outline-offset: 2px;
       }
 
       &.longpress {

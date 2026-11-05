@@ -17,13 +17,34 @@
 
     .datatable-header-cell {
       flex-shrink: 0;
+      align-items: center;
+      gap: 0.25rem;
       text-align: start;
       padding-block: 0.5rem;
       padding-inline: 1.2rem;
       font-weight: bold;
 
-      .datatable-header-cell-label {
+      .datatable-header-sort-button {
+        appearance: none;
+        border: 0;
+        padding: 0;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        text-align: inherit;
+      }
+
+      .datatable-header-label {
         line-height: 24px;
+      }
+
+      .datatable-header-actions {
+        align-items: center;
+      }
+
+      .datatable-header-sort-button:focus-visible {
+        outline: 2px solid #232837;
+        outline-offset: 2px;
       }
     }
   }

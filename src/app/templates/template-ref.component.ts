@@ -47,7 +47,7 @@ export class TemplateRefComponent implements OnInit {
     this.columns = [
       {
         cellTemplate: this.editTmpl,
-        headerTemplate: this.hdrTpl,
+        headerLabelTemplate: this.hdrTpl,
         name: 'Gender'
       }
     ];

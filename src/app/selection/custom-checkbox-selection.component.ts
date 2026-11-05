@@ -3,7 +3,7 @@ import {
   ActivateEvent,
   DataTableColumnCellDirective,
   DataTableColumnDirective,
-  DataTableColumnHeaderDirective,
+  DataTableColumnHeaderActionsDirective,
   DatatableComponent
 } from '@siemens/ngx-datatable';
 
@@ -15,7 +15,7 @@ import { DataService } from '../data.service';
   imports: [
     DatatableComponent,
     DataTableColumnDirective,
-    DataTableColumnHeaderDirective,
+    DataTableColumnHeaderActionsDirective,
     DataTableColumnCellDirective
   ],
   template: `
@@ -50,7 +50,7 @@ import { DataService } from '../data.service';
           <ng-template
             let-allRowsSelected="allRowsSelected"
             let-selectFn="selectFn"
-            ngx-datatable-header-template
+            ngx-datatable-header-actions
           >
             <input type="checkbox" [checked]="allRowsSelected" (change)="selectFn()" />
           </ng-template>

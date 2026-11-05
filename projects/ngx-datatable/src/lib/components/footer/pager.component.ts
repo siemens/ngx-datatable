@@ -3,6 +3,7 @@ import { Component, computed, inject } from '@angular/core';
 import { Page } from '../../types/internal.types';
 import { DATATABLE_COMPONENT_TOKEN } from '../../utils/table-token';
 import { DatatableConfiguration } from '../datatable-configuration';
+import { DatatableController } from '../datatable-controller';
 
 /**
  * Use this component to construct custom table footer with standard pagination.
@@ -96,11 +97,11 @@ export class DatatablePagerComponent {
   // But the table always is.
   // Ideally we can one day fetch those attributes from a global state, but for now this is fine.
   private datatable = inject(DATATABLE_COMPONENT_TOKEN);
+  private readonly controller = inject(DatatableController);
 
   protected readonly configuration = inject(DatatableConfiguration).configuration;
 
   protected readonly page = computed(() => this.datatable._footerComponent()!.curPage());
-  protected readonly pageSize = computed(() => this.datatable._footerComponent()!.pageSize());
   protected readonly count = computed(
     () =>
       this.datatable._footerComponent()!.groupCount() ??
@@ -120,7 +121,11 @@ export class DatatablePagerComponent {
   );
 
   protected readonly totalPages = computed(() => {
-    return Math.max((this.pageSize() < 1 ? 1 : Math.ceil(this.count() / this.pageSize())) || 0, 1);
+    return Math.max(
+      (this.controller.pageSize() < 1 ? 1 : Math.ceil(this.count() / this.controller.pageSize())) ||
+        0,
+      1
+    );
   });
 
   protected readonly pages = computed(() => {

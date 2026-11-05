@@ -592,11 +592,7 @@ export class DatatableComponent<TRow extends Row = any>
 
   readonly tableWidth = signal(0);
   readonly bodyHeight = signal(0);
-  readonly pageSize = computed(() => this.calcPageSize());
-  private readonly viewportRowCount = computed(() => {
-    const size = Math.ceil(this.bodyHeight() / (this.rowHeight() as number));
-    return Math.max(size, 0);
-  });
+  readonly pageSize = this.controller.pageSize;
   readonly _isFixedHeader = computed(() => {
     if (this.hideHeader()) {
       return false;
@@ -633,7 +629,7 @@ export class DatatableComponent<TRow extends Row = any>
     }
 
     if (this.ghostLoadingIndicator() && this.scrollbarV() && !this.externalPaging()) {
-      const ghostRowCount = Math.max(this.viewportRowCount() - rows.length, 1);
+      const ghostRowCount = Math.max(this.controller.viewportRowCount() - rows.length, 1);
       for (let i = 0; i < ghostRowCount; i++) {
         rows.push(undefined);
       }
@@ -778,7 +774,7 @@ export class DatatableComponent<TRow extends Row = any>
       queueMicrotask(() =>
         this.page.emit({
           count: this.count(),
-          pageSize: this.pageSize(),
+          pageSize: this.controller.pageSize(),
           limit: this.limit(),
           offset: 0,
           sorts: this.sorts()
@@ -901,7 +897,7 @@ export class DatatableComponent<TRow extends Row = any>
     if (!isNaN(this.controller.offset())) {
       this.page.emit({
         count: this.count(),
-        pageSize: this.pageSize(),
+        pageSize: this.controller.pageSize(),
         limit: this.limit(),
         offset: this.controller.offset(),
         sorts: this.sorts()
@@ -926,7 +922,7 @@ export class DatatableComponent<TRow extends Row = any>
 
     this.page.emit({
       count: this.count(),
-      pageSize: this.pageSize(),
+      pageSize: this.controller.pageSize(),
       limit: this.limit(),
       offset: this.controller.offset(),
       sorts: this.sorts()
@@ -939,20 +935,10 @@ export class DatatableComponent<TRow extends Row = any>
 
   /**
    * Recalculates the sizes of the page
+   * @deprecated This method has no effect. Use {@link pageSize} to retrieve the calculated page size.
    */
   calcPageSize(): number {
-    if (this.scrollbarV() && this.virtualization()) {
-      return this.viewportRowCount();
-    }
-
-    // if limit is passed, we are paging
-    const limit = this.limit();
-    if (limit !== undefined) {
-      return limit;
-    }
-
-    // otherwise use row length
-    return this._internalRows().length;
+    return this.controller.pageSize();
   }
 
   /**
@@ -1067,7 +1053,7 @@ export class DatatableComponent<TRow extends Row = any>
     // Emit the page object with updated offset value
     this.page.emit({
       count: this.count(),
-      pageSize: this.pageSize(),
+      pageSize: this.controller.pageSize(),
       limit: this.limit(),
       offset: this.controller.offset(),
       sorts: this.sorts()

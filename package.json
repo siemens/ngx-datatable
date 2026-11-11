@@ -94,7 +94,7 @@
     "prettier": "3.9.10",
     "sass": "1.107.1",
     "semantic-release": "25.0.9",
-    "stylelint": "17.16.0",
+    "stylelint": "18.0.0",
     "stylelint-scss": "7.4.0",
     "ts-node": "10.9.2",
     "typescript": "6.0.3",

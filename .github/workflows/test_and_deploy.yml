@@ -96,7 +96,7 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     needs: build
-    container: mcr.microsoft.com/playwright:v1.64.1-jammy@sha256:7e9f074b4b69f7c746865936ac7840733cf5dfc957f265a547f331e7b83922d7
+    container: mcr.microsoft.com/playwright:v1.65.0-jammy@sha256:3abe8253579c7df4f9c4bc1fca6a5ef365120f8e4de818a02a034a54a46564cf
     steps:
       # We cannot use built-in LFS functionality due to the missing support of custom LFS endpoints.
       # See: https://github.com/actions/checkout/issues/365

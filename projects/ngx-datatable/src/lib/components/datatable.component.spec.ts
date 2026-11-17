@@ -62,6 +62,22 @@ describe('DatatableComponent', () => {
     component = fixture.componentInstance;
   });
 
+  it('keeps deprecated page-size accessors in sync with the controller', async () => {
+    component.rows.set(Array.from({ length: 12 }, (_, id) => ({ id })));
+    component.limit.set(5);
+    await fixture.whenStable();
+    const datatable: DatatableComponent = fixture.debugElement.query(
+      By.directive(DatatableComponent)
+    ).componentInstance;
+
+    expect(datatable.pageSize()).toBe(5);
+    expect(datatable.calcPageSize()).toBe(5);
+    component.limit.set(10);
+    await fixture.whenStable();
+    expect(datatable.pageSize()).toBe(10);
+    expect(datatable.calcPageSize()).toBe(10);
+  });
+
   it('should use the natural header height by default', async () => {
     component.columns.set([{ prop: 'name' }]);
     await fixture.whenStable();

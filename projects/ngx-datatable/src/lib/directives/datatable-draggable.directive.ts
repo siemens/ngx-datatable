@@ -45,6 +45,7 @@ export class DatatableDraggableDirective implements OnDestroy {
 
   private timeoutId?: number;
   private pointerId?: number;
+  private suppressClick = false;
   private readonly startX = signal<number | undefined>(undefined);
   private readonly startY = signal<number | undefined>(undefined);
   private currentX?: number;
@@ -60,9 +61,11 @@ export class DatatableDraggableDirective implements OnDestroy {
       if (this.enabled()) {
         this.element.addEventListener('pointerdown', this.pointerdown);
         this.element.addEventListener('contextmenu', this.contextmenu);
+        this.element.addEventListener('click', this.click, true);
         this.removeEventListeners = () => {
           this.element.removeEventListener('pointerdown', this.pointerdown);
           this.element.removeEventListener('contextmenu', this.contextmenu);
+          this.element.removeEventListener('click', this.click, true);
         };
       } else {
         this.removeEventListeners?.();
@@ -82,6 +85,7 @@ export class DatatableDraggableDirective implements OnDestroy {
       return;
     }
     event.stopPropagation();
+    this.suppressClick = false;
     this.delay(this.dragStartDelay()).then(() => {
       if (this.pointerId !== event.pointerId) {
         return;
@@ -114,6 +118,16 @@ export class DatatableDraggableDirective implements OnDestroy {
     }
   };
 
+  private click = (event: MouseEvent): void => {
+    // Pointer capture can produce a click on the drag target after pointerup.
+    // Suppress that click, but preserve keyboard activation and subsequent clicks.
+    if (this.suppressClick && event.detail > 0) {
+      this.suppressClick = false;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+  };
+
   private starting(clientX: number, clientY: number): void {
     this.startX.set(clientX);
     this.startY.set(clientY);
@@ -134,6 +148,7 @@ export class DatatableDraggableDirective implements OnDestroy {
     }
 
     const dragged = this.isDragging();
+    this.suppressClick = dragged;
     const dragEvent = dragged ? this.dragEvent() : undefined;
     this.stopDragging();
     // This function is also called if the long press was aborted before the delay.

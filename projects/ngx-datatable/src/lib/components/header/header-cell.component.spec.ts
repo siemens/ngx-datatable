@@ -108,14 +108,31 @@ describe('DataTableHeaderCellComponent', () => {
   it('should toggle sort direction on sort button click', async () => {
     await harness.applySort();
     expect(await harness.getSortDirection()).toBe('asc');
+    expect(fixture.nativeElement.getAttribute('aria-sort')).toBe('ascending');
     await harness.applySort();
     expect(await harness.getSortDirection()).toBe('desc');
+    expect(fixture.nativeElement.getAttribute('aria-sort')).toBe('descending');
   });
 
   it('should sort on enter key press', async () => {
     vi.spyOn(component.sort, 'emit');
-    await harness.applySort(true);
+    const sortButton = fixture.nativeElement.querySelector('.datatable-header-sort-button');
+    sortButton.focus();
+    await userEvent.keyboard('{Enter}');
     expect(component.sort.emit).toHaveBeenCalled();
+  });
+
+  it('should not add a tab stop for a non-sortable header', async () => {
+    fixture.componentRef.setInput('column', {
+      name: 'test',
+      sortable: false,
+      width: signal(0)
+    });
+    await fixture.whenStable();
+
+    expect(fixture.nativeElement.getAttribute('tabindex')).toBeNull();
+    expect(fixture.nativeElement.getAttribute('aria-sort')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.datatable-header-sort-button')).toBeNull();
   });
 });
 
@@ -146,7 +163,7 @@ class TestHeaderCellComponent implements AfterViewInit {
   sort(event: InnerSortEvent) {}
 
   ngAfterViewInit() {
-    this.column.set({ ...this.column(), headerTemplate: this.headerCellTemplate() });
+    this.column.set({ ...this.column(), headerCellTemplate: this.headerCellTemplate() });
   }
 }
 
@@ -175,6 +192,62 @@ describe('DataTableHeaderCellComponent with template', () => {
       prevValue: undefined,
       newValue: 'asc'
     });
+  });
+});
+
+@Component({
+  imports: [DataTableHeaderCellComponent],
+  template: `
+    <datatable-header-cell sortType="single" [column]="column()" (sort)="sort($event)" />
+    <ng-template #headerLabelTemplate let-column="column">
+      <strong class="custom-label">{{ column.name }}</strong>
+    </ng-template>
+    <ng-template #headerActionsTemplate>
+      <button class="custom-action" type="button" (click)="action()">Filter</button>
+    </ng-template>
+  `
+})
+class TestHeaderSlotsComponent implements AfterViewInit {
+  readonly column = signal<TableColumnInternal<any>>(
+    toInternalColumn([{ name: 'test', sortable: true }])[0]
+  );
+  readonly headerLabelTemplate = viewChild('headerLabelTemplate', { read: TemplateRef<any> });
+  readonly headerActionsTemplate = viewChild('headerActionsTemplate', {
+    read: TemplateRef<any>
+  });
+
+  sort(event: InnerSortEvent) {}
+
+  action() {}
+
+  ngAfterViewInit(): void {
+    this.column.set({
+      ...this.column(),
+      headerLabelTemplate: this.headerLabelTemplate(),
+      headerActionsTemplate: this.headerActionsTemplate()
+    });
+  }
+}
+
+describe('DataTableHeaderCellComponent with label and actions templates', () => {
+  let fixture: ComponentFixture<TestHeaderSlotsComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideDatatableConfigurationMock()]
+    });
+    fixture = TestBed.createComponent(TestHeaderSlotsComponent);
+  });
+
+  it('should not sort when a header action is activated', async () => {
+    await fixture.whenStable();
+    const sortSpy = vi.spyOn(fixture.componentInstance, 'sort');
+    const actionSpy = vi.spyOn(fixture.componentInstance, 'action');
+
+    await userEvent.click(fixture.nativeElement.querySelector('.custom-action'));
+
+    expect(actionSpy).toHaveBeenCalled();
+    expect(sortSpy).not.toHaveBeenCalled();
   });
 });
 
@@ -218,9 +291,8 @@ describe('DataTableHeaderCellComponent - custom sort icons', () => {
   });
 
   it('should apply custom sortAscendingIcon class when toggling to ascending sort', async () => {
-    const label = fixture.nativeElement.querySelector('.datatable-header-cell-label');
-    // eslint-disable-next-line @angular-eslint/no-experimental
-    await userEvent.click(label);
+    const sortButton = fixture.nativeElement.querySelector('.datatable-header-sort-button');
+    await userEvent.click(sortButton);
     await fixture.whenStable();
 
     const sortBtn = fixture.nativeElement.querySelector('.sort-btn');
@@ -233,12 +305,10 @@ describe('DataTableHeaderCellComponent - custom sort icons', () => {
   });
 
   it('should apply custom sortDescendingIcon class when toggling to descending sort', async () => {
-    const label = fixture.nativeElement.querySelector('.datatable-header-cell-label');
-    // eslint-disable-next-line @angular-eslint/no-experimental
+    const label = fixture.nativeElement.querySelector('.datatable-header-sort-button');
     await userEvent.click(label);
     await fixture.whenStable();
 
-    // eslint-disable-next-line @angular-eslint/no-experimental
     await userEvent.click(label);
     await fixture.whenStable();
 

@@ -24,6 +24,7 @@ nav = [
     { "Features" = [
         "features/index.md",
         { "Pagination and Scrolling" = "features/pagination-and-scrolling.md" },
+        { "Header Customization" = "features/header-customization.md" },
         { "Configuration" = "features/configuration.md" },
     ] },
     { "API" = [

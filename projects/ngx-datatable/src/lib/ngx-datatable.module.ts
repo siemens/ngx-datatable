@@ -9,7 +9,11 @@ import {
 import { DatatableSummaryRowDirective } from './components/body/summary/summary-row.directive';
 import { DataTableColumnCellDirective } from './components/columns/column-cell.directive';
 import { DataTableColumnGhostCellDirective } from './components/columns/column-ghost-cell.directive';
-import { DataTableColumnHeaderDirective } from './components/columns/column-header.directive';
+import {
+  DataTableColumnHeaderActionsDirective,
+  DataTableColumnHeaderCellDirective,
+  DataTableColumnHeaderLabelDirective
+} from './components/columns/column-header.directive';
 import { DataTableColumnDirective } from './components/columns/column.directive';
 import { DataTableColumnCellTreeToggle } from './components/columns/tree.directive';
 import { DatatableComponent } from './components/datatable.component';
@@ -29,7 +33,9 @@ import { NgxDatatableConfig, providedNgxDatatableConfig } from './ngx-datatable.
     DatatableRowDetailDirective,
     DatatableGroupHeaderDirective,
     DatatableRowDetailTemplateDirective,
-    DataTableColumnHeaderDirective,
+    DataTableColumnHeaderCellDirective,
+    DataTableColumnHeaderLabelDirective,
+    DataTableColumnHeaderActionsDirective,
     DataTableColumnCellDirective,
     DataTableColumnGhostCellDirective,
     DataTableColumnCellTreeToggle,
@@ -47,7 +53,9 @@ import { NgxDatatableConfig, providedNgxDatatableConfig } from './ngx-datatable.
     DatatableGroupHeaderDirective,
     DatatableRowDetailTemplateDirective,
     DataTableColumnDirective,
-    DataTableColumnHeaderDirective,
+    DataTableColumnHeaderCellDirective,
+    DataTableColumnHeaderLabelDirective,
+    DataTableColumnHeaderActionsDirective,
     DataTableColumnCellDirective,
     DataTableColumnGhostCellDirective,
     DataTableColumnCellTreeToggle,

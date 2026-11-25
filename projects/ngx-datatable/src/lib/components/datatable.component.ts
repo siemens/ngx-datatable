@@ -31,7 +31,6 @@ import {
   NgxDatatableCssClasses,
   NgxDatatableMessages
 } from '../ngx-datatable.config';
-import { ScrollbarHelper } from '../services/scrollbar-helper.service';
 import {
   ColumnResizeEventInternal,
   ReorderEventInternal,
@@ -122,7 +121,6 @@ import { DatatableRowDetailDirective } from './row-detail/row-detail.directive';
 export class DatatableComponent<TRow extends Row = any>
   implements DoCheck, AfterViewInit, OnDestroy
 {
-  private scrollbarHelper = inject(ScrollbarHelper);
   private cd = inject(ChangeDetectorRef);
   element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   rowDiffer: IterableDiffer<TRow | undefined> = inject(IterableDiffers).find([]).create();
@@ -569,6 +567,10 @@ export class DatatableComponent<TRow extends Row = any>
    */
   private readonly _scrollContainer = viewChild.required(ScrollContainerDirective);
 
+  private readonly _scrollContainerElement = viewChild.required(ScrollContainerDirective, {
+    read: ElementRef<HTMLElement>
+  });
+
   /** @internal */
   readonly _rowDefTemplate = contentChild(DatatableRowDefDirective, {
     read: TemplateRef
@@ -716,7 +718,6 @@ export class DatatableComponent<TRow extends Row = any>
    * so we need to get if from here until we have a state service.
    */
   readonly _footerComponent = viewChild(DataTableFooterComponent);
-  protected verticalScrollVisible = false;
 
   /** Re-measures the table width and body viewport height whenever either changes. */
   private resizeObserver?: ResizeObserver;
@@ -729,6 +730,8 @@ export class DatatableComponent<TRow extends Row = any>
     effect(() => this.recalculateColumns());
 
     afterNextRender(() => {
+      const scrollContainer = this._scrollContainerElement().nativeElement;
+
       this.resizeObserver = new ResizeObserver(entries => {
         const bodyElement = this._bodyElement().nativeElement;
 
@@ -737,10 +740,13 @@ export class DatatableComponent<TRow extends Row = any>
           if (!borderBox) {
             continue;
           }
-          if (entry.target === this.element) {
+          if (entry.target === scrollContainer) {
+            // The content box excludes the vertical scrollbar, so the columns are
+            // recalculated whenever the scrollbar appears or disappears.
+            const contentBox = entry.contentBoxSize[0];
             clearTimeout(this.widthResizeDebounce);
             this.widthResizeDebounce = setTimeout(() => {
-              this.tableWidth.set(borderBox.inlineSize);
+              this.tableWidth.set(contentBox.inlineSize);
             }, 5);
           } else if (entry.target === bodyElement) {
             clearTimeout(this.heightResizeDebounce);
@@ -750,9 +756,9 @@ export class DatatableComponent<TRow extends Row = any>
           }
         }
       });
-      this.resizeObserver.observe(this.element);
+      this.resizeObserver.observe(scrollContainer);
       this.resizeObserver.observe(this._bodyElement().nativeElement);
-      this.tableWidth.set(this.element.getBoundingClientRect().width);
+      this.tableWidth.set(scrollContainer.clientWidth);
       this.bodyHeight.set(this._bodyElement().nativeElement.getBoundingClientRect().height);
     });
   }
@@ -838,7 +844,7 @@ export class DatatableComponent<TRow extends Row = any>
 
   /**
    * @deprecated No-op. Dimensions are kept current by a `ResizeObserver` on the
-   * host element; this will be removed in a future release.
+   * scroll container and body; this will be removed in a future release.
    */
   recalculate(): void {}
 
@@ -856,15 +862,11 @@ export class DatatableComponent<TRow extends Row = any>
     forceIdx = -1,
     allowBleed: boolean = this.scrollbarH()
   ): TableColumnInternal[] {
-    let width = this.tableWidth();
+    const width = this.tableWidth();
     const columns = this._internalColumns();
     const strategy = this.columnStrategy();
     if (!width) {
       return [];
-    }
-    this.verticalScrollVisible = this._scrollContainer().verticalScrollVisible;
-    if (this.scrollbarV() || this.scrollbarVDynamic()) {
-      width = width - (this.verticalScrollVisible ? this.scrollbarHelper.width : 0);
     }
 
     strategy.recalculate({
@@ -873,7 +875,7 @@ export class DatatableComponent<TRow extends Row = any>
       forceIdx,
       allowBleed,
       defaultColumnWidth: this._defaultColumnWidth,
-      verticalScrollWidth: this.scrollbarHelper.width
+      verticalScrollWidth: this._scrollContainer().verticalScrollWidth
     });
 
     return columns;
@@ -881,7 +883,7 @@ export class DatatableComponent<TRow extends Row = any>
 
   /**
    * @deprecated No-op. Dimensions are kept current by a `ResizeObserver` on the
-   * host element; this will be removed in a future release.
+   * scroll container and body; this will be removed in a future release.
    */
   recalculateDims(): void {}
 

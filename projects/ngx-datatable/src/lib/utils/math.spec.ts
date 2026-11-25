@@ -39,6 +39,32 @@ describe('Math function', () => {
         expect(columns[2].width()).toBe(320);
       });
     });
+
+    describe('when columns are clamped', () => {
+      it('should redistribute a negative remaining width to the unclamped columns', () => {
+        const columns = toInternalColumn([
+          { prop: 'id', width: 100, minWidth: 95, canAutoResize: true },
+          { prop: 'name', width: 100, canAutoResize: true },
+          { prop: 'email', width: 100, canAutoResize: true }
+        ]);
+
+        forceFillColumnWidths(columns, 270, -1, false);
+
+        expect(columns.map(c => c.width())).toEqual([95, 87.5, 87.5]);
+      });
+
+      it('should redistribute until no column is clamped anymore', () => {
+        const columns = toInternalColumn([
+          { prop: 'id', width: 100, maxWidth: 110, canAutoResize: true },
+          { prop: 'name', width: 100, maxWidth: 130, canAutoResize: true },
+          { prop: 'email', width: 100, canAutoResize: true }
+        ]);
+
+        forceFillColumnWidths(columns, 390, -1, false); // Clamps 'id', then 'name'
+
+        expect(columns.map(c => c.width())).toEqual([110, 130, 150]);
+      });
+    });
   });
 
   describe('adjustColumnWidths', () => {

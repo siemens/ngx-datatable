@@ -100,7 +100,6 @@ export class DataTableHeaderComponent {
   readonly allRowsSelected = input<boolean>();
   readonly selectionType = input<SelectionType>();
   readonly reorderable = input<boolean>();
-  readonly verticalScrollVisible = input(false);
 
   readonly columns = input.required<TableColumnInternal[]>();
 

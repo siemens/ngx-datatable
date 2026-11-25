@@ -19,9 +19,9 @@ export class ScrollContainerDirective {
     return this.element.scrollTop;
   }
 
-  /** Whether the container's content overflows it vertically. */
-  get verticalScrollVisible(): boolean {
-    return this.element.scrollHeight > this.element.clientHeight;
+  /** Width of the vertical scrollbar, or `0` when none is visible. */
+  get verticalScrollWidth(): number {
+    return this.element.offsetWidth - this.element.clientWidth;
   }
 
   setScrollTop(value: number): void {

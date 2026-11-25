@@ -5,7 +5,6 @@ import { By } from '@angular/platform-browser';
 import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
 import { provideDatatableControllerMock } from '../../../testing/datatable-controller.mock';
 import { ScrollContainerDirective } from '../../directives/scroll-container.directive';
-import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 import { toInternalColumn } from '../../utils/column-helper';
 import { DATATABLE_COMPONENT_TOKEN } from '../../utils/table-token';
 import { DataTableBodyRowComponent } from './body-row.component';
@@ -20,7 +19,6 @@ import { ScrollerComponent } from './scroller.component';
  */
 const scrollContainerStub: Partial<ScrollContainerDirective> = {
   scrollTop: 0,
-  verticalScrollVisible: false,
   setScrollTop: () => {},
   scrollTo: () => {},
   listenToScroll: () => () => {}
@@ -38,7 +36,6 @@ describe('DataTableBodyComponent', () => {
     offset = signal(0);
     TestBed.configureTestingModule({
       providers: [
-        ScrollbarHelper,
         { provide: DATATABLE_COMPONENT_TOKEN, useValue: {} },
         provideDatatableConfigurationMock({ rowHeight }),
         provideDatatableControllerMock({ offset, rowCount: signal(100), pageSize: signal(10) }),

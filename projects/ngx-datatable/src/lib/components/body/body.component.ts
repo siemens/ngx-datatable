@@ -305,7 +305,6 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
   readonly columns = input.required<TableColumnInternal[]>();
 
   readonly bodyHeight = input<string | number>();
-  readonly verticalScrollVisible = input(false);
 
   readonly scroll = output<ScrollEvent>();
   readonly page = output<number>();

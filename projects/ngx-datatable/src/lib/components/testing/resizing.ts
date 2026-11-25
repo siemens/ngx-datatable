@@ -1,6 +1,6 @@
 import { inputBinding, outputBinding, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { expect, vi } from 'vitest';
+import { expect, onTestFinished, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 
 import { ColumnMode, ColumnResizeEvent } from '../../types/public.types';
@@ -24,6 +24,7 @@ export class ResizingTable {
   readonly grid = page.getByRole('table');
   readonly fixture: ComponentFixture<DatatableComponent>;
   readonly host: HTMLElement;
+  private scrollbarStyle?: HTMLStyleElement;
 
   private constructor(mode: ColumnMode, initialColumns: TableColumn[], options: ResizeOptions) {
     this.columns.set(initialColumns.map(column => ({ name: String(column.prop), ...column })));
@@ -99,8 +100,29 @@ export class ResizingTable {
 
   async setWidth(width: number) {
     this.host.style.width = `${width}px`;
-    await expect.poll(() => this.fixture.componentInstance.tableWidth()).toBe(width);
+    await expect
+      .poll(() => this.fixture.componentInstance.tableWidth())
+      .toBe(width - this.verticalScrollWidth());
     await this.fixture.whenStable();
+  }
+
+  /**
+   * Shows or hides a classic 15px vertical scrollbar. Headless Chromium hides
+   * scrollbars, so the space is reserved with a stable scrollbar gutter.
+   */
+  toggleVerticalScrollbar(visible: boolean) {
+    if (!this.scrollbarStyle) {
+      this.scrollbarStyle = document.createElement('style');
+      this.scrollbarStyle.textContent = '.datatable-grid::-webkit-scrollbar { width: 15px; }';
+      document.head.append(this.scrollbarStyle);
+      onTestFinished(() => this.scrollbarStyle?.remove());
+    }
+    (this.grid.element() as HTMLElement).style.scrollbarGutter = visible ? 'stable' : '';
+  }
+
+  private verticalScrollWidth() {
+    const grid = this.grid.element() as HTMLElement;
+    return grid.offsetWidth - grid.clientWidth;
   }
 
   async drag(prop: string, delta: number) {

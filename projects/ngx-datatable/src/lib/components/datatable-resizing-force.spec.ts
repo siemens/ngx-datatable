@@ -1,6 +1,3 @@
-import { TestBed } from '@angular/core/testing';
-
-import { ScrollbarHelper } from '../services/scrollbar-helper.service';
 import { equalColumns, resizeRows, ResizingTable } from './testing/resizing';
 
 describe('Datatable resizing: force strategy', () => {
@@ -43,10 +40,8 @@ describe('Datatable resizing: force strategy', () => {
     await table.widths({ A: 80, B: 100, C: 105, D: 115 });
     await table.drag('A', 100);
     await table.widths({ A: 160, B: 100, C: 90 });
-    // BUG: after C reaches its minimum, the remaining deficit is not fully
-    // redistributed. Skip D === 50 and total width === 400 until this is fixed.
-    // await table.widths({ A: 160, B: 100, C: 90, D: 50 });
-    // expect(table.grid.element().scrollWidth).toBe(400);
+    await table.widths({ A: 160, B: 100, C: 90, D: 50 });
+    expect(table.grid.element().scrollWidth).toBe(400);
   });
 
   it('handles exhausted capacity, minimum-width overflow and maximum-width unused space', async () => {
@@ -109,34 +104,28 @@ describe('Datatable resizing: force strategy', () => {
   });
 
   it('deducts a nonzero vertical scrollbar width without bleeding into horizontal overflow', async () => {
-    // Headless Chromium can use overlay scrollbars. Control the measurement,
-    // not the ResizeObserver or layout, to exercise this branch on all platforms.
-    TestBed.configureTestingModule({
-      providers: [{ provide: ScrollbarHelper, useValue: { width: 15 } }]
-    });
     const table = await ResizingTable.create('force', equalColumns(), {
       scrollbarH: true,
       scrollbarV: true
     });
     table.rows.set(resizeRows(30));
+    table.toggleVerticalScrollbar(true);
     await expect
       .poll(() => table.grid.element().scrollHeight > table.grid.element().clientHeight)
       .toBe(true);
-    // BUG: scrollbar visibility alone does not trigger redistribution. Skip
-    // A/B/C/D === 96.25 immediately after adding rows, without a width change.
-    // await table.widths({ A: 96.25, B: 96.25, C: 96.25, D: 96.25 });
+    await table.widths({ A: 96.25, B: 96.25, C: 96.25, D: 96.25 });
     await table.setWidth(420);
     await table.widths({ A: 101.25, B: 101.25, C: 101.25, D: 101.25 });
     await table.setWidth(405);
     await table.widths({ A: 97.5, B: 97.5, C: 97.5, D: 97.5 });
     table.rows.set(resizeRows(2));
+    table.toggleVerticalScrollbar(false);
     await expect
       .poll(() => table.grid.element().scrollHeight > table.grid.element().clientHeight)
       .toBe(false);
-    // BUG: removing the vertical scrollbar alone does not trigger redistribution.
-    // await table.widths({ A: 101.25, B: 101.25, C: 101.25, D: 101.25 });
-    await table.setWidth(400);
-    await table.widths({ A: 100, B: 100, C: 100, D: 100 });
+    await table.widths({ A: 101.25, B: 101.25, C: 101.25, D: 101.25 });
+    await table.setWidth(420);
+    await table.widths({ A: 105, B: 105, C: 105, D: 105 });
   });
 
   it('keeps pinned groups aligned and redistributes following columns in rendered order', async () => {

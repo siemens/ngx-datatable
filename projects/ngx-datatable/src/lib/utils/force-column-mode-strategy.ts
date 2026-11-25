@@ -34,16 +34,18 @@ export class ForceColumnModeStrategy implements ColumnModeStrategy {
     let contentWidth = this.getContentWidth(columns, defaultColumnWidth);
     let remainingWidth = width - contentWidth;
     const initialRemainingWidth = remainingWidth;
-    const columnsProcessed: TableColumnInternal[] = [];
-    const remainingWidthLimit = 1; // Stop when less than one pixel remains.
+    let bleed: boolean;
+    let columnsProcessed: TableColumnInternal[];
 
     do {
       additionWidthPerColumn = remainingWidth / columnsToResize.length;
       exceedsWindow = contentWidth >= width;
+      // Do not bleed when the initial difference equals the vertical scrollbar width.
+      bleed = exceedsWindow && allowBleed && initialRemainingWidth !== -1 * verticalScrollWidth;
+      columnsProcessed = [];
 
       for (const column of columnsToResize) {
-        // Do not bleed when the initial difference equals the vertical scrollbar width.
-        if (exceedsWindow && allowBleed && initialRemainingWidth !== -1 * verticalScrollWidth) {
+        if (bleed) {
           column.width.update(value => value || defaultColumnWidth);
         } else {
           const newSize = (column.width() || defaultColumnWidth) + additionWidthPerColumn;
@@ -65,7 +67,8 @@ export class ForceColumnModeStrategy implements ColumnModeStrategy {
       contentWidth = this.getContentWidth(columns, defaultColumnWidth);
       remainingWidth = width - contentWidth;
       this.removeProcessedColumns(columnsToResize, columnsProcessed);
-    } while (remainingWidth > remainingWidthLimit && columnsToResize.length !== 0);
+      // Columns clamped to their min or max width leave a delta for the remaining ones.
+    } while (!bleed && columnsProcessed.length !== 0 && columnsToResize.length !== 0);
   }
 
   private removeProcessedColumns(

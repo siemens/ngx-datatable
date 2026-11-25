@@ -1,6 +1,3 @@
-import { TestBed } from '@angular/core/testing';
-
-import { ScrollbarHelper } from '../services/scrollbar-helper.service';
 import { resizeRows, ResizingTable } from './testing/resizing';
 
 const weightedColumns = () => [
@@ -161,9 +158,6 @@ describe('Datatable resizing: flex strategy', () => {
   });
 
   it('keeps manually resized pinned columns fixed across scrollbar transitions', async () => {
-    TestBed.configureTestingModule({
-      providers: [{ provide: ScrollbarHelper, useValue: { width: 15 } }]
-    });
     const table = await ResizingTable.create(
       'flex',
       [
@@ -177,6 +171,7 @@ describe('Datatable resizing: flex strategy', () => {
     await table.drag('A', 40);
     const pinnedWidth = table.header('A').element().getBoundingClientRect().width;
     table.rows.set(resizeRows(30));
+    table.toggleVerticalScrollbar(true);
     await expect
       .poll(() => table.grid.element().scrollHeight > table.grid.element().clientHeight)
       .toBe(true);
@@ -189,11 +184,11 @@ describe('Datatable resizing: flex strategy', () => {
       D: remaining / 5
     });
     table.rows.set(resizeRows(2));
+    table.toggleVerticalScrollbar(false);
     await expect
       .poll(() => table.grid.element().scrollHeight > table.grid.element().clientHeight)
       .toBe(false);
-    // BUG: scrollbar visibility alone does not trigger redistribution.
-    // await table.widths({ A: 140, B: 224, C: 224, D: 112 });
+    await table.widths({ A: 140, B: 224, C: 224, D: 112 });
     await table.setWidth(720);
     await table.widths({
       A: pinnedWidth,

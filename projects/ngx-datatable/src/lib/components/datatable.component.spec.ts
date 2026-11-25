@@ -668,6 +668,7 @@ describe('DatatableComponent With Ghost Loading', () => {
     imports: [DatatableComponent],
     template: `
       <ngx-datatable
+        style="block-size: 100%"
         columnMode="force"
         [rows]="rows()"
         [columns]="columns()"
@@ -703,17 +704,25 @@ describe('DatatableComponent With Ghost Loading', () => {
     datatable = fixture.debugElement.query(By.directive(DatatableComponent)).componentInstance;
   });
 
-  it('should push enough undefined rows to fill pageSize when ghost loading with no data', async () => {
+  /** Waits for the body to be measured and returns the number of rows fitting into it completely. */
+  const fullyVisibleRowCount = async () => {
+    await expect.poll(() => datatable.bodyHeight()).toBeGreaterThan(0);
+    await fixture.whenStable();
+    return Math.floor(datatable.bodyHeight() / component.rowHeight());
+  };
+
+  it('should push enough undefined rows to fill the body when ghost loading with no data', async () => {
     component.ghostLoadingIndicator.set(true);
     component.scrollbarV.set(true);
     component.rows.set([]);
-    await fixture.whenStable();
+    const rowCount = await fullyVisibleRowCount();
 
     const internalRows = datatable._internalRows();
-    const pageSize = datatable.pageSize();
     const undefinedCount = internalRows.filter(r => r === undefined).length;
+    const grid = fixture.nativeElement.querySelector('.datatable-grid') as HTMLElement;
 
-    expect(undefinedCount).toBe(Math.max(pageSize, 1));
+    expect(undefinedCount).toBe(rowCount);
+    expect(grid.scrollHeight).toBe(grid.clientHeight);
   });
 
   it('should push only one undefined row when data already fills the viewport', async () => {
@@ -734,9 +743,8 @@ describe('DatatableComponent With Ghost Loading', () => {
   it('should push enough undefined rows to fill remaining viewport when partial data is loaded', async () => {
     component.ghostLoadingIndicator.set(true);
     component.scrollbarV.set(true);
-    await fixture.whenStable();
+    const rowCount = await fullyVisibleRowCount();
 
-    const pageSize = datatable.pageSize();
     const partialRows = Array.from({ length: 3 }, (_, i) => ({ name: `Row ${i}` }));
     component.rows.set(partialRows);
     await fixture.whenStable();
@@ -744,7 +752,7 @@ describe('DatatableComponent With Ghost Loading', () => {
     const internalRows = datatable._internalRows();
     const undefinedCount = internalRows.filter(r => r === undefined).length;
 
-    expect(undefinedCount).toBe(Math.max(pageSize - partialRows.length, 1));
+    expect(undefinedCount).toBe(rowCount - partialRows.length);
     expect(internalRows.length).toBe(partialRows.length + undefinedCount);
   });
 

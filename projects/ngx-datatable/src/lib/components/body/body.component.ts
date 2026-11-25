@@ -669,7 +669,10 @@ export class DataTableBodyComponent<TRow extends Row = any> implements OnInit, O
         // that shows up inside the view port the last.
         const height = parseInt(this._bodyHeight(), 10);
         first = this.rowHeightsCache().getRowIndex(this.offsetY());
-        last = this.rowHeightsCache().getRowIndex(height + this.offsetY()) + 1;
+        last = Math.min(
+          this.rowHeightsCache().getRowIndex(height + this.offsetY()) + 1,
+          this.rowCount()
+        );
       }
     } else {
       // The server is handling paging and will pass an array that begins with the

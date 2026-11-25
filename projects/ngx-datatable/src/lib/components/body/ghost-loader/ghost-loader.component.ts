@@ -13,7 +13,7 @@ export class DataTableGhostLoaderComponent {
   readonly columns = input.required<TableColumnInternal[]>();
   readonly pageSize = input.required<number, unknown>({ transform: numberAttribute });
   readonly rowHeight = input.required<number | 'auto' | ((row?: any) => number)>();
-  readonly ghostBodyHeight = input<number, unknown>(undefined, { transform: numberAttribute });
+  readonly ghostBodyHeight = input<string>();
 
   protected readonly ghostRows = computed(() =>
     Array.from({ length: this.pageSize() }, (_, index) => index)

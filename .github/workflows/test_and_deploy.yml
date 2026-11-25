@@ -85,7 +85,7 @@ jobs:
           path: coverage/ngx-datatable-lib
 
       - name: Publish coverage results
-        uses: qltysh/qlty-action/coverage@0ff2178667bf8eb28ed0013a7ef54857a24d4056 # v2
+        uses: qltysh/qlty-action/coverage@56bee2d751c94b7bd8de22f64c9b5f398048e13f # v2
         env:
           QLTY_COVERAGE_TOKEN: ${{ secrets.QLTY_COVERAGE_TOKEN }}
         with:

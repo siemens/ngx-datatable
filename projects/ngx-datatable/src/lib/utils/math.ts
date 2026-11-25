@@ -128,17 +128,19 @@ export const forceFillColumnWidths = (
   let contentWidth = getContentWidth(allColumns, defaultColWidth);
   let remainingWidth = expectedWidth - contentWidth;
   const initialRemainingWidth = remainingWidth;
-  const columnsProcessed: any[] = [];
-  const remainingWidthLimit = 1; // when to stop
+  let bleed: boolean;
+  let columnsProcessed: TableColumnInternal[];
 
   // This loop takes care of the
   do {
     additionWidthPerColumn = remainingWidth / columnsToResize.length;
     exceedsWindow = contentWidth >= expectedWidth;
+    // don't bleed if the initialRemainingWidth is same as verticalScrollWidth
+    bleed = exceedsWindow && allowBleed && initialRemainingWidth !== -1 * verticalScrollWidth;
+    columnsProcessed = [];
 
     for (const column of columnsToResize) {
-      // don't bleed if the initialRemainingWidth is same as verticalScrollWidth
-      if (exceedsWindow && allowBleed && initialRemainingWidth !== -1 * verticalScrollWidth) {
+      if (bleed) {
         column.width.update(value => value || defaultColWidth);
       } else {
         const newSize = (column.width() || defaultColWidth) + additionWidthPerColumn;
@@ -160,7 +162,8 @@ export const forceFillColumnWidths = (
     contentWidth = getContentWidth(allColumns, defaultColWidth);
     remainingWidth = expectedWidth - contentWidth;
     removeProcessedColumns(columnsToResize, columnsProcessed);
-  } while (remainingWidth > remainingWidthLimit && columnsToResize.length !== 0);
+    // columns clamped to their min or max width leave a delta for the remaining ones
+  } while (!bleed && columnsProcessed.length !== 0 && columnsToResize.length !== 0);
 };
 
 /**

@@ -31,6 +31,11 @@
   flex: 1 1 0;
 }
 
+// `overflow-y: auto` would compute `overflow-x` to `auto` as well.
+:host(.scroll-vertical:not(.scroll-horz)) .datatable-grid {
+  overflow-x: hidden;
+}
+
 .datatable-empty-row {
   grid-column: 1 / -1;
 }

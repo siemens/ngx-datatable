@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { provideDatatableConfigurationMock } from '../../../testing/datatable-configuration.mock';
-import { ScrollbarHelper } from '../../services/scrollbar-helper.service';
 import { RowIndex } from '../../types/internal.types';
 import { columnsByPinArr, gridColumnTemplate } from '../../utils/column';
 import { toInternalColumn } from '../../utils/column-helper';
@@ -35,7 +34,7 @@ describe('DataTableBodyRowComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [ScrollbarHelper, provideDatatableConfigurationMock()]
+      providers: [provideDatatableConfigurationMock()]
     });
     fixture = TestBed.createComponent(TestHostComponent);
     component = fixture.componentInstance;

@@ -620,7 +620,9 @@ export class DatatableComponent<TRow extends Row = any>
     }
 
     if (this.ghostLoadingIndicator() && this.scrollbarV() && !this.externalPaging()) {
-      const ghostRowCount = Math.max(this.viewportRowCount() - rows.length, 1);
+      // Only fill the fully visible rows, so that the ghost rows never overflow the body.
+      const fullyVisibleRowCount = Math.floor(this.bodyHeight() / (this.rowHeight() as number));
+      const ghostRowCount = Math.max(fullyVisibleRowCount - rows.length, 1);
       for (let i = 0; i < ghostRowCount; i++) {
         rows.push(undefined);
       }

@@ -3,17 +3,16 @@ import { ComponentHarness } from '@angular/cdk/testing';
 export class HeaderCellHarness extends ComponentHarness {
   static readonly hostSelector = 'datatable-header-cell';
 
-  private cellLabel = this.locatorForOptional('.datatable-header-cell-label');
-  private cellWrapper = this.locatorFor('.datatable-header-cell-template-wrap');
+  private cellLabel = this.locatorForOptional('.datatable-header-label');
   private cellResizeHandle = this.locatorForOptional('.resize-handle');
   private cellCheckbox = this.locatorForOptional('.datatable-checkbox');
-  private sortBtn = this.locatorForOptional('.sort-btn');
+  private sortButton = this.locatorForOptional('.datatable-header-sort-button');
+  private sortIndicator = this.locatorForOptional('.sort-btn');
   private customSortButton = this.locatorForOptional('.custom-sort-button');
 
   async getHeaderCellText(): Promise<string> {
     const label = await this.cellLabel();
-    const wrapperText = await (await this.cellWrapper()).text();
-    return label?.text() ?? wrapperText;
+    return label?.text() ?? (await this.host()).text();
   }
 
   async hasResizeHandle(): Promise<boolean> {
@@ -48,22 +47,18 @@ export class HeaderCellHarness extends ComponentHarness {
     }
   }
 
-  async applySort(withKeyboard = false): Promise<void> {
-    const sortButton = await this.sortBtn();
-    if (sortButton && !withKeyboard) {
+  async applySort(): Promise<void> {
+    const sortButton = await this.sortButton();
+    if (sortButton) {
       await sortButton.click();
-    } else {
-      (await this.host()).dispatchEvent('keydown', {
-        key: 'Enter'
-      });
     }
   }
 
   async getSortDirection(): Promise<string | undefined> {
-    const sortButton = await this.sortBtn();
-    if (sortButton) {
-      const isAscending = await sortButton.hasClass('sort-asc');
-      const isDescending = await sortButton.hasClass('sort-desc');
+    const sortIndicator = await this.sortIndicator();
+    if (sortIndicator) {
+      const isAscending = await sortIndicator.hasClass('sort-asc');
+      const isDescending = await sortIndicator.hasClass('sort-desc');
       return isAscending ? 'asc' : isDescending ? 'desc' : undefined;
     }
     return undefined;

@@ -4,15 +4,14 @@ import {
   ElementRef,
   HostListener,
   inject,
-  OnDestroy,
   OnInit,
   TemplateRef,
   input,
   output,
   computed,
-  booleanAttribute
+  booleanAttribute,
+  signal
 } from '@angular/core';
-import { Subscription } from 'rxjs';
 
 import {
   DragEvent,
@@ -38,13 +37,19 @@ import { DatatableConfiguration } from '../datatable-configuration';
   selector: 'datatable-header-cell',
   imports: [NgTemplateOutlet, DatatableDraggableDirective],
   template: `
-    <div class="datatable-header-cell-template-wrap">
-      @if (isTarget()) {
-        <ng-template
-          [ngTemplateOutlet]="targetMarkerTemplate()!"
-          [ngTemplateOutletContext]="targetMarkerContext()"
-        />
-      }
+    @if (isTarget()) {
+      <ng-template
+        [ngTemplateOutlet]="targetMarkerTemplate()!"
+        [ngTemplateOutletContext]="targetMarkerContext()"
+      />
+    }
+    @let column = this.column();
+    @if (column.headerCellTemplate) {
+      <ng-template
+        [ngTemplateOutlet]="column.headerCellTemplate"
+        [ngTemplateOutletContext]="cellContext()"
+      />
+    } @else {
       @if (isCheckboxable()) {
         <label class="datatable-checkbox">
           <input
@@ -55,21 +60,61 @@ import { DatatableConfiguration } from '../datatable-configuration';
           />
         </label>
       }
-      @let column = this.column();
-      @if (column.headerTemplate) {
-        <ng-template
-          [ngTemplateOutlet]="column.headerTemplate"
-          [ngTemplateOutletContext]="cellContext()"
-        />
+      @if (column.sortable) {
+        <button
+          type="button"
+          class="datatable-header-label datatable-header-sort-button"
+          dragStartDelay="500"
+          [datatableDraggable]="isDraggable()"
+          [dragModel]="column"
+          (dragStart)="onDragStart($event)"
+          (dragMove)="onDragMove($event)"
+          (dragEnd)="onDragEnd($event)"
+          (click)="onSort()"
+        >
+          <span class="datatable-header-label-content">
+            @if (column.headerLabelTemplate) {
+              <ng-template
+                [ngTemplateOutlet]="column.headerLabelTemplate"
+                [ngTemplateOutletContext]="cellContext()"
+              />
+            } @else {
+              {{ name() }}
+            }
+          </span>
+          <span aria-hidden="true" [class]="sortClass()"></span>
+        </button>
       } @else {
-        <span class="datatable-header-cell-wrapper">
-          <span class="datatable-header-cell-label draggable" (click)="onSort()">
-            {{ name() }}
+        <span
+          class="datatable-header-label"
+          dragStartDelay="500"
+          [datatableDraggable]="isDraggable()"
+          [dragModel]="column"
+          (dragStart)="onDragStart($event)"
+          (dragMove)="onDragMove($event)"
+          (dragEnd)="onDragEnd($event)"
+        >
+          <span class="datatable-header-label-content">
+            @if (column.headerLabelTemplate) {
+              <ng-template
+                [ngTemplateOutlet]="column.headerLabelTemplate"
+                [ngTemplateOutletContext]="cellContext()"
+              />
+            } @else {
+              {{ name() }}
+            }
           </span>
         </span>
       }
-      <span aria-hidden="true" [class]="sortClass()" (click)="onSort()"> </span>
-    </div>
+      @if (column.headerActionsTemplate) {
+        <div class="datatable-header-actions">
+          <ng-template
+            [ngTemplateOutlet]="column.headerActionsTemplate"
+            [ngTemplateOutletContext]="cellContext()"
+          />
+        </div>
+      }
+    }
     @if (showResizeHandle()) {
       <span
         class="resize-handle"
@@ -85,21 +130,25 @@ import { DatatableConfiguration } from '../datatable-configuration';
     class: 'datatable-header-cell',
     '[attr.resizeable]': 'showResizeHandle()',
     '[attr.title]': 'name()',
-    '[attr.tabindex]': 'column().sortable ? 0 : -1',
     '[attr.aria-sort]': 'ariaSort()',
     '[class]': 'columnCssClasses()',
     '[class.sortable]': 'column().sortable',
     '[class.resizeable]': 'showResizeHandle()',
+    '[class.draggable]': 'isDraggable()',
+    '[class.dragging]': 'dragging()',
+    '[class.longpress]': 'dragging()',
     '[class.sort-active]': 'sortDir()',
     '[class.sort-asc]': 'sortDir() === "asc"',
     '[class.sort-desc]': 'sortDir() === "desc"'
   }
 })
-export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
+export class DataTableHeaderCellComponent implements OnInit {
   private element = inject(ElementRef).nativeElement;
   protected readonly configuration = inject(DatatableConfiguration).configuration;
 
   readonly sortType = input.required<SortType>();
+  readonly reorderable = input<boolean>();
+  protected readonly dragging = signal(false);
 
   readonly isTarget = input<boolean>();
   readonly showResizeHandle = input<boolean | undefined>(true);
@@ -119,6 +168,9 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
   }>();
   readonly resize = output<{ width: number; column: TableColumnInternal }>();
   readonly resizing = output<{ width: number; column: TableColumnInternal }>();
+  readonly dragStart = output<DragEvent>();
+  readonly dragMove = output<DragEvent>();
+  readonly dragEnd = output<DragEvent>();
 
   protected readonly columnCssClasses = computed(() => {
     const column = this.column();
@@ -133,10 +185,11 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
 
   protected readonly name = computed(() => {
     // guaranteed to have a value by setColumnDefaults() in column-helper.ts
-    return this.column().headerTemplate === undefined ? this.column().name : undefined;
+    return this.column().name;
   });
 
   protected readonly isCheckboxable = computed(() => this.column().headerCheckboxable);
+  protected readonly isDraggable = computed(() => this.reorderable() && this.column().draggable);
 
   protected readonly sortClass = computed<string | undefined>(() =>
     this.calcSortClass(this.sortDir())
@@ -170,7 +223,20 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
   });
 
   private initialWidth?: number;
-  private subscription?: Subscription;
+
+  protected onDragStart(event: DragEvent): void {
+    this.dragging.set(true);
+    this.dragStart.emit({ ...event, element: this.element });
+  }
+
+  protected onDragMove(event: DragEvent): void {
+    this.dragMove.emit({ ...event, element: this.element });
+  }
+
+  protected onDragEnd(event: DragEvent): void {
+    this.dragging.set(false);
+    this.dragEnd.emit({ ...event, element: this.element });
+  }
 
   @HostListener('contextmenu', ['$event'])
   onContextmenu($event: MouseEvent): void {
@@ -180,20 +246,11 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
     }
   }
 
-  @HostListener('keydown.enter')
-  enter(): void {
-    this.onSort();
-  }
-
   ngOnInit() {
     // If there is already a default sort then start the counter with 1.
     if (this.sortDir()) {
       this.totalSortStatesApplied = 1;
     }
-  }
-
-  ngOnDestroy() {
-    this.destroySubscription();
   }
 
   calcSortDir(sorts: SortPropDir[]): any {
@@ -256,12 +313,5 @@ export class DataTableHeaderCellComponent implements OnInit, OnDestroy {
       width: this.initialWidth! + (currentX - initialX),
       column: this.column()
     });
-  }
-
-  private destroySubscription(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-      this.subscription = undefined;
-    }
   }
 }

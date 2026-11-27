@@ -10,7 +10,7 @@ test.describe('row grouping', () => {
     await si.runVisualAndA11yTests('default');
 
     const groupCheckbox = page.locator('.datatable-group-cell .datatable-checkbox input').first();
-    groupCheckbox.check();
+    await groupCheckbox.check();
 
     await expect(page.getByText('4 selected')).toBeVisible();
 
@@ -22,10 +22,10 @@ test.describe('row grouping', () => {
 
     await expect(page.getByText('Ethel Price')).toBeVisible();
     const groupHeader = page.getByTitle('Expand/Collapse Group').first();
-    groupHeader.click();
+    await groupHeader.click();
     await expect(page.getByText('Ethel Price')).not.toBeVisible();
     await si.runVisualAndA11yTests('group-collapsed');
-    groupHeader.click();
+    await groupHeader.click();
     await expect(page.getByText('Ethel Price')).toBeVisible();
     await si.runVisualAndA11yTests('group-expanded');
   });

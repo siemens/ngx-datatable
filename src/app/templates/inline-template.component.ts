@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import {
   DataTableColumnCellDirective,
   DataTableColumnDirective,
-  DataTableColumnHeaderDirective,
+  DataTableColumnHeaderLabelDirective,
   DatatableComponent
 } from '@siemens/ngx-datatable';
 import { map } from 'rxjs';
@@ -15,7 +15,7 @@ import { DataService } from '../data.service';
   imports: [
     DatatableComponent,
     DataTableColumnDirective,
-    DataTableColumnHeaderDirective,
+    DataTableColumnHeaderLabelDirective,
     DataTableColumnCellDirective,
     AsyncPipe
   ],
@@ -29,7 +29,7 @@ import { DataService } from '../data.service';
       [footerHeight]="50"
     >
       <ngx-datatable-column name="Name">
-        <ng-template let-column="column" ngx-datatable-header-template>
+        <ng-template let-column="column" ngx-datatable-header-label>
           Holla! {{ column.name }}
         </ng-template>
         <ng-template let-value="value" ngx-datatable-cell-template>
@@ -37,8 +37,8 @@ import { DataService } from '../data.service';
         </ng-template>
       </ngx-datatable-column>
       <ngx-datatable-column name="Gender">
-        <ng-template let-column="column" let-sort="sortFn" ngx-datatable-header-template>
-          <span (click)="sort()">{{ column.name }}</span>
+        <ng-template let-column="column" ngx-datatable-header-label>
+          <span>{{ column.name }}</span>
         </ng-template>
         <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
           My name is: <i [innerHTML]="row['name']"></i> and <i>{{ value }}</i>

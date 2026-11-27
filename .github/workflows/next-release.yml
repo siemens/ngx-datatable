@@ -1,0 +1,39 @@
+name: Next Release
+on:
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  # This ensures that the next branch is up to date with main.
+  update-next:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: next # IMPORTANT! We ignore the actual branch. Enforcing the next branch for next releases.
+          fetch-depth: 0 # semantic-release needs this
+          token: ${{ secrets.ELEMENT_BOT_GITHUB_TOKEN }} # Otherwise, branch protection rules are not bypassed.
+      - name: update next branch
+        run: |
+          git merge origin/main --ff-only --quiet
+          git push origin next
+
+  trigger-release:
+    needs:
+      - update-next
+    runs-on: ubuntu-26.04
+    steps:
+      - name: Dispatch release workflow on updated next
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        with:
+          # We must use the rest actions.
+          # Otherwise, the workflow will not run on the updated ref.
+          github-token: ${{ secrets.ELEMENT_BOT_GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'release.yml',
+              ref: 'next'
+            });

@@ -30,6 +30,7 @@ jobs:
       - run: npm ci --prefer-offline --no-audit
       - run: npx semantic-release
         env:
+          SKIP_COMMIT: ${{ github.ref_name == 'next' && 'true' || '' }}
           GIT_AUTHOR_NAME: 'Siemens Element Bot'
           GIT_AUTHOR_EMAIL: 'simpl.si@siemens.com'
           GIT_COMMITTER_NAME: 'Siemens Element Bot'

@@ -75,17 +75,17 @@
     "@siemens/eslint-plugin-defaultvalue": "5.1.0",
     "@siemens/prettier-config": "5.1.0",
     "@siemens/stylelint-config-scss": "5.1.0",
-    "@types/node": "26.6.6",
+    "@types/node": "26.6.10",
     "@types/parsimmon": "1.10.9",
-    "@vitest/browser-playwright": "5.1.0",
-    "@vitest/coverage-v8": "5.1.0",
-    "angular-eslint": "22.6.0",
+    "@vitest/browser-playwright": "5.1.2",
+    "@vitest/coverage-v8": "5.1.2",
+    "angular-eslint": "22.8.0",
     "axe-html-reporter": "2.2.11",
     "cpy-cli": "7.0.0",
     "eslint": "10.15.0",
     "eslint-plugin-headers": "1.3.5",
-    "eslint-plugin-jsdoc": "65.4.7",
-    "eslint-plugin-perfectionist": "5.13.0",
+    "eslint-plugin-jsdoc": "65.5.5",
+    "eslint-plugin-perfectionist": "5.14.0",
     "eslint-plugin-prefer-arrow": "1.2.3",
     "eslint-plugin-tsdoc": "0.5.4",
     "http-server": "14.1.1",
@@ -98,7 +98,7 @@
     "stylelint-scss": "7.5.0",
     "ts-node": "10.9.2",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.72.2",
-    "vitest": "5.1.0"
+    "typescript-eslint": "8.74.0",
+    "vitest": "5.1.2"
   }
 }
